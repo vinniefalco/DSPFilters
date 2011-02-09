@@ -41,7 +41,7 @@ public:
       Biquad const* stage = c.m_stage;
       for (int i = Stages; --i >= 0; ++state, ++stage)
         out = state->process (out, *stage);
-      return out;
+      return static_cast<Sample> (out);
     }
 
   private:
