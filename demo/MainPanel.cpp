@@ -1,228 +1,9 @@
 #include "Common.h"
 #include "CpuMeter.h"
 #include "CustomSlider.h"
-#include "FilterChart.h"
+#include "GainChart.h"
 #include "MainApp.h"
 #include "MainPanel.h"
-
-//------------------------------------------------------------------------------
-
-class ResponseGraph2
-  : public GraphComponent
-  , public FilterListener
-{
-private:
-  Dsp::Filter* m_filter;
-  float m_scale_y;
-
-public:
-  Path m_path;
-
-  ResponseGraph2 ()
-    : m_filter (0)
-    , m_scale_y (1)
-  {
-  }
-
-  void paint (Graphics& g)
-  {
-    paintBackground (g);
-
-    Rectangle<int> bounds = getLocalBounds ();
-    Rectangle<int> r = bounds.reduced (4, 4);
-
-    AffineTransform t = AffineTransform::
-      scale (r.getWidth(), -r.getHeight()*m_scale_y).
-      translated (r.getX(), r.getBottom());
-
-    g.setColour (Colour::fromRGBA (0, 0, 0, 12));
-    g.fillPath (m_path, t);
-    g.setColour (Colours::blue);
-    g.strokePath (m_path, 1, t);
-  }
-
-  void calcPath ()
-  {
-    m_path.clear();
-    if (m_filter)
-    {
-      Rectangle<int> bounds = getLocalBounds ();
-      Rectangle<int> r = bounds.reduced (4, 4);
-      m_path.startNewSubPath (0, 0);
-      for (int xi = 0; xi <= r.getWidth(); ++xi )
-      {
-        float x = xi / float(r.getWidth()-1);
-        Dsp::complex_t c = m_filter->response (x/2);
-        float y = std::abs(c);
-        m_path.lineTo (x, y);
-      }
-      m_path.lineTo (1, 0);
-      m_path.closeSubPath();
-    }
-
-    float yh = m_path.getBounds().getHeight();
-    m_scale_y = (yh > 1) ? (1/yh) : 1;
-
-    repaint();
-  }
-
-  void onFilterChanged (Dsp::Filter* newFilter)
-  {
-    m_filter = newFilter;
-    calcPath ();
-  }
-
-  void onFilterParameters ()
-  {
-    calcPath ();
-  }
-};
-
-//------------------------------------------------------------------------------
-
-class PoleChart2
-  : public GraphComponent
-  , public FilterListener
-{
-private:
-  double m_max;
-  Dsp::Filter* m_filter;
-  Dsp::PoleZeros m_pz;
-
-public:
-  PoleChart2 ()
-    : m_filter (0)
-  {
-  }
-
-  void onFilterChanged (Dsp::Filter* newFilter)
-  {
-    setFilter (newFilter);
-  }
-
-  void onFilterParameters ()
-  {
-    update ();
-  }
-
-  void clear ()
-  {
-    m_max = 0;
-    m_pz.poles.clear();
-    m_pz.zeros.clear();
-  }
-
-  void setFilter (Dsp::Filter* filter)
-  {
-    m_filter = filter;
-
-    update();
-  }
-
-  void update ()
-  {
-    clear ();
-
-    if (m_filter)
-      addPoleZeros (m_filter->getPoleZeros());
-
-    repaint ();
-  }
-
-	void paint( Graphics &g )
-	{
-    paintBackground (g);
-
-		Colour cPole (0xd0ff0000);
-		Colour cZero (0xd02020ff);
-		
-		Rectangle<int> bounds = getLocalBounds();
-
-		int size = (jmin (getWidth(), getHeight()) + 2) / 3;
-
-    // scale the graph down if the pole/zeroes lie outside the unit disc
-    AffineTransform t = AffineTransform::identity;
-
-    {
-      double margin = 0.2;
-      if (m_max > 1 + margin)
-      {
-        t = t.scaled (1/(m_max-margin), 1/(m_max-margin));
-      }
-    }
-
-    t = t.scaled (size, -size);
-    t = t.translated (bounds.getCentreX (), bounds.getCentreY ());
-
-		g.setColour (m_cAxis);
-    {
-      Point<float> p = Point<float>(100000, 0).transformedBy (t);
-      g.drawLine (-p.getX(), p.getY(), p.getX(), p.getY(), 1);
-    }
-    {
-      Point<float> p = Point<float>(0, 100000).transformedBy (t);
-      g.drawLine (p.getX(), -p.getY(), p.getX(), p.getY(), 1);
-    }
-    {
-      Point<float> p0 = Point<float>(-1, -1).transformedBy (t);
-      Point<float> p1 = Point<float>( 1,  1).transformedBy (t);
-      g.drawEllipse (p0.getX(), p0.getY(),
-                     p1.getX()-p0.getX(), p1.getY()-p0.getY(), 1);
-    }
-
-    const float r = 3.5f;
-
-    g.setColour (cPole);
-    for (size_t i = 0; i < m_pz.poles.size(); ++i)
-    {
-      Point<float> p (m_pz.poles[i].real(), m_pz.poles[i].imag());
-      p = p.transformedBy (t);
-      g.drawLine (p.getX()-r, p.getY()-r, p.getX()+r, p.getY()+r);
-      g.drawLine (p.getX()+r, p.getY()-r, p.getX()-r, p.getY()+r);
-    }
-
-		g.setColour (cZero);
-    for (size_t i = 0; i < m_pz.zeros.size(); ++i)
-    {
-      Point<float> p (m_pz.zeros[i].real(), m_pz.zeros[i].imag());
-      p = p.transformedBy (t);
-  	  g.drawEllipse (p.getX()-r, p.getY()-r, 2*r, 2*r, 1);
-    }
-
-		{
-			g.setColour( m_cText );
-			Rectangle<int> rc( 0, 0, getWidth(), getHeight() );
-			Rectangle<int> rText = tlbr( rc.getY()+2, rc.getX()+2, rc.getY()+18, rc.getRight()-2 );
-			g.drawFittedText(
-				"Pole/Zero",
-				rText.getX(),
-				rText.getY(),
-				rText.getWidth(),
-				rText.getHeight(),
-				Justification::topRight,
-				1 );
-		}
-	}
-
-private:
-  void addPoleZeros (Dsp::PoleZeros pz)
-  {
-    for (size_t i = 0; i < pz.poles.size(); ++i)
-    {
-      m_pz.poles.push_back (pz.poles[i]);
-      m_max = jmax (m_max, fabs(pz.poles[i].real()));
-      m_max = jmax (m_max, fabs(pz.poles[i].imag()));
-    }
-
-    for (size_t i = 0; i < pz.zeros.size(); ++i)
-    {
-      m_pz.zeros.push_back (pz.zeros[i]);
-      m_max = jmax (m_max, fabs(pz.zeros[i].real()));
-      m_max = jmax (m_max, fabs(pz.zeros[i].imag()));
-    }
-  }
-
-};
 
 //------------------------------------------------------------------------------
 
@@ -385,6 +166,7 @@ MainPanel::MainPanel()
 	  m_menuFilter->addItem ("RBJ All Pass", 9);
 	  m_menuFilter->addItem ("Butterworth Low Pass", 10);
 	  m_menuFilter->addItem ("Butterworth High Pass", 11);
+	  m_menuFilter->addItem ("Butterworth Low Shelf", 12);
 	  m_menuFilter->setBounds (342, 26, 512-350, 28);
 	  m_menuFilter->addListener(this);
     addToLayout (m_menuFilter, anchorTopRight);
@@ -392,21 +174,29 @@ MainPanel::MainPanel()
   }
 
   {
-    m_poleChart = new PoleChart2;
-    m_poleChart->setBounds (4, 76, 246, 244);
-    addToLayout (m_poleChart, anchorTopLeft, anchorBottomCenter);
-    addAndMakeVisible (m_poleChart);
-
-    m_listeners.add (m_poleChart);
+    GainChart* c = new GainChart;
+    c->setBounds (4, 76, 165, 166);
+    addToLayout (c, Point<int>(0, 0), Point<int>(33, 100));
+    addAndMakeVisible (c);
+    m_listeners.add (c);
   }
 
   {
-    m_responseGraph = new ResponseGraph2;
-    m_responseGraph->setBounds (258, 76, 246, 244);
-    addToLayout (m_responseGraph, anchorTopCenter, anchorBottomRight);
-    addAndMakeVisible (m_responseGraph);
+    m_brickWallChart = new BrickWallChart;
+    m_brickWallChart->setBounds (173, 76, 166, 166);
+    addToLayout (m_brickWallChart, Point<int>(33, 0), Point<int>(66, 100));
+    addAndMakeVisible (m_brickWallChart);
 
-    m_listeners.add (m_responseGraph);
+    m_listeners.add (m_brickWallChart);
+  }
+
+  {
+    m_poleChart = new PoleZeroChart;
+    m_poleChart->setBounds (343, 76, 165, 166);
+    addToLayout (m_poleChart, Point<int>(66, 0), Point<int>(100, 100));
+    addAndMakeVisible (m_poleChart);
+
+    m_listeners.add (m_poleChart);
   }
 
   m_menuFilter->setSelectedId (1);
@@ -502,27 +292,44 @@ void MainPanel::setFilter (int id)
 
   case 10:
     f  = new Dsp::FilterType <
-      Dsp::PoleZeroDesign <24,
+      Dsp::PoleZeroDesign <7,
                            Dsp::detail::ButterworthLowPass,
                            Dsp::detail::LowPassTransformation> >;
     fo  = new Dsp::SmoothedFilter <
-      Dsp::PoleZeroDesign <24,
+      Dsp::PoleZeroDesign <7,
                            Dsp::detail::ButterworthLowPass,
                            Dsp::detail::LowPassTransformation>,
       Dsp::ChannelsState <2,
-                          Dsp::Cascade <12>::State <
+                          Dsp::Cascade <4>::State <
                             Dsp::Biquad::DirectFormIState> > > (1024);
     break;
   
   case 11:
     f  = new Dsp::FilterType <
-      Dsp::PoleZeroDesign <15,
+      Dsp::PoleZeroDesign <3,
                            Dsp::detail::ButterworthLowPass,
                            Dsp::detail::HighPassTransformation> >;
-    fo  = new Dsp::FilterType <
-      Dsp::PoleZeroDesign <15,
+    fo  = new Dsp::SmoothedFilter <
+      Dsp::PoleZeroDesign <3,
                            Dsp::detail::ButterworthLowPass,
-                           Dsp::detail::HighPassTransformation> >;
+                           Dsp::detail::HighPassTransformation>,
+      Dsp::ChannelsState <2,
+                          Dsp::Cascade <2>::State <
+                            Dsp::Biquad::DirectFormIState> > > (1024);
+    break;
+
+  case 12:
+    f  = new Dsp::FilterType <
+      Dsp::PoleZeroDesign <4,
+                           Dsp::detail::ButterworthLowShelf,
+                           Dsp::detail::LowPassTransformation> >;
+    fo  = new Dsp::SmoothedFilter <
+      Dsp::PoleZeroDesign <4,
+                           Dsp::detail::ButterworthLowShelf,
+                           Dsp::detail::LowPassTransformation>,
+      Dsp::ChannelsState <2,
+                          Dsp::Cascade <2>::State <
+                            Dsp::Biquad::DirectFormIState> > > (1024);
     break;
 
   default:
@@ -538,10 +345,8 @@ void MainPanel::setFilter (int id)
     m_listeners.call (&FilterListener::onFilterChanged, m_filter);
 
     if (fo)
-    {
       fo->setParameters (m_filter->getDefaultParameters());
-      MainApp::getInstance().getAudioOutput().setFilter (fo);
-    }
+    MainApp::getInstance().getAudioOutput().setFilter (fo);
   }
 }
 

@@ -2,24 +2,12 @@
 #define DSPDEMO_MAINPANEL_H
 
 #include "Common.h"
-#include "GraphComponent.h"
+#include "BrickWallChart.h"
+#include "PoleZeroChart.h"
 #include "ResizableLayout.h"
+#include "FilterListener.h"
 
-class PoleChart2;
-class ResponseGraph2;
 class KnobPanel;
-
-class FilterListener
-{
-public:
-  virtual void onFilterChanged (Dsp::Filter* newFilter)
-  {
-  }
-
-  virtual void onFilterParameters ()
-  {
-  }
-};
 
 class MainPanel :
 	public Component,
@@ -50,9 +38,11 @@ private:
   ListenerList<FilterListener> m_listeners;
   ComboBox* m_menuFilter;
   KnobPanel* m_knobPanel;
+
   ScopedPointer<Dsp::Filter> m_filter;
-  PoleChart2* m_poleChart;
-  ResponseGraph2* m_responseGraph;
+
+  BrickWallChart* m_brickWallChart;
+  PoleZeroChart* m_poleChart;
 };
 
 #endif

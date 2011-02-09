@@ -192,14 +192,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\demo\BrickWallGraph.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\demo\BrickWallGraph.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\demo\Common.h"
 				>
 			</File>
@@ -212,34 +204,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\demo\CustomSlider.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\demo\DemoPanel.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\demo\DemoPanel.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\demo\FilterChart.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\demo\FilterChart.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\demo\FilterGraph.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\demo\FilterGraph.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\demo\FilteringAudioSource.cpp"
 				>
 			</File>
@@ -248,19 +212,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\demo\Graph.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\demo\Graph.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\demo\GraphComponent.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\demo\GraphComponent.h"
+				RelativePath="..\..\demo\FilterListener.h"
 				>
 			</File>
 			<File
@@ -287,22 +239,110 @@
 				RelativePath="..\..\demo\MainWindow.h"
 				>
 			</File>
-			<File
-				RelativePath="..\..\demo\ResizableLayout.cpp"
+			<Filter
+				Name="Charts"
 				>
-			</File>
-			<File
-				RelativePath="..\..\demo\ResizableLayout.h"
+				<File
+					RelativePath="..\..\demo\BrickWallChart.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\BrickWallChart.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\Chart.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\Chart.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\GainChart.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\GainChart.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\PoleZeroChart.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\PoleZeroChart.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Old Code"
 				>
-			</File>
-			<File
-				RelativePath="..\..\demo\ThreadQueue.cpp"
+				<File
+					RelativePath="..\..\demo\BrickWallGraph.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\BrickWallGraph.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\DemoPanel.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\DemoPanel.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\FilterChart.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\FilterChart.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\FilterGraph.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\FilterGraph.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\Graph.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\Graph.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Utilities"
 				>
-			</File>
-			<File
-				RelativePath="..\..\demo\ThreadQueue.h"
-				>
-			</File>
+				<File
+					RelativePath="..\..\demo\CustomSlider.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\ResizableLayout.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\ResizableLayout.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\ThreadQueue.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\ThreadQueue.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="DspFilters"

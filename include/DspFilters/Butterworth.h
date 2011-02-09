@@ -125,9 +125,9 @@ public:
                                parameters[0],
                                m_design,
                                m_prototype);
+    const double w0 = doublePi;
     setPoleZeros (Poles, m_design);
-    scale (1. / std::abs (response (0)));
-    
+    scale (1. / std::abs (response (w0)));    
   }
 
   const PoleZeros getPoleZeros ()

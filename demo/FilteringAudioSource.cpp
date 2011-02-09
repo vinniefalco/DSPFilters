@@ -17,8 +17,11 @@ void FilteringAudioSource::setFilter (Dsp::Filter* filter)
 
 void FilteringAudioSource::setFilterParameters (Dsp::Parameters parameters)
 {
-  m_filter->reset();
-  m_filter->setParameters (parameters);
+  if (m_filter)
+  {
+    m_filter->reset();
+    m_filter->setParameters (parameters);
+  }
 }
 
 void FilteringAudioSource::prepareToPlay (int samplesPerBlockExpected,
