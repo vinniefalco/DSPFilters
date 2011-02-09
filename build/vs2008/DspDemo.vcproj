@@ -267,6 +267,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\demo\GroupDelayChart.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\GroupDelayChart.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\PhaseChart.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\PhaseChart.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\demo\PoleZeroChart.cpp"
 					>
 				</File>

@@ -21,6 +21,8 @@ public:
   MainPanel();
   ~MainPanel();
 
+  void createCharts (const Rectangle<int>& r);
+
   const StringArray getMenuBarNames();
   const PopupMenu getMenuForIndex (int topLevelMenuIndex, const String& menuName);
   void menuItemSelected (int menuItemID, int topLevelMenuIndex);
@@ -40,9 +42,6 @@ private:
   KnobPanel* m_knobPanel;
 
   ScopedPointer<Dsp::Filter> m_filter;
-
-  BrickWallChart* m_brickWallChart;
-  PoleZeroChart* m_poleChart;
 };
 
 #endif

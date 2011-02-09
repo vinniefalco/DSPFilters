@@ -2,8 +2,10 @@
 #include "CpuMeter.h"
 #include "CustomSlider.h"
 #include "GainChart.h"
+#include "GroupDelayChart.h"
 #include "MainApp.h"
 #include "MainPanel.h"
+#include "PhaseChart.h"
 
 //------------------------------------------------------------------------------
 
@@ -132,8 +134,9 @@ private:
 MainPanel::MainPanel()
 	: ResizableLayout (this) 	
 {
-  int w = 512;
-  int h = 384;
+  const int w = 512;
+  const int h = 512 + 72;
+  int y;
 
   m_listeners.add (this);
 
@@ -142,8 +145,9 @@ MainPanel::MainPanel()
     m_knobPanel->setBounds (4, 4, 496, 68);
     addToLayout (m_knobPanel, anchorTopLeft, anchorTopRight);
     addAndMakeVisible (m_knobPanel);
-
     m_listeners.add (m_knobPanel);
+
+    y = m_knobPanel->getBottom();
   }
 
   {
@@ -173,55 +177,76 @@ MainPanel::MainPanel()
 	  addAndMakeVisible (m_menuFilter);
   }
 
-  {
-    GainChart* c = new GainChart;
-    c->setBounds (4, 76, 165, 166);
-    addToLayout (c, Point<int>(0, 0), Point<int>(33, 100));
-    addAndMakeVisible (c);
-    m_listeners.add (c);
-  }
-
-  {
-    m_brickWallChart = new BrickWallChart;
-    m_brickWallChart->setBounds (173, 76, 166, 166);
-    addToLayout (m_brickWallChart, Point<int>(33, 0), Point<int>(66, 100));
-    addAndMakeVisible (m_brickWallChart);
-
-    m_listeners.add (m_brickWallChart);
-  }
-
-  {
-    m_poleChart = new PoleZeroChart;
-    m_poleChart->setBounds (343, 76, 165, 166);
-    addToLayout (m_poleChart, Point<int>(66, 0), Point<int>(100, 100));
-    addAndMakeVisible (m_poleChart);
-
-    m_listeners.add (m_poleChart);
-  }
-
-  m_menuFilter->setSelectedId (1);
-
-#if 0
-  Slider* s = new CustomSlider (String::empty);
-  s->setSliderStyle (Slider::RotaryVerticalDrag);
-  s->setRotaryParameters (float_Pi * 1.2f, float_Pi * 2.8f, false);
-  s->setBounds (8, 8, 58, 58 );
-  s->setRange (0, 0.5);
-  s->setVelocityBasedMode (false);
-  s->addListener (this);
-  addAndMakeVisible (s);
-
-  s->setValue (0.25);
-#endif
+  const Rectangle<int> r (4, y + 4, w - 8, h - (y + 8));
+  createCharts (r);
 
 	setSize (w, h);
 
 	activateLayout();
+
+  m_menuFilter->setSelectedId (1);
 }
 
 MainPanel::~MainPanel()
 {
 	deleteAllChildren();
+}
+
+/*
+
+Gain Phase Poles
+
+Response   Delay
+Response
+Response   Step
+*/
+void MainPanel::createCharts (const Rectangle<int>& r)
+{
+  const int gap = 4;
+  const int w = (r.getWidth()  - (2 * gap)) / 3;
+  const int h = (r.getHeight() - (2 * gap)) / 3;
+  const int w2 = r.getWidth()  - (w + gap);
+  const int h2 = r.getHeight() - (h + gap);
+
+  {
+    BrickWallChart* c = new BrickWallChart;
+    c->setBounds (r.getX(), r.getY(), w, h);
+    addToLayout (c, Point<int>(0, 0), Point<int>(33, 33));
+    addAndMakeVisible (c);
+    m_listeners.add (c);
+  }
+
+  {
+    PhaseChart* c = new PhaseChart;
+    c->setBounds (r.getX() + w + gap, r.getY(), w, h);
+    addToLayout (c, Point<int>(33, 0), Point<int>(66, 33));
+    addAndMakeVisible (c);
+    m_listeners.add (c);
+  }
+
+  {
+    PoleZeroChart* c = new PoleZeroChart;
+    c->setBounds (r.getX() + w + gap + w + gap, r.getY(), w, h);
+    addToLayout (c, Point<int>(66, 0), Point<int>(100, 33));
+    addAndMakeVisible (c);
+    m_listeners.add (c);
+  }
+
+  {
+    GainChart* c = new GainChart;
+    c->setBounds (r.getX(), r.getY() + h + gap, w2, h2);
+    addToLayout (c, Point<int>(0, 33), Point<int>(66, 100));
+    addAndMakeVisible (c);
+    m_listeners.add (c);
+  }
+
+  {
+    GroupDelayChart* c = new GroupDelayChart;
+    c->setBounds (r.getX() + w + gap + w + gap, r.getY() + h + gap, w, h);
+    addToLayout (c, Point<int>(66, 33), Point<int>(100, 66));
+    addAndMakeVisible (c);
+    m_listeners.add (c);
+  }
 }
 
 void MainPanel::paint( Graphics& g )

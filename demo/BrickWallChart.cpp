@@ -25,9 +25,6 @@ void BrickWallChart::paintContents (Graphics& g)
 {
   AffineTransform t = calcTransform();
 
-  g.setColour (Colours::blue);
-  g.strokePath (m_path, 1, t);
-
   {
     int y = yToScreen (0);
 
@@ -49,6 +46,10 @@ void BrickWallChart::paintContents (Graphics& g)
     g.setColour (m_cText);
     drawText (g, Point<int> (6, y+2), "1", Justification::topLeft);
   }
+
+  // path
+  g.setColour (Colours::blue);
+  g.strokePath (m_path, 1, t);
 }
 
 void BrickWallChart::onFilterChanged (Dsp::Filter* newFilter)
@@ -74,7 +75,7 @@ void BrickWallChart::update ()
 
     for (int xi = 0; xi < r.getWidth(); ++xi )
     {
-      float x = xi / float(r.getWidth()-1);
+      float x = xi / float(r.getWidth());
       Dsp::complex_t c = m_filter->response (x/2);
       float y = std::abs(c);
       if (xi == 0)
