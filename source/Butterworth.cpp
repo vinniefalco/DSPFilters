@@ -29,7 +29,28 @@ void ButterworthLowPass::design (int numPoles, PoleZeroPair* pzArray)
 
 void ButterworthLowShelf::design (int numPoles, PoleZeroPair* pzArray)
 {
+  double gainDb = 24;
+  const double n2 = numPoles * 2;
+  const double g = pow (pow (10., gainDb/20), 1. / n2);
+  const double gp = -1. / g;
+  const double gz = -g;
 
+  const int pairs = numPoles / 2;
+  for (int i = 1; i <= pairs; ++i)
+  {
+    const double theta = doublePi * (0.5 - (2 * i - 1) / n2);
+    pzArray->pole[0] = std::polar (gp, theta);
+    pzArray->zero[0] = std::polar (gz, theta);
+    pzArray->pole[1] = std::conj (pzArray->pole[0]);
+    pzArray->zero[1] = std::conj (pzArray->zero[0]);
+    ++pzArray;
+  }
+  
+  if (numPoles & 1)
+  {
+    pzArray->pole[0] = complex_t (-gp, 0);
+    pzArray->zero[0] = complex_t (-gz, 0);
+  }
 }
 
 void LowPassTransformation::transform (int numPoles,

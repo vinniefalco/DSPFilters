@@ -21,8 +21,8 @@ public:
   {
     //static double v = 1e-16;
     static double v = 1e-35;
-    return v=-v;
     //return v=-v;
+    return 0;
   }
 
   // Expresses the biquad as a pair of pole/zeros, with gain
