@@ -13,6 +13,12 @@ class GainChart
   , public FilterListener
 {
 public:
+  enum
+  {
+    kMaxDb = 17,
+    kMinDb = -65
+  };
+
   GainChart ();
 
   const String getName () const;
@@ -26,11 +32,12 @@ public:
 
 private:
   void update ();
+  bool drawDbLine (Graphics& g, int db, bool drawLabel = true);
   AffineTransform calcTransform ();
 
 private:
   Dsp::Filter* m_filter;
-  float m_scale_y;
+  float m_maxDb;
   Path m_path;
 };
 

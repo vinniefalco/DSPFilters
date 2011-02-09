@@ -25,8 +25,6 @@ void BrickWallChart::paintContents (Graphics& g)
 {
   AffineTransform t = calcTransform();
 
-  g.setColour (Colour::fromRGBA (0, 0, 0, 12));
-  //g.fillPath (m_path, t);
   g.setColour (Colours::blue);
   g.strokePath (m_path, 1, t);
 
@@ -71,18 +69,21 @@ void BrickWallChart::update ()
 
   if (m_filter)
   {
-    Rectangle<int> bounds = getLocalBounds ();
-    Rectangle<int> r = bounds.reduced (4, 4);
-    m_path.startNewSubPath (0, 0);
+    const Rectangle<int> bounds = getLocalBounds ();
+    const Rectangle<int> r = bounds.reduced (4, 4);
+
     for (int xi = 0; xi < r.getWidth(); ++xi )
     {
       float x = xi / float(r.getWidth()-1);
       Dsp::complex_t c = m_filter->response (x/2);
       float y = std::abs(c);
-      m_path.lineTo (x, y);
+      if (xi == 0)
+        m_path.startNewSubPath (x, y);
+      else
+        m_path.lineTo (x, y);
     }
-    m_path.lineTo (1, 0);
-    m_path.closeSubPath();
+
+    m_path.startNewSubPath (0, 0);
   }
 
   float yh = m_path.getBounds().getHeight();
