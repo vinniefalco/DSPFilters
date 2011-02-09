@@ -1,4 +1,5 @@
 #include "Common.h"
+#include "CpuMeter.h"
 #include "CustomSlider.h"
 #include "FilterChart.h"
 #include "MainApp.h"
@@ -365,6 +366,13 @@ MainPanel::MainPanel()
   }
 
   {
+    CpuMeter* c = new CpuMeter (MainApp::getInstance().getAudioOutput().getAudioDeviceManager());
+    c->setBounds (424, 8, 80, 14);
+    addToLayout (c, anchorTopRight);
+    addAndMakeVisible (c);
+  }
+
+  {
 	  m_menuFilter=new ComboBox( String::empty );
 	  m_menuFilter->addItem ("RBJ Low Pass", 1 );
 	  m_menuFilter->addItem ("RBJ High Pass", 2 );
@@ -377,7 +385,7 @@ MainPanel::MainPanel()
 	  m_menuFilter->addItem ("RBJ All Pass", 9);
 	  m_menuFilter->addItem ("Butterworth Low Pass", 10);
 	  m_menuFilter->addItem ("Butterworth High Pass", 11);
-	  m_menuFilter->setBounds (342, 8, 512-350, 28);
+	  m_menuFilter->setBounds (342, 26, 512-350, 28);
 	  m_menuFilter->addListener(this);
     addToLayout (m_menuFilter, anchorTopRight);
 	  addAndMakeVisible (m_menuFilter);

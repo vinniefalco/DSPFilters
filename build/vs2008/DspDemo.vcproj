@@ -173,7 +173,7 @@
 	</References>
 	<Files>
 		<Filter
-			Name="demo"
+			Name="Demo"
 			>
 			<File
 				RelativePath="..\..\demo\AudioOutput.cpp"
@@ -201,6 +201,14 @@
 			</File>
 			<File
 				RelativePath="..\..\demo\Common.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\demo\CpuMeter.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\demo\CpuMeter.h"
 				>
 			</File>
 			<File
