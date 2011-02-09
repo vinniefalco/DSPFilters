@@ -204,6 +204,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\demo\FilterControls.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\demo\FilterControls.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\demo\FilteringAudioSource.cpp"
 				>
 			</File>
@@ -213,6 +221,14 @@
 			</File>
 			<File
 				RelativePath="..\..\demo\FilterListener.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\demo\FilterValue.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\demo\FilterValue.h"
 				>
 			</File>
 			<File
@@ -290,6 +306,14 @@
 					RelativePath="..\..\demo\PoleZeroChart.h"
 					>
 				</File>
+				<File
+					RelativePath="..\..\demo\StepResponseChart.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\StepResponseChart.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Old Code"
@@ -338,6 +362,10 @@
 			<Filter
 				Name="Utilities"
 				>
+				<File
+					RelativePath="..\..\demo\ContentComponentConstrainer.h"
+					>
+				</File>
 				<File
 					RelativePath="..\..\demo\CustomSlider.h"
 					>

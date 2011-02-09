@@ -10,11 +10,14 @@ FilteringAudioSource::~FilteringAudioSource()
 {
 }
 
+// Caller is responsible for synchronization.
+// This is the proper way to do it.
 void FilteringAudioSource::setFilter (Dsp::Filter* filter)
 {
   m_filter = filter;
 }
 
+// Caller is responsible for synchronization.
 void FilteringAudioSource::setFilterParameters (Dsp::Parameters parameters)
 {
   if (m_filter)

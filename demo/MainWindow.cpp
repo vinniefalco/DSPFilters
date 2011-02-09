@@ -1,3 +1,4 @@
+#include "ContentComponentConstrainer.h"
 #include "MainWindow.h"
 #include "DemoPanel.h"
 #include "MainPanel.h"
@@ -18,6 +19,9 @@ MainWindow::MainWindow ()
 
   setMenuBar (contentComponent);
   setContentComponent (contentComponent, true, true);
+
+  contentComponent->setAsConstrainerFor (this);
+  ContentComponentConstrainer::attachTo (this);
 
   centreWithSize (getWidth(), getHeight());
   setVisible (true);

@@ -2,19 +2,17 @@
 #define DSPDEMO_FILTERLISTENER_H
 
 /*
- * Used to broadcast filter changes
+ * Used to broadcast Filter changes in the interface
  *
  */
 class FilterListener
 {
 public:
-  virtual void onFilterChanged (Dsp::Filter* newFilter)
-  {
-  }
+  // Sent when a new Filter object is created
+  virtual void onFilterChanged (Dsp::Filter* newFilter) { }
 
-  virtual void onFilterParameters ()
-  {
-  }
+  // Called when the current Filter object parameters change
+  virtual void onFilterParameters () { }
 };
 
 #endif

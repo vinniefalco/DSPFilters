@@ -86,7 +86,7 @@ bool PhaseChart::drawPhaseLine (Graphics& g, int degrees, bool drawLabel)
 
   const Rectangle<int> bounds = getLocalBounds ();
   const Rectangle<int> r = bounds;
-  const int y = yToScreen (degrees);
+  const int y = yToScreen (float(degrees));
 
   if (y >= r.getY() && y < r.getBottom())
   {
@@ -116,19 +116,19 @@ AffineTransform PhaseChart::calcTransform ()
   AffineTransform t;
 
   // scale x from 0..1 to 0..getWidth(), and flip vertical
-  t = AffineTransform::scale (r.getWidth(), -1);
+  t = AffineTransform::scale (float(r.getWidth()), -1.f);
 
   // move y down so 120 is at the top
-  t = t.translated (0, 120);
+  t = t.translated (0.f, 120.f);
 
   // scale y from phase to 0..1 bounds in r
-  t = t.scaled (1, 1./(maxPhase - -maxPhase));
+  t = t.scaled (1.f, 1.f/(maxPhase - -maxPhase));
 
   // scale y from 0..1 to getHeight()
-  t = t.scaled (1, r.getHeight());
+  t = t.scaled (1.f, float(r.getHeight()));
 
   // translate
-  t = t.translated (r.getX(), r.getY());
+  t = t.translated (float(r.getX()), float(r.getY()));
 
   return t;
 }

@@ -4,6 +4,11 @@
 #include "Common.h"
 #include "ResizableLayout.h"
 
+/*
+ * Simple CPU meter. Note this measures overall consumption in
+ * the Audio callback (via Juce), not the overall system CPU usage.
+ *
+ */
 class CpuMeter
   : public Component
   , public Timer

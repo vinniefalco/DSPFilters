@@ -3,6 +3,8 @@
 
 Chart::Chart()
 {
+  setOpaque (true);
+
 	m_cBack       = Colour (0xfff8f8f8);
 	m_cFrame      = Colour (0xff808080);
 	m_cAxis       = Colour (0x80000000);

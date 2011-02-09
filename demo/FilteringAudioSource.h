@@ -4,10 +4,11 @@
 #include "Common.h"
 #include "DspFilters/Filter.h"
 
-//
-// An AudioSource which applies a Dsp::Filter to its connected source.
-// The filter parameters can be changed during playback.
-//
+/*
+ * An AudioSource which applies a Dsp::Filter to its connected source.
+ * The filter parameters can be changed during playback.
+ *
+ */
 class FilteringAudioSource : public AudioSource
 {
 public:

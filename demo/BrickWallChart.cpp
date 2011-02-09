@@ -77,7 +77,7 @@ void BrickWallChart::update ()
     {
       float x = xi / float(r.getWidth());
       Dsp::complex_t c = m_filter->response (x/2);
-      float y = std::abs(c);
+      float y = float (std::abs(c));
       if (xi == 0)
         m_path.startNewSubPath (x, y);
       else
@@ -98,6 +98,7 @@ AffineTransform BrickWallChart::calcTransform ()
   const Rectangle<int> bounds = getLocalBounds ();
   const Rectangle<int> r = bounds.reduced (4, 4);
 
-  return AffineTransform::scale (r.getWidth(), -r.getHeight()*m_scale_y).
-    translated (r.getX(), r.getBottom());
+  return AffineTransform::scale (
+    float(r.getWidth()), -float(r.getHeight()*m_scale_y)).
+    translated (float(r.getX()), float(r.getBottom()));
 }

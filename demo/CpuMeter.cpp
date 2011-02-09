@@ -18,7 +18,7 @@ CpuMeter::CpuMeter (AudioDeviceManager& audioDeviceManager)
 
   activateLayout ();
 
-  startTimer (250);
+  startTimer (100);
 }
 
 CpuMeter::~CpuMeter()
@@ -31,13 +31,21 @@ void CpuMeter::paint (Graphics& g)
   Rectangle<int> r = bounds;
   r.setLeft (m_label->getRight() + 4);
 
+  // fill
   g.setColour (Colours::white);
   g.fillRect (r.reduced (1, 1));
+
+  // frame
   g.setColour (Colours::black);
   g.drawRect (r, 1);
-  g.setColour (Colours::olivedrab);
+
+  // value
   r = r.reduced (1, 1);
   r.setWidth (int(r.getWidth() * m_value + 0.5));
+  if (m_value < 0.9)
+    g.setColour (Colours::olivedrab);
+  else
+    g.setColour (Colours::red);
   g.fillRect (r);
 }
 

@@ -5,6 +5,12 @@
 #include "ThreadQueue.h"
 #include "FilteringAudioSource.h"
 
+/*
+ * Handles Audio Output. Allows insertion of one Dsp::Filter
+ * in the output chain, selectable audio source material, and
+ * a resampler with dynamically adjustable tempo control.
+ *
+ */
 class AudioOutput
   : private AudioIODeviceCallback
 {
