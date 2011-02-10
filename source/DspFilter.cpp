@@ -74,7 +74,7 @@ There are a few other utility classes and functions included that may prove usef
 
 Classes:
 
-Order for PoleFilterSpace derived classes is specified in the number of poles,
+Order for filter derived classes is specified in the number of poles,
 except for band pass and band stop filters, for which the number of pole pairs
 is specified.
 
@@ -100,7 +100,7 @@ http://crca.ucsd.edu/~msp/techniques/v0.08/book-html/node1.html
 
 --------------------------------------------------------------------------------
 
-PoleFilterSpace ideas are based on a java applet (http://www.falstad.com/dfilter/)
+Filter ideas are based on a java applet (http://www.falstad.com/dfilter/)
 developed by Paul Falstad.
 
 All of this code was written by the author Vincent Falco except where marked.

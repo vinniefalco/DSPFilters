@@ -42,7 +42,7 @@
 #include "DspFilters/Biquad.h"
 #include "DspFilters/Cascade.h"
 #include "DspFilters/Filter.h"
-#include "DspFilters/RBJBiquad.h"
+#include "DspFilters/PoleFilter.h"
 #include "DspFilters/Utilities.h"
 
 #include "DspFilters/Bessel.h"
@@ -50,6 +50,7 @@
 #include "DspFilters/ChebyshevI.h"
 #include "DspFilters/ChebyshevII.h"
 #include "DspFilters/Elliptic.h"
+#include "DspFilters/RBJBiquad.h"
 
 // OLD STUFF, DON'T USE!
 #include "DspFilters/DspFilter.h"
