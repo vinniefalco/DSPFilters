@@ -16,8 +16,9 @@ public:
   ~FilteringAudioSource ();
 
   void setSource (AudioSource* source);
+  
   void setFilter (Dsp::Filter* filter);
-
+  
   void setFilterParameters (Dsp::Parameters parameters);
 
   void prepareToPlay (int samplesPerBlockExpected,

@@ -6,6 +6,8 @@ AudioOutput::AudioOutput()
   : m_audioDeviceManager (new AudioDeviceManager)
   , m_device (0)
   , m_resampler (0)
+  , m_gain (1)
+  , m_gainNext (1)
   , m_tempo (1)
 {
   m_filteringAudioSource = new FilteringAudioSource ();
@@ -41,15 +43,20 @@ AudioOutput::~AudioOutput()
   m_audioDeviceManager = 0;
 }
 
-void AudioOutput::setSource (AudioSource* source)
+void AudioOutput::setGain (float gainDb)
 {
-  ResamplingAudioSource* resampler = new ResamplingAudioSource (source, true);
-  m_queue.call (std::tr1::bind (&AudioOutput::doSetSource, this, resampler));
+  m_queue.call (std::tr1::bind (&AudioOutput::doSetGain, this, Decibels::decibelsToGain(gainDb)));
 }
 
 void AudioOutput::setTempo (float tempo)
 {
   m_queue.call (std::tr1::bind (&AudioOutput::doSetTempo, this, tempo));
+}
+
+void AudioOutput::setSource (AudioSource* source)
+{
+  ResamplingAudioSource* resampler = new ResamplingAudioSource (source, true);
+  m_queue.call (std::tr1::bind (&AudioOutput::doSetSource, this, resampler));
 }
 
 void AudioOutput::setFilter (Dsp::Filter* filter)
@@ -68,6 +75,11 @@ void AudioOutput::updateResampler ()
   {
     m_resampler->setResamplingRatio (m_tempo);
   }
+}
+
+void AudioOutput::doSetGain (float gain)
+{
+  m_gainNext = gain;
 }
 
 void AudioOutput::doSetTempo (float tempo)
@@ -124,6 +136,10 @@ void AudioOutput::audioDeviceIOCallback (const float** inputChannelData,
   info.numSamples = numSamples;
 
   m_filteringAudioSource->getNextAudioBlock (info);
+
+  for (int i = 0; i < buffer.getNumChannels(); ++i)
+    info.buffer->applyGainRamp (i, info.startSample, info.numSamples, m_gain, m_gainNext);
+  m_gain = m_gainNext;
 }
 
 void AudioOutput::audioDeviceStopped ()

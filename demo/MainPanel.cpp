@@ -88,8 +88,8 @@ MainPanel::MainPanel()
     c->setBounds (x - 20, y, 20, hfc);
     c->setSliderStyle (Slider::LinearVertical);
     c->setTextBoxStyle (Slider::NoTextBox, true, 0, 0);
-    c->setRange (0, 1);
-    c->setValue (1);
+    c->setRange (-40, 12);
+    c->setValue (0);
     addAndMakeVisible (c);
     addToLayout (c, anchorTopRight);
     c->addListener (this);
@@ -485,6 +485,7 @@ void MainPanel::sliderValueChanged (Slider* ctrl)
 {
   if (ctrl == m_volumeSlider)
   {
+    MainApp::getInstance().getAudioOutput().setGain (ctrl->getValue());
   }
   else if (ctrl == m_tempoSlider)
   {
