@@ -13,8 +13,36 @@ namespace Dsp {
  *
  */
 
+namespace detail {
+
+// Factored implementation to reduce template instantiations
+class CascadeBase
+{
+public:
+  class Stage : public Biquad
+  {
+  public:
+  };
+
+public:
+  // Calculate filter response at the given normalized frequency.
+  complex_t response (double normalizedFrequency) const;
+
+protected:
+  CascadeBase ();
+
+  void scale (double factor);
+  void setPoleZeros (int numPoles, const PoleZeroPair* pzArray);
+
+protected:
+  int m_numStages;
+  Biquad* m_stageArray;
+};
+
+}
+
 template <int Stages>
-class Cascade
+class Cascade : public detail::CascadeBase
 {
 public:
   template <class StateType>
@@ -38,7 +66,7 @@ public:
     {
       double out = in;
       StateType* state = m_state;
-      Biquad const* stage = c.m_stage;
+      Biquad const* stage = c.m_stages;
       for (int i = Stages; --i >= 0; ++state, ++stage)
         out = state->process (out, *stage);
       return static_cast<Sample> (out);
@@ -51,34 +79,11 @@ public:
 public:
   Cascade ()
   {
+    m_numStages = Stages;
+    m_stageArray = m_stages;
   }
 
   explicit Cascade (const PoleZeros& pz);
-
-  // Calculate filter response at the given normalized frequency.
-  complex_t response (double normalizedFrequency) const
-  {
-    double w = 2 * doublePi * normalizedFrequency;
-    const complex_t czn1 = std::polar (1., -w);
-    const complex_t czn2 = std::polar (1., -2 * w);
-    complex_t ch (1);
-    complex_t cbot (1);
-
-    const Biquad* stage = m_stage;
-    for (int i = Stages; --i >=0; ++stage)
-    {
-      complex_t ct (stage->getB0()/stage->getA0());
-      complex_t cb (1);
-      ct = addmul (ct, stage->getB1()/stage->getA0(), czn1);
-      ct = addmul (ct, stage->getB2()/stage->getA0(), czn2);
-      cb = addmul (cb, stage->getA1()/stage->getA0(), czn1);
-      cb = addmul (cb, stage->getA2()/stage->getA0(), czn2);
-      ch   *= ct;
-      cbot *= cb;
-    }
-
-    return ch / cbot;
-  }
 
   // Process a block of samples in the given form
   template <class StateType, typename Sample>
@@ -89,26 +94,7 @@ public:
   }
 
 protected:
-  void scale (double factor)
-  {
-    Biquad* stage = m_stage;
-    //factor *= Stages;
-    //for (int i = Stages; --i >= 0; ++stage)
-      stage->scale (factor);
-  }
-
-  void setPoleZeros (int numPoles, const PoleZeroPair* pzArray)
-  {
-    const int pairs = numPoles / 2;
-    Biquad* stage = m_stage;
-    for (int i = pairs; --i >= 0; ++pzArray,  ++stage)
-      stage->setPoleZeros (pzArray->pole, pzArray->zero);
-    if (numPoles & 1)
-      stage->setPoleZero (pzArray->pole[0], pzArray->zero[0]);
-  }
-
-protected:
-  Biquad m_stage[Stages];
+  Biquad m_stages[Stages];
 };
 
 //------------------------------------------------------------------------------

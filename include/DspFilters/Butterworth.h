@@ -35,7 +35,7 @@ public:
 }
 
 template <int MaxPoles>
-class ButterworthLowPass : public PoleZeroDesign <MaxPoles>
+class ButterLowPassDesign : public PoleZeroDesign <MaxPoles>
 {
 public:
   const std::string getName () const
@@ -62,7 +62,7 @@ public:
 };
 
 template <int MaxPoles>
-class ButterworthHighPass : public PoleZeroDesign <MaxPoles>
+class ButterHighPassDesign : public PoleZeroDesign <MaxPoles>
 {
 public:
   const std::string getName () const
@@ -89,7 +89,7 @@ public:
 };
 
 template <int MaxPoles>
-class ButterworthBandPass : public PoleZeroDesign <MaxPoles>
+class ButterBandPassDesign : public PoleZeroDesign <MaxPoles>
 {
 public:
   const std::string getName () const
@@ -117,7 +117,7 @@ public:
 };
 
 template <int MaxPoles>
-class ButterworthLowShelf : public PoleZeroDesign <MaxPoles>
+class ButterLowShelfDesign : public PoleZeroDesign <MaxPoles>
 {
 public:
   const std::string getName () const

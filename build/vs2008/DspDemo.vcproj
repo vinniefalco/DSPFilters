@@ -427,6 +427,10 @@
 		<Filter
 			Name="DspFilters"
 			>
+			<File
+				RelativePath="..\..\ToDo.txt"
+				>
+			</File>
 			<Filter
 				Name="include"
 				>

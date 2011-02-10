@@ -3,6 +3,7 @@
 
 #include "DspFilters/Common.h"
 #include "DspFilters/MathSupplement.h"
+#include "DspFilters/State.h"
 
 namespace Dsp {
 
@@ -48,6 +49,15 @@ struct PoleZeros
   std::vector<complex_t> zeros;
 };
 
+//------------------------------------------------------------------------------
+
+// Base for all designs that use a biquad
+class BiquadDesign : public Biquad
+{
+public:
+  const PoleZeros getPoleZeros ();
+};
+
 /*
  * Abstract polymorphic filter.
  *
@@ -56,8 +66,6 @@ class Filter
 {
 public:
   virtual ~Filter();
-
-  //virtual Filter* clone () = 0;
 
   virtual const std::string getName () const = 0;
 
@@ -110,15 +118,15 @@ private:
  * polymorphism.
  *
  */
-template <class DesignType,
-          class ChannelsStateType = detail::NullChannelsState>
-class FilterType : public Filter
+
+namespace detail {
+
+// This wraps up the design independent of the channel
+// count to reduce the number of template instantiations.
+template <class DesignType>
+class FilterBase : public Filter
 {
 public:
-  FilterType ()
-  {
-  }
-
   const std::string getName () const
   {
     return m_design.getName();
@@ -149,6 +157,28 @@ public:
     return m_design.response (normalizedFrequency);
   }
 
+protected:
+  void doSetParameters (const Parameters& parameters)
+  {
+    m_design.setParameters (parameters);
+  }
+
+protected:
+  DesignType m_design;
+};
+
+}
+
+template <class DesignType,
+          int Channels = 0,
+          class StateType = DirectFormI>
+class FilterType : public detail::FilterBase <DesignType>
+{
+public:
+  FilterType ()
+  {
+  }
+
   int getNumChannels()
   {
     return m_state.getNumChannels();
@@ -170,14 +200,7 @@ public:
   }
 
 protected:
-  void doSetParameters (const Parameters& parameters)
-  {
-    m_design.setParameters (parameters);
-  }
-
-protected:
-  DesignType m_design;
-  ChannelsStateType m_state;
+  ChannelsState <Channels, StateType> m_state;
 };
 
 }

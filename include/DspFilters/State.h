@@ -126,41 +126,11 @@ private:
 
 //------------------------------------------------------------------------------
 
-namespace detail {
-
-// This is for filters with no state information (i.e. cannot be used to
-// process samples). Other than this limitation, you can still calculate
-// the magnitude response, pole zero chart, etc...
-class NullChannelsState
-{
-public:
-  const int getNumChannels() const
-  {
-    return 0;
-  }
-
-  void reset ()
-  {
-  }
-
-  template <class FilterType, typename Sample>
-  void process (int numSamples,
-                Sample* const* arrayOfChannels,
-                FilterType& filter)
-  {
-    assert (0);
-  }
-};
-
-}
-
 // Holds an array of states suitable for multi-channel processing
 template <int Channels, class StateType = DirectFormI>
 class ChannelsState
 {
 public:
-  typedef typename StateType state_t;
-
   const int getNumChannels() const
   {
     return Channels;
@@ -189,6 +159,37 @@ public:
 
 private:
   StateType m_state[Channels];
+};
+
+// Empty state, can't process anything
+template <>
+class ChannelsState <0>
+{
+public:
+  const int getNumChannels() const
+  {
+    return 0;
+  }
+
+  void reset ()
+  {
+    assert (0);
+  }
+
+  /*
+  StateType& operator[] (int index)
+  {
+    assert(0);
+  }
+  */
+
+  template <class FilterType, typename Sample>
+  void process (int numSamples,
+                Sample* const* arrayOfChannels,
+                FilterType& filter)
+  {
+    assert (0);
+  }
 };
 
 //------------------------------------------------------------------------------

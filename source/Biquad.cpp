@@ -165,15 +165,4 @@ void Biquad::setupIdentity ()
 
 //------------------------------------------------------------------------------
 
-const PoleZeros BiquadDesign::getPoleZeros ()
-{
-  PoleZeroForm pzf (*this);
-  PoleZeros pz;
-  pz.poles.push_back (pzf.pole[0]);
-  pz.poles.push_back (pzf.pole[1]);
-  pz.zeros.push_back (pzf.zero[0]);
-  pz.zeros.push_back (pzf.zero[1]);
-  return pz;
-}
-
 }

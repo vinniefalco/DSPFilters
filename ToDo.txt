@@ -1,0 +1,1 @@
+- spread scale factor between all stages in a Cascade

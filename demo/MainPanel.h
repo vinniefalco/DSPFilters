@@ -40,11 +40,8 @@ public:
   void menuItemSelected (int menuItemID, int topLevelMenuIndex);
 
 private:
-  template <class AudioFilterType>
-  void createFilters (int familyId,
-                      int typeId,
-                      Dsp::Filter** pFilter,
-                      Dsp::Filter** pAudioFilter);
+  template <class DesignType>
+  void createSmoothedFilter (Dsp::Filter** pFilter, Dsp::Filter** pAudioFilter);
 
 private:
   ListenerList<FilterListener> m_listeners;
