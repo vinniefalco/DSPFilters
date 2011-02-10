@@ -47,7 +47,7 @@ const ParameterInfo RBJDesignTypeII::getParameterInfo (int index) const
     break;
   
   case 1:
-    info.szLabel = "bw";
+    info.szLabel = "BW";
     info.szName = "Bandwidth";
     info.szUnits= "Octaves";
     info.minValue = 0.01;
@@ -74,7 +74,7 @@ const ParameterInfo RBJDesignTypeIII::getParameterInfo (int index) const
     break;
   
   case 1:
-    info.szLabel = "gain";
+    info.szLabel = "Gain";
     info.szName = "Gain";
     info.szUnits= "dB";
     info.minValue = -12;
@@ -83,7 +83,7 @@ const ParameterInfo RBJDesignTypeIII::getParameterInfo (int index) const
     break;
 
   case 2:
-    info.szLabel = "slope";
+    info.szLabel = "Slope";
     info.szName = "Slope";
     info.szUnits= "";
     info.minValue = 0.01;
@@ -315,6 +315,7 @@ void RBJBandShelfDesign::setup (double normalizedCenterFrequency,
   double cs = cos(w0);
   double sn = sin(w0);
   double AL = sn * sinh( doubleLn2/2 * bandWidth * w0/sn );
+  assert (!isnan (AL));
   double b0 =  1 + AL * A;
   double b1 = -2 * cs;
   double b2 =  1 - AL * A;
@@ -350,146 +351,5 @@ void RBJAllPassDesign::setup (double normalizedFrequency, double q)
   double a2 =  1 - AL;
   setCoefficients (a0, a1, a2, b0, b1, b2);
 }
-
-
-
-
-
-
-
-#if 0  
-
-const Filter::ParameterInfo RBJBandPass1::getParameterInfo (int index) const
-{
-  ParameterInfo info;
-  switch (index)
-  {
-  case 0:
-    info.szLabel = "Freq";
-    info.szName = "Frequency";
-    info.szUnits= "Hz";
-    info.minValue = 10./44100;
-    info.maxValue = 22040./44100;
-    info.defaultValue = 0.25;
-    break;
-  
-  case 1:
-    info.szLabel = "bw";
-    info.szName = "Bandwidth";
-    info.szUnits= "Octaves";
-    info.minValue = 0.01;
-    info.maxValue = 8;
-    info.defaultValue = 1;
-    break;
-  }
-
-  return info;
-}
-
-void RBJBandPass1::setParameters (const Parameters& parameters)
-{
-  m_parameters = parameters;
-  setupBandPass1 (m_parameters[0], m_parameters[1]);
-}
-
-//------------------------------------------------------------------------------
-
-const std::string RBJBandStop::getName () const
-{
-  return "RBJ Band Stop";
-}
-
-int RBJBandStop::getNumParameters () const
-{
-  return 2;
-}
-
-const Filter::ParameterInfo RBJBandStop::getParameterInfo (int index) const
-{
-  ParameterInfo info;
-  switch (index)
-  {
-  case 0:
-    info.szLabel = "Freq";
-    info.szName = "Frequency";
-    info.szUnits= "Hz";
-    info.minValue = 10./44100;
-    info.maxValue = 22040./44100;
-    info.defaultValue = 0.25;
-    break;
-  
-  case 1:
-    info.szLabel = "bw";
-    info.szName = "Bandwidth";
-    info.szUnits= "Octaves";
-    info.minValue = 0.01;
-    info.maxValue = 8;
-    info.defaultValue = 1;
-    break;
-  }
-
-  return info;
-}
-
-void RBJBandStop::setParameters (const Parameters& parameters)
-{
-  m_parameters = parameters;
-  setupBandStop (m_parameters[0], m_parameters[1]);
-}
-
-//------------------------------------------------------------------------------
-
-const std::string RBJLowShelf::getName () const
-{
-  return "RBJ Low Shelf";
-}
-
-int RBJLowShelf::getNumParameters () const
-{
-  return 3;
-}
-
-const Filter::ParameterInfo RBJLowShelf::getParameterInfo (int index) const
-{
-  ParameterInfo info;
-  switch (index)
-  {
-  case 0:
-    info.szLabel = "Freq";
-    info.szName = "Frequency";
-    info.szUnits= "Hz";
-    info.minValue = 10./44100;
-    info.maxValue = 22040./44100;
-    info.defaultValue = 0.25;
-    break;
-  
-  case 1:
-    info.szLabel = "gain";
-    info.szName = "Gain";
-    info.szUnits= "dB";
-    info.minValue = -12;
-    info.maxValue = 12;
-    info.defaultValue = 0;
-    break;
-
-  case 2:
-    info.szLabel = "slope";
-    info.szName = "Slope";
-    info.szUnits= "";
-    info.minValue = 0.01;
-    info.maxValue = 4;
-    info.defaultValue = 1;
-    break;
-  }
-
-  return info;
-}
-
-void RBJLowShelf::setParameters (const Parameters& parameters)
-{
-  m_parameters = parameters;
-  setupLowShelf (m_parameters[0], m_parameters[1], m_parameters[2]);
-}
-#endif
 
 }

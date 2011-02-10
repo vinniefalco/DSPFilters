@@ -2,7 +2,6 @@
 #define DSPFILTERS_BIQUAD_H
 
 #include "DspFilters/Common.h"
-#include "DspFilters/Filter.h"
 #include "DspFilters/MathSupplement.h"
 
 namespace Dsp {
@@ -13,7 +12,26 @@ namespace Dsp {
  *
  */
 
-class Biquad
+namespace detail {
+
+// Biquad filter designs derive from this class instaed, in order
+// to restrict callers from interfering with the coefficients.
+class BiquadBase
+{
+public:
+
+protected:
+  double m_a0;
+  double m_a1;
+  double m_a2;
+  double m_b1;
+  double m_b2;
+  double m_b0;
+};
+
+}
+
+class Biquad : public detail::BiquadBase
 {
 public:
   // Expresses the biquad as a pair of pole/zeros, with gain
@@ -28,6 +46,9 @@ public:
     complex_t zero[2];
     double gain;
   };
+
+  template <class StateType>
+  struct State : StateType { };
 
 public:
   Biquad ();
@@ -134,26 +155,6 @@ public:
 
   // Set up the identity filter (i.e. pass input to output unaffected)
   void setupIdentity ();
-
-private:
-  //
-
-  double m_a1;
-  double m_a2;
-  double m_b1;
-  double m_b2;
-
-  double m_a0;
-  double m_b0;
-};
-
-//------------------------------------------------------------------------------
-
-// Base for all designs that use a biquad
-class BiquadDesign : public Biquad
-{
-public:
-  const PoleZeros getPoleZeros ();
 };
 
 }

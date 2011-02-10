@@ -11,8 +11,12 @@ namespace Dsp {
  *
  */
 template <class DesignType,
-          class StateType>
-class SmoothedFilter : public FilterType <DesignType, StateType>
+          int Channels,
+          class StateType = DirectFormI>
+class SmoothedFilter
+  : public FilterType <DesignType,
+                       Channels,
+                       typename DesignType::State <StateType> >
 {
 public:
   SmoothedFilter (int transitionSamples)

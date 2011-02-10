@@ -142,7 +142,7 @@ public:
       break;
 
     case 3:
-      info.szLabel = "bW";
+      info.szLabel = "BW";
       info.szName = "Band Width";
       info.szUnits= "Hz";
       info.minValue = 0;
