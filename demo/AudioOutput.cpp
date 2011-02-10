@@ -5,27 +5,10 @@
 AudioOutput::AudioOutput()
   : m_audioDeviceManager (new AudioDeviceManager)
   , m_device (0)
+  , m_resampler (0)
+  , m_tempo (1)
 {
-  // Format Reader
-  {
-    WavAudioFormat waf;
-    m_formatReader = waf.createReaderFor (
-      new MemoryInputStream (binaries::amenbreakloop_wav,
-        binaries::amenbreakloop_wavSize,
-        false),
-      true);
-  }
-
-  // Format Reader AudioSource
-  {
-    m_formatReaderSource = new AudioFormatReaderSource (m_formatReader, true);
-    m_formatReaderSource->setLooping (true);
-  }
-
-  // Filtering AudioSource
-  {
-    m_filteringAudioSource = new FilteringAudioSource (m_formatReaderSource);
-  }
+  m_filteringAudioSource = new FilteringAudioSource ();
 
   // set up audio device
   {
@@ -58,6 +41,17 @@ AudioOutput::~AudioOutput()
   m_audioDeviceManager = 0;
 }
 
+void AudioOutput::setSource (AudioSource* source)
+{
+  ResamplingAudioSource* resampler = new ResamplingAudioSource (source, true);
+  m_queue.call (std::tr1::bind (&AudioOutput::doSetSource, this, resampler));
+}
+
+void AudioOutput::setTempo (float tempo)
+{
+  m_queue.call (std::tr1::bind (&AudioOutput::doSetTempo, this, tempo));
+}
+
 void AudioOutput::setFilter (Dsp::Filter* filter)
 {
   m_queue.call (std::tr1::bind (&AudioOutput::doSetFilter, this, filter));
@@ -66,6 +60,27 @@ void AudioOutput::setFilter (Dsp::Filter* filter)
 void AudioOutput::setFilterParameters (Dsp::Parameters parameters)
 {
   m_queue.call (std::tr1::bind (&AudioOutput::doSetFilterParameters, this, parameters));
+}
+
+void AudioOutput::updateResampler ()
+{
+  if (m_device != 0 && m_resampler != 0)
+  {
+    m_resampler->setResamplingRatio (m_tempo);
+  }
+}
+
+void AudioOutput::doSetTempo (float tempo)
+{
+  m_tempo = tempo;
+  updateResampler ();
+}
+
+void AudioOutput::doSetSource (ResamplingAudioSource* source)
+{
+  m_resampler = source;
+  m_filteringAudioSource->setSource (source);
+  updateResampler ();
 }
 
 void AudioOutput::doSetFilter (Dsp::Filter* filter)
@@ -87,6 +102,11 @@ void AudioOutput::audioDeviceAboutToStart (AudioIODevice* device)
 {
   m_queue.open ();
   m_device = device;
+
+  updateResampler ();
+
+  m_filteringAudioSource->prepareToPlay (m_device->getCurrentBufferSizeSamples(),
+                                         m_device->getCurrentSampleRate());
 }
 
 void AudioOutput::audioDeviceIOCallback (const float** inputChannelData,
@@ -108,6 +128,7 @@ void AudioOutput::audioDeviceIOCallback (const float** inputChannelData,
 
 void AudioOutput::audioDeviceStopped ()
 {
+  m_filteringAudioSource->releaseResources ();
   m_queue.close ();
   m_device = 0;
 }

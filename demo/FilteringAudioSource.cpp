@@ -1,8 +1,10 @@
 #include "Common.h"
 #include "FilteringAudioSource.h"
 
-FilteringAudioSource::FilteringAudioSource (AudioSource* source)
-  : m_source (source)
+FilteringAudioSource::FilteringAudioSource ()
+  : m_samplesPerBlockExpected (-1)
+  , m_sampleRate (-1)
+  , m_source (0)
 {
 }
 
@@ -12,6 +14,14 @@ FilteringAudioSource::~FilteringAudioSource()
 
 // Caller is responsible for synchronization.
 // This is the proper way to do it.
+void FilteringAudioSource::setSource (AudioSource* source)
+{
+  m_source = source;
+  if (m_sampleRate != -1)
+    m_source->prepareToPlay (m_samplesPerBlockExpected, m_sampleRate);
+}
+
+// Caller is responsible for synchronization.
 void FilteringAudioSource::setFilter (Dsp::Filter* filter)
 {
   m_filter = filter;
@@ -30,7 +40,10 @@ void FilteringAudioSource::setFilterParameters (Dsp::Parameters parameters)
 void FilteringAudioSource::prepareToPlay (int samplesPerBlockExpected,
                                           double sampleRate)
 {
-  m_source->prepareToPlay (samplesPerBlockExpected, sampleRate);
+  m_samplesPerBlockExpected = samplesPerBlockExpected;
+  m_sampleRate = sampleRate;
+  if (m_source)
+    m_source->prepareToPlay (samplesPerBlockExpected, sampleRate);
 }
 
 void FilteringAudioSource::releaseResources()
@@ -40,9 +53,16 @@ void FilteringAudioSource::releaseResources()
 
 void FilteringAudioSource::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill)
 {
-  m_source->getNextAudioBlock (bufferToFill);
-
   jassert (bufferToFill.buffer->getNumChannels() == 2);
+
+  if (m_source)
+  {
+    m_source->getNextAudioBlock (bufferToFill);
+  }
+  else
+  {
+    bufferToFill.clearActiveBufferRegion ();
+  }
 
   if (m_filter)
   {

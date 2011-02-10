@@ -255,6 +255,14 @@
 				RelativePath="..\..\demo\MainWindow.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\demo\NoiseAudioSource.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\demo\NoiseAudioSource.h"
+				>
+			</File>
 			<Filter
 				Name="Charts"
 				>

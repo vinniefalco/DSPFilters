@@ -1,4 +1,5 @@
 #include "Common.h"
+#include "binaries.h"
 #include "BrickWallChart.h"
 #include "CpuMeter.h"
 #include "CustomSlider.h"
@@ -7,6 +8,7 @@
 #include "GroupDelayChart.h"
 #include "MainApp.h"
 #include "MainPanel.h"
+#include "NoiseAudioSource.h"
 #include "PhaseChart.h"
 #include "PoleZeroChart.h"
 #include "StepResponseChart.h"
@@ -54,6 +56,20 @@ MainPanel::MainPanel()
   x = this->getChildComponent (this->getNumChildComponents() - 1)->getBounds().getRight() + gap;
 
   {
+    ComboBox* c = new ComboBox;
+    c->setBounds (x, y, 120, 24);
+    c->addItem ("Amen Break", 1);
+    c->addItem ("White Noise", 2);
+    c->addItem ("Sine Wave (440Hz)", 3);
+    addToLayout (c, anchorTopLeft);
+    addAndMakeVisible (c);
+    m_menuAudio = c;    
+    c->addListener (this);
+  }
+
+  x = this->getChildComponent (this->getNumChildComponents() - 1)->getBounds().getRight() + gap;
+
+  {
     CpuMeter* c = new CpuMeter (MainApp::getInstance().getAudioOutput().getAudioDeviceManager());
     c->setBounds (w - 80 - gap, y, 80, 24);
     addToLayout (c, anchorTopRight);
@@ -63,9 +79,44 @@ MainPanel::MainPanel()
   y = this->getChildComponent (this->getNumChildComponents()-1)->getBounds().getBottom() + gap;
   x = x0;
 
+  x = w - gap;
+
+  const int hfc = 80;
+
+  {
+    Slider* c = new Slider;
+    c->setBounds (x - 20, y, 20, hfc);
+    c->setSliderStyle (Slider::LinearVertical);
+    c->setTextBoxStyle (Slider::NoTextBox, true, 0, 0);
+    c->setRange (0, 1);
+    c->setValue (1);
+    addAndMakeVisible (c);
+    addToLayout (c, anchorTopRight);
+    c->addListener (this);
+    m_volumeSlider = c;
+    
+  }
+
+  x = this->getChildComponent (this->getNumChildComponents() - 1)->getBounds().getX() - gap;
+ 
+  {
+    Slider* c = new Slider;
+    c->setBounds (x - 20, y, 20, hfc);
+    c->setSliderStyle (Slider::LinearVertical);
+    c->setTextBoxStyle (Slider::NoTextBox, true, 0, 0);
+    c->setRange (-2, 2);
+    c->setValue (0);
+    addAndMakeVisible (c);
+    addToLayout (c, anchorTopRight);
+    c->addListener (this);
+    m_tempoSlider = c;
+  }
+
+  x = this->getChildComponent (this->getNumChildComponents() - 1)->getBounds().getX() - gap;
+ 
   {
     FilterControls* c = new FilterControls (m_listeners);
-    c->setBounds (x, y, w - (x + gap), 80);
+    c->setBounds (x0, y, x - x0, hfc);
     addToLayout (c, anchorTopLeft, anchorTopRight);
     addAndMakeVisible (c);
     m_listeners.add (c);
@@ -84,6 +135,7 @@ MainPanel::MainPanel()
 	activateLayout();
 
   m_menuFamily->setSelectedId (1);
+  m_menuAudio->setSelectedId (1);
 }
 
 MainPanel::~MainPanel()
@@ -386,8 +438,59 @@ void MainPanel::setFilter (int familyId, int typeId)
   }
 }
 
+void MainPanel::setAudio (int audioId)
+{
+  AudioSource* source = 0;
+
+  switch (audioId)
+  {
+  case 1: // Amen Break
+    {
+      WavAudioFormat waf;
+      AudioFormatReader* afr = waf.createReaderFor (
+        new MemoryInputStream (binaries::amenbreakloop_wav,
+          binaries::amenbreakloop_wavSize,
+          false),
+        true);
+
+      AudioFormatReaderSource* afrs = new AudioFormatReaderSource (afr, true);
+      afrs->setLooping (true);
+
+      source = afrs;
+    }
+    break;
+
+  case 2: // White Noise
+    source = new NoiseAudioSource;
+    break;
+
+  case 3: // sine wave
+    {
+      ToneGeneratorAudioSource* tgas = new ToneGeneratorAudioSource ();
+      tgas->setFrequency (440);
+      tgas->setAmplitude (1.f);
+      source = tgas;
+    }
+    break;
+  };
+
+  MainApp::getInstance().getAudioOutput().setSource (source);
+}
+
 void MainPanel::buttonClicked (Button* ctrl)
 {
+}
+
+void MainPanel::sliderValueChanged (Slider* ctrl)
+{
+  if (ctrl == m_volumeSlider)
+  {
+  }
+  else if (ctrl == m_tempoSlider)
+  {
+    const float tempo = pow (1.2f, float(ctrl->getValue()));
+    MainApp::getInstance().getAudioOutput().setTempo (tempo);
+  }
 }
 
 void MainPanel::comboBoxChanged (ComboBox* ctrl)
@@ -414,6 +517,10 @@ void MainPanel::comboBoxChanged (ComboBox* ctrl)
     m_lastTypeId = m_menuType->getSelectedId();
 
     setFilter (m_menuFamily->getSelectedId(), m_lastTypeId);
+  }
+  else if (ctrl == m_menuAudio)
+  {
+    setAudio (ctrl->getSelectedId());
   }
 }
 

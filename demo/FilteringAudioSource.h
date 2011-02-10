@@ -12,9 +12,10 @@
 class FilteringAudioSource : public AudioSource
 {
 public:
-  FilteringAudioSource (AudioSource* source);
+  FilteringAudioSource ();
   ~FilteringAudioSource ();
 
+  void setSource (AudioSource* source);
   void setFilter (Dsp::Filter* filter);
 
   void setFilterParameters (Dsp::Parameters parameters);
@@ -27,6 +28,8 @@ public:
   void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill);
 
 private:
+  int m_samplesPerBlockExpected;
+  double m_sampleRate;
   ScopedPointer<AudioSource> m_source;
   ScopedPointer<Dsp::Filter> m_filter;
 };

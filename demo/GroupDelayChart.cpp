@@ -66,7 +66,7 @@ void GroupDelayChart::update ()
     for (int xi = 1; xi < r.getWidth(); ++xi )
     {
       const float x = xi / float(r.getWidth());
-      const float w = Dsp::doublePi * (x/4);
+      const float w = float (Dsp::doublePi * (x/2.));
       const float y = float (-std::abs(m_filter->response (w)) / w);
 
       if (xi == 1)
@@ -117,14 +117,14 @@ AffineTransform GroupDelayChart::calcTransform ()
   AffineTransform t;
 
   // scale x from 0..1 to 0..getWidth(), and flip vertical
-  t = AffineTransform::scale (r.getWidth(), -1.f);
+  t = AffineTransform::scale (float(r.getWidth()), -1.f);
 
   // scale y from -h..h to getHeight()/2
   const float h =3;
   t = t.scaled (1, r.getHeight() / (2.f * h));
 
   // translate to centre
-  t = t.translated (r.getX(), r.getCentreY());
+  t = t.translated (float(r.getX()), float(r.getCentreY()));
 
   return t;
 }

@@ -9,6 +9,7 @@ class MainPanel :
 	public Component,
   public MenuBarModel,
 	public ButtonListener,
+  public SliderListener,
 	public ComboBoxListener,
   public TopLevelResizableLayout,
   public FilterListener
@@ -26,7 +27,10 @@ public:
   void paint (Graphics& g);
 
   void setFilter (int familyId, int typeId);
+  void setAudio (int audioId);
+
   void buttonClicked (Button *ctrl);
+  void sliderValueChanged (Slider* ctrl);
   void comboBoxChanged (ComboBox* ctrl);
 
   void onFilterParameters ();
@@ -39,6 +43,10 @@ private:
   ListenerList<FilterListener> m_listeners;
   ComboBox* m_menuFamily;
   ComboBox* m_menuType;
+  ComboBox* m_menuAudio;
+  Slider* m_volumeSlider;
+  Slider* m_tempoSlider;
+
   int m_lastTypeId;
 
   ScopedPointer<Dsp::Filter> m_filter;

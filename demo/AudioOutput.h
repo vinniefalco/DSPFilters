@@ -20,10 +20,15 @@ public:
 
   AudioDeviceManager& getAudioDeviceManager();
 
+  void setSource (AudioSource* source);
+  void setTempo (float tempo);
   void setFilter (Dsp::Filter* filter);
   void setFilterParameters (Dsp::Parameters parameters);
 
 protected:
+  void updateResampler ();
+  void doSetSource (ResamplingAudioSource* source);
+  void doSetTempo (float tempo);
   void doSetFilter (Dsp::Filter* filter);
   void doSetFilterParameters (Dsp::Parameters parameters);
 
@@ -41,9 +46,9 @@ private:
   ScopedPointer<AudioDeviceManager> m_audioDeviceManager;
   ThreadQueue m_queue;
   AudioIODevice* m_device;
-  AudioFormatReader* m_formatReader;
-  AudioFormatReaderSource* m_formatReaderSource;
   ScopedPointer<FilteringAudioSource> m_filteringAudioSource;
+  ResamplingAudioSource* m_resampler;
+  float m_tempo;
 };
 
 #endif

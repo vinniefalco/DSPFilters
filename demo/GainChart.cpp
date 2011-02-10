@@ -81,9 +81,9 @@ void GainChart::update ()
     {
       float x = xi / float(r.getWidth());
       Dsp::complex_t c = m_filter->response (x/2);
-      float y = std::abs(c);
-      if (y < 1e-5)
-          y = 1e-5;
+      float y = float(std::abs(c));
+      if (y < 1e-5f)
+          y = 1e-5f;
       y = 20 * log10 (y);
 
       if (xi == 0)
@@ -95,7 +95,7 @@ void GainChart::update ()
     m_path.startNewSubPath (0, 0);
   }
 
-  m_maxDb = floor(m_path.getBounds().getBottom()+0.5);
+  m_maxDb = float(floor(m_path.getBounds().getBottom()+0.5));
 
   repaint();
 }
@@ -106,7 +106,7 @@ bool GainChart::drawDbLine (Graphics& g, int db, bool drawLabel)
 
   const Rectangle<int> bounds = getLocalBounds ();
   const Rectangle<int> r = bounds;
-  const int y = yToScreen (db);
+  const int y = yToScreen (float(db));
 
   if (y >= r.getY() && y < r.getBottom())
   {
@@ -138,19 +138,19 @@ AffineTransform GainChart::calcTransform ()
   AffineTransform t;
 
   // scale x from 0..1 to 0..getWidth(), and flip vertical
-  t = AffineTransform::scale (r.getWidth(), -1);
+  t = AffineTransform::scale (float(r.getWidth()), -1.f);
 
   // move y down so maxDb is at the top
   t = t.translated (0, maxDb);
 
   // scale y from gain to 0..1 bounds in r
-  t = t.scaled (1, 1./(maxDb - kMinDb));
+  t = t.scaled (1.f, 1.f/(maxDb - kMinDb));
 
   // scale y from 0..1 to getHeight()
-  t = t.scaled (1, r.getHeight());
+  t = t.scaled (1.f, float(r.getHeight()));
 
   // translate
-  t = t.translated (r.getX(), r.getY());
+  t = t.translated (float(r.getX()), float(r.getY()));
 
   return t;
 }

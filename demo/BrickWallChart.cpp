@@ -1,6 +1,8 @@
 #include "Common.h"
 #include "BrickWallChart.h"
 
+#define MARGIN 1.1f
+
 //------------------------------------------------------------------------------
 
 BrickWallChart::BrickWallChart ()
@@ -88,7 +90,7 @@ void BrickWallChart::update ()
   }
 
   float yh = m_path.getBounds().getHeight();
-  m_scale_y = (yh > 1) ? (1/yh) : 1;
+  m_scale_y = (yh > MARGIN) ? (1/yh) : (1/MARGIN);
 
   repaint();
 }
@@ -98,7 +100,19 @@ AffineTransform BrickWallChart::calcTransform ()
   const Rectangle<int> bounds = getLocalBounds ();
   const Rectangle<int> r = bounds.reduced (4, 4);
 
-  return AffineTransform::scale (
-    float(r.getWidth()), -float(r.getHeight()*m_scale_y)).
-    translated (float(r.getX()), float(r.getBottom()));
+  AffineTransform t;
+
+  // scale x from 0..1 to 0..getWidth(), and flip vertical
+  t = AffineTransform::scale (float(r.getWidth()), -1.f);
+
+  // scale y from gain to 0..1 bounds in r
+  t = t.scaled (1.f, m_scale_y);
+
+  // scale y from 0..1 to getHeight()
+  t = t.scaled (1.f, float(r.getHeight()));
+
+  // translate
+  t = t.translated (float(r.getX()), float(r.getBottom()));
+
+  return t;
 }
