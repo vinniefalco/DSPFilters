@@ -9,11 +9,11 @@ public:
 	FilterChart();
 	~FilterChart();
 
-	void SetFilter( const Dsp::PoleFilter *filter, const Spec &spec );
+	void SetFilter( const Dsp::PoleFilterOld *filter, const Spec &spec );
 	virtual void Recalculate( void )=0;
 
 protected:
-	const Dsp::PoleFilter *m_filter;
+	const Dsp::PoleFilterOld *m_filter;
 	const Spec *m_spec;
 
 	Colour m_cFrame;

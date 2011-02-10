@@ -472,9 +472,9 @@ void DemoPanel::SpecToCtrls( void )
 
 //------------------------------------------------------------------------------
 
-Dsp::PoleFilter *DemoPanel::SpecToFilter( const Spec &spec, Filters *filters )
+Dsp::PoleFilterOld *DemoPanel::SpecToFilter( const Spec &spec, Filters *filters )
 {
-	Dsp::PoleFilter *filter=0;
+	Dsp::PoleFilterOld *filter=0;
 
 	switch( spec.proto )
 	{

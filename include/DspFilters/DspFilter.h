@@ -941,7 +941,7 @@ struct Prototype : virtual Layout
 //--------------------------------------------------------------------------
 
 // Abstract digital pole filter base
-struct PoleFilter : CascadeFilter, virtual Layout
+struct PoleFilterOld : CascadeFilter, virtual Layout
 {
   virtual void Setup( const Spec& spec )=0;
 };
@@ -951,7 +951,7 @@ struct PoleFilter : CascadeFilter, virtual Layout
 // Component aggregate for a cascade filter that provides storage
 // for coefficients, history buffer, and processing capabilities.
 template<class Proto, class Trans, int maxorder, int channels>
-struct PoleFilterSpace : PoleFilter, LayoutSpace<maxorder>, CascadeSpace<maxorder>
+struct PoleFilterSpace : PoleFilterOld, LayoutSpace<maxorder>, CascadeSpace<maxorder>
 {
   PoleFilterSpace()
   {

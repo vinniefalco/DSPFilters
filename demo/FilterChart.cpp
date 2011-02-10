@@ -15,7 +15,7 @@ FilterChart::~FilterChart()
 {
 }
 
-void FilterChart::SetFilter( const Dsp::PoleFilter *filter, const Spec &spec )
+void FilterChart::SetFilter( const Dsp::PoleFilterOld *filter, const Spec &spec )
 {
 	m_filter=filter;
 	m_spec=&spec;

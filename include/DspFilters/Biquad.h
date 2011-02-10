@@ -52,13 +52,6 @@ public:
   public:
     DirectFormIState ();
 
-    /*
-    const int getNumChannels () const
-    {
-      return 1;
-    }
-    */
-
     void reset ();
 
     template <typename Sample>
@@ -95,13 +88,6 @@ public:
   {
   public:
     DirectFormIIState ();
-    
-    /*
-    const int getNumChannels () const
-    {
-      return 1;
-    }
-    */
 
     void reset ();
 

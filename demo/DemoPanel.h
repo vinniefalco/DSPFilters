@@ -117,7 +117,7 @@ private:
 private:
   void SpecDefaults( Spec *spec );
   void SpecToCtrls( void );
-  Dsp::PoleFilter *SpecToFilter( const Spec &spec, Filters *filters );
+  Dsp::PoleFilterOld *SpecToFilter( const Spec &spec, Filters *filters );
 
 private:
   void paint( Graphics &g );
@@ -133,7 +133,7 @@ private:
 
   Spec				m_spec;
   Filters				m_filters;
-  Dsp::PoleFilter *	m_filter;
+  Dsp::PoleFilterOld *	m_filter;
 };
 
 #endif

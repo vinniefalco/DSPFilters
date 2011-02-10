@@ -11,17 +11,17 @@ MainWindow::MainWindow ()
 {
   setResizable (true, false);
   
-#if 0
+#if 1
   DemoPanel* contentComponent = new DemoPanel;
-#else
-  MainPanel* contentComponent = new MainPanel;
-#endif
-
   setMenuBar (contentComponent);
   setContentComponent (contentComponent, true, true);
-
+#else
+  MainPanel* contentComponent = new MainPanel;
+  setMenuBar (contentComponent);
+  setContentComponent (contentComponent, true, true);
   contentComponent->setAsConstrainerFor (this);
   ContentComponentConstrainer::attachTo (this);
+#endif
 
   centreWithSize (getWidth(), getHeight());
   setVisible (true);

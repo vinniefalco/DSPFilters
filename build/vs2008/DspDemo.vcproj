@@ -479,6 +479,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\include\DspFilters\PoleFilter.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\include\DspFilters\RBJBiquad.h"
 					>
 				</File>
@@ -500,6 +504,10 @@
 				</File>
 				<File
 					RelativePath="..\..\source\Butterworth.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\Cascade.cpp"
 					>
 				</File>
 				<File
