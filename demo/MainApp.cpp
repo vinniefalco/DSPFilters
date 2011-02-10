@@ -1,4 +1,5 @@
 #include "MainApp.h"
+#include "SettingsWindow.h"
 
 MainApp* MainApp::s_app = 0;
 
@@ -86,11 +87,9 @@ bool MainApp::perform (const InvocationInfo& info)
   {
   case cmdSettings:
     {
-      /*
-      SettingsWindow* w = new SettingsWindow (*getCoreView());
+      SettingsWindow* w = new SettingsWindow;
       w->addToDesktop (w->getDesktopWindowStyleFlags());
       w->setVisible (true);
-      */
     }
     return true;
 

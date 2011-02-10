@@ -9,6 +9,8 @@ AudioOutput::AudioOutput()
   , m_gain (1)
   , m_gainNext (1)
   , m_tempo (1)
+  , m_tempoNext (1)
+  , m_tempoSamplesFade (0)
 {
   m_filteringAudioSource = new FilteringAudioSource ();
 
@@ -69,14 +71,6 @@ void AudioOutput::setFilterParameters (Dsp::Parameters parameters)
   m_queue.call (std::tr1::bind (&AudioOutput::doSetFilterParameters, this, parameters));
 }
 
-void AudioOutput::updateResampler ()
-{
-  if (m_device != 0 && m_resampler != 0)
-  {
-    m_resampler->setResamplingRatio (m_tempo);
-  }
-}
-
 void AudioOutput::doSetGain (float gain)
 {
   m_gainNext = gain;
@@ -84,15 +78,30 @@ void AudioOutput::doSetGain (float gain)
 
 void AudioOutput::doSetTempo (float tempo)
 {
-  m_tempo = tempo;
-  updateResampler ();
+  m_tempoNext = tempo;
+
+  if (m_device && m_resampler)
+  {
+    // fade over this many milliseconds
+    const int msFade = 50;
+
+    m_tempoSamplesFade = int((ceil(m_device->getCurrentSampleRate() * msFade) + 999) / 1000);
+    if (m_tempoSamplesFade < 2)
+        m_tempoSamplesFade = 2;
+  }
+  else
+  {
+    m_tempo = tempo;
+  }
 }
 
 void AudioOutput::doSetSource (ResamplingAudioSource* source)
 {
   m_resampler = source;
+  m_resampler->setResamplingRatio (m_tempo);
   m_filteringAudioSource->setSource (source);
-  updateResampler ();
+  m_filteringAudioSource->prepareToPlay (m_device->getCurrentBufferSizeSamples(),
+                                         m_device->getCurrentSampleRate());
 }
 
 void AudioOutput::doSetFilter (Dsp::Filter* filter)
@@ -115,8 +124,6 @@ void AudioOutput::audioDeviceAboutToStart (AudioIODevice* device)
   m_queue.open ();
   m_device = device;
 
-  updateResampler ();
-
   m_filteringAudioSource->prepareToPlay (m_device->getCurrentBufferSizeSamples(),
                                          m_device->getCurrentSampleRate());
 }
@@ -131,14 +138,54 @@ void AudioOutput::audioDeviceIOCallback (const float** inputChannelData,
 
   AudioSampleBuffer buffer (outputChannelData, numOutputChannels, numSamples);
   AudioSourceChannelInfo info;
+
   info.buffer = &buffer;
+
   info.startSample = 0;
   info.numSamples = numSamples;
+  if (m_tempoSamplesFade > 0)
+  {
+    // tempo fade
+    float dt = (m_tempoNext - m_tempo) / m_tempoSamplesFade;
+    while (info.numSamples > 0)
+    {
+      // smallest step sounds best but uses the most CPU
+      const int step = 1; // increase to reduce CPU usage
+      int amount = jmin (step, info.numSamples);
 
-  m_filteringAudioSource->getNextAudioBlock (info);
+      AudioSourceChannelInfo b;
+      b.buffer = &buffer;
+      b.startSample = info.startSample;
+      b.numSamples = amount;
+      m_resampler->setResamplingRatio (m_tempo);
+      m_filteringAudioSource->getNextAudioBlock (b);
 
+      // advance
+      m_tempo += dt * amount;
+      m_tempoSamplesFade -= amount;
+      info.startSample += amount;
+      info.numSamples -= amount;
+    }
+
+    if (m_tempoSamplesFade == 0)
+    {
+      m_tempo = m_tempoNext;
+      m_resampler->setResamplingRatio (m_tempo);
+    }
+  }
+
+  if (info.numSamples > 0)
+    m_filteringAudioSource->getNextAudioBlock (info);
+
+  // gain
+  info.startSample = 0;
+  info.numSamples = numSamples;
   for (int i = 0; i < buffer.getNumChannels(); ++i)
-    info.buffer->applyGainRamp (i, info.startSample, info.numSamples, m_gain, m_gainNext);
+    info.buffer->applyGainRamp (i,
+                                info.startSample,
+                                info.numSamples,
+                                m_gain,
+                                m_gainNext);
   m_gain = m_gainNext;
 }
 

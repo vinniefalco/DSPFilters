@@ -27,7 +27,6 @@ public:
   void setFilterParameters (Dsp::Parameters parameters);
 
 protected:
-  void updateResampler ();
   void doSetGain (float gain);
   void doSetTempo (float tempo);
   void doSetSource (ResamplingAudioSource* source);
@@ -52,7 +51,9 @@ private:
   ResamplingAudioSource* m_resampler;
   float m_gain;
   float m_gainNext;
+  int m_tempoSamplesFade;
   float m_tempo;
+  float m_tempoNext;
 };
 
 #endif

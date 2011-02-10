@@ -184,23 +184,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\demo\binaries.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\demo\binaries.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\demo\Common.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\demo\CpuMeter.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\demo\CpuMeter.h"
 				>
 			</File>
 			<File
@@ -256,11 +240,19 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\demo\NoiseAudioSource.cpp"
+				RelativePath="..\..\demo\SettingsPanel.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\demo\NoiseAudioSource.h"
+				RelativePath="..\..\demo\SettingsPanel.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\demo\SettingsWindow.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\demo\SettingsWindow.h"
 				>
 			</File>
 			<Filter
@@ -375,7 +367,31 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\demo\CpuMeter.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\CpuMeter.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\demo\CustomSlider.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\NoiseAudioSource.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\NoiseAudioSource.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\ResamplingReader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\ResamplingReader.h"
 					>
 				</File>
 				<File
@@ -392,6 +408,18 @@
 				</File>
 				<File
 					RelativePath="..\..\demo\ThreadQueue.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="binaries"
+				>
+				<File
+					RelativePath="..\..\demo\binaries.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\binaries.h"
 					>
 				</File>
 			</Filter>
@@ -500,18 +528,26 @@
 				</File>
 			</Filter>
 		</Filter>
-		<File
-			RelativePath="..\..\demo\juce_amalgamated.cpp"
+		<Filter
+			Name="Juce"
 			>
-		</File>
-		<File
-			RelativePath="..\..\demo\juce_amalgamated.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\demo\juce_amalgamated.mm"
-			>
-		</File>
+			<File
+				RelativePath="..\..\demo\juce_amalgamated.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\demo\juce_amalgamated.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\demo\juce_amalgamated.mm"
+				>
+			</File>
+			<File
+				RelativePath="..\..\demo\juce_Config.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

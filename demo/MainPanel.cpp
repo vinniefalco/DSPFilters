@@ -11,6 +11,7 @@
 #include "NoiseAudioSource.h"
 #include "PhaseChart.h"
 #include "PoleZeroChart.h"
+#include "ResamplingReader.h"
 #include "StepResponseChart.h"
 
 MainPanel::MainPanel()
@@ -453,10 +454,7 @@ void MainPanel::setAudio (int audioId)
           false),
         true);
 
-      AudioFormatReaderSource* afrs = new AudioFormatReaderSource (afr, true);
-      afrs->setLooping (true);
-
-      source = afrs;
+      source = new ResamplingReader (afr);
     }
     break;
 
@@ -485,7 +483,7 @@ void MainPanel::sliderValueChanged (Slider* ctrl)
 {
   if (ctrl == m_volumeSlider)
   {
-    MainApp::getInstance().getAudioOutput().setGain (ctrl->getValue());
+    MainApp::getInstance().getAudioOutput().setGain (float(ctrl->getValue()));
   }
   else if (ctrl == m_tempoSlider)
   {
