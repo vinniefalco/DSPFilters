@@ -67,12 +67,12 @@ public:
     const Biquad* stage = m_stage;
     for (int i = Stages; --i >=0; ++stage)
     {
-      complex_t ct (stage->m_b0/stage->m_a0);
+      complex_t ct (stage->getB0()/stage->getA0());
       complex_t cb (1);
-      ct = addmul (ct, stage->m_b1/stage->m_a0, czn1);
-      ct = addmul (ct, stage->m_b2/stage->m_a0, czn2);
-      cb = addmul (cb, stage->m_a1/stage->m_a0, czn1);
-      cb = addmul (cb, stage->m_a2/stage->m_a0, czn2);
+      ct = addmul (ct, stage->getB1()/stage->getA0(), czn1);
+      ct = addmul (ct, stage->getB2()/stage->getA0(), czn2);
+      cb = addmul (cb, stage->getA1()/stage->getA0(), czn1);
+      cb = addmul (cb, stage->getA2()/stage->getA0(), czn2);
       ch   *= ct;
       cbot *= cb;
     }

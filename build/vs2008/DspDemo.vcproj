@@ -487,6 +487,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\include\DspFilters\SmoothedFilter.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\DspFilters\State.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\include\DspFilters\Utilities.h"
 					>
 				</File>
@@ -532,6 +540,10 @@
 				</File>
 				<File
 					RelativePath="..\..\source\RBJBiquad.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\State.cpp"
 					>
 				</File>
 			</Filter>

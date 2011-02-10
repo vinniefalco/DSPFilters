@@ -11,7 +11,7 @@ MainWindow::MainWindow ()
 {
   setResizable (true, false);
   
-#if 1
+#if 0
   DemoPanel* contentComponent = new DemoPanel;
   setMenuBar (contentComponent);
   setContentComponent (contentComponent, true, true);

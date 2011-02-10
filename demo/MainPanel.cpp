@@ -307,10 +307,25 @@ void MainPanel::paint (Graphics& g)
 
 //------------------------------------------------------------------------------
 
+template <class AudioFilterType>
+void MainPanel::createFilters (int familyId,
+                               int typeId,
+                               Dsp::Filter** pFilter,
+                               Dsp::Filter** pAudioFilter)
+{
+  Dsp::Filter* f1 = 0;
+  Dsp::Filter* f2 = 0;
+
+  *pFilter = f1;
+  *pAudioFilter = f2;
+}
+
 void MainPanel::setFilter (int familyId, int typeId)
 {
   Dsp::Filter* f = 0;
   Dsp::Filter* fo = 0;
+
+  createFilters<Dsp::FilterType <Dsp::RBJLowPassDesign> > (familyId, typeId, &f, &fo);
 
   //
   // RBJ
@@ -322,55 +337,55 @@ void MainPanel::setFilter (int familyId, int typeId)
     case 1:
       f  = new Dsp::FilterType     <Dsp::RBJLowPassDesign>;
       fo = new Dsp::SmoothedFilter <Dsp::RBJLowPassDesign,
-        Dsp::ChannelsState <2,      Dsp::RBJLowPassDesign::DirectFormIState> > (1024);
+        Dsp::ChannelsState <2> > (1024);
       break;
 
     case 2:
       f  = new Dsp::FilterType <Dsp::RBJHighPassDesign>;
       fo = new Dsp::SmoothedFilter <Dsp::RBJHighPassDesign,
-        Dsp::ChannelsState <2, Dsp::RBJHighPassDesign::DirectFormIState> > (1024);
+        Dsp::ChannelsState <2> > (1024);
       break;
 
     case 3:
       f  = new Dsp::FilterType <Dsp::RBJBandPass1Design>;
       fo = new Dsp::SmoothedFilter <Dsp::RBJBandPass1Design,
-        Dsp::ChannelsState <2, Dsp::RBJBandPass1Design::DirectFormIState> > (1024);
+        Dsp::ChannelsState <2> > (1024);
       break;
 
     case 4:
       f  = new Dsp::FilterType <Dsp::RBJBandPass2Design>;
       fo = new Dsp::SmoothedFilter <Dsp::RBJBandPass2Design,
-        Dsp::ChannelsState <2, Dsp::RBJBandPass2Design::DirectFormIState> > (1024);
+        Dsp::ChannelsState <2> > (1024);
       break;
 
     case 5:
       f  = new Dsp::FilterType <Dsp::RBJBandStopDesign>;
       fo = new Dsp::SmoothedFilter <Dsp::RBJBandStopDesign,
-        Dsp::ChannelsState <2, Dsp::RBJBandStopDesign::DirectFormIState> > (1024);
+        Dsp::ChannelsState <2> > (1024);
       break;
 
     case 6:
       f  = new Dsp::FilterType <Dsp::RBJLowShelfDesign>;
       fo = new Dsp::SmoothedFilter <Dsp::RBJLowShelfDesign,
-        Dsp::ChannelsState <2, Dsp::RBJLowShelfDesign::DirectFormIState> > (1024);
+        Dsp::ChannelsState <2> > (1024);
       break;
 
     case 7:
       f  = new Dsp::FilterType <Dsp::RBJHighShelfDesign>;
       fo = new Dsp::SmoothedFilter <Dsp::RBJHighShelfDesign,
-        Dsp::ChannelsState <2, Dsp::RBJHighShelfDesign::DirectFormIState> > (1024);
+        Dsp::ChannelsState <2> > (1024);
       break;
 
     case 8:
       f  = new Dsp::FilterType <Dsp::RBJBandShelfDesign>;
       fo = new Dsp::SmoothedFilter <Dsp::RBJBandShelfDesign,
-        Dsp::ChannelsState <2, Dsp::RBJBandShelfDesign::DirectFormIState> > (1024);
+        Dsp::ChannelsState <2> > (1024);
       break;
 
     case 9:
       f  = new Dsp::FilterType <Dsp::RBJAllPassDesign>;
       fo = new Dsp::SmoothedFilter <Dsp::RBJAllPassDesign,
-        Dsp::ChannelsState <2, Dsp::RBJAllPassDesign::DirectFormIState> > (1024);
+        Dsp::ChannelsState <2> > (1024);
       break;
     };
   }
@@ -382,45 +397,30 @@ void MainPanel::setFilter (int familyId, int typeId)
     switch (typeId)
     {
     case 1:
-      f  = new Dsp::FilterType <
-        Dsp::PoleZeroDesign <7,
-                             Dsp::detail::ButterworthLowPass,
-                             Dsp::detail::LowPassTransformation> >;
-      fo  = new Dsp::SmoothedFilter <
-        Dsp::PoleZeroDesign <7,
-                             Dsp::detail::ButterworthLowPass,
-                             Dsp::detail::LowPassTransformation>,
-        Dsp::ChannelsState <2,
-                            Dsp::Cascade <4>::State <
-                              Dsp::Biquad::DirectFormIState> > > (1024);
+      f  = new Dsp::FilterType <Dsp::ButterworthLowPass <50>>;
+
+      fo  = new Dsp::SmoothedFilter <Dsp::ButterworthLowPass <50>,
+                            Dsp::ChannelsState <2,
+                            Dsp::Cascade <25>::State <
+                            Dsp::DirectFormI> > > (1024);
       break;
     
     case 2:
-      f  = new Dsp::FilterType <
-        Dsp::PoleZeroDesign <3,
-                             Dsp::detail::ButterworthLowPass,
-                             Dsp::detail::HighPassTransformation> >;
-      fo  = new Dsp::SmoothedFilter <
-        Dsp::PoleZeroDesign <3,
-                             Dsp::detail::ButterworthLowPass,
-                             Dsp::detail::HighPassTransformation>,
-        Dsp::ChannelsState <2,
-                            Dsp::Cascade <2>::State <
-                              Dsp::Biquad::DirectFormIState> > > (1024);
+      f  = new Dsp::FilterType <Dsp::ButterworthHighPass <7>>;
+
+      fo  = new Dsp::SmoothedFilter <Dsp::ButterworthHighPass <7>,
+                            Dsp::ChannelsState <2,
+                            Dsp::Cascade <4>::State <
+                            Dsp::DirectFormI> > > (1024);
       break;
 
     case 6:
-      f  = new Dsp::FilterType <
-        Dsp::PoleZeroDesign <26,
-                             Dsp::detail::ButterworthLowShelf,
-                             Dsp::detail::LowPassTransformation> >;
-      fo  = new Dsp::SmoothedFilter <
-        Dsp::PoleZeroDesign <26,
-                             Dsp::detail::ButterworthLowShelf,
-                             Dsp::detail::LowPassTransformation>,
-        Dsp::ChannelsState <2,
-                            Dsp::Cascade <13>::State <
-                              Dsp::Biquad::DirectFormIState> > > (1024);
+      f  = new Dsp::FilterType <Dsp::ButterworthLowShelf <10>>;
+
+      fo  = new Dsp::SmoothedFilter <Dsp::ButterworthLowShelf <10>,
+                            Dsp::ChannelsState <2,
+                            Dsp::Cascade <5>::State <
+                            Dsp::DirectFormI> > > (1024);
       break;
     }
   }

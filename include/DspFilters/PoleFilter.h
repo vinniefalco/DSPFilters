@@ -15,30 +15,98 @@ namespace Dsp {
  *
  */
 
+namespace detail {
+
+// low pass to low pass transform
+class LowPassTransformation
+{
+private:
+  static inline void transform (const double k,
+                                complex_t& c,
+                                complex_t const& r)
+  {
+    if (r == infinity())
+    {
+      c = complex_t (-1, 0);
+    }
+    else
+    {
+      // frequency transform
+      c = r * k; 
+      // bilinear low pass transform
+      c = (1. + c) / (1. - c);
+    }
+  }
+
+public:
+  static void transform (int numPoles,
+                         double normalizedCornerFrequency,
+                         PoleZeroPair* resultArray,
+                         PoleZeroPair const* sourceArray);
+};
+
+// low pass to high pass transform
+class HighPassTransformation
+{
+private:
+  static inline void transform (const double k,
+                                complex_t& c,
+                                complex_t const& r)
+  {
+    if (r == infinity())
+    {
+      c = complex_t (1, 0);
+    }
+    else
+    {
+      // frequency transform
+      c = r * k; 
+      // bilinear high pass transform
+      c = - (1. + c) / (1. - c);
+    }
+  }
+
+public:
+  static void transform (int numPoles,
+                         double normalizedCornerFrequency,
+                         PoleZeroPair* resultArray,
+                         PoleZeroPair const* sourceArray);
+};
+
+// low pass to band pass transform
+class BandPassTransformation
+{
+private:
+
+public:
+  static void transform (int numPoles,
+                         double normalizedCornerFrequency,
+                         PoleZeroPair* resultArray,
+                         PoleZeroPair const* sourceArray)
+  {
+  }
+};
+
+}
+
+/*
 class PoleFilter
 {
 public:
 };
+*/
 
-template <int Poles,
-          class Prototype,
-          class Transformation>
+template <int Poles>
 class PoleZeroDesign : public CascadeDesign <(Poles+1)/2>
 {
 public:
   PoleZeroDesign ()
   {
-    Prototype::design (Poles, m_prototype);
-  }
-
-  const std::string getName () const
-  {
-    return "Pole Zero";
   }
 
   const int getNumParameters() const
   {
-    return 2;
+    return 4;
   }
 
   const ParameterInfo getParameterInfo (int index) const
@@ -59,24 +127,31 @@ public:
       info.szLabel = "Freq";
       info.szName = "Cutoff Frequency";
       info.szUnits= "Hz";
-      info.minValue = 1./44100;
-      info.maxValue = 22049./44100;
+      info.minValue = 10./44100;
+      info.maxValue = 22040./44100;
       info.defaultValue = 0.25;
+      break;
+
+    case 2:
+      info.szLabel = "Gain";
+      info.szName = "Gain";
+      info.szUnits= "dB";
+      info.minValue = -18;
+      info.maxValue = 18;
+      info.defaultValue = 0;
+      break;
+
+    case 3:
+      info.szLabel = "bW";
+      info.szName = "Band Width";
+      info.szUnits= "Hz";
+      info.minValue = 0;
+      info.maxValue = 0.4999;
+      info.defaultValue = .125;
       break;
     };
 
     return info;
-  }
-
-  void setParameters (const Parameters& parameters)
-  {
-    Transformation::transform (Poles,
-                               parameters[1],
-                               m_design,
-                               m_prototype);
-    const double w0 = doublePi;
-    setPoleZeros (Poles, m_design);
-    scale (1. / std::abs (response (w0)));    
   }
 
   const PoleZeros getPoleZeros ()
@@ -98,7 +173,7 @@ public:
     return pz;
   }
 
-private:
+protected:
   PoleZeroPair m_prototype[Poles]; // s-plane analog prototype
   PoleZeroPair m_design[Poles]; // z-plane digital mapping
 };

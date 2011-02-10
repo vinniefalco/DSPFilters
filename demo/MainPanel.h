@@ -40,6 +40,13 @@ public:
   void menuItemSelected (int menuItemID, int topLevelMenuIndex);
 
 private:
+  template <class AudioFilterType>
+  void createFilters (int familyId,
+                      int typeId,
+                      Dsp::Filter** pFilter,
+                      Dsp::Filter** pAudioFilter);
+
+private:
   ListenerList<FilterListener> m_listeners;
   ComboBox* m_menuFamily;
   ComboBox* m_menuType;

@@ -41,12 +41,23 @@ void CpuMeter::paint (Graphics& g)
 
   // value
   r = r.reduced (1, 1);
-  r.setWidth (int(r.getWidth() * m_value + 0.5));
-  if (m_value < 0.9)
-    g.setColour (Colours::olivedrab);
+  Colour c;
+  if (m_value > 0.95)
+    c = Colours::red;
+  else if (m_value > 0.85)
+    c = Colours::olivedrab.interpolatedWith (Colours::red, float(m_value - 0.85f));
   else
-    g.setColour (Colours::red);
-  g.fillRect (r);
+    c = Colours::olivedrab;
+
+  float w = float(r.getWidth() * m_value);
+  g.setColour (c);
+  g.fillRect (r.getX(), r.getY(), int(w), r.getHeight());
+  if (w != floor (w))
+  {
+    // anti-alias
+    g.setColour (c.withAlpha (w-floor(w)));
+    g.fillRect (r.getX() + int(w), r.getY(), 1, r.getHeight());
+  }
 }
 
 void CpuMeter::timerCallback ()
