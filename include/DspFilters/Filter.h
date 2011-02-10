@@ -286,8 +286,6 @@ public:
 
     // first handle any transition samples
     int remainingSamples = std::min (m_remainingSamples, numSamples);
-    if (remainingSamples < 0)
-        remainingSamples = 0;
 
     if (remainingSamples > 0)
     {
@@ -335,12 +333,10 @@ public:
 protected:
   void doSetParameters (const Parameters& parameters)
   {
-    FilterType::doSetParameters (parameters);
-
     if (m_remainingSamples >= 0)
     {
       if (m_remainingSamples == 0)
-        m_transitionParameters = parameters;
+        m_transitionParameters = getParameters();
       m_remainingSamples = m_transitionSamples;
     }
     else
@@ -349,6 +345,8 @@ protected:
       m_remainingSamples = 0;
       m_transitionParameters = parameters;
     }
+
+    FilterType::doSetParameters (parameters);
   }
 
 protected:
