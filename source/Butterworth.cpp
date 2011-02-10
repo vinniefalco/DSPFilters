@@ -27,9 +27,10 @@ void ButterworthLowPass::design (int numPoles, PoleZeroPair* pzArray)
   //m_normal.gain=1;
 }
 
-void ButterworthLowShelf::design (int numPoles, PoleZeroPair* pzArray)
+void ButterworthLowShelf::design (int numPoles,
+                                  double gainDb,
+                                  PoleZeroPair* pzArray)
 {
-  double gainDb = 24;
   const double n2 = numPoles * 2;
   const double g = pow (pow (10., gainDb/20), 1. / n2);
   const double gp = -1. / g;

@@ -1,9 +1,10 @@
-
 #include "DspFilters/Common.h"
 #include "DspFilters/MathSupplement.h"
 #include "DspFilters/Biquad.h"
 
 namespace Dsp {
+
+//------------------------------------------------------------------------------
 
 Biquad::PoleZeroForm::PoleZeroForm ()
 {
@@ -30,35 +31,6 @@ Biquad::PoleZeroForm::PoleZeroForm (const Biquad& s)
   }
 
   gain = s.m_b0;
-}
-
-//------------------------------------------------------------------------------
-
-Biquad::DirectFormIState::DirectFormIState()
-{
-  reset ();
-}
-
-void Biquad::DirectFormIState::reset ()
-{
-  m_x1 = 0;
-  m_x2 = 0;
-  m_y1 = 0;
-  m_y2 = 0;
-}
-
-//------------------------------------------------------------------------------
-
-Biquad::DirectFormIIState::DirectFormIIState()
-{
-  reset ();
-}
-
-void Biquad::DirectFormIIState::reset ()
-{
-  m_v0 = 0;
-  m_v1 = 0;
-  m_v2 = 0;
 }
 
 //------------------------------------------------------------------------------

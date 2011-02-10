@@ -20,72 +20,129 @@ namespace detail {
 class ButterworthLowPass
 {
 public:
-  static void design (const int numPoles, PoleZeroPair* pzArray);
+  static void design (const int numPoles,
+                      PoleZeroPair* pzArray);
 };
 
 class ButterworthLowShelf
 {
 public:
-  static void design (const int numPoles, PoleZeroPair* pzArray);
-};
-
-// low pass to low pass transform
-class LowPassTransformation
-{
-private:
-  static inline void transform (const double k,
-                                complex_t& c,
-                                complex_t const& r)
-  {
-    if (r == infinity())
-    {
-      c = complex_t (-1, 0);
-    }
-    else
-    {
-      // frequency transform
-      c = r * k; 
-      // bilinear low pass transform
-      c = (1. + c) / (1. - c);
-    }
-  }
-
-public:
-  static void transform (int numPoles,
-                         double normalizedCornerFrequency,
-                         PoleZeroPair* resultArray,
-                         PoleZeroPair const* sourceArray);
-};
-
-// low pass to high pass transform
-class HighPassTransformation
-{
-private:
-  static inline void transform (const double k,
-                                complex_t& c,
-                                complex_t const& r)
-  {
-    if (r == infinity())
-    {
-      c = complex_t (1, 0);
-    }
-    else
-    {
-      // frequency transform
-      c = r * k; 
-      // bilinear high pass transform
-      c = - (1. + c) / (1. - c);
-    }
-  }
-
-public:
-  static void transform (int numPoles,
-                         double normalizedCornerFrequency,
-                         PoleZeroPair* resultArray,
-                         PoleZeroPair const* sourceArray);
+  static void design (const int numPoles,
+                      double gainDb,
+                      PoleZeroPair* pzArray);
 };
 
 }
+
+template <int MaxPoles>
+class ButterworthLowPass : public PoleZeroDesign <MaxPoles>
+{
+public:
+  const std::string getName () const
+  {
+    return "Butterworth Low Pass";
+  }
+
+  void setup (double normalizedFrequency)
+  {
+    detail::ButterworthLowPass::design (MaxPoles, m_prototype);
+    detail::LowPassTransformation::transform (MaxPoles,
+                                              normalizedFrequency,
+                                              m_design,
+                                              m_prototype);
+    const double w0 = 0;
+    setPoleZeros (MaxPoles, m_design);
+    scale (1. / std::abs (response (w0/(2*doublePi))));    
+  }
+
+  void setParameters (const Parameters& params)
+  {
+    setup (params[1]);
+  }
+};
+
+template <int MaxPoles>
+class ButterworthHighPass : public PoleZeroDesign <MaxPoles>
+{
+public:
+  const std::string getName () const
+  {
+    return "Butterworth High Pass";
+  }
+
+  void setup (double normalizedFrequency)
+  {
+    detail::ButterworthLowPass::design (MaxPoles, m_prototype);
+    detail::HighPassTransformation::transform (MaxPoles,
+                                              normalizedFrequency,
+                                              m_design,
+                                              m_prototype);
+    const double w0 = doublePi;
+    setPoleZeros (MaxPoles, m_design);
+    scale (1. / std::abs (response (w0/(2*doublePi))));    
+  }
+
+  void setParameters (const Parameters& params)
+  {
+    setup (params[1]);
+  }
+};
+
+template <int MaxPoles>
+class ButterworthBandPass : public PoleZeroDesign <MaxPoles>
+{
+public:
+  const std::string getName () const
+  {
+    return "Butterworth Band Pass";
+  }
+
+  void setup (double normalizedFrequency, double normalizedWidth)
+  {
+    detail::ButterworthLowPass::design (MaxPoles, m_prototype);
+    detail::BandPassTransformation::transform (MaxPoles,
+                                              normalizedFrequency,
+                                              normalizedWidth,
+                                              m_design,
+                                              m_prototype);
+    const double w0 = doublePi;
+    setPoleZeros (MaxPoles, m_design);
+    scale (1. / std::abs (response (w0/(2*doublePi))));    
+  }
+
+  void setParameters (const Parameters& params)
+  {
+    setup (params[1], params[3]);
+  }
+};
+
+template <int MaxPoles>
+class ButterworthLowShelf : public PoleZeroDesign <MaxPoles>
+{
+public:
+  const std::string getName () const
+  {
+    return "Butterworth Low Shelf";
+  }
+
+  void setup (double normalizedFrequency,
+              double gainDb)
+  {
+    detail::ButterworthLowShelf::design (MaxPoles, gainDb, m_prototype);
+    detail::LowPassTransformation::transform (MaxPoles,
+                                              normalizedFrequency,
+                                              m_design,
+                                              m_prototype);
+    const double w0 = doublePi;
+    setPoleZeros (MaxPoles, m_design);
+    scale (1. / std::abs (response (w0/(2*doublePi))));    
+  }
+
+  void setParameters (const Parameters& params)
+  {
+    setup (params[1], params[2]);
+  }
+};
 
 }
 

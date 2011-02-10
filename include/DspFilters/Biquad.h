@@ -9,22 +9,13 @@ namespace Dsp {
 
 /*
  * Holds coefficients for a second order Infinite Impulse Response
- * digital filter. This is the building block for all filters.
+ * digital filter. This is the building block for all IIR filters.
  *
  */
 
 class Biquad
 {
 public:
-  // small alternating current to prevent denormals
-  static inline double ac()
-  {
-    //static double v = 1e-16;
-    static double v = 1e-35;
-    //return v=-v;
-    return 0;
-  }
-
   // Expresses the biquad as a pair of pole/zeros, with gain
   // values so that the coefficients can be reconstructed precisely.
   struct PoleZeroForm
@@ -38,77 +29,6 @@ public:
     double gain;
   };
 
-  /*
-   * Holds the state for applying a second order section to a single channel
-   * input stream, using Direct Form I.
-   *
-   * Difference equation:
-   *
-   *  y[n] = (b0/a0)*x[n] + (b1/a0)*x[n-1] + (b2/a0)*x[n-2]
-   *                      - (a1/a0)*y[n-1] - (a2/a0)*y[n-2]  
-   */
-  class DirectFormIState
-  {
-  public:
-    DirectFormIState ();
-
-    void reset ();
-
-    template <typename Sample>
-    inline Sample process (const Sample in, const Biquad& s)
-    {
-      double out = (s.m_b0*in + s.m_b1*m_x1 + s.m_b2*m_x2
-                              - s.m_a1*m_y1 - s.m_a2*m_y2) / s.m_a0
-                              + ac();
-      m_x2 = m_x1;
-      m_x1 = in;
-      m_y2 = m_y1;
-      m_y1 = out;
-
-      return static_cast<Sample> (out);
-    }
-
-  private:
-    double m_x1; // x[n-1]
-    double m_x2; // x[n-2]
-    double m_y1; // y[n-1]
-    double m_y2; // y[n-2]
-  };
-
-  /*
-   * Holds the state for applying a second order section to a single channel
-   * input stream, using Direct Form II.
-   *
-   *
-   * v[n] =        *x[n] - (a1/a0)*v[n-1] - (a2/a0)*v[n-2]
-   * y(n) = (b0/a0)*v[n] + (b1/a0)*v[n-1] + (b2/a0)*v[n-2]
-   *
-   */
-  class DirectFormIIState
-  {
-  public:
-    DirectFormIIState ();
-
-    void reset ();
-
-    template <typename Sample>
-    Sample process (const Sample in, const Biquad& s)
-    {
-      double d2 = m_v2 = m_v1;
-      double d1 = m_v1 = m_v0;
-      double d0 = m_v0 = in - (s.m_a1 * d1 + s.m_a2 * d2) / s.m_a0;
-      double out = (s.m_b0 * d0 + s.m_b0 * d1 + s.m_b2 * d2) / s.m_a0 + ac();
-      return static_cast<Sample> (out);
-    }
-
-  private:
-    friend class Biquad;
-
-    double m_v0; // v[0]
-    double m_v1; // v[-1]
-    double m_v2; // v[-2]
-  };
-
 public:
   Biquad ();
 
@@ -116,6 +36,13 @@ public:
 
   // Calculate filter response at the given normalized frequency.
   complex_t response (double normalizedFrequency) const;
+
+  double getA0 () const { return m_a0; }
+  double getA1 () const { return m_a1; }
+  double getA2 () const { return m_a2; }
+  double getB0 () const { return m_b0; }
+  double getB1 () const { return m_b1; }
+  double getB2 () const { return m_b2; }
 
 public:
   // Process a block of samples in the given form
@@ -208,7 +135,7 @@ public:
   // Set up the identity filter (i.e. pass input to output unaffected)
   void setupIdentity ();
 
-public:
+private:
   //
 
   double m_a1;
