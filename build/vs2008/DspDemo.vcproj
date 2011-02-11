@@ -208,14 +208,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\demo\FilterValue.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\demo\FilterValue.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\demo\MainApp.cpp"
 				>
 			</File>
@@ -488,6 +480,10 @@
 				</File>
 				<File
 					RelativePath="..\..\include\DspFilters\MathSupplement.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\DspFilters\Params.h"
 					>
 				</File>
 				<File

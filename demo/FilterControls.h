@@ -3,7 +3,6 @@
 
 #include "Common.h"
 #include "FilterListener.h"
-#include "FilterValue.h"
 #include "ResizableLayout.h"
 #include "SliderGroup.h"
 

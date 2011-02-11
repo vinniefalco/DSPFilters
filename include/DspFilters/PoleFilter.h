@@ -186,9 +186,9 @@ public:
     return 4;
   }
 
-  const ParameterInfo getParameterInfo (int index) const
+  const Param getParam (int index) const
   {
-    ParameterInfo info;
+    Param info;
     switch (index)
     {
     case 0:

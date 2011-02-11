@@ -2,8 +2,8 @@
 #define DSPFILTERS_RBJBIQUAD_H
 
 #include "DspFilters/Common.h"
-#include "DspFilters/Filter.h"
 #include "DspFilters/Biquad.h"
+#include "DspFilters/Filter.h"
 
 namespace Dsp {
 
@@ -16,10 +16,18 @@ namespace Dsp {
 
 //------------------------------------------------------------------------------
 
+/*
+ * a "Design" 
+ *
+ */
 namespace detail {
 
+class BaseDesign
+{
+};
+
 // corner freq / Q params
-class RBJDesignTypeI : public detail::BiquadBase
+class RBJDesignTypeI
 {
 public:
   int getNumParameters () const
@@ -27,11 +35,11 @@ public:
     return 2;
   }
 
-  const ParameterInfo getParameterInfo (int index) const;
+  const Param getParam (int index) const;
 };
 
 // center freq / bandwidth params
-class RBJDesignTypeII : public detail::BiquadBase
+class RBJDesignTypeII
 {
 public:
   int getNumParameters () const
@@ -39,11 +47,11 @@ public:
     return 2;
   }
 
-  const ParameterInfo getParameterInfo (int index) const;
+  const Param getParam (int index) const;
 };
 
 // corner freq / gainDb / slope params
-class RBJDesignTypeIII : public detail::BiquadBase
+class RBJDesignTypeIII
 {
 public:
   int getNumParameters () const
@@ -51,7 +59,7 @@ public:
     return 3;
   }
 
-  const ParameterInfo getParameterInfo (int index) const;
+  const Param getParam (int index) const;
 };
 
 }
@@ -59,6 +67,7 @@ public:
 //------------------------------------------------------------------------------
 
 class RBJLowPassDesign : public detail::RBJDesignTypeI
+                       , public detail::BiquadBase
 {
 public:
   const std::string getName() const;
@@ -68,6 +77,7 @@ public:
 };
 
 class RBJHighPassDesign : public detail::RBJDesignTypeI
+                        , public detail::BiquadBase
 {
 public:
   const std::string getName() const;
@@ -78,6 +88,7 @@ public:
 
 // (constant skirt gain, peak gain = Q)
 class RBJBandPass1Design : public detail::RBJDesignTypeII
+                         , public detail::BiquadBase
 {
 public:
   const std::string getName() const;
@@ -88,6 +99,7 @@ public:
 
 // (constant 0 dB peak gain)
 class RBJBandPass2Design : public detail::RBJDesignTypeII
+                         , public detail::BiquadBase
 {
 public:
   const std::string getName() const;
@@ -97,6 +109,7 @@ public:
 };
 
 class RBJBandStopDesign : public detail::RBJDesignTypeII
+                        , public detail::BiquadBase
 {
 public:
   const std::string getName() const;
@@ -106,6 +119,7 @@ public:
 };
 
 class RBJLowShelfDesign : public detail::RBJDesignTypeIII
+                        , public detail::BiquadBase
 {
 public:
   const std::string getName() const;
@@ -116,6 +130,7 @@ public:
 };
 
 class RBJHighShelfDesign : public detail::RBJDesignTypeIII
+                         , public detail::BiquadBase
 {
 public:
   const std::string getName() const;
@@ -126,6 +141,7 @@ public:
 };
 
 class RBJBandShelfDesign : public detail::RBJDesignTypeIII
+                         , public detail::BiquadBase
 {
 public:
   const std::string getName() const;
@@ -136,6 +152,7 @@ public:
 };
 
 class RBJAllPassDesign : public detail::RBJDesignTypeI
+                       , public detail::BiquadBase
 {
 public:
   const std::string getName() const;

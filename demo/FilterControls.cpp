@@ -1,7 +1,6 @@
 #include "Common.h"
 #include "CustomSlider.h"
 #include "FilterControls.h"
-#include "FilterValue.h"
 
 class FilterParamSliderGroupModel : public SliderGroup::Model
 {
@@ -12,7 +11,7 @@ public:
     : m_listeners (listeners)
     , m_filter (filter)
     , m_paramIndex (paramIndex)
-    , m_paramInfo (m_filter->getParameterInfo (paramIndex))
+    , m_paramInfo (m_filter->getParam (paramIndex))
   {
   }
 
@@ -32,13 +31,13 @@ public:
 
   void setControlValue (double controlValue)
   {
-    m_filter->setParam (m_paramIndex, controlValue);
-    m_listeners.call (&FilterListener::onFilterParameters);
+    m_filter->setParamValue (m_paramIndex, controlValue);
+    //m_listeners.call (&FilterListener::onFilterParameters);
   }
 
   const String getNativeValueAsText () const
   {
-    double nativeValue = 0.5;
+    double nativeValue = m_filter->getParamValue (m_paramIndex);
     return String (nativeValue, 3);
   }
 
@@ -50,7 +49,7 @@ private:
   ListenerList<FilterListener>& m_listeners;
   Dsp::Filter* m_filter;
   int m_paramIndex;
-  const Dsp::ParameterInfo m_paramInfo;
+  const Dsp::Param m_paramInfo;
 };
 
 //------------------------------------------------------------------------------
@@ -93,7 +92,7 @@ void FilterControls::onFilterChanged (Dsp::Filter* newFilter)
   int x = bounds.getX() + 2;
   for (int i = 0; i < m_filter->getNumParameters(); ++i)
   {
-    const Dsp::ParameterInfo& info = m_filter->getParameterInfo(i);
+    const Dsp::Param& info = m_filter->getParam(i);
 
     Item item;
     item.group = new SliderGroup (new FilterParamSliderGroupModel (

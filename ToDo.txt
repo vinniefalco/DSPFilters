@@ -4,3 +4,8 @@
 
 - eliminate the second pole/zero of all conjugate pairs from the
   implementation
+
+
+
+Documentation, Bibliography
+
