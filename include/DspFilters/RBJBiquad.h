@@ -3,6 +3,7 @@
 
 #include "DspFilters/Common.h"
 #include "DspFilters/Biquad.h"
+#include "DspFilters/Design.h"
 #include "DspFilters/Filter.h"
 
 namespace Dsp {
@@ -16,50 +17,27 @@ namespace Dsp {
 
 //------------------------------------------------------------------------------
 
-/*
- * a "Design" 
- *
- */
 namespace detail {
 
-class BaseDesign
-{
-};
-
 // corner freq / Q params
-class RBJDesignTypeI
+class RBJDesignTypeI : public Design
 {
 public:
-  int getNumParameters () const
-  {
-    return 2;
-  }
-
-  const Param getParam (int index) const;
+  RBJDesignTypeI ();
 };
 
 // center freq / bandwidth params
-class RBJDesignTypeII
+class RBJDesignTypeII : public Design
 {
 public:
-  int getNumParameters () const
-  {
-    return 2;
-  }
-
-  const Param getParam (int index) const;
+  RBJDesignTypeII ();
 };
 
 // corner freq / gainDb / slope params
-class RBJDesignTypeIII
+class RBJDesignTypeIII : public Design
 {
 public:
-  int getNumParameters () const
-  {
-    return 3;
-  }
-
-  const Param getParam (int index) const;
+  RBJDesignTypeIII ();
 };
 
 }
@@ -71,8 +49,9 @@ class RBJLowPassDesign : public detail::RBJDesignTypeI
 {
 public:
   const std::string getName() const;
-  void setParameters (const Parameters& parameters);
-  void setup (double normalizedCornerFrequency,
+  void setParameters (const Parameters& params);
+  void setup (double sampleRate,
+              double cutoffFrequency,
               double q);
 };
 
@@ -81,8 +60,9 @@ class RBJHighPassDesign : public detail::RBJDesignTypeI
 {
 public:
   const std::string getName() const;
-  void setParameters (const Parameters& parameters);
-  void setup (double normalizedCornerFrequency,
+  void setParameters (const Parameters& params);
+  void setup (double sampleRate,
+              double cutoffFrequency,
               double q);
 };
 
@@ -92,8 +72,9 @@ class RBJBandPass1Design : public detail::RBJDesignTypeII
 {
 public:
   const std::string getName() const;
-  void setParameters (const Parameters& parameters);
-  void setup (double normalizedCenterFrequency,
+  void setParameters (const Parameters& params);
+  void setup (double sampleRate,
+              double centerFrequency,
               double bandWidth);
 };
 
@@ -103,8 +84,9 @@ class RBJBandPass2Design : public detail::RBJDesignTypeII
 {
 public:
   const std::string getName() const;
-  void setParameters (const Parameters& parameters);
-  void setup (double normalizedCenterFrequency,
+  void setParameters (const Parameters& params);
+  void setup (double sampleRate,
+              double centerFrequency,
               double bandWidth);
 };
 
@@ -113,8 +95,9 @@ class RBJBandStopDesign : public detail::RBJDesignTypeII
 {
 public:
   const std::string getName() const;
-  void setParameters (const Parameters& parameters);
-  void setup (double normalizedCenterFrequency,
+  void setParameters (const Parameters& params);
+  void setup (double sampleRate,
+              double centerFrequency,
               double bandWidth);
 };
 
@@ -123,8 +106,9 @@ class RBJLowShelfDesign : public detail::RBJDesignTypeIII
 {
 public:
   const std::string getName() const;
-  void setParameters (const Parameters& parameters);
-  void setup (double normalizedCornerFrequency,
+  void setParameters (const Parameters& params);
+  void setup (double sampleRate,
+              double cutoffFrequency,
               double gainDb,
               double shelfSlope);
 };
@@ -134,8 +118,9 @@ class RBJHighShelfDesign : public detail::RBJDesignTypeIII
 {
 public:
   const std::string getName() const;
-  void setParameters (const Parameters& parameters);
-  void setup (double normalizedCornerFrequency,
+  void setParameters (const Parameters& params);
+  void setup (double sampleRate,
+              double cutoffFrequency,
               double gainDb,
               double shelfSlope);
 };
@@ -145,8 +130,9 @@ class RBJBandShelfDesign : public detail::RBJDesignTypeIII
 {
 public:
   const std::string getName() const;
-  void setParameters (const Parameters& parameters);
-  void setup (double normalizedCenterFrequency,
+  void setParameters (const Parameters& params);
+  void setup (double sampleRate,
+              double centerFrequency,
               double gainDb,
               double bandWidth);
 };
@@ -156,8 +142,9 @@ class RBJAllPassDesign : public detail::RBJDesignTypeI
 {
 public:
   const std::string getName() const;
-  void setParameters (const Parameters& parameters);
-  void setup (double normalizedFrequency,
+  void setParameters (const Parameters& params);
+  void setup (double sampleRate,
+              double phaseFrequency,
               double q);
 };
 

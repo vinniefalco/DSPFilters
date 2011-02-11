@@ -39,17 +39,44 @@ struct Parameters
 // Unique IDs to help identify parameters
 enum
 {
-  idSampleRate = 1
+  idSampleRate,
+  idFrequency,
+  idQ,
+  idBandwidth,
+  idGain,
+  idSlope,
+  idOrder
 };
 
-struct Param
+class ParamInfo
 {
-  const char* szLabel;
+public:
+  int getId () const
+  {
+    return m_id;
+  }
+
+  const char* getLabel () const
+  {
+    return m_szLabel;
+  }
+
   const char* szName;
   const char* szUnits;
   double minValue;
   double maxValue;
   double defaultValue;
+
+  virtual double toControlValue (double nativeValue) const;
+  virtual double toNativeValue (double controlValue) const;
+  virtual std::string toString (double nativeValue) const;
+
+protected:
+  ParamInfo (int id,
+             const char* szLabel);
+
+  int m_id;
+  const char* m_szLabel;
 };
 
 }

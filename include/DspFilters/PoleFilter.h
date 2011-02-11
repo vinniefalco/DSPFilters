@@ -2,6 +2,7 @@
 #define DSPFILTERS_POLEFILTER_H
 
 #include "DspFilters/Common.h"
+#include "DspFilters/Design.h"
 
 namespace Dsp {
 
@@ -104,7 +105,7 @@ public:
 }
 
 template <int MaxPoles>
-class PoleZeroDesign : public CascadeDesign <(MaxPoles+1)/2>
+class PoleZeroDesign : public Cascade <(MaxPoles+1)/2>, public Design
 {
 public:
   // Analog or digital pole filter prototype, specified by
@@ -179,56 +180,10 @@ public:
 public:
   PoleZeroDesign ()
   {
-  }
-
-  const int getNumParameters() const
-  {
-    return 4;
-  }
-
-  const Param getParam (int index) const
-  {
-    Param info;
-    switch (index)
-    {
-    case 0:
-      info.szLabel = "Order";
-      info.szName = "Order";
-      info.szUnits= "";
-      info.minValue = 1;
-      info.maxValue = MaxPoles;
-      info.defaultValue = 2;
-      break;
-
-    case 1:
-      info.szLabel = "Freq";
-      info.szName = "Cutoff Frequency";
-      info.szUnits= "Hz";
-      info.minValue = 10./44100;
-      info.maxValue = 22040./44100;
-      info.defaultValue = 0.25;
-      break;
-
-    case 2:
-      info.szLabel = "Gain";
-      info.szName = "Gain";
-      info.szUnits= "dB";
-      info.minValue = -18;
-      info.maxValue = 18;
-      info.defaultValue = 0;
-      break;
-
-    case 3:
-      info.szLabel = "BW";
-      info.szName = "Band Width";
-      info.szUnits= "Hz";
-      info.minValue = 0;
-      info.maxValue = 0.4999;
-      info.defaultValue = .125;
-      break;
-    };
-
-    return info;
+    addBuiltinParamInfo (idOrder);
+    addBuiltinParamInfo (idFrequency);
+    addBuiltinParamInfo (idGain);
+    addBuiltinParamInfo (idBandwidth);
   }
 
 #if 1

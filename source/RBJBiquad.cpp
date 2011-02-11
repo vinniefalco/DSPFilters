@@ -5,94 +5,23 @@ namespace Dsp {
 
 namespace detail {
 
-const Param RBJDesignTypeI::getParam (int index) const
+RBJDesignTypeI::RBJDesignTypeI ()
 {
-  Param info;
-  switch (index)
-  {
-  case 0:
-    info.szLabel = "Freq";
-    info.szName = "Frequency";
-    info.szUnits= "Hz";
-    info.minValue = 10./44100;
-    info.maxValue = 22040./44100;
-    info.defaultValue = 0.25;
-    break;
-  
-  case 1:
-    info.szLabel = "Q";
-    info.szName = "Q";
-    info.szUnits= "";
-    info.minValue = 0.01;
-    info.maxValue = 16;
-    info.defaultValue = 1;
-    break;
-  }
-
-  return info;
+  addBuiltinParamInfo (idFrequency);
+  addBuiltinParamInfo (idQ);
 }
 
-const Param RBJDesignTypeII::getParam (int index) const
+RBJDesignTypeII::RBJDesignTypeII ()
 {
-  Param info;
-  switch (index)
-  {
-  case 0:
-    info.szLabel = "Freq";
-    info.szName = "Frequency";
-    info.szUnits= "Hz";
-    info.minValue = 10./44100;
-    info.maxValue = 22040./44100;
-    info.defaultValue = 0.25;
-    break;
-  
-  case 1:
-    info.szLabel = "BW";
-    info.szName = "Bandwidth";
-    info.szUnits= "Octaves";
-    info.minValue = 0.01;
-    info.maxValue = 8;
-    info.defaultValue = 1;
-    break;
-  }
-
-  return info;
+  addBuiltinParamInfo (idFrequency);
+  addBuiltinParamInfo (idBandwidth);
 }
 
-const Param RBJDesignTypeIII::getParam (int index) const
+RBJDesignTypeIII::RBJDesignTypeIII ()
 {
-  Param info;
-  switch (index)
-  {
-  case 0:
-    info.szLabel = "Freq";
-    info.szName = "Frequency";
-    info.szUnits= "Hz";
-    info.minValue = 10./44100;
-    info.maxValue = 22040./44100;
-    info.defaultValue = 0.25;
-    break;
-  
-  case 1:
-    info.szLabel = "Gain";
-    info.szName = "Gain";
-    info.szUnits= "dB";
-    info.minValue = -12;
-    info.maxValue = 12;
-    info.defaultValue = 0;
-    break;
-
-  case 2:
-    info.szLabel = "Slope";
-    info.szName = "Slope";
-    info.szUnits= "";
-    info.minValue = 0.01;
-    info.maxValue = 4;
-    info.defaultValue = 1;
-    break;
-  }
-
-  return info;
+  addBuiltinParamInfo (idFrequency);
+  addBuiltinParamInfo (idGain);
+  addBuiltinParamInfo (idSlope);
 }
 
 }
@@ -104,14 +33,16 @@ const std::string RBJLowPassDesign::getName () const
   return "RBJ Low Pass";
 }
 
-void RBJLowPassDesign::setParameters (const Parameters& parameters)
+void RBJLowPassDesign::setParameters (const Parameters& params)
 {
-  setup (parameters[0], parameters[1]);
+  setup (params[0], params[1], params[2]);
 }
 
-void RBJLowPassDesign::setup (double normalizedCornerFrequency, double q)
+void RBJLowPassDesign::setup (double sampleRate,
+                              double cutoffFrequency,
+                              double q)
 {
-  double w0 = 2 * doublePi * normalizedCornerFrequency;
+  double w0 = 2 * doublePi * cutoffFrequency / sampleRate;
   double cs = cos (w0);
   double sn = sin (w0);
   double AL = sn / (2 * q);
@@ -131,14 +62,16 @@ const std::string RBJHighPassDesign::getName () const
   return "RBJ High Pass";
 }
 
-void RBJHighPassDesign::setParameters (const Parameters& parameters)
+void RBJHighPassDesign::setParameters (const Parameters& params)
 {
-  setup (parameters[0], parameters[1]);
+  setup (params[0], params[1], params[2]);
 }
 
-void RBJHighPassDesign::setup (double normalizedCornerFrequency, double q)
+void RBJHighPassDesign::setup (double sampleRate,
+                               double cutoffFrequency,
+                               double q)
 {
-  double w0 = 2 * doublePi * normalizedCornerFrequency;
+  double w0 = 2 * doublePi * cutoffFrequency / sampleRate;
   double cs = cos (w0);
   double sn = sin (w0);
   double AL = sn / ( 2 * q );
@@ -158,14 +91,15 @@ const std::string RBJBandPass1Design::getName () const
   return "RBJ Band Pass I";
 }
 
-void RBJBandPass1Design::setParameters (const Parameters& parameters)
+void RBJBandPass1Design::setParameters (const Parameters& params)
 {
-  setup (parameters[0], parameters[1]);
+  setup (params[0], params[1], params[2]);
 }
 
-void RBJBandPass1Design::setup (double normalizedCenterFrequency, double bandWidth)
+void RBJBandPass1Design::setup (double sampleRate,
+                                double centerFrequency, double bandWidth)
 {
-  double w0 = 2 * doublePi * normalizedCenterFrequency;
+  double w0 = 2 * doublePi * centerFrequency / sampleRate;
   double cs = cos (w0);
   double sn = sin (w0);
   double AL = sn / ( 2 * bandWidth );
@@ -185,14 +119,16 @@ const std::string RBJBandPass2Design::getName () const
   return "RBJ Band Pass II";
 }
 
-void RBJBandPass2Design::setParameters (const Parameters& parameters)
+void RBJBandPass2Design::setParameters (const Parameters& params)
 {
-  setup (parameters[0], parameters[1]);
+  setup (params[0], params[1], params[2]);
 }
 
-void RBJBandPass2Design::setup (double normalizedCenterFrequency, double bandWidth)
+void RBJBandPass2Design::setup (double sampleRate,
+                                double centerFrequency,
+                                double bandWidth)
 {
-  double w0 = 2 * doublePi * normalizedCenterFrequency;
+  double w0 = 2 * doublePi * centerFrequency / sampleRate;
   double cs = cos (w0);
   double sn = sin (w0);
   double AL = sn / ( 2 * bandWidth );
@@ -212,14 +148,16 @@ const std::string RBJBandStopDesign::getName () const
   return "RBJ Band Stop";
 }
 
-void RBJBandStopDesign::setParameters (const Parameters& parameters)
+void RBJBandStopDesign::setParameters (const Parameters& params)
 {
-  setup (parameters[0], parameters[1]);
+  setup (params[0], params[1], params[2]);
 }
 
-void RBJBandStopDesign::setup (double normalizedCenterFrequency, double bandWidth)
+void RBJBandStopDesign::setup (double sampleRate,
+                               double centerFrequency,
+                               double bandWidth)
 {
-  double w0 = 2 * doublePi * normalizedCenterFrequency;
+  double w0 = 2 * doublePi * centerFrequency / sampleRate;
   double cs = cos (w0);
   double sn = sin (w0);
   double AL = sn / ( 2 * bandWidth );
@@ -239,17 +177,18 @@ const std::string RBJLowShelfDesign::getName () const
   return "RBJ Low Shelf";
 }
 
-void RBJLowShelfDesign::setParameters (const Parameters& parameters)
+void RBJLowShelfDesign::setParameters (const Parameters& params)
 {
-  setup (parameters[0], parameters[1], parameters[2]);
+  setup (params[0], params[1], params[2], params[3]);
 }
 
-void RBJLowShelfDesign::setup (double normalizedCornerFrequency,
+void RBJLowShelfDesign::setup (double sampleRate,
+                               double cutoffFrequency,
                                double gainDb,
                                double shelfSlope)
 {
   double A  = pow (10, gainDb/40);
-  double w0 = 2 * doublePi * normalizedCornerFrequency;
+  double w0 = 2 * doublePi * cutoffFrequency / sampleRate;
   double cs = cos (w0);
   double sn = sin (w0);
   double AL = sn / 2 * ::std::sqrt ((A + 1/A) * (1/shelfSlope - 1) + 2);
@@ -270,17 +209,18 @@ const std::string RBJHighShelfDesign::getName () const
   return "RBJ High Shelf";
 }
 
-void RBJHighShelfDesign::setParameters (const Parameters& parameters)
+void RBJHighShelfDesign::setParameters (const Parameters& params)
 {
-  setup (parameters[0], parameters[1], parameters[2]);
+  setup (params[0], params[1], params[2], params[3]);
 }
 
-void RBJHighShelfDesign::setup (double normalizedCornerFrequency,
+void RBJHighShelfDesign::setup (double sampleRate,
+                                double cutoffFrequency,
                                 double gainDb,
                                 double shelfSlope)
 {
   double A  = pow (10, gainDb/40);
-  double w0 = 2 * doublePi * normalizedCornerFrequency;
+  double w0 = 2 * doublePi * cutoffFrequency / sampleRate;
   double cs = cos (w0);
   double sn = sin (w0);
   double AL = sn / 2 * ::std::sqrt ((A + 1/A) * (1/shelfSlope - 1) + 2);
@@ -301,17 +241,18 @@ const std::string RBJBandShelfDesign::getName () const
   return "RBJ Band Shelf";
 }
 
-void RBJBandShelfDesign::setParameters (const Parameters& parameters)
+void RBJBandShelfDesign::setParameters (const Parameters& params)
 {
-  setup (parameters[0], parameters[1], parameters[2]);
+  setup (params[0], params[1], params[2], params[3]);
 }
 
-void RBJBandShelfDesign::setup (double normalizedCenterFrequency,
+void RBJBandShelfDesign::setup (double sampleRate,
+                                double centerFrequency,
                                 double gainDb,
                                 double bandWidth)
 {
   double A  = pow (10, gainDb/40);
-  double w0 = 2 * doublePi * normalizedCenterFrequency;
+  double w0 = 2 * doublePi * centerFrequency / sampleRate;
   double cs = cos(w0);
   double sn = sin(w0);
   double AL = sn * sinh( doubleLn2/2 * bandWidth * w0/sn );
@@ -332,14 +273,16 @@ const std::string RBJAllPassDesign::getName () const
   return "RBJ All Pass";
 }
 
-void RBJAllPassDesign::setParameters (const Parameters& parameters)
+void RBJAllPassDesign::setParameters (const Parameters& params)
 {
-  setup (parameters[0], parameters[1]);
+  setup (params[0], params[1], params[3]);
 }
 
-void RBJAllPassDesign::setup (double normalizedFrequency, double q)
+void RBJAllPassDesign::setup (double sampleRate,
+                              double phaseFrequency,
+                              double q)
 {
-  double w0 = 2 * doublePi * normalizedFrequency;
+  double w0 = 2 * doublePi * phaseFrequency / sampleRate;
   double cs = cos (w0);
   double sn = sin (w0);
   double AL = sn / ( 2 * q );

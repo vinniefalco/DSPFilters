@@ -53,12 +53,12 @@ public:
       // interpolate parameters for each sample
       double t = 1. / m_remainingSamples;
       double dp[maxParameters];
-      for (int i = 0; i < m_design.getNumParameters(); ++i)
+      for (int i = 0; i < m_design.getNumParams(); ++i)
         dp[i] = (getParameters()[i] - m_transitionParameters[i]) * t;
 
       for (int n = 0; n < remainingSamples; ++n)
       {
-        for (int i = m_design.getNumParameters(); --i >=0;)
+        for (int i = m_design.getNumParams(); --i >=0;)
           m_transitionParameters[i] += dp[i];
 
         m_transitionDesign.setParameters (m_transitionParameters);

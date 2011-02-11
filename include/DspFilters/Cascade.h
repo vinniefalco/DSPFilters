@@ -102,15 +102,6 @@ protected:
   Stage m_stages[MaxStages];
 };
 
-//------------------------------------------------------------------------------
-
-// Base for all designs that use a Cascade
-template <int Stages>
-class CascadeDesign : public Cascade<Stages>
-{
-public:
-};
-
 }
 
 #endif
