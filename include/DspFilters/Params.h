@@ -75,6 +75,10 @@ protected:
   ParamInfo (int id,
              const char* szLabel);
 
+private:
+  ParamInfo (const ParamInfo& other);
+
+private:
   int m_id;
   const char* m_szLabel;
 };

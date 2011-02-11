@@ -40,7 +40,21 @@ public:
   {
     assert (paramIndex >= 0 && paramIndex <= getNumParams());
     m_parameters[paramIndex] = nativeValue;
-    //doSetParameters (m_parameters);
+    doSetParameters (m_parameters);
+  }
+
+  void setParamById (int paramId, double nativeValue)
+  {
+    for (int i = getNumParams(); --i >= 0;)
+    {
+      if (getParamInfo (i).getId () == paramId)
+      {
+        setParam (i, nativeValue);
+        return;
+      }
+    }
+    
+    assert (0);
   }
 
   void setParameters (const Parameters& parameters)
