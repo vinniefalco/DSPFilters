@@ -1,3 +1,6 @@
+#ifndef DSPDEMO_THREADQUEUE_H
+#define DSPDEMO_THREADQUEUE_H
+
 #include "Common.h"
 
 // Thread Queue
@@ -61,3 +64,5 @@ private:
   Element* m_head;
   Element* m_tail;
 };
+
+#endif

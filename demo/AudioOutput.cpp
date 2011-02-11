@@ -1,6 +1,7 @@
 #include "Common.h"
 #include "AudioOutput.h"
 #include "binaries.h"
+#include "bond.h"
 
 AudioOutput::AudioOutput()
   : m_audioDeviceManager (new AudioDeviceManager)
@@ -47,28 +48,28 @@ AudioOutput::~AudioOutput()
 
 void AudioOutput::setGain (float gainDb)
 {
-  m_queue.call (tr1::bind (&AudioOutput::doSetGain, this, Decibels::decibelsToGain(gainDb)));
+  m_queue.call (bond (&AudioOutput::doSetGain, this, Decibels::decibelsToGain(gainDb)));
 }
 
 void AudioOutput::setTempo (float tempo)
 {
-  m_queue.call (tr1::bind (&AudioOutput::doSetTempo, this, tempo));
+  m_queue.call (bond (&AudioOutput::doSetTempo, this, tempo));
 }
 
 void AudioOutput::setSource (AudioSource* source)
 {
   ResamplingAudioSource* resampler = new ResamplingAudioSource (source, true);
-  m_queue.call (tr1::bind (&AudioOutput::doSetSource, this, resampler));
+  m_queue.call (bond (&AudioOutput::doSetSource, this, resampler));
 }
 
 void AudioOutput::setFilter (Dsp::Filter* filter)
 {
-  m_queue.call (tr1::bind (&AudioOutput::doSetFilter, this, filter));
+  m_queue.call (bond (&AudioOutput::doSetFilter, this, filter));
 }
 
 void AudioOutput::setFilterParameters (Dsp::Parameters parameters)
 {
-  m_queue.call (tr1::bind (&AudioOutput::doSetFilterParameters, this, parameters));
+  m_queue.call (bond (&AudioOutput::doSetFilterParameters, this, parameters));
 }
 
 void AudioOutput::doSetGain (float gain)

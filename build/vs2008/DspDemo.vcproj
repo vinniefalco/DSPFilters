@@ -355,6 +355,10 @@
 				Name="Utilities"
 				>
 				<File
+					RelativePath="..\..\demo\bond.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\demo\ContentComponentConstrainer.h"
 					>
 				</File>
