@@ -37,26 +37,7 @@ struct ParameterInfo
   double defaultValue;
 };
 
-struct PoleZeroPair
-{
-  complex_t pole[2];
-  complex_t zero[2];
-};
-
-struct PoleZeros
-{
-  std::vector<complex_t> poles;
-  std::vector<complex_t> zeros;
-};
-
 //------------------------------------------------------------------------------
-
-// Base for all designs that use a biquad
-class BiquadDesign : public Biquad
-{
-public:
-  const PoleZeros getPoleZeros ();
-};
 
 /*
  * Abstract polymorphic filter.
@@ -86,7 +67,7 @@ public:
     doSetParameters (parameters);
   }
 
-  virtual const PoleZeros getPoleZeros() = 0;
+  virtual const PoleZeros getPoleZeros() const = 0;
  
   virtual complex_t response (double normalizedFrequency) const = 0;
 
@@ -147,7 +128,7 @@ public:
     return m_design.getParameterInfo (index);
   }
 
-  const PoleZeros getPoleZeros()
+  const PoleZeros getPoleZeros() const
   {
     return m_design.getPoleZeros();
   }

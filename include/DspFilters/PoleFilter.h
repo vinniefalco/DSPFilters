@@ -87,7 +87,12 @@ public:
   }
 };
 
-}
+// Factored implementation
+class PoleZeroDesignBase
+{
+public:
+  // problem...we would need virtual base classes again...
+};
 
 /*
 class PoleFilter
@@ -96,9 +101,81 @@ public:
 };
 */
 
-template <int Poles>
-class PoleZeroDesign : public CascadeDesign <(Poles+1)/2>
+}
+
+template <int MaxPoles>
+class PoleZeroDesign : public CascadeDesign <(MaxPoles+1)/2>
 {
+public:
+  // Analog or digital pole filter prototype, specified by
+  // a set of pole/zeros and normalization information.
+  class Prototype
+  {
+  public:
+    int getNumPoles () const
+    {
+      return m_numPoles;
+    }
+
+    int getMaxPoles () const
+    {
+      return m_maxPoles;
+    }
+
+    void setNumPoles (int numPoles)
+    {
+      assert (numPoles >= 1 && numPoles <= m_maxPoles);
+      m_numPoles = numPoles;
+    }
+
+    complex_t& pole (int index)
+    {
+      assert (index >= 0 && index < m_numPoles);
+      return poleArray[index];
+    }
+
+    complex_t& zero (int index)
+    {
+      assert (index >= 0 && index < m_numPoles);
+      return zeroArray[index];
+    }
+
+    double getNormalW () const
+    {
+      return m_normalW;
+    }
+
+    double getNormalGain () const
+    {
+      return m_normalGain;
+    }
+
+    void setNormalization (double w, double g)
+    {
+      m_normalW = w;
+      m_normalGain = g;
+    }
+
+  protected:
+    Prototype (int maxPoles,
+               complex_t const* poleArray,
+               complex_t const* zeroArray)
+      : m_maxPoles (maxPoles)
+      , m_poleArray (poleArray)
+      , m_zeroArray (zeroArray)
+      , m_numPoles (0)
+    {
+    }
+
+  private:
+    const int m_maxPoles;
+    complex_t const* m_poleArray;
+    complex_t const* m_zeroArray;
+    int m_numPoles;
+    double m_normalW;
+    double m_normalGain;
+  };
+
 public:
   PoleZeroDesign ()
   {
@@ -119,7 +196,7 @@ public:
       info.szName = "Order";
       info.szUnits= "";
       info.minValue = 1;
-      info.maxValue = Poles;
+      info.maxValue = MaxPoles;
       info.defaultValue = 2;
       break;
 
@@ -154,10 +231,11 @@ public:
     return info;
   }
 
-  const PoleZeros getPoleZeros ()
+#if 1
+  const PoleZeros getPoleZeros () const
   {
     PoleZeros pz;
-    const int pairs = Poles / 2;
+    const int pairs = MaxPoles / 2;
     for (int i = 0; i < pairs; ++i)
     {
       pz.poles.push_back (m_design[i].pole[0]);
@@ -165,17 +243,18 @@ public:
       pz.zeros.push_back (m_design[i].zero[0]);
       pz.zeros.push_back (m_design[i].zero[1]);
     }
-    if (Poles & 1)
+    if (MaxPoles & 1)
     {
       pz.poles.push_back (m_design[pairs].pole[0]);
       pz.zeros.push_back (m_design[pairs].zero[0]);
     }
     return pz;
   }
+#endif
 
 protected:
-  PoleZeroPair m_prototype[Poles]; // s-plane analog prototype
-  PoleZeroPair m_design[Poles]; // z-plane digital mapping
+  PoleZeroPair m_prototype[MaxPoles]; // s-plane analog prototype
+  PoleZeroPair m_design[MaxPoles]; // z-plane digital mapping
 };
 
 }

@@ -28,6 +28,8 @@ public:
   // Calculate filter response at the given normalized frequency.
   complex_t response (double normalizedFrequency) const;
 
+  const PoleZeros getPoleZeros () const;
+
 protected:
   CascadeBase ();
 
@@ -35,13 +37,15 @@ protected:
   void setPoleZeros (int numPoles, const PoleZeroPair* pzArray);
 
 protected:
+  // set by derived classes
+  int m_maxStages;
   int m_numStages;
-  Biquad* m_stageArray;
+  Stage* m_stageArray;
 };
 
 }
 
-template <int Stages>
+template <int MaxStages>
 class Cascade : public detail::CascadeBase
 {
 public:
@@ -57,7 +61,7 @@ public:
     void reset ()
     {
       StateType* state = m_state;
-      for (int i = Stages; --i >= 0; ++state)
+      for (int i = MaxStages; --i >= 0; ++state)
         state->reset();
     }
 
@@ -67,19 +71,20 @@ public:
       double out = in;
       StateType* state = m_state;
       Biquad const* stage = c.m_stages;
-      for (int i = Stages; --i >= 0; ++state, ++stage)
+      for (int i = c.m_numStages; --i >= 0; ++state, ++stage)
         out = state->process (out, *stage);
       return static_cast<Sample> (out);
     }
 
   private:
-    StateType m_state[Stages];
+    StateType m_state[MaxStages];
   };
 
 public:
   Cascade ()
   {
-    m_numStages = Stages;
+    m_maxStages = MaxStages;
+    m_numStages = MaxStages;
     m_stageArray = m_stages;
   }
 
@@ -94,7 +99,7 @@ public:
   }
 
 protected:
-  Biquad m_stages[Stages];
+  Stage m_stages[MaxStages];
 };
 
 //------------------------------------------------------------------------------

@@ -43,21 +43,22 @@ public:
     return "Butterworth Low Pass";
   }
 
-  void setup (double normalizedFrequency)
+  void setup (int order,
+              double normalizedFrequency)
   {
-    detail::ButterworthLowPass::design (MaxPoles, m_prototype);
-    detail::LowPassTransformation::transform (MaxPoles,
+    detail::ButterworthLowPass::design (order, m_prototype);
+    detail::LowPassTransformation::transform (order,
                                               normalizedFrequency,
                                               m_design,
                                               m_prototype);
     const double w0 = 0;
-    setPoleZeros (MaxPoles, m_design);
+    setPoleZeros (order, m_design);
     scale (1. / std::abs (response (w0/(2*doublePi))));    
   }
 
   void setParameters (const Parameters& params)
   {
-    setup (params[1]);
+    setup (int (params[0]), params[1]);
   }
 };
 
@@ -70,7 +71,8 @@ public:
     return "Butterworth High Pass";
   }
 
-  void setup (double normalizedFrequency)
+  void setup (int order,
+              double normalizedFrequency)
   {
     detail::ButterworthLowPass::design (MaxPoles, m_prototype);
     detail::HighPassTransformation::transform (MaxPoles,
@@ -84,7 +86,7 @@ public:
 
   void setParameters (const Parameters& params)
   {
-    setup (params[1]);
+    setup (int (params[0]), params[1]);
   }
 };
 
@@ -97,7 +99,9 @@ public:
     return "Butterworth Band Pass";
   }
 
-  void setup (double normalizedFrequency, double normalizedWidth)
+  void setup (int order,
+              double normalizedFrequency,
+              double normalizedWidth)
   {
     detail::ButterworthLowPass::design (MaxPoles, m_prototype);
     detail::BandPassTransformation::transform (MaxPoles,
@@ -112,7 +116,7 @@ public:
 
   void setParameters (const Parameters& params)
   {
-    setup (params[1], params[3]);
+    setup (int (params[0]), params[1], params[3]);
   }
 };
 
@@ -125,7 +129,8 @@ public:
     return "Butterworth Low Shelf";
   }
 
-  void setup (double normalizedFrequency,
+  void setup (int order,
+              double normalizedFrequency,
               double gainDb)
   {
     detail::ButterworthLowShelf::design (MaxPoles, gainDb, m_prototype);
@@ -140,7 +145,7 @@ public:
 
   void setParameters (const Parameters& params)
   {
-    setup (params[1], params[2]);
+    setup (int (params[0]), params[1], params[2]);
   }
 };
 
