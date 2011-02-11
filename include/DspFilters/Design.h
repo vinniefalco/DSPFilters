@@ -6,20 +6,10 @@
 
 namespace Dsp {
 
-/*
- * Every realizable filter has two parts, the actual implementation,
- * and a GUI-friendly layer that provides introspection for the
- * parameters. This is the base of the introspection layer.
- *
- * Since every filter has a sampling rate, this provides it as the
- * first parameter
- *
- */
-
-class Design
+class DesignBase
 {
 public:
-  Design ();
+  DesignBase ();
 
   int getNumParams () const
   {

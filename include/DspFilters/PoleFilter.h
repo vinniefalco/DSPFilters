@@ -2,10 +2,19 @@
 #define DSPFILTERS_POLEFILTER_H
 
 #include "DspFilters/Common.h"
-#include "DspFilters/Design.h"
+#include "DspFilters/MathSupplement.h"
+#include "DspFilters/Cascade.h"
+
+#include "DspFilters/Design.h" // REMOVE ASAP
 
 namespace Dsp {
 
+
+
+  
+  
+  
+  
 /*
  * Base for filters designed via algorithmic placement of poles and zeros.
  *
@@ -15,8 +24,6 @@ namespace Dsp {
  * are calculated in the z-plane.
  *
  */
-
-namespace detail {
 
 // low pass to low pass transform
 class LowPassTransformation
@@ -44,6 +51,10 @@ public:
                          double normalizedCornerFrequency,
                          PoleZeroPair* resultArray,
                          PoleZeroPair const* sourceArray);
+
+  static void transform (double normalizedCutoffFrequency,
+                         PoleZeroPrototype* digitalProto,
+                         PoleZeroPrototype const* analogProto);
 };
 
 // low pass to high pass transform
@@ -88,95 +99,12 @@ public:
   }
 };
 
-// Factored implementation
-class PoleZeroDesignBase
-{
-public:
-  // problem...we would need virtual base classes again...
-};
 
-/*
-class PoleFilter
-{
-public:
-};
-*/
 
-}
 
 template <int MaxPoles>
-class PoleZeroDesign : public Cascade <(MaxPoles+1)/2>, public Design
+class PoleZeroDesign : public Cascade <(MaxPoles+1)/2>, public DesignBase
 {
-public:
-  // Analog or digital pole filter prototype, specified by
-  // a set of pole/zeros and normalization information.
-  class Prototype
-  {
-  public:
-    int getNumPoles () const
-    {
-      return m_numPoles;
-    }
-
-    int getMaxPoles () const
-    {
-      return m_maxPoles;
-    }
-
-    void setNumPoles (int numPoles)
-    {
-      assert (numPoles >= 1 && numPoles <= m_maxPoles);
-      m_numPoles = numPoles;
-    }
-
-    complex_t& pole (int index)
-    {
-      assert (index >= 0 && index < m_numPoles);
-      return poleArray[index];
-    }
-
-    complex_t& zero (int index)
-    {
-      assert (index >= 0 && index < m_numPoles);
-      return zeroArray[index];
-    }
-
-    double getNormalW () const
-    {
-      return m_normalW;
-    }
-
-    double getNormalGain () const
-    {
-      return m_normalGain;
-    }
-
-    void setNormalization (double w, double g)
-    {
-      m_normalW = w;
-      m_normalGain = g;
-    }
-
-  protected:
-    Prototype (int maxPoles,
-               complex_t const* poleArray,
-               complex_t const* zeroArray)
-      : m_maxPoles (maxPoles)
-      , m_poleArray (poleArray)
-      , m_zeroArray (zeroArray)
-      , m_numPoles (0)
-    {
-    }
-
-  private:
-    const int m_maxPoles;
-    complex_t const* m_poleArray;
-    complex_t const* m_zeroArray;
-    int m_numPoles;
-    double m_normalW;
-    double m_normalGain;
-  };
-
 public:
   PoleZeroDesign ()
   {

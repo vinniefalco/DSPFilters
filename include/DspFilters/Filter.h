@@ -10,7 +10,11 @@
 namespace Dsp {
 
 /*
- * Abstract polymorphic filter.
+ * Filter
+ *
+ * Full abstraction of a digital IIR filter.
+ * Supports run-time introspection and modulation of filter
+ * parameters.
  *
  */
 class Filter
@@ -90,25 +94,16 @@ private:
 //------------------------------------------------------------------------------
 
 /*
- * Self-contained object which has:
+ * FilterType
  *
- * - A well defined filter specification, with introspection
- * - Defined filter parameters, with introspection
- * - Option for smooth modulation of time-varying filter parameters
- * - Realization of N-order section coefficients
- * - Selectable state for processing N-channel audio data 
- *
- * This is the big bad boy right here. Combines all of the objects and
- * concepts in the DspFilters library into a single object with run-time
- * polymorphism.
+ * Concrete instance of Filter. Supply a DesignClass, and optional
+ * values for Channels and StateType if you want to process samples.
  *
  */
 
-namespace detail {
-
 // This wraps up the design independent of the channel
 // count to reduce the number of template instantiations.
-template <class DesignType>
+template <class DesignClass>
 class FilterBase : public Filter
 {
 public:
@@ -154,15 +149,13 @@ protected:
   }
 
 protected:
-  DesignType m_design;
+  DesignClass m_design;
 };
 
-}
-
-template <class DesignType,
+template <class DesignClass,
           int Channels = 0,
           class StateType = DirectFormI>
-class FilterType : public detail::FilterBase <DesignType>
+class FilterType : public FilterBase <DesignClass>
 {
 public:
   FilterType ()
@@ -181,12 +174,14 @@ public:
 
   void process (int numSamples, float* const* arrayOfChannels)
   {
-    m_state.process (numSamples, arrayOfChannels, m_design);
+    m_state.process (numSamples, arrayOfChannels,
+                     FilterBase<DesignClass>::m_design);
   }
 
   void process (int numSamples, double* const* arrayOfChannels)
   {
-    m_state.process (numSamples, arrayOfChannels, m_design);
+    m_state.process (numSamples, arrayOfChannels,
+                     FilterBase<DesignClass>::m_design);
   }
 
 protected:

@@ -109,6 +109,7 @@ void FrequencyChart::paintOverChildren (Graphics& g)
   Rectangle <int> r = bounds.reduced (1, 1);
 
   g.setColour (Colour::fromRGBA (0, 0, 0, 32));
+#if 0
   for (int i = -3; i < 6; ++i)
   {
     double freq = 440. * pow (2., double(i));
@@ -117,9 +118,22 @@ void FrequencyChart::paintOverChildren (Graphics& g)
     int xi = r.getX() + int (f * r.getWidth() + 0.5);
     g.fillRect (xi, r.getY(), 1, r.getHeight());
   }
+#else
+  for (int i = 1000; i <= 22000; i+= 2000)
+  {
+    float x = i / 22050.f;
+    float f = xToF (x);
+    int xi = r.getX() + int (f * r.getWidth() + 0.5);
+    g.fillRect (xi, r.getY(), 1, r.getHeight());
+  }
+#endif
 }
 
 float FrequencyChart::xToF (float x)
 {
-  return float (pow (double(x), 2.));
+#if 0
+  return float (pow (double(x), .5));
+#else
+  return x;
+#endif
 }

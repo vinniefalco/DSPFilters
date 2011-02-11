@@ -3,8 +3,6 @@
 
 namespace Dsp {
 
-namespace detail {
-
 CascadeBase::CascadeBase ()
 {
   m_maxStages = 0;
@@ -83,6 +81,32 @@ void CascadeBase::setPoleZeros (int numPoles, const PoleZeroPair* pzArray)
   m_numStages = pairs + (numPoles & 1);
 }
 
+void CascadeBase::setup (const PoleZeroPrototype& proto)
+{
+  const int numPoles = proto.getNumPoles();
+  assert ((numPoles+1)/2 <= m_maxStages);
+
+  // THIS IS CRAP ON A STICK
+  Biquad* stage = m_stageArray;
+  for (int i = 0; i < numPoles; i+=2, ++stage)
+  {
+    complex_t pole[2], zero[2];
+    pole[0] = proto.pole (i);
+    pole[1] = proto.pole (i+1);
+    zero[0] = proto.zero (i);
+    zero[1] = proto.zero (i+1);
+
+    stage->setPoleZeros (pole, zero);
+  }
+  
+  if (numPoles & 1)
+    stage->setPoleZero (proto.pole (numPoles-1), proto.zero (numPoles-1));
+  
+  m_numStages = (numPoles+1)/2;
+
+  scale (proto.getNormalGain() /
+         std::abs (response (proto.getNormalW() / (2 * doublePi))));
 }
 
 }
+

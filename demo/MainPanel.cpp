@@ -210,6 +210,8 @@ bool MainPanel::isEnabled (int familyId)
 
   switch (familyId)
   {
+  case 2: // butterworth
+
   case 3:
   case 4:
   case 5:
@@ -232,6 +234,9 @@ bool MainPanel::isEnabled (int familyId, int typeId)
     case 2:
       switch (typeId)
       {
+      case 2:
+      case 6:
+
       case 4:
       case 5:
       case 7:
@@ -320,15 +325,15 @@ void MainPanel::setFilter (int familyId, int typeId)
   {
     switch (typeId)
     {
-    case 1: createSmoothedFilter <Dsp::RBJLowPassDesign> (&f, &fo); break;
-    case 2: createSmoothedFilter <Dsp::RBJHighPassDesign> (&f, &fo); break;
-    case 3: createSmoothedFilter <Dsp::RBJBandPass1Design> (&f, &fo); break;
-    case 4: createSmoothedFilter <Dsp::RBJBandPass2Design> (&f, &fo); break;
-    case 5: createSmoothedFilter <Dsp::RBJBandStopDesign> (&f, &fo); break;
-    case 6: createSmoothedFilter <Dsp::RBJLowShelfDesign> (&f, &fo); break;
-    case 7: createSmoothedFilter <Dsp::RBJHighShelfDesign> (&f, &fo); break;
-    case 8: createSmoothedFilter <Dsp::RBJBandShelfDesign> (&f, &fo); break;
-    case 9: createSmoothedFilter <Dsp::RBJAllPassDesign> (&f, &fo); break;
+    case 1: createSmoothedFilter <Dsp::RBJ::Design::LowPass> (&f, &fo); break;
+    case 2: createSmoothedFilter <Dsp::RBJ::Design::HighPass> (&f, &fo); break;
+    case 3: createSmoothedFilter <Dsp::RBJ::Design::BandPass1> (&f, &fo); break;
+    case 4: createSmoothedFilter <Dsp::RBJ::Design::BandPass2> (&f, &fo); break;
+    case 5: createSmoothedFilter <Dsp::RBJ::Design::BandStop> (&f, &fo); break;
+    case 6: createSmoothedFilter <Dsp::RBJ::Design::LowShelf> (&f, &fo); break;
+    case 7: createSmoothedFilter <Dsp::RBJ::Design::HighShelf> (&f, &fo); break;
+    case 8: createSmoothedFilter <Dsp::RBJ::Design::BandShelf> (&f, &fo); break;
+    case 9: createSmoothedFilter <Dsp::RBJ::Design::AllPass> (&f, &fo); break;
     };
   }
   //
@@ -338,9 +343,9 @@ void MainPanel::setFilter (int familyId, int typeId)
   {
     switch (typeId)
     {
-    case 1: createSmoothedFilter <Dsp::ButterLowPassDesign <12> > (&f, &fo); break;
-    case 2: createSmoothedFilter <Dsp::ButterHighPassDesign <12> > (&f, &fo); break;
-    case 6: createSmoothedFilter <Dsp::ButterLowShelfDesign <12> > (&f, &fo); break;
+    //case 1: createSmoothedFilter <Dsp::Butterworth::Design::LowPass <12> > (&f, &fo); break;
+    //case 2: createSmoothedFilter <Dsp::Butterworth::ButterHighPassDesign <12> > (&f, &fo); break;
+    //case 6: createSmoothedFilter <Dsp::Butterworth::ButterLowShelfDesign <12> > (&f, &fo); break;
     };
   }
 

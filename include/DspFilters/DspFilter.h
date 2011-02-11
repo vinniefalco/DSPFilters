@@ -226,7 +226,7 @@ template<int Channels=2, typename Value=float>
 class EnvelopeFollower
 {
 public:
-  EnvelopeFollower::EnvelopeFollower()
+  EnvelopeFollower()
   {
     for( int i=0; i<Channels; i++ )
       m_env[i]=0;
@@ -234,7 +234,7 @@ public:
 
   Value operator[] (int channel) const
   {
-    return m_env[i];
+    return m_env[channel];
   }
 
   void Setup (int sampleRate, double attackMs, double releaseMs)
@@ -247,12 +247,12 @@ public:
   {
     for( int i=0; i<Channels; i++ )
     {
-      const Ty* cur = src[i];
+      const Value* cur = src[i];
 
       CalcT e = m_env[i];
       for (int n = samples; n; n--)
       {
-        double v = ::fabs(*s++);
+        double v = ::fabs(*cur++);
         if (v > e)
           e = m_a * (e - v) + v;
         else

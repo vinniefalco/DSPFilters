@@ -66,7 +66,7 @@ inline Ty acosh (Ty x)
 }
 
 template <typename Ty>
-bool isnan (Ty v)
+inline bool isnan (Ty v)
 {
   return !(v == v);
 }

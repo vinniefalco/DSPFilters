@@ -322,7 +322,7 @@ void interleave (int samples,
   const Ts* src[2];
   src[0] = left;
   src[1] = right;
-  interleave (2, frames, dest, src);
+  interleave (2, samples, dest, src);
 }
 
 //--------------------------------------------------------------------------
@@ -405,6 +405,11 @@ void reverse (int channels, size_t frames, Td* const* dest, const Ts* const* src
 
 //--------------------------------------------------------------------------
 
+#if 0
+/*
+ * this stuff all depends on is_pod which is not always available
+ *
+ */
 namespace detail {
 
 template <typename Ty,
@@ -455,6 +460,30 @@ void zero (int samples,
 {
   detail::zero<Ty, tr1::is_pod<Ty>::value>::process (samples, dest, destSkip );
 }
+
+#else
+// Fill a channel with zeros. This works even if Ty is not a basic type.
+template <typename Ty>
+void zero (int samples,
+           Ty* dest,
+           int destSkip = 0)
+{
+    if (destSkip != 0)
+    {
+      ++destSkip;
+      while (--samples >= 0)
+      {
+        *dest = Ty();
+        dest += destSkip;
+      }
+    }
+    else
+    {
+      std::fill (dest, dest + samples, Ty());
+    }
+}
+
+#endif
 
 // Fill a set of channels with zero.
 template <typename Ty>

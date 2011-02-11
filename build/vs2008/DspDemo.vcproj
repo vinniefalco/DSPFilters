@@ -499,7 +499,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\DspFilters\RBJBiquad.h"
+					RelativePath="..\..\include\DspFilters\RBJ.h"
 					>
 				</File>
 				<File
@@ -567,7 +567,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\source\RBJBiquad.cpp"
+					RelativePath="..\..\source\PoleFilter.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\RBJ.cpp"
 					>
 				</File>
 				<File
@@ -596,6 +600,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\..\source\Documentation.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
