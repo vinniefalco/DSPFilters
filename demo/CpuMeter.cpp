@@ -55,7 +55,7 @@ void CpuMeter::paint (Graphics& g)
   if (w != floor (w))
   {
     // anti-alias
-    g.setColour (c.withAlpha (w-floor(w)));
+    g.setColour (c.withAlpha (float(w-floor(w))));
     g.fillRect (r.getX() + int(w), r.getY(), 1, r.getHeight());
   }
 }

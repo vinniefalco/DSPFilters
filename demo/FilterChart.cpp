@@ -65,7 +65,6 @@ void FilterChart::drawText (Graphics &g,
 {
   const Font& font = g.getCurrentFont();
   const int w = font.getStringWidth(text);
-  const int h = int (ceil (font.getAscent())); // getHeight()
 
   int x, y;
 

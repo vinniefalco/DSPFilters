@@ -16,9 +16,12 @@ template <class DesignClass,
 class SmoothedFilter
   : public FilterType <DesignClass,
                        Channels,
-                       typename DesignClass::State <typename StateType> >
+                       typename DesignClass::template State <StateType> >
 {
 public:
+  typedef FilterType <DesignClass, Channels,
+    typename DesignClass::template State <StateType> > filter_type_t;
+
   SmoothedFilter (int transitionSamples)
     : m_transitionSamples (transitionSamples)
     , m_remainingSamples (-1) // first time flag
@@ -30,7 +33,7 @@ public:
   void processBlock (int numSamples,
                      Sample* const* destChannelArray)
   {
-    const int numChannels = getNumChannels();
+    const int numChannels = this->getNumChannels();
 
     // If this goes off it means setup() was never called
     assert (m_remainingSamples >= 0);
@@ -43,12 +46,12 @@ public:
       // interpolate parameters for each sample
       double t = 1. / m_remainingSamples;
       double dp[maxParameters];
-      for (int i = 0; i < m_design.getNumParams(); ++i)
-        dp[i] = (getParameters()[i] - m_transitionParams[i]) * t;
+      for (int i = 0; i < this->m_design.getNumParams(); ++i)
+        dp[i] = (this->getParameters()[i] - m_transitionParams[i]) * t;
 
       for (int n = 0; n < remainingSamples; ++n)
       {
-        for (int i = m_design.getNumParams(); --i >=0;)
+        for (int i = this->m_design.getNumParams(); --i >=0;)
           m_transitionParams[i] += dp[i];
 
         m_transitionFilter.setParameters (m_transitionParams);
@@ -56,7 +59,7 @@ public:
         for (int i = numChannels; --i >= 0;)
         {
           Sample* dest = destChannelArray[i]+n;
-          *dest = m_state[i].process (*dest, m_transitionFilter);
+          *dest = this->m_state[i].process (*dest, m_transitionFilter);
         }
       }
 
@@ -68,9 +71,9 @@ public:
     {
       // no transition
       for (int i = 0; i < numChannels; ++i)
-        m_design.process (numSamples - remainingSamples,
+        this->m_design.process (numSamples - remainingSamples,
                           destChannelArray[i] + remainingSamples,
-                          m_state[i]);
+                          this->m_state[i]);
     }
   }
 
@@ -90,7 +93,7 @@ protected:
     if (m_remainingSamples >= 0)
     {
       if (m_remainingSamples == 0)
-        m_transitionParams = getParameters();
+        m_transitionParams = this->getParameters();
       m_remainingSamples = m_transitionSamples;
     }
     else
@@ -100,7 +103,7 @@ protected:
       m_transitionParams = parameters;
     }
 
-    FilterType::doSetParameters (parameters);
+    filter_type_t::doSetParameters (parameters);
   }
 
 protected:

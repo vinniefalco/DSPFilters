@@ -16,6 +16,7 @@
 #include <cfloat>
 #include <cmath>
 #include <complex>
+#include <cstring>
 #include <string>
 #include <limits>
 #include <vector>

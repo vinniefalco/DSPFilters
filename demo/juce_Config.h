@@ -77,7 +77,7 @@
 /** JUCE_WASAPI: Enables WASAPI audio devices (Windows Vista and above).
 */
 #ifndef JUCE_WASAPI
-  #define JUCE_WASAPI 1
+  #define JUCE_WASAPI 0
 #endif
 
 /** JUCE_DIRECTSOUND: Enables DirectSound audio (MS Windows only).
