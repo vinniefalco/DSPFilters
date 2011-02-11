@@ -499,6 +499,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\include\DspFilters\Types.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\include\DspFilters\Utilities.h"
 					>
 				</File>

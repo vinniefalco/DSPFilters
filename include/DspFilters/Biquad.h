@@ -3,6 +3,7 @@
 
 #include "DspFilters/Common.h"
 #include "DspFilters/MathSupplement.h"
+#include "DspFilters/Types.h"
 
 namespace Dsp {
 
@@ -19,6 +20,46 @@ namespace detail {
 class BiquadBase
 {
 public:
+  // Expresses the biquad as a pair of pole/zeros, with gain
+  // values so that the coefficients can be reconstructed precisely.
+  struct PoleZeroForm : PoleZeroPair
+  {
+    PoleZeroForm ();
+
+    explicit PoleZeroForm (const BiquadBase& s);
+
+    double gain;
+  };
+
+  template <class StateType>
+  struct State : StateType { };
+
+public:
+  // Calculate filter response at the given normalized frequency.
+  complex_t response (double normalizedFrequency) const;
+
+  const PoleZeros getPoleZeros () const;
+
+  double getA0 () const { return m_a0; }
+  double getA1 () const { return m_a1; }
+  double getA2 () const { return m_a2; }
+  double getB0 () const { return m_b0; }
+  double getB1 () const { return m_b1; }
+  double getB2 () const { return m_b2; }
+
+  // Process a block of samples in the given form
+  template <class StateType, typename Sample>
+  void process (int numSamples, Sample* dest, StateType& state) const
+  {
+    while (--numSamples >= 0)
+      *dest++ = state.process (*dest, *this);
+  }
+
+protected:
+  // Set the coefficients. The overall gain is collected,
+  // stored and factored out to reduce computation.
+  void setCoefficients (double a0, double a1, double a2,
+                        double b0, double b1, double b2);
 
 protected:
   double m_a0;
@@ -34,46 +75,11 @@ protected:
 class Biquad : public detail::BiquadBase
 {
 public:
-  // Expresses the biquad as a pair of pole/zeros, with gain
-  // values so that the coefficients can be reconstructed precisely.
-  struct PoleZeroForm
-  {
-    PoleZeroForm ();
-
-    explicit PoleZeroForm (const Biquad& s);
-
-    complex_t pole[2];
-    complex_t zero[2];
-    double gain;
-  };
-
-  template <class StateType>
-  struct State : StateType { };
-
-public:
   Biquad ();
 
   explicit Biquad (const PoleZeroForm& pzf);
 
-  // Calculate filter response at the given normalized frequency.
-  complex_t response (double normalizedFrequency) const;
-
-  double getA0 () const { return m_a0; }
-  double getA1 () const { return m_a1; }
-  double getA2 () const { return m_a2; }
-  double getB0 () const { return m_b0; }
-  double getB1 () const { return m_b1; }
-  double getB2 () const { return m_b2; }
-
 public:
-  // Process a block of samples in the given form
-  template <class StateType, typename Sample>
-  void process (int numSamples, Sample* dest, StateType& state) const
-  {
-    while (--numSamples >= 0)
-      *dest++ = state.process (*dest, *this);
-  }
-
   // Process a block of samples, interpolating from the old section's coefficients
   // to this section's coefficients, over numSamples. This implements smooth
   // parameter changes.
@@ -132,11 +138,6 @@ public:
   }
 
 public:
-  // Set the coefficients. The overall gain is collected,
-  // stored and factored out to reduce computation.
-  void setCoefficients (double a0, double a1, double a2,
-                        double b0, double b1, double b2);
-
   // Set the poles and zeros from two-element arrays.
   void setPoleZeros (complex_t const* poles, complex_t const* zeros);
 

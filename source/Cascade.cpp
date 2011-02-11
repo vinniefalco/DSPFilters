@@ -7,10 +7,9 @@ namespace detail {
 
 CascadeBase::CascadeBase ()
 {
-#ifndef NDEBUG
+  m_maxStages = 0;
   m_numStages = 0;
   m_stageArray = 0;
-#endif
 }
 
 complex_t CascadeBase::response (double normalizedFrequency) const
@@ -37,6 +36,33 @@ complex_t CascadeBase::response (double normalizedFrequency) const
   return ch / cbot;
 }
 
+const PoleZeros CascadeBase::getPoleZeros () const
+{
+  PoleZeros pz;
+  const Stage* stage = m_stageArray;
+  for (int i = 0; i < m_numStages - 1; ++i)
+  {
+    Biquad::PoleZeroForm pzf (*stage++);
+    pz.poles.push_back (pzf.pole[0]);
+    pz.poles.push_back (pzf.pole[1]);
+    pz.zeros.push_back (pzf.zero[0]);
+    pz.zeros.push_back (pzf.zero[1]);
+  }
+
+  {
+    Biquad::PoleZeroForm pzf (*stage);
+    pz.poles.push_back (pzf.pole[0]);
+    pz.zeros.push_back (pzf.zero[0]);
+    if (pzf.pole[1] != pzf.pole[0] || pzf.zero[1] != pzf.zero[0])
+    {
+      pz.poles.push_back (pzf.pole[1]);
+      pz.zeros.push_back (pzf.zero[1]);
+    }
+  }
+
+  return pz;
+}
+
 void CascadeBase::scale (double factor)
 {
   // For higher order filters it might be helpful
@@ -48,11 +74,13 @@ void CascadeBase::scale (double factor)
 void CascadeBase::setPoleZeros (int numPoles, const PoleZeroPair* pzArray)
 {
   const int pairs = numPoles / 2;
+  assert (pairs <= m_maxStages);
   Biquad* stage = m_stageArray;
   for (int i = pairs; --i >= 0; ++pzArray,  ++stage)
     stage->setPoleZeros (pzArray->pole, pzArray->zero);
   if (numPoles & 1)
     stage->setPoleZero (pzArray->pole[0], pzArray->zero[0]);
+  m_numStages = pairs + (numPoles & 1);
 }
 
 }

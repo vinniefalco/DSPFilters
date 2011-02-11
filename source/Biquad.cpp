@@ -4,13 +4,13 @@
 
 namespace Dsp {
 
-//------------------------------------------------------------------------------
+namespace detail {
 
-Biquad::PoleZeroForm::PoleZeroForm ()
+BiquadBase::PoleZeroForm::PoleZeroForm ()
 {
 }
 
-Biquad::PoleZeroForm::PoleZeroForm (const Biquad& s)
+BiquadBase::PoleZeroForm::PoleZeroForm (const BiquadBase& s)
 {
   {
     const complex_t c = sqrt (complex_t (
@@ -35,21 +35,7 @@ Biquad::PoleZeroForm::PoleZeroForm (const Biquad& s)
 
 //------------------------------------------------------------------------------
 
-Biquad::Biquad ()
-{
-}
-
-// Construct a second order section from a pair of poles and zeroes
-Biquad::Biquad (const PoleZeroForm& pzf)
-{
-  setPoles (pzf.pole[0], pzf.pole[1]);
-  setZeros (pzf.zero[0], pzf.zero[1]);
-  scale (pzf.gain);
-}
-
-//------------------------------------------------------------------------------
-
-complex_t Biquad::response (double normalizedFrequency) const
+complex_t BiquadBase::response (double normalizedFrequency) const
 {
   double w = 2 * doublePi * normalizedFrequency;
   const complex_t czn1 = std::polar (1., -w);
@@ -69,10 +55,19 @@ complex_t Biquad::response (double normalizedFrequency) const
   return ch / cbot;
 }
 
-//------------------------------------------------------------------------------
+const PoleZeros BiquadBase::getPoleZeros () const
+{
+  PoleZeroForm pzf (*this);
+  PoleZeros pz;
+  pz.poles.push_back (pzf.pole[0]);
+  pz.poles.push_back (pzf.pole[1]);
+  pz.zeros.push_back (pzf.zero[0]);
+  pz.zeros.push_back (pzf.zero[1]);
+  return pz;
+}
 
-void Biquad::setCoefficients (double a0, double a1, double a2,
-                              double b0, double b1, double b2)
+void BiquadBase::setCoefficients (double a0, double a1, double a2,
+                                  double b0, double b1, double b2)
 {
   m_a0 = a0;
   m_a1 = a1;
@@ -81,6 +76,24 @@ void Biquad::setCoefficients (double a0, double a1, double a2,
   m_b1 = b1;
   m_b2 = b2;
 }
+
+}
+
+//------------------------------------------------------------------------------
+
+Biquad::Biquad ()
+{
+}
+
+// Construct a second order section from a pair of poles and zeroes
+Biquad::Biquad (const PoleZeroForm& pzf)
+{
+  setPoles (pzf.pole[0], pzf.pole[1]);
+  setZeros (pzf.zero[0], pzf.zero[1]);
+  scale (pzf.gain);
+}
+
+//------------------------------------------------------------------------------
 
 void Biquad::setPoleZeros (complex_t const* poles, complex_t const* zeros)
 {

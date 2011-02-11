@@ -104,8 +104,15 @@ void FilterControls::sliderValueChanged (Slider* ctrl)
   {
     if (m_items[i].knob == ctrl)
     {
+      const Dsp::ParameterInfo& info = m_filter->getParameterInfo(i);
       Dsp::Parameters parameters = m_filter->getParameters();
-      parameters[i] = ctrl->getValue ();
+      double v = ctrl->getValue ();
+      if (v < info.minValue)
+        v = info.minValue;
+      else if (v > info.maxValue)
+        v = info.maxValue;
+
+      parameters[i] = v;
       m_filter->setParameters (parameters);
       /*
       double flo = 10./44100.;

@@ -1,1 +1,6 @@
 - spread scale factor between all stages in a Cascade
+
+- factor a0 out of the biquad coefficients and fix everything
+
+- eliminate the second pole/zero of all conjugate pairs from the
+  implementation
