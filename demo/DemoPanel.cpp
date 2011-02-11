@@ -189,7 +189,7 @@ public:
 
 //------------------------------------------------------------------------------
 
-class PoleChart : virtual public Component, public FilterChart
+class PoleChart : virtual public Component, public FilterChartOld
 {
 public:
 	void Recalculate( void )
@@ -363,7 +363,7 @@ DemoPanel::DemoPanel()
 
 	// Graphs
 
-	FilterChart *chart;
+	FilterChartOld *chart;
 
 	chart=new BrickWallGraph();
 	chart->setBounds( x, y, 200, 200 );

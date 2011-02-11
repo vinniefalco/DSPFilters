@@ -259,11 +259,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\demo\Chart.cpp"
+					RelativePath="..\..\demo\FilterChart.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\demo\Chart.h"
+					RelativePath="..\..\demo\FilterChart.h"
 					>
 				</File>
 				<File
@@ -327,11 +327,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\demo\FilterChart.cpp"
+					RelativePath="..\..\demo\FilterChartOld.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\demo\FilterChart.h"
+					RelativePath="..\..\demo\FilterChartOld.h"
 					>
 				</File>
 				<File

@@ -162,51 +162,45 @@ void MainPanel::createCharts (const Rectangle<int>& r)
   const int h2 = h * 2 + gap; //r.getHeight() - (h + gap);
 
   {
-    BrickWallChart* c = new BrickWallChart;
+    BrickWallChart* c = new BrickWallChart (m_listeners);
     c->setBounds (r.getX(), r.getY(), w, h);
     addToLayout (c, Point<int>(0, 0), Point<int>(33, 33));
     addAndMakeVisible (c);
-    m_listeners.add (c);
   }
 
   {
-    PhaseChart* c = new PhaseChart;
+    PhaseChart* c = new PhaseChart (m_listeners);
     c->setBounds (r.getX() + w + gap, r.getY(), w, h);
     addToLayout (c, Point<int>(33, 0), Point<int>(66, 33));
     addAndMakeVisible (c);
-    m_listeners.add (c);
   }
 
   {
-    PoleZeroChart* c = new PoleZeroChart;
+    PoleZeroChart* c = new PoleZeroChart (m_listeners);
     c->setBounds (r.getX() + w + gap + w + gap, r.getY(), w, h);
     addToLayout (c, Point<int>(66, 0), Point<int>(100, 33));
     addAndMakeVisible (c);
-    m_listeners.add (c);
   }
 
   {
-    GainChart* c = new GainChart;
+    GainChart* c = new GainChart (m_listeners);
     c->setBounds (r.getX(), r.getY() + h + gap, w2, h2);
     addToLayout (c, Point<int>(0, 33), Point<int>(66, 100));
     addAndMakeVisible (c);
-    m_listeners.add (c);
   }
 
   {
-    GroupDelayChart* c = new GroupDelayChart;
+    GroupDelayChart* c = new GroupDelayChart (m_listeners);
     c->setBounds (r.getX() + w + gap + w + gap, r.getY() + h + gap, w, h);
     addToLayout (c, Point<int>(66, 33), Point<int>(100, 66));
     addAndMakeVisible (c);
-    m_listeners.add (c);
   }
 
   {
-    StepResponseChart* c = new StepResponseChart;
+    StepResponseChart* c = new StepResponseChart (m_listeners);
     c->setBounds (r.getX() + w + gap + w + gap, r.getY() + h + gap + h + gap, w, h);
     addToLayout (c, Point<int>(66, 66), Point<int>(100, 100));
     addAndMakeVisible (c);
-    m_listeners.add (c);
   }
 }
 

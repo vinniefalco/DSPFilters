@@ -12,7 +12,7 @@
 #  pragma warning (disable: 4355)
 #endif
 
-class FilterChart;
+class FilterChartOld;
 const int kSampleRate=44100;
 const int kMaxOrder=50;
 

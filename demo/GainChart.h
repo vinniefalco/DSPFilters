@@ -1,16 +1,13 @@
 #ifndef DSPDEMO_GAINCHART_H
 #define DSPDEMO_GAINCHART_H
 
-#include "FilterListener.h"
-#include "Chart.h"
+#include "FilterChart.h"
 
 /*
  * Displays the gain response of a Dsp::Filter in decibels
  *
  */
-class GainChart
-  : public Chart
-  , public FilterListener
+class GainChart : public FrequencyChart
 {
 public:
   enum
@@ -19,7 +16,7 @@ public:
     kMinDb = -65
   };
 
-  GainChart ();
+  GainChart (FilterListeners& listeners);
 
   const String getName () const;
 
@@ -27,16 +24,12 @@ public:
 
   void paintContents (Graphics& g);
 
-  void onFilterChanged (Dsp::Filter* newFilter);
-  void onFilterParameters ();
-
 private:
   void update ();
   bool drawDbLine (Graphics& g, int db, bool drawLabel = true);
   AffineTransform calcTransform ();
 
 private:
-  Dsp::Filter* m_filter;
   float m_maxDb;
   Path m_path;
 };

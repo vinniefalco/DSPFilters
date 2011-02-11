@@ -5,9 +5,9 @@
 
 //------------------------------------------------------------------------------
 
-BrickWallChart::BrickWallChart ()
-  : m_scale_y (1)
-  , m_filter (0)
+BrickWallChart::BrickWallChart (FilterListeners& listeners)
+  : FrequencyChart (listeners)
+  , m_scale_y (1)
 {
 }
 
@@ -54,18 +54,6 @@ void BrickWallChart::paintContents (Graphics& g)
   g.strokePath (m_path, 1, t);
 }
 
-void BrickWallChart::onFilterChanged (Dsp::Filter* newFilter)
-{
-  m_filter = newFilter;
-
-  update ();
-}
-
-void BrickWallChart::onFilterParameters ()
-{
-  update ();
-}
-
 void BrickWallChart::update ()
 {
   m_path.clear();
@@ -77,8 +65,10 @@ void BrickWallChart::update ()
 
     for (int xi = 0; xi < r.getWidth(); ++xi )
     {
-      float x = xi / float(r.getWidth());
-      Dsp::complex_t c = m_filter->response (x/2);
+      float x = xi / float(r.getWidth()); // [0..1)
+      float f = xToF (x);
+
+      Dsp::complex_t c = m_filter->response (f/2.f);
       float y = float (std::abs(c));
       if (xi == 0)
         m_path.startNewSubPath (x, y);

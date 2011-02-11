@@ -15,4 +15,6 @@ public:
   virtual void onFilterParameters () { }
 };
 
+typedef ListenerList<FilterListener> FilterListeners;
+
 #endif

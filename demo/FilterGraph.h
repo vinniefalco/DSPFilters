@@ -3,9 +3,9 @@
 
 #include "Common.h"
 #include "Graph.h"
-#include "FilterChart.h"
+#include "FilterChartOld.h"
 
-class FilterGraph : public Graph, public FilterChart
+class FilterGraph : public Graph, public FilterChartOld
 {
 public:
 	FilterGraph();

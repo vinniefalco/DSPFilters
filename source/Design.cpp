@@ -130,6 +130,8 @@ public:
   }
 };
 
+//------------------------------------------------------------------------------
+
 class BandwidthParamInfo : public ParamInfo
 {
 public:
@@ -160,6 +162,8 @@ public:
     return os.str();
   }
 };
+
+//------------------------------------------------------------------------------
 
 class GainParamInfo : public ParamInfo
 {
@@ -205,6 +209,8 @@ public:
     return os.str();
   }
 };
+
+//------------------------------------------------------------------------------
 
 class OrderParamInfo : public ParamInfo
 {

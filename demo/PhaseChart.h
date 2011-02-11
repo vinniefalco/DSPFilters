@@ -1,16 +1,13 @@
 #ifndef DSPDEMO_PHASECHART_H
 #define DSPDEMO_PHASECHART_H
 
-#include "FilterListener.h"
-#include "Chart.h"
+#include "FilterChart.h"
 
 /*
  * Displays the phase response of a Dsp::Filter in degrees
  *
  */
-class PhaseChart
-  : public Chart
-  , public FilterListener
+class PhaseChart : public FilterChart
 {
 public:
   enum
@@ -19,7 +16,7 @@ public:
     maxPhase = 120
   };
 
-  PhaseChart ();
+  PhaseChart (FilterListeners& listeners);
 
   const String getName () const;
 
@@ -27,16 +24,12 @@ public:
 
   void paintContents (Graphics& g);
 
-  void onFilterChanged (Dsp::Filter* newFilter);
-  void onFilterParameters ();
-
 private:
   void update ();
   bool drawPhaseLine (Graphics& g, int degrees, bool drawLabel = true);
   AffineTransform calcTransform ();
 
 private:
-  Dsp::Filter* m_filter;
   Path m_path;
 };
 

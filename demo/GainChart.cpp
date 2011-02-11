@@ -3,8 +3,8 @@
 
 //------------------------------------------------------------------------------
 
-GainChart::GainChart ()
-  : m_filter (0)
+GainChart::GainChart (FilterListeners& listeners)
+  : FrequencyChart (listeners)
   , m_maxDb (0)
 {
 }
@@ -50,18 +50,6 @@ void GainChart::paintContents (Graphics& g)
   g.strokePath (m_path, 1, t);
 }
 
-void GainChart::onFilterChanged (Dsp::Filter* newFilter)
-{
-  m_filter = newFilter;
-
-  update ();
-}
-
-void GainChart::onFilterParameters ()
-{
-  update ();
-}
-
 /*
  * compute the path.
  * the x coordinates will range from 0..1
@@ -80,7 +68,8 @@ void GainChart::update ()
     for (int xi = 0; xi < r.getWidth(); ++xi )
     {
       float x = xi / float(r.getWidth());
-      Dsp::complex_t c = m_filter->response (x/2);
+      float f = xToF (x);
+      Dsp::complex_t c = m_filter->response (f/2.f);
       float y = float(std::abs(c));
       if (y < 1e-5f)
           y = 1e-5f;

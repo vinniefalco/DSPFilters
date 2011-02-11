@@ -3,8 +3,8 @@
 
 //------------------------------------------------------------------------------
 
-GroupDelayChart::GroupDelayChart ()
-  : m_filter (0)
+GroupDelayChart::GroupDelayChart (FilterListeners& listeners)
+  : FilterChart (listeners)
 {
 }
 
@@ -33,18 +33,6 @@ void GroupDelayChart::paintContents (Graphics& g)
 
   g.setColour (Colours::blue);
   g.strokePath (m_path, 1, t);
-}
-
-void GroupDelayChart::onFilterChanged (Dsp::Filter* newFilter)
-{
-  m_filter = newFilter;
-
-  update ();
-}
-
-void GroupDelayChart::onFilterParameters ()
-{
-  update ();
 }
 
 /*

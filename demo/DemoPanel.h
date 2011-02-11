@@ -129,7 +129,7 @@ private:
   ComboBox *	m_menuProto;
   ComboBox *	m_menuKind;
   Slider *		m_knob[knobCount];
-  FilterChart *		m_chart[chartCount];
+  FilterChartOld *		m_chart[chartCount];
 
   Spec				m_spec;
   Filters				m_filters;

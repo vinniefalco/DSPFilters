@@ -1,0 +1,25 @@
+#ifndef DSPDEMO_FILTERCHART_H
+#define DSPDEMO_FILTERCHART_H
+
+#include "Common.h"
+
+class FilterChartOld : virtual public Component
+{
+public:
+	FilterChartOld();
+	~FilterChartOld();
+
+	void SetFilter( const Dsp::PoleFilterOld *filter, const Spec &spec );
+	virtual void Recalculate( void )=0;
+
+protected:
+	const Dsp::PoleFilterOld *m_filter;
+	const Spec *m_spec;
+
+	Colour m_cFrame;
+	Colour m_cAxis;
+	Colour m_cAxisMinor;
+	Colour m_cText;
+};
+
+#endif

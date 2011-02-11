@@ -1,8 +1,8 @@
 #include "Common.h"
 #include "PoleZeroChart.h"
 
-PoleZeroChart::PoleZeroChart ()
-  : m_filter (0)
+PoleZeroChart::PoleZeroChart (FilterListeners& listeners)
+  : FilterChart (listeners)
 {
 }
 
@@ -68,17 +68,6 @@ void PoleZeroChart::paintContents (Graphics& g)
     p = p.transformedBy (t);
 	  g.drawEllipse (p.getX()-r, p.getY()-r, 2*r, 2*r, 1);
   }
-}
-
-void PoleZeroChart::onFilterChanged (Dsp::Filter* newFilter)
-{
-  m_filter = newFilter;
-  update();
-}
-
-void PoleZeroChart::onFilterParameters ()
-{
-  update ();
 }
 
 void PoleZeroChart::clear ()

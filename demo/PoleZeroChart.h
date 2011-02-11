@@ -1,26 +1,20 @@
 #ifndef DSPDEMO_POLEZEROCHART_H
 #define DSPDEMO_POLEZEROCHART_H
 
-#include "FilterListener.h"
-#include "Chart.h"
+#include "FilterChart.h"
 
 /*
  * Displays the poles and zeros of a Dsp::Filter
  *
  */
-class PoleZeroChart
-  : public Chart
-  , public FilterListener
+class PoleZeroChart : public FilterChart
 {
 public:
-  PoleZeroChart();
+  PoleZeroChart (FilterListeners& listeners);
 
   const String getName () const;
 
 	void paintContents (Graphics& g);
-
-  void onFilterChanged (Dsp::Filter* newFilter);
-  void onFilterParameters ();
 
 private:
   void clear ();
@@ -29,7 +23,6 @@ private:
 
 private:
   double m_max;
-  Dsp::Filter* m_filter;
   Dsp::PoleZeros m_pz;
 };
 
