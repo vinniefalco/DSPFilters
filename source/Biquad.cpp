@@ -16,7 +16,7 @@ BiquadBase::PoleZeroForm::PoleZeroForm (const BiquadBase& s)
     double d = 2. * s.m_a0;
     pole[0] =  (c - s.m_a1) / d;
     pole[1] = -(s.m_a1 + c) / d;
-    assert (!isnan (pole[0]) && !isnan (pole[1]));
+    assert (!Dsp::isnan (pole[0]) && !Dsp::isnan (pole[1]));
   }
 
   {
@@ -25,7 +25,7 @@ BiquadBase::PoleZeroForm::PoleZeroForm (const BiquadBase& s)
     double d = 2. * s.m_b0;
     zero[0] =  (c - s.m_b1) / d;
     zero[1] = -(s.m_b1 + c) / d;
-    assert (!isnan (zero[0]) && !isnan (zero[1]));
+    assert (!Dsp::isnan (zero[0]) && !Dsp::isnan (zero[1]));
   }
 
   gain = s.m_b0;
