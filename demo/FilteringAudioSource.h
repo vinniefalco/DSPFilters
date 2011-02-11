@@ -29,6 +29,7 @@ public:
   void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill);
 
 private:
+  double m_sampleRate;
   ScopedPointer<AudioSource> m_source;
   ScopedPointer<Dsp::Filter> m_filter;
 };

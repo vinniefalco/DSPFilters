@@ -43,12 +43,13 @@ public:
     return "Butterworth Low Pass";
   }
 
-  void setup (int order,
-              double normalizedFrequency)
+  void setup (double sampleRate,
+              int order,
+              double cutoffFrequency)
   {
     detail::ButterworthLowPass::design (order, m_prototype);
     detail::LowPassTransformation::transform (order,
-                                              normalizedFrequency,
+                                              cutoffFrequency / sampleRate,
                                               m_design,
                                               m_prototype);
     const double w0 = 0;
@@ -58,7 +59,7 @@ public:
 
   void setParameters (const Parameters& params)
   {
-    setup (int (params[0]), params[1]);
+    setup (params[0], int (params[1]), params[2]);
   }
 };
 
@@ -71,12 +72,13 @@ public:
     return "Butterworth High Pass";
   }
 
-  void setup (int order,
-              double normalizedFrequency)
+  void setup (double sampleRate,
+              int order,
+              double cutoffFrequency)
   {
     detail::ButterworthLowPass::design (MaxPoles, m_prototype);
     detail::HighPassTransformation::transform (MaxPoles,
-                                              normalizedFrequency,
+                                              cutoffFrequency / sampleRate,
                                               m_design,
                                               m_prototype);
     const double w0 = doublePi;
@@ -86,7 +88,7 @@ public:
 
   void setParameters (const Parameters& params)
   {
-    setup (int (params[0]), params[1]);
+    setup (params[0], int (params[1]), params[1]);
   }
 };
 
@@ -99,13 +101,14 @@ public:
     return "Butterworth Band Pass";
   }
 
-  void setup (int order,
-              double normalizedFrequency,
+  void setup (double sampleRate,
+              int order,
+              double centerFrequency,
               double normalizedWidth)
   {
     detail::ButterworthLowPass::design (MaxPoles, m_prototype);
     detail::BandPassTransformation::transform (MaxPoles,
-                                              normalizedFrequency,
+                                              centerFrequency / sampleRate,
                                               normalizedWidth,
                                               m_design,
                                               m_prototype);
@@ -116,7 +119,7 @@ public:
 
   void setParameters (const Parameters& params)
   {
-    setup (int (params[0]), params[1], params[3]);
+    setup (params[0], int (params[1]), params[2], params[4]);
   }
 };
 
@@ -129,13 +132,14 @@ public:
     return "Butterworth Low Shelf";
   }
 
-  void setup (int order,
-              double normalizedFrequency,
+  void setup (double sampleRate,
+              int order,
+              double cutoffFrequency,
               double gainDb)
   {
     detail::ButterworthLowShelf::design (MaxPoles, gainDb, m_prototype);
     detail::LowPassTransformation::transform (MaxPoles,
-                                              normalizedFrequency,
+                                              cutoffFrequency / sampleRate,
                                               m_design,
                                               m_prototype);
     const double w0 = doublePi;
@@ -145,7 +149,7 @@ public:
 
   void setParameters (const Parameters& params)
   {
-    setup (int (params[0]), params[1], params[2]);
+    setup (params[0], int (params[1]), params[2], params[3]);
   }
 };
 

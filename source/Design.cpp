@@ -1,17 +1,19 @@
 #include "DspFilters/Common.h"
 #include "DspFilters/Design.h"
 #include <sstream>
+#include <iostream>
+#include <iomanip>
 
 namespace Dsp {
 
 double ParamInfo::toControlValue (double nativeValue) const
 {
-  return nativeValue;
+  return (nativeValue - minValue) / (maxValue - minValue);
 }
 
 double ParamInfo::toNativeValue (double controlValue) const
 {
-  return controlValue;
+  return minValue + controlValue * (maxValue - minValue);
 }
 
 std::string ParamInfo::toString (double nativeValue) const
@@ -20,6 +22,8 @@ std::string ParamInfo::toString (double nativeValue) const
   os << nativeValue;
   return os.str();
 }
+
+//------------------------------------------------------------------------------
 
 namespace detail {
 
@@ -35,7 +39,26 @@ public:
     maxValue = 192000;
     defaultValue = 44100;
   }
+
+  double toControlValue (double nativeValue) const
+  {
+    return nativeValue;
+  }
+
+  double toNativeValue (double controlValue) const
+  {
+    return controlValue;
+  }
+
+  std::string toString (double nativeValue) const
+  {
+    std::ostringstream os;
+    os << nativeValue;
+    return os.str();
+  }
 };
+
+//------------------------------------------------------------------------------
 
 class FrequencyParamInfo : public ParamInfo
 {
@@ -49,7 +72,32 @@ public:
     maxValue = 20000;
     defaultValue = 440;
   }
+
+  double toControlValue (double nativeValue) const
+  {
+    const double base = 1.5;
+    double l0 = log (minValue) / log (base);
+    double l1 = log (maxValue) / log (base);
+    return (log (nativeValue) / log(base) - l0) / (l1 - l0);
+  }
+
+  double toNativeValue (double controlValue) const
+  {
+    const double base = 1.5;
+    double l0 = log (minValue) / log (base);
+    double l1 = log (maxValue) / log (base);
+    return pow (base, l0 + controlValue * (l1 - l0));
+  }
+
+  std::string toString (double nativeValue) const
+  {
+    std::ostringstream os;
+    os << int(nativeValue+0.5) << " Hz";
+    return os.str();
+  }
 };
+
+//------------------------------------------------------------------------------
 
 class QParamInfo : public ParamInfo
 {
@@ -62,6 +110,23 @@ public:
     minValue = 0.01;
     maxValue = 16;
     defaultValue = 1;
+  }
+
+  double toControlValue (double nativeValue) const
+  {
+    return ((log (nativeValue) / log (2.)) + 4) / 8;
+  }
+
+  double toNativeValue (double controlValue) const
+  {
+    return pow (2., (controlValue*8)-4);
+  }
+
+  std::string toString (double nativeValue) const
+  {
+    std::ostringstream os;
+    os << std::fixed << std::setprecision(3) << nativeValue;
+    return os.str();
   }
 };
 
@@ -76,6 +141,23 @@ public:
     minValue = 0.01;
     maxValue = 8;
     defaultValue = 1;
+  }
+
+  double toControlValue (double nativeValue) const
+  {
+    return ((log (nativeValue) / log (2.)) + 4) / 8;
+  }
+
+  double toNativeValue (double controlValue) const
+  {
+    return pow (2., (controlValue*8)-4);
+  }
+
+  std::string toString (double nativeValue) const
+  {
+    std::ostringstream os;
+    os << std::fixed << std::setprecision(3) << nativeValue;
+    return os.str();
   }
 };
 
@@ -101,9 +183,26 @@ public:
   {
     szName = "Shelf Slope";
     szUnits= "";
-    minValue = 0.01;
+    minValue = 1./4;
     maxValue = 4;
     defaultValue = 1;
+  }
+
+  double toControlValue (double nativeValue) const
+  {
+    return ((log (nativeValue) / log (2.)) + 2) / 4;
+  }
+
+  double toNativeValue (double controlValue) const
+  {
+    return pow (2., (controlValue*4)-2);
+  }
+
+  std::string toString (double nativeValue) const
+  {
+    std::ostringstream os;
+    os << std::fixed << std::setprecision(3) << nativeValue;
+    return os.str();
   }
 };
 
@@ -125,7 +224,7 @@ public:
 
 //------------------------------------------------------------------------------
 
-static detail::SampleRateParamInfo buildinParamSampleRate;
+static detail::SampleRateParamInfo builtinParamSampleRate;
 static detail::FrequencyParamInfo  builtinParamFrequency;
 static detail::QParamInfo          builtinParamQ;
 static detail::BandwidthParamInfo  builtinParamBandwidth;
@@ -136,6 +235,7 @@ static detail::OrderParamInfo      builtinParamOrder;
 Design::Design ()
   : m_numParams (0)
 {
+  addBuiltinParamInfo (idSampleRate);
 }
 
 //------------------------------------------------------------------------------
@@ -159,7 +259,7 @@ ParamInfo* Design::getBuiltinParamInfo (int paramId)
 
   switch (paramId)
   {
-  case idSampleRate: p = &buildinParamSampleRate; break;
+  case idSampleRate: p = &builtinParamSampleRate; break;
   case idFrequency:  p = &builtinParamFrequency; break;
   case idQ:          p = &builtinParamQ; break;
   case idBandwidth:  p = &builtinParamBandwidth; break;

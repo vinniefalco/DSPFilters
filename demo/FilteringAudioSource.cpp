@@ -2,7 +2,8 @@
 #include "FilteringAudioSource.h"
 
 FilteringAudioSource::FilteringAudioSource ()
-  : m_source (0)
+  : m_sampleRate (0)
+  , m_source (0)
 {
 }
 
@@ -21,15 +22,19 @@ void FilteringAudioSource::setSource (AudioSource* source)
 void FilteringAudioSource::setFilter (Dsp::Filter* filter)
 {
   m_filter = filter;
+  
+  if (m_filter)
+  {
+    assert (m_sampleRate != 0);
+    m_filter->setParamById (Dsp::idSampleRate, m_sampleRate);
+  }
 }
 
 // Caller is responsible for synchronization.
 void FilteringAudioSource::setFilterParameters (Dsp::Parameters parameters)
 {
   if (m_filter)
-  {
     m_filter->setParameters (parameters);
-  }
 }
 
 void FilteringAudioSource::prepareToPlay (int samplesPerBlockExpected,
@@ -37,6 +42,11 @@ void FilteringAudioSource::prepareToPlay (int samplesPerBlockExpected,
 {
   if (m_source)
     m_source->prepareToPlay (samplesPerBlockExpected, sampleRate);
+
+  if (m_filter)
+    m_filter->setParamById (Dsp::idSampleRate, sampleRate);
+
+  m_sampleRate = sampleRate;
 }
 
 void FilteringAudioSource::releaseResources()

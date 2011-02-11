@@ -26,13 +26,13 @@ public:
 
   double getControlValue () const
   {
-    return m_filter->getParam (m_paramIndex);
+    return m_paramInfo.toControlValue (m_filter->getParam (m_paramIndex));
   }
 
   void setControlValue (double controlValue)
   {
-    m_filter->setParam (m_paramIndex, controlValue);
-    //m_listeners.call (&FilterListener::onFilterParameters);
+    m_filter->setParam (m_paramIndex, m_paramInfo.toNativeValue (controlValue));
+    m_listeners.call (&FilterListener::onFilterParameters);
   }
 
   const String getNativeValueAsText () const
@@ -49,7 +49,7 @@ private:
   ListenerList<FilterListener>& m_listeners;
   Dsp::Filter* m_filter;
   int m_paramIndex;
-  const Dsp::ParamInfo m_paramInfo;
+  const Dsp::ParamInfo& m_paramInfo;
 };
 
 //------------------------------------------------------------------------------
@@ -94,15 +94,16 @@ void FilterControls::onFilterChanged (Dsp::Filter* newFilter)
   {
     const Dsp::ParamInfo& info = m_filter->getParamInfo (i);
 
-    Item item;
-    item.group = new SliderGroup (new FilterParamSliderGroupModel (
-      m_listeners, m_filter, i));
-    item.group->setBounds (x, y, w, h);
-    addAndMakeVisible (item.group);
-
-    m_items.add (item);
-
-    x += w;
+    if (info.getId() != Dsp::idSampleRate)
+    {
+      Item item;
+      item.group = new SliderGroup (new FilterParamSliderGroupModel (
+        m_listeners, m_filter, i));
+      item.group->setBounds (x, y, w, h);
+      addAndMakeVisible (item.group);
+      m_items.add (item);
+      x += w;
+    }
   }
 }
 
