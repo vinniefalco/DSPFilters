@@ -5,6 +5,7 @@
 #include "DspFilters/MathSupplement.h"
 #include "DspFilters/Params.h"
 #include "DspFilters/State.h"
+#include "DspFilters/Types.h"
 
 namespace Dsp {
 
@@ -17,11 +18,18 @@ class Filter
 public:
   virtual ~Filter();
 
+  virtual Kind getKind () const = 0;
+
   virtual const std::string getName () const = 0;
 
   virtual int getNumParams () const = 0;  
 
   Parameters getDefaultParameters() const;
+
+  // This makes a best-effort to pick up the values
+  // of matching parameters from another set. It uses
+  // the ParamID information to make the match.
+  void copyParamsFrom (Dsp::Filter const* other);
 
   virtual const ParamInfo& getParamInfo (int index) const = 0;
 
@@ -104,9 +112,14 @@ template <class DesignType>
 class FilterBase : public Filter
 {
 public:
+  Kind getKind () const
+  {
+    return m_design.getKind ();
+  }
+
   const std::string getName () const
   {
-    return m_design.getName();
+    return m_design.getName ();
   }
 
   int getNumParams () const

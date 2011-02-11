@@ -38,6 +38,8 @@ template <int MaxPoles>
 class ButterLowPassDesign : public PoleZeroDesign <MaxPoles>
 {
 public:
+  Kind getKind () const { return kindLowPass; }
+
   const std::string getName () const
   {
     return "Butterworth Low Pass";
@@ -67,6 +69,8 @@ template <int MaxPoles>
 class ButterHighPassDesign : public PoleZeroDesign <MaxPoles>
 {
 public:
+  Kind getKind () const { return kindHighPass; }
+
   const std::string getName () const
   {
     return "Butterworth High Pass";
@@ -88,7 +92,7 @@ public:
 
   void setParameters (const Parameters& params)
   {
-    setup (params[0], int (params[1]), params[1]);
+    setup (params[0], int (params[1]), params[2]);
   }
 };
 
@@ -96,6 +100,8 @@ template <int MaxPoles>
 class ButterBandPassDesign : public PoleZeroDesign <MaxPoles>
 {
 public:
+  Kind getKind () const { return kindBandPass; }
+
   const std::string getName () const
   {
     return "Butterworth Band Pass";
@@ -127,6 +133,8 @@ template <int MaxPoles>
 class ButterLowShelfDesign : public PoleZeroDesign <MaxPoles>
 {
 public:
+  Kind getKind () const { return kindLowShelf; }
+
   const std::string getName () const
   {
     return "Butterworth Low Shelf";

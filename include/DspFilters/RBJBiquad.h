@@ -48,6 +48,7 @@ class RBJLowPassDesign : public detail::RBJDesignTypeI
                        , public detail::BiquadBase
 {
 public:
+  Kind getKind () const { return kindLowPass; }
   const std::string getName() const;
   void setParameters (const Parameters& params);
   void setup (double sampleRate,
@@ -59,6 +60,7 @@ class RBJHighPassDesign : public detail::RBJDesignTypeI
                         , public detail::BiquadBase
 {
 public:
+  Kind getKind () const { return kindHighPass; }
   const std::string getName() const;
   void setParameters (const Parameters& params);
   void setup (double sampleRate,
@@ -71,6 +73,7 @@ class RBJBandPass1Design : public detail::RBJDesignTypeII
                          , public detail::BiquadBase
 {
 public:
+  Kind getKind () const { return kindBandPass; }
   const std::string getName() const;
   void setParameters (const Parameters& params);
   void setup (double sampleRate,
@@ -83,6 +86,7 @@ class RBJBandPass2Design : public detail::RBJDesignTypeII
                          , public detail::BiquadBase
 {
 public:
+  Kind getKind () const { return kindBandPass; }
   const std::string getName() const;
   void setParameters (const Parameters& params);
   void setup (double sampleRate,
@@ -94,6 +98,7 @@ class RBJBandStopDesign : public detail::RBJDesignTypeII
                         , public detail::BiquadBase
 {
 public:
+  Kind getKind () const { return kindBandStop; }
   const std::string getName() const;
   void setParameters (const Parameters& params);
   void setup (double sampleRate,
@@ -105,6 +110,7 @@ class RBJLowShelfDesign : public detail::RBJDesignTypeIII
                         , public detail::BiquadBase
 {
 public:
+  Kind getKind () const { return kindLowShelf; }
   const std::string getName() const;
   void setParameters (const Parameters& params);
   void setup (double sampleRate,
@@ -117,6 +123,7 @@ class RBJHighShelfDesign : public detail::RBJDesignTypeIII
                          , public detail::BiquadBase
 {
 public:
+  Kind getKind () const { return kindHighShelf; }
   const std::string getName() const;
   void setParameters (const Parameters& params);
   void setup (double sampleRate,
@@ -129,6 +136,7 @@ class RBJBandShelfDesign : public detail::RBJDesignTypeIII
                          , public detail::BiquadBase
 {
 public:
+  Kind getKind () const { return kindBandShelf; }
   const std::string getName() const;
   void setParameters (const Parameters& params);
   void setup (double sampleRate,
@@ -141,6 +149,7 @@ class RBJAllPassDesign : public detail::RBJDesignTypeI
                        , public detail::BiquadBase
 {
 public:
+  Kind getKind () const { return kindOther; }
   const std::string getName() const;
   void setParameters (const Parameters& params);
   void setup (double sampleRate,

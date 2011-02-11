@@ -15,6 +15,7 @@ namespace Dsp {
  * first parameter
  *
  */
+
 class Design
 {
 public:
