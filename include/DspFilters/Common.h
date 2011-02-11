@@ -17,7 +17,7 @@
 #include <cmath>
 #include <complex>
 #include <string>
-#include <type_traits>
+#include <limits>
 #include <vector>
 
 #ifdef _MSC_VER

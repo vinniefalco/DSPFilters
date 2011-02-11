@@ -1,0 +1,183 @@
+#include "DspFilters/Common.h"
+#include "DspFilters/Design.h"
+#include <sstream>
+
+namespace Dsp {
+
+double ParamInfo::toControlValue (double nativeValue) const
+{
+  return nativeValue;
+}
+
+double ParamInfo::toNativeValue (double controlValue) const
+{
+  return controlValue;
+}
+
+std::string ParamInfo::toString (double nativeValue) const
+{
+  std::ostringstream os;
+  os << nativeValue;
+  return os.str();
+}
+
+namespace detail {
+
+class SampleRateParamInfo : public ParamInfo
+{
+public:
+  SampleRateParamInfo ()
+    : ParamInfo (idSampleRate, "Fs")
+  {
+    szName = "Sample Rate";
+    szUnits= "Hz";
+    minValue = 44100;
+    maxValue = 192000;
+    defaultValue = 44100;
+  }
+};
+
+class FrequencyParamInfo : public ParamInfo
+{
+public:
+  FrequencyParamInfo ()
+    : ParamInfo (idFrequency, "Freq")
+  {
+    szName = "Frequency";
+    szUnits= "Hz";
+    minValue = 20;
+    maxValue = 20000;
+    defaultValue = 440;
+  }
+};
+
+class QParamInfo : public ParamInfo
+{
+public:
+  QParamInfo ()
+    : ParamInfo (idQ, "Q")
+  {
+    szName = "Q";
+    szUnits= "";
+    minValue = 0.01;
+    maxValue = 16;
+    defaultValue = 1;
+  }
+};
+
+class BandwidthParamInfo : public ParamInfo
+{
+public:
+  BandwidthParamInfo ()
+    : ParamInfo (idBandwidth, "BW")
+  {
+    szName = "Bandwidth";
+    szUnits= "Oct";
+    minValue = 0.01;
+    maxValue = 8;
+    defaultValue = 1;
+  }
+};
+
+class GainParamInfo : public ParamInfo
+{
+public:
+  GainParamInfo ()
+    : ParamInfo (idGain, "Gain")
+  {
+    szName = "Gain";
+    szUnits= "dB";
+    minValue = -24;
+    maxValue = 24;
+    defaultValue = 0;
+  }
+};
+
+class SlopeParamInfo : public ParamInfo
+{
+public:
+  SlopeParamInfo ()
+    : ParamInfo (idSlope, "Slope")
+  {
+    szName = "Shelf Slope";
+    szUnits= "";
+    minValue = 0.01;
+    maxValue = 4;
+    defaultValue = 1;
+  }
+};
+
+class OrderParamInfo : public ParamInfo
+{
+public:
+  OrderParamInfo ()
+    : ParamInfo (idOrder, "Order")
+  {
+    szName = "Order";
+    szUnits= "";
+    minValue = 1;
+    maxValue = 50;
+    defaultValue = 2;
+  }
+};
+
+}
+
+//------------------------------------------------------------------------------
+
+static detail::SampleRateParamInfo buildinParamSampleRate;
+static detail::FrequencyParamInfo  builtinParamFrequency;
+static detail::QParamInfo          builtinParamQ;
+static detail::BandwidthParamInfo  builtinParamBandwidth;
+static detail::GainParamInfo       builtinParamGain;
+static detail::SlopeParamInfo      builtinParamSlope;
+static detail::OrderParamInfo      builtinParamOrder;
+
+Design::Design ()
+  : m_numParams (0)
+{
+}
+
+//------------------------------------------------------------------------------
+
+const ParamInfo& Design::getParamInfo (int index) const
+{
+  assert (index >= 0 && index < m_numParams);
+  return *m_paramInfo[index];
+}
+
+void Design::addParamInfo (const ParamInfo* paramInfo)
+{
+  assert (m_numParams < maxParameters);
+
+  m_paramInfo[m_numParams++] = paramInfo;
+}
+
+ParamInfo* Design::getBuiltinParamInfo (int paramId)
+{
+  ParamInfo* p = 0;
+
+  switch (paramId)
+  {
+  case idSampleRate: p = &buildinParamSampleRate; break;
+  case idFrequency:  p = &builtinParamFrequency; break;
+  case idQ:          p = &builtinParamQ; break;
+  case idBandwidth:  p = &builtinParamBandwidth; break;
+  case idGain:       p = &builtinParamGain; break;
+  case idSlope:      p = &builtinParamSlope; break;
+  case idOrder:      p = &builtinParamOrder; break;
+  };
+
+  assert (p);
+
+  return p;
+}
+
+void Design::addBuiltinParamInfo (int paramId)
+{
+  ParamInfo* paramInfo = getBuiltinParamInfo (paramId);
+
+  addParamInfo (paramInfo);
+}
+
+}

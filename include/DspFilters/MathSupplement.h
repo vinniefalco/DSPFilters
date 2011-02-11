@@ -2,10 +2,9 @@
 #define DSPFILTERS_MATHSUPPLEMENT_H
 
 #include "DspFilters/Common.h"
+#include "DspFilters/Types.h"
 
 namespace Dsp {
-
-typedef std::complex<double> complex_t;
 
 const double doublePi		=3.1415926535897932384626433832795028841971;
 const double doublePi_2	=1.5707963267948966192313216916397514420986;

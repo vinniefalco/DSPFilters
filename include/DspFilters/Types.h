@@ -5,6 +5,8 @@
 
 namespace Dsp {
 
+typedef std::complex<double> complex_t;
+
 // A pair of pole/zeros. This fits in a biquad / second order section.
 struct PoleZeroPair
 {

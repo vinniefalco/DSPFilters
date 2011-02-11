@@ -463,6 +463,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\include\DspFilters\Design.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\include\DspFilters\Dsp.h"
 					>
 				</File>
@@ -539,6 +543,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\source\Design.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\DspFilter.cpp"
 					>
 				</File>
@@ -548,6 +556,10 @@
 				</File>
 				<File
 					RelativePath="..\..\source\Filter.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\Param.cpp"
 					>
 				</File>
 				<File

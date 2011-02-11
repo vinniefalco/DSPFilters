@@ -19,26 +19,26 @@ public:
 
   virtual const std::string getName () const = 0;
 
-  virtual int getNumParameters () const = 0;  
+  virtual int getNumParams () const = 0;  
 
   Parameters getDefaultParameters() const;
 
-  virtual const Param getParam (int index) const = 0;
+  virtual const ParamInfo& getParamInfo (int index) const = 0;
 
   const Parameters& getParameters() const
   {
     return m_parameters;
   }
 
-  double getParamValue (int paramIndex) const
+  double getParam (int paramIndex) const
   {
-    assert (paramIndex >= 0 && paramIndex <= getNumParameters());
+    assert (paramIndex >= 0 && paramIndex <= getNumParams());
     return m_parameters[paramIndex];
   }
 
-  void setParamValue (int paramIndex, double nativeValue)
+  void setParam (int paramIndex, double nativeValue)
   {
-    assert (paramIndex >= 0 && paramIndex <= getNumParameters());
+    assert (paramIndex >= 0 && paramIndex <= getNumParams());
     m_parameters[paramIndex] = nativeValue;
     //doSetParameters (m_parameters);
   }
@@ -95,9 +95,9 @@ public:
     return m_design.getName();
   }
 
-  int getNumParameters () const
+  int getNumParams () const
   {
-    return m_design.getNumParameters();
+    return m_design.getNumParams();
   }
 
   Parameters getDefaultParameters() const
@@ -105,9 +105,9 @@ public:
     return m_design.getDefaultParameters();
   }
 
-  const Param getParam (int index) const
+  const ParamInfo& getParamInfo (int index) const
   {
-    return m_design.getParam (index);
+    return m_design.getParamInfo (index);
   }
 
   const PoleZeros getPoleZeros() const

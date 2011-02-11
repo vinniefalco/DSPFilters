@@ -7,8 +7,8 @@ Parameters Filter::getDefaultParameters() const
 {
   Parameters parameters;
 
-  for (int i = 0; i < getNumParameters(); ++i)
-    parameters[i] = getParam(i).defaultValue;
+  for (int i = 0; i < getNumParams(); ++i)
+    parameters[i] = getParamInfo(i).defaultValue;
 
   return parameters;
 }

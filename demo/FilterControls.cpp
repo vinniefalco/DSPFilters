@@ -11,7 +11,7 @@ public:
     : m_listeners (listeners)
     , m_filter (filter)
     , m_paramIndex (paramIndex)
-    , m_paramInfo (m_filter->getParam (paramIndex))
+    , m_paramInfo (m_filter->getParamInfo (paramIndex))
   {
   }
 
@@ -21,24 +21,24 @@ public:
 
   const String getName () const
   {
-    return m_paramInfo.szLabel;
+    return m_paramInfo.getLabel ();
   }
 
   double getControlValue () const
   {
-    return m_filter->getParameters()[m_paramIndex];
+    return m_filter->getParam (m_paramIndex);
   }
 
   void setControlValue (double controlValue)
   {
-    m_filter->setParamValue (m_paramIndex, controlValue);
+    m_filter->setParam (m_paramIndex, controlValue);
     //m_listeners.call (&FilterListener::onFilterParameters);
   }
 
   const String getNativeValueAsText () const
   {
-    double nativeValue = m_filter->getParamValue (m_paramIndex);
-    return String (nativeValue, 3);
+    const Dsp::ParamInfo& paramInfo = m_filter->getParamInfo (m_paramIndex);
+    return String (paramInfo.toString (m_filter->getParam (m_paramIndex)).c_str ());
   }
 
   void setNativeValue (double nativeValue)
@@ -49,7 +49,7 @@ private:
   ListenerList<FilterListener>& m_listeners;
   Dsp::Filter* m_filter;
   int m_paramIndex;
-  const Dsp::Param m_paramInfo;
+  const Dsp::ParamInfo m_paramInfo;
 };
 
 //------------------------------------------------------------------------------
@@ -90,9 +90,9 @@ void FilterControls::onFilterChanged (Dsp::Filter* newFilter)
   const int y = bounds.getY() + ygap;
 
   int x = bounds.getX() + 2;
-  for (int i = 0; i < m_filter->getNumParameters(); ++i)
+  for (int i = 0; i < m_filter->getNumParams(); ++i)
   {
-    const Dsp::Param& info = m_filter->getParam(i);
+    const Dsp::ParamInfo& info = m_filter->getParamInfo (i);
 
     Item item;
     item.group = new SliderGroup (new FilterParamSliderGroupModel (
