@@ -258,6 +258,8 @@ private:
 		Rect margin;
 
     State (Component* component=0);
+    State (const State& other);
+
     bool operator== (const State& rhs) const;
     bool operator>= (const State& rhs) const;
 	};

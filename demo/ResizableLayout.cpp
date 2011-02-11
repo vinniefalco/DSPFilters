@@ -69,6 +69,13 @@ ResizableLayout::State::State (Component* component_)
   jassert (component);
 }
 
+ResizableLayout::State::State (const State& other)
+: component (other.component)
+, aspect (other.aspect)
+, margin (other.margin)
+{
+}
+
 bool ResizableLayout::State::operator== (const State& rhs) const
 {
   return component == rhs.component;

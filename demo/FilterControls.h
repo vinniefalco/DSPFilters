@@ -5,6 +5,7 @@
 #include "FilterListener.h"
 #include "FilterValue.h"
 #include "ResizableLayout.h"
+#include "SliderGroup.h"
 
 /*
  * Creates filter Gui controls dynamically, using
@@ -13,9 +14,7 @@
  */
 class FilterControls
   : public Component
-  , public ResizableLayout
   , public FilterListener
-  , private Slider::Listener
 {
 public:
   FilterControls (ListenerList<FilterListener>& listeners);
@@ -27,22 +26,16 @@ public:
 
 protected:
   void clear ();
-  void setFilter (Dsp::Filter* filter);
-  void sliderValueChanged (Slider* ctrl);
 
 private:
   struct Item
   {
     Item ()
     {
-      label = 0;
-      knob = 0;
-      value = 0;
+      group = 0;
     }
 
-    Label* label;
-    Slider* knob;
-    FilterValue* value;
+    SliderGroup* group;
   };
 
   ListenerList<FilterListener>& m_listeners;

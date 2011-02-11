@@ -61,6 +61,13 @@ public:
     return m_parameters;
   }
 
+  void setParam (int paramIndex, double value)
+  {
+    assert (paramIndex >= 0 && paramIndex <= getNumParameters());
+    m_parameters[paramIndex] = value;
+    doSetParameters (m_parameters);
+  }
+
   void setParameters (const Parameters& parameters)
   {
     m_parameters = parameters;

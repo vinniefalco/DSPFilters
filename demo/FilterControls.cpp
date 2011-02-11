@@ -3,11 +3,61 @@
 #include "FilterControls.h"
 #include "FilterValue.h"
 
-FilterControls::FilterControls (ListenerList<FilterListener>& listeners)
-  : ResizableLayout (this)
-  , m_listeners (listeners)
+class FilterParamSliderGroupModel : public SliderGroup::Model
 {
-  //setOpaque (true);
+public:
+  FilterParamSliderGroupModel (ListenerList<FilterListener>& listeners,
+                               Dsp::Filter* filter,
+                               int paramIndex)
+    : m_listeners (listeners)
+    , m_filter (filter)
+    , m_paramIndex (paramIndex)
+    , m_paramInfo (m_filter->getParameterInfo (paramIndex))
+  {
+  }
+
+  ~FilterParamSliderGroupModel()
+  {
+  }
+
+  const String getName () const
+  {
+    return m_paramInfo.szLabel;
+  }
+
+  double getControlValue () const
+  {
+    return m_filter->getParameters()[m_paramIndex];
+  }
+
+  void setControlValue (double controlValue)
+  {
+    m_filter->setParam (m_paramIndex, controlValue);
+    m_listeners.call (&FilterListener::onFilterParameters);
+  }
+
+  const String getNativeValueAsText () const
+  {
+    double nativeValue = 0.5;
+    return String (nativeValue, 3);
+  }
+
+  void setNativeValue (double nativeValue)
+  {
+  }
+
+private:
+  ListenerList<FilterListener>& m_listeners;
+  Dsp::Filter* m_filter;
+  int m_paramIndex;
+  const Dsp::ParameterInfo m_paramInfo;
+};
+
+//------------------------------------------------------------------------------
+
+FilterControls::FilterControls (ListenerList<FilterListener>& listeners)
+  : m_listeners (listeners)
+{
 }
 
 FilterControls::~FilterControls ()
@@ -26,106 +76,43 @@ void FilterControls::paint (Graphics& g)
   g.drawRect (bounds, 1);
 }
 
+// Use introspection to build the list of controls
 void FilterControls::onFilterChanged (Dsp::Filter* newFilter)
 {
-  setFilter (newFilter);
+  m_filter = newFilter;
+
+  clear ();
+
+  const Rectangle<int> bounds = getLocalBounds();
+
+  const int w = 70;
+  const int ygap = 0;
+  const int h = bounds.getHeight() - 2 * ygap;
+  const int y = bounds.getY() + ygap;
+
+  int x = bounds.getX() + 2;
+  for (int i = 0; i < m_filter->getNumParameters(); ++i)
+  {
+    const Dsp::ParameterInfo& info = m_filter->getParameterInfo(i);
+
+    Item item;
+    item.group = new SliderGroup (new FilterParamSliderGroupModel (
+      m_listeners, m_filter, i));
+    item.group->setBounds (x, y, w, h);
+    addAndMakeVisible (item.group);
+
+    m_items.add (item);
+
+    x += w;
+  }
 }
 
 void FilterControls::clear ()
 {
   for (int i = 0; i < m_items.size(); ++i)
   {
-    delete m_items[i].label;
-    delete m_items[i].knob;
-    delete m_items[i].value;
+    delete m_items[i].group;
   }
 
   m_items.clear ();
-}
-
-/*
- * This function uses the introspection feature of Dsp::Filter
- * in order to build a set of controls on the fly.
- *
- */
-void FilterControls::setFilter (Dsp::Filter* filter)
-{
-  clear ();
-
-  const Rectangle<int> bounds = getLocalBounds();
-
-  const int w = 40;
-  const int h = 40;
-  const int y = bounds.getY() + 4;
-
-  int x = bounds.getX() + 2;
-  for (int i = 0; i < filter->getNumParameters(); ++i)
-  {
-    const Dsp::ParameterInfo& info = filter->getParameterInfo(i);
-
-    Item item;
-
-    item.label = new Label (String::empty, info.szLabel);
-    item.label->setFont (14);
-    item.label->setBorderSize (0, 0);
-    item.label->setBounds (x, y, w, int(ceil(item.label->getFont().getHeight())));
-    item.label->setJustificationType (Justification::centred);
-    addAndMakeVisible (item.label);
-
-    item.knob = new CustomSlider (String::empty);
-    item.knob->setSliderStyle (Slider::RotaryVerticalDrag);
-    item.knob->setRotaryParameters (float_Pi * 1.2f, float_Pi * 2.8f, false);
-    item.knob->setBounds (x, item.label->getBounds().getBottom() + 4, w, h);
-    item.knob->setRange (info.minValue, info.maxValue);
-    item.knob->setVelocityBasedMode (false);
-    item.knob->setTextBoxStyle (Slider::NoTextBox, false, 0, 0);
-    item.knob->addListener (this);
-    item.knob->setValue (filter->getParameters()[i], false);
-    addAndMakeVisible (item.knob);
-
-    item.value = new FilterValue (m_listeners, filter, i);
-    item.value->setFont (15);
-    item.value->setBorderSize (0, 0);
-    item.value->setJustificationType (Justification::centredTop);
-    item.value->setBounds (x, item.knob->getBounds().getBottom() + 2, w, h);
-    addAndMakeVisible (item.value);
-
-    m_items.add (item);
-
-    x += w + 12;
-  }
-
-  m_filter = filter;
-}
-
-void FilterControls::sliderValueChanged (Slider* ctrl)
-{
-  for (int i = 0; i < m_items.size(); ++i)
-  {
-    if (m_items[i].knob == ctrl)
-    {
-      const Dsp::ParameterInfo& info = m_filter->getParameterInfo(i);
-      Dsp::Parameters parameters = m_filter->getParameters();
-      double v = ctrl->getValue ();
-      if (v < info.minValue)
-        v = info.minValue;
-      else if (v > info.maxValue)
-        v = info.maxValue;
-
-      parameters[i] = v;
-      m_filter->setParameters (parameters);
-      /*
-      double flo = 10./44100.;
-      double fhi = (22050-10)/44100.;
-      normalizedFrequency = jlimit (flo, fhi, normalizedFrequency);
-
-      Dsp::Parameters parameters;
-      parameters[0] = normalizedFrequency;
-      parameters[1] = 3;
-      m_filter->setParameters (parameters);
-      */
-      m_listeners.call (&FilterListener::onFilterParameters);
-      break;
-    }
-  }
 }

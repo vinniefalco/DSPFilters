@@ -403,6 +403,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\demo\SliderGroup.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\SliderGroup.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\demo\ThreadQueue.cpp"
 					>
 				</File>
