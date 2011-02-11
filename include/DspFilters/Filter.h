@@ -3,41 +3,10 @@
 
 #include "DspFilters/Common.h"
 #include "DspFilters/MathSupplement.h"
+#include "DspFilters/Params.h"
 #include "DspFilters/State.h"
 
 namespace Dsp {
-
-enum
-{
-  maxParameters = 8
-};
-
-struct Parameters
-{
-  double& operator[] (int index)
-  {
-    return value[index];
-  }
-
-  const double& operator[] (int index) const
-  {
-    return value[index];
-  }
-
-  double value[maxParameters];
-};
-
-struct ParameterInfo
-{
-  const char* szLabel;
-  const char* szName;
-  const char* szUnits;
-  double minValue;
-  double maxValue;
-  double defaultValue;
-};
-
-//------------------------------------------------------------------------------
 
 /*
  * Abstract polymorphic filter.
@@ -54,18 +23,24 @@ public:
 
   Parameters getDefaultParameters() const;
 
-  virtual const ParameterInfo getParameterInfo (int index) const = 0;
+  virtual const Param getParam (int index) const = 0;
 
   const Parameters& getParameters() const
   {
     return m_parameters;
   }
 
-  void setParam (int paramIndex, double value)
+  double getParamValue (int paramIndex) const
   {
     assert (paramIndex >= 0 && paramIndex <= getNumParameters());
-    m_parameters[paramIndex] = value;
-    doSetParameters (m_parameters);
+    return m_parameters[paramIndex];
+  }
+
+  void setParamValue (int paramIndex, double nativeValue)
+  {
+    assert (paramIndex >= 0 && paramIndex <= getNumParameters());
+    m_parameters[paramIndex] = nativeValue;
+    //doSetParameters (m_parameters);
   }
 
   void setParameters (const Parameters& parameters)
@@ -130,9 +105,9 @@ public:
     return m_design.getDefaultParameters();
   }
 
-  const ParameterInfo getParameterInfo (int index) const
+  const Param getParam (int index) const
   {
-    return m_design.getParameterInfo (index);
+    return m_design.getParam (index);
   }
 
   const PoleZeros getPoleZeros() const

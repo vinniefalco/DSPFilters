@@ -5,9 +5,9 @@ namespace Dsp {
 
 namespace detail {
 
-const ParameterInfo RBJDesignTypeI::getParameterInfo (int index) const
+const Param RBJDesignTypeI::getParam (int index) const
 {
-  ParameterInfo info;
+  Param info;
   switch (index)
   {
   case 0:
@@ -32,9 +32,9 @@ const ParameterInfo RBJDesignTypeI::getParameterInfo (int index) const
   return info;
 }
 
-const ParameterInfo RBJDesignTypeII::getParameterInfo (int index) const
+const Param RBJDesignTypeII::getParam (int index) const
 {
-  ParameterInfo info;
+  Param info;
   switch (index)
   {
   case 0:
@@ -59,9 +59,9 @@ const ParameterInfo RBJDesignTypeII::getParameterInfo (int index) const
   return info;
 }
 
-const ParameterInfo RBJDesignTypeIII::getParameterInfo (int index) const
+const Param RBJDesignTypeIII::getParam (int index) const
 {
-  ParameterInfo info;
+  Param info;
   switch (index)
   {
   case 0:
