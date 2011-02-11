@@ -4,8 +4,6 @@
 
 namespace Dsp {
 
-namespace detail {
-
 BiquadBase::PoleZeroForm::PoleZeroForm ()
 {
 }
@@ -75,8 +73,6 @@ void BiquadBase::setCoefficients (double a0, double a1, double a2,
   m_b0 = b0;
   m_b1 = b1;
   m_b2 = b2;
-}
-
 }
 
 //------------------------------------------------------------------------------

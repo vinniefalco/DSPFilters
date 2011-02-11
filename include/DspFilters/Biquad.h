@@ -13,10 +13,7 @@ namespace Dsp {
  *
  */
 
-namespace detail {
-
-// Biquad filter designs derive from this class instaed, in order
-// to restrict callers from interfering with the coefficients.
+// Factored interface to prevent outsiders from fiddling
 class BiquadBase
 {
 public:
@@ -56,8 +53,6 @@ public:
   }
 
 protected:
-  // Set the coefficients. The overall gain is collected,
-  // stored and factored out to reduce computation.
   void setCoefficients (double a0, double a1, double a2,
                         double b0, double b1, double b2);
 
@@ -70,9 +65,10 @@ protected:
   double m_b0;
 };
 
-}
+//------------------------------------------------------------------------------
 
-class Biquad : public detail::BiquadBase
+// More permissive interface for fooling around
+class Biquad : public BiquadBase
 {
 public:
   Biquad ();
@@ -117,7 +113,7 @@ public:
                 StateType& state,
                 PoleZeroForm zPrev) const 
   {
-    PoleZeros z (*this);
+    PoleZeroForm z (*this);
     double t = 1. / numSamples;
     complex_t dp0 = (z.pole[0] - zPrev.pole[0]) * t;
     complex_t dp1 = (z.pole[1] - zPrev.pole[1]) * t;

@@ -6,34 +6,110 @@
 #include "DspFilters/Filter.h"
 #include "DspFilters/PoleFilter.h"
 
+#if 0
+
 namespace Dsp {
 
 /*
- * Cascade filter design with Butterworth response characteristics
+ * Filters with Butterworth response characteristics
  *
  */
 
-//------------------------------------------------------------------------------
+namespace Butterworth {
 
-namespace detail {
+// Half-band analog prototypes (s-plane)
 
-class ButterworthLowPass
+class AnalogLowPassHalfband
 {
 public:
   static void design (const int numPoles,
                       PoleZeroPair* pzArray);
+
+  static void design (const int numPoles,
+                      PoleZeroPrototype* proto);
 };
 
-class ButterworthLowShelf
+class AnalogLowShelfHalfband
 {
 public:
   static void design (const int numPoles,
                       double gainDb,
                       PoleZeroPair* pzArray);
+
+  static void design (const int numPoles,
+                      double gainDb,
+                      PoleZeroPrototype* proto);
+};
+
+//------------------------------------------------------------------------------
+
+class PoleFilterBase : public CascadeBase
+{
+public:
+
+protected:
+  PoleZeroPrototype* m_analogProto;
+  PoleZeroPrototype* m_digitalProto;
+};
+
+struct LowPassBase : PoleFilterBase
+{
+  void setup (int order,
+              double sampleRate,
+              double cutoffFrequency);
+};
+
+template <int MaxOrder, class BaseClass>
+struct PoleFilter : BaseClass
+{
+private:
+};
+
+template <int MaxOrder>
+struct LowPass : Cascade <MaxOrder>, LowPassBase
+{
+  LowPass () : Cascade (this)
+  {
+  }
+};
+
+//------------------------------------------------------------------------------
+
+namespace Design {
+
+template <class FilterClass>
+struct TypeI : DesignBase, FilterClass
+{
+  TypeI ()
+  {
+    addBuiltinParamInfo (idOrder);
+    addBuiltinParamInfo (idFrequency);
+  }
+
+  void setParameters (const Parameters& params)
+  {
+    FilterClass::setup (int(params[1]), params[0], params[2]);
+  }
+};
+
+//------------------------------------------------------------------------------
+
+struct LowPassBase
+{
+  Kind getKind () const { return kindLowPass; }
+  const char* getName() const { return "Butterworth Low Pass"; }
+};
+
+template<int MaxOrder>
+struct LowPass : TypeI <Butterworth::LowPass <MaxOrder>>, LowPassBase
+{
 };
 
 }
 
+//------------------------------------------------------------------------------
+
+#if 0
 template <int MaxPoles>
 class ButterLowPassDesign : public PoleZeroDesign <MaxPoles>
 {
@@ -49,8 +125,8 @@ public:
               int order,
               double cutoffFrequency)
   {
-    detail::ButterworthLowPass::design (order, m_prototype);
-    detail::LowPassTransformation::transform (order,
+    AnalogLowPassHalfband::design (order, m_prototype);
+    LowPassTransformation::transform (order,
                                               cutoffFrequency / sampleRate,
                                               m_design,
                                               m_prototype);
@@ -80,8 +156,8 @@ public:
               int order,
               double cutoffFrequency)
   {
-    detail::ButterworthLowPass::design (MaxPoles, m_prototype);
-    detail::HighPassTransformation::transform (MaxPoles,
+    AnalogLowPassHalfband::design (MaxPoles, m_prototype);
+    HighPassTransformation::transform (MaxPoles,
                                               cutoffFrequency / sampleRate,
                                               m_design,
                                               m_prototype);
@@ -112,8 +188,8 @@ public:
               double centerFrequency,
               double normalizedWidth)
   {
-    detail::ButterworthLowPass::design (MaxPoles, m_prototype);
-    detail::BandPassTransformation::transform (MaxPoles,
+    AnalogLowPassHalfband::design (MaxPoles, m_prototype);
+    BandPassTransformation::transform (MaxPoles,
                                               centerFrequency / sampleRate,
                                               normalizedWidth,
                                               m_design,
@@ -145,8 +221,8 @@ public:
               double cutoffFrequency,
               double gainDb)
   {
-    detail::ButterworthLowShelf::design (MaxPoles, gainDb, m_prototype);
-    detail::LowPassTransformation::transform (MaxPoles,
+    AnalogLowShelfHalfband::design (MaxPoles, gainDb, m_prototype);
+    LowPassTransformation::transform (MaxPoles,
                                               cutoffFrequency / sampleRate,
                                               m_design,
                                               m_prototype);
@@ -160,8 +236,13 @@ public:
     setup (params[0], int (params[1]), params[2], params[3]);
   }
 };
+#endif
 
 }
+
+}
+
+#endif
 
 #endif
 

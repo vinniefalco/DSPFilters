@@ -10,29 +10,19 @@ namespace Dsp {
  * Implements smooth modulation of time-varying filter parameters
  *
  */
-template <class DesignType,
+template <class DesignClass,
           int Channels,
           class StateType = DirectFormI>
 class SmoothedFilter
-  : public FilterType <DesignType,
+  : public FilterType <DesignClass,
                        Channels,
-                       typename DesignType::State <StateType> >
+                       typename DesignClass::State <typename StateType> >
 {
 public:
   SmoothedFilter (int transitionSamples)
     : m_transitionSamples (transitionSamples)
     , m_remainingSamples (-1) // first time flag
   {
-  }
-
-  void process (int numSamples, float* const* arrayOfChannels)
-  {
-    processBlock (numSamples, arrayOfChannels);
-  }
-
-  void process (int numSamples, double* const* arrayOfChannels)
-  {
-    processBlock (numSamples, arrayOfChannels);
   }
 
   // Process a block of samples.
@@ -54,19 +44,19 @@ public:
       double t = 1. / m_remainingSamples;
       double dp[maxParameters];
       for (int i = 0; i < m_design.getNumParams(); ++i)
-        dp[i] = (getParameters()[i] - m_transitionParameters[i]) * t;
+        dp[i] = (getParameters()[i] - m_transitionParams[i]) * t;
 
       for (int n = 0; n < remainingSamples; ++n)
       {
         for (int i = m_design.getNumParams(); --i >=0;)
-          m_transitionParameters[i] += dp[i];
+          m_transitionParams[i] += dp[i];
 
-        m_transitionDesign.setParameters (m_transitionParameters);
+        m_transitionFilter.setParameters (m_transitionParams);
         
         for (int i = numChannels; --i >= 0;)
         {
           Sample* dest = destChannelArray[i]+n;
-          *dest = m_state[i].process (*dest, m_transitionDesign);
+          *dest = m_state[i].process (*dest, m_transitionFilter);
         }
       }
 
@@ -84,28 +74,38 @@ public:
     }
   }
 
+  void process (int numSamples, float* const* arrayOfChannels)
+  {
+    processBlock (numSamples, arrayOfChannels);
+  }
+
+  void process (int numSamples, double* const* arrayOfChannels)
+  {
+    processBlock (numSamples, arrayOfChannels);
+  }
+
 protected:
   void doSetParameters (const Parameters& parameters)
   {
     if (m_remainingSamples >= 0)
     {
       if (m_remainingSamples == 0)
-        m_transitionParameters = getParameters();
+        m_transitionParams = getParameters();
       m_remainingSamples = m_transitionSamples;
     }
     else
     {
       // first time
       m_remainingSamples = 0;
-      m_transitionParameters = parameters;
+      m_transitionParams = parameters;
     }
 
     FilterType::doSetParameters (parameters);
   }
 
 protected:
-  Parameters m_transitionParameters;
-  DesignType m_transitionDesign;
+  Parameters m_transitionParams;
+  DesignClass m_transitionFilter;
   int m_transitionSamples;
 
   int m_remainingSamples;        // remaining transition samples

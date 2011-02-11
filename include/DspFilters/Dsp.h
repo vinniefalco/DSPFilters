@@ -52,7 +52,7 @@
 #include "DspFilters/ChebyshevI.h"
 #include "DspFilters/ChebyshevII.h"
 #include "DspFilters/Elliptic.h"
-#include "DspFilters/RBJBiquad.h"
+#include "DspFilters/RBJ.h"
 
 // OLD STUFF, DON'T USE!
 #include "DspFilters/DspFilter.h"

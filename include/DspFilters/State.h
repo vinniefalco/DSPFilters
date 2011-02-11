@@ -61,7 +61,7 @@ public:
   }
 
   template <typename Sample>
-  inline Sample process (const Sample in, const detail::BiquadBase& s)
+  inline Sample process (const Sample in, const BiquadBase& s)
   {
     double out = (s.getB0()*in + s.getB1()*m_x1 + s.getB2()*m_x2
                                - s.getA1()*m_y1 - s.getA2()*m_y2) / s.getA0()
@@ -108,13 +108,13 @@ public:
   }
 
   template <typename Sample>
-  Sample process (const Sample in, const detail::BiquadBase& s)
+  Sample process (const Sample in, const BiquadBase& s)
   {
     double d2 = m_v2 = m_v1;
     double d1 = m_v1 = m_v0;
     double a1i = 1. / s.getA1();
     double d0 = m_v0 = in - (s.getA1() * d1 + s.getA2() * d2) * a1i;
-    double out = (s.getB0 * d0 + s.getB1() * d1 + s.getB2() * d2) * a1i  + ac();
+    double out = (s.getB0() * d0 + s.getB1() * d1 + s.getB2() * d2) * a1i  + ac();
     return static_cast<Sample> (out);
   }
 

@@ -70,7 +70,7 @@ public:
     szUnits= "Hz";
     minValue = 20;
     maxValue = 20000;
-    defaultValue = 440;
+    defaultValue = 10000;
   }
 
   double toControlValue (double nativeValue) const
@@ -238,7 +238,7 @@ static detail::GainParamInfo       builtinParamGain;
 static detail::SlopeParamInfo      builtinParamSlope;
 static detail::OrderParamInfo      builtinParamOrder;
 
-Design::Design ()
+DesignBase::DesignBase ()
   : m_numParams (0)
 {
   addBuiltinParamInfo (idSampleRate);
@@ -246,20 +246,20 @@ Design::Design ()
 
 //------------------------------------------------------------------------------
 
-const ParamInfo& Design::getParamInfo (int index) const
+const ParamInfo& DesignBase::getParamInfo (int index) const
 {
   assert (index >= 0 && index < m_numParams);
   return *m_paramInfo[index];
 }
 
-void Design::addParamInfo (const ParamInfo* paramInfo)
+void DesignBase::addParamInfo (const ParamInfo* paramInfo)
 {
   assert (m_numParams < maxParameters);
 
   m_paramInfo[m_numParams++] = paramInfo;
 }
 
-ParamInfo* Design::getBuiltinParamInfo (int paramId)
+ParamInfo* DesignBase::getBuiltinParamInfo (int paramId)
 {
   ParamInfo* p = 0;
 
@@ -279,7 +279,7 @@ ParamInfo* Design::getBuiltinParamInfo (int paramId)
   return p;
 }
 
-void Design::addBuiltinParamInfo (int paramId)
+void DesignBase::addBuiltinParamInfo (int paramId)
 {
   ParamInfo* paramInfo = getBuiltinParamInfo (paramId);
 
