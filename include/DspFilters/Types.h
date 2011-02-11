@@ -21,6 +21,19 @@ struct PoleZeros
   std::vector<complex_t> zeros;
 };
 
+// Identifies the general class of filter
+enum Kind
+{
+  kindLowPass,
+  kindHighPass,
+  kindBandPass,
+  kindBandStop,
+  kindLowShelf,
+  kindHighShelf,
+  kindBandShelf,
+  kindOther
+};
+
 }
 
 #endif

@@ -3,7 +3,7 @@
 
 namespace Dsp {
 
-ParamInfo::ParamInfo (int id,
+ParamInfo::ParamInfo (ParamID id,
                       const char* szLabel)
   : m_id (id)
   , m_szLabel (szLabel)

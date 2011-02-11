@@ -37,7 +37,7 @@ struct Parameters
 };
 
 // Unique IDs to help identify parameters
-enum
+enum ParamID
 {
   idSampleRate,
   idFrequency,
@@ -51,7 +51,7 @@ enum
 class ParamInfo
 {
 public:
-  int getId () const
+  ParamID getId () const
   {
     return m_id;
   }
@@ -72,14 +72,14 @@ public:
   virtual std::string toString (double nativeValue) const;
 
 protected:
-  ParamInfo (int id,
+  ParamInfo (ParamID id,
              const char* szLabel);
 
 private:
   ParamInfo (const ParamInfo& other);
 
 private:
-  int m_id;
+  ParamID m_id;
   const char* m_szLabel;
 };
 

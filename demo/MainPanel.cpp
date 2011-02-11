@@ -347,13 +347,14 @@ void MainPanel::setFilter (int familyId, int typeId)
   if (f)
   {
     // TODO: Copy the parameters over in an intelligent way
+    f->copyParamsFrom (m_filter);
     m_filter = f;
-    m_filter->setParameters (m_filter->getDefaultParameters());
+    //m_filter->setParameters (m_filter->getDefaultParameters());
    
     m_listeners.call (&FilterListener::onFilterChanged, m_filter);
 
     if (fo)
-      fo->setParameters (m_filter->getDefaultParameters());
+      fo->setParameters (m_filter->getParameters ());
     MainApp::getInstance().getAudioOutput().setFilter (fo);
   }
 }
