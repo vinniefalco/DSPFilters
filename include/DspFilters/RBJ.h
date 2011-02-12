@@ -17,6 +17,10 @@ namespace Dsp {
 
 namespace RBJ {
 
+//
+// Raw filters
+//
+
 struct LowPass : BiquadBase
 {
   void setup (double sampleRate,

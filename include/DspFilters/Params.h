@@ -43,6 +43,7 @@ enum ParamID
   idFrequency,
   idQ,
   idBandwidth,
+  idBandwidthHz,
   idGain,
   idSlope,
   idOrder

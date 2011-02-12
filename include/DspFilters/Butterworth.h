@@ -15,74 +15,21 @@ namespace Dsp {
 
 namespace Butterworth {
 
+namespace detail {
+
 // Half-band analog prototypes (s-plane)
 
-struct AnalogLowPassHalfband
+struct AnalogLowPass
 {
   static void design (const int numPoles,
                       LayoutBase& proto);
 };
 
-struct AnalogLowShelfHalfband
+struct AnalogLowShelf
 {
   static void design (int numPoles,
                       double gainDb,
                       LayoutBase& proto);
-};
-
-//------------------------------------------------------------------------------
-
-class PoleFilterBase : public CascadeBase
-{
-public:
-  const PoleZeros getPoleZeros () const
-  {
-    const LayoutBase& proto = m_digitalProto;
-    const int numPoles = proto.getNumPoles ();
-    PoleZeros pz;
-    const int pairs = numPoles / 2;
-    for (int i = 0; i < pairs; ++i)
-    {
-      pz.poles.push_back (m_digitalProto.pole(2*i));
-      pz.poles.push_back (m_digitalProto.pole(2*i+1));
-      pz.zeros.push_back (m_digitalProto.zero(2*i));
-      pz.zeros.push_back (m_digitalProto.zero(2*i+1));
-    }
-    if (numPoles & 1)
-    {
-      pz.poles.push_back (m_digitalProto.pole (numPoles-1));
-      pz.zeros.push_back (m_digitalProto.zero (numPoles-1));
-    }
-    return pz;
-  }
-
-protected:
-  void construct (const LayoutBase& analogStorage,
-                  const LayoutBase& digitalStorage)
-  {
-    m_analogProto = analogStorage;
-    m_digitalProto = digitalStorage;
-  }
-
-protected:
-  LayoutBase m_analogProto;
-  LayoutBase m_digitalProto;
-};
-
-template <int MaxAnalogPoles,
-          int MaxDigitalPoles,
-          class BaseClass>
-class PoleFilter : public BaseClass
-{
-public:
-  PoleFilter ()
-  {
-    BaseClass::construct (m_analogStorage, m_digitalStorage);
-  }
-
-private:
-  Layout <MaxAnalogPoles> m_analogStorage;
-  Layout <MaxDigitalPoles> m_digitalStorage;
 };
 
 //------------------------------------------------------------------------------
@@ -103,6 +50,22 @@ struct HighPassBase : PoleFilterBase
               double cutoffFrequency);
 };
 
+struct BandPassBase : PoleFilterBase
+{
+  void setup (int order,
+              double sampleRate,
+              double centerFrequency,
+              double widthFrequency);
+};
+
+struct BandStopBase : PoleFilterBase
+{
+  void setup (int order,
+              double sampleRate,
+              double centerFrequency,
+              double widthFrequency);
+};
+
 struct LowShelfBase : PoleFilterBase
 {
   void setup (int order,
@@ -119,46 +82,42 @@ struct HighShelfBase : PoleFilterBase
               double gainDb);
 };
 
+}
+
 //------------------------------------------------------------------------------
 
+//
+// Raw filters
+//
+
 template <int MaxOrder>
-struct LowPass : PoleFilter <MaxOrder, MaxOrder, LowPassBase>
-               , Cascade <(MaxOrder+1)/2>
-                 
+struct LowPass : PoleFilter <detail::LowPassBase, MaxOrder>
 {
-  LowPass () : Cascade <(MaxOrder+1)/2> (this)
-  {
-  }
 };
 
 template <int MaxOrder>
-struct HighPass : PoleFilter <MaxOrder, MaxOrder, HighPassBase>
-                , Cascade <(MaxOrder+1)/2>
-                 
+struct HighPass : PoleFilter <detail::HighPassBase, MaxOrder>
 {
-  HighPass () : Cascade <(MaxOrder+1)/2> (this)
-  {
-  }
 };
 
 template <int MaxOrder>
-struct LowShelf : PoleFilter <MaxOrder, MaxOrder, LowShelfBase>
-               , Cascade <(MaxOrder+1)/2>
-                 
+struct BandPass : PoleFilter <detail::BandPassBase, MaxOrder, MaxOrder*2>
 {
-  LowShelf () : Cascade <(MaxOrder+1)/2> (this)
-  {
-  }
 };
 
 template <int MaxOrder>
-struct HighShelf : PoleFilter <MaxOrder, MaxOrder, HighShelfBase>
-                 , Cascade <(MaxOrder+1)/2>
-                 
+struct BandStop : PoleFilter <detail::BandStopBase, MaxOrder, MaxOrder*2>
 {
-  HighShelf () : Cascade <(MaxOrder+1)/2> (this)
-  {
-  }
+};
+
+template <int MaxOrder>
+struct LowShelf : PoleFilter <detail::LowShelfBase, MaxOrder>
+{
+};
+
+template <int MaxOrder>
+struct HighShelf : PoleFilter <detail::HighShelfBase, MaxOrder>
+{
 };
 
 //------------------------------------------------------------------------------
@@ -168,7 +127,7 @@ namespace Design {
 template <class FilterClass>
 struct TypeI : DesignBase, FilterClass
 {
-  // in theory this ctor could be factored out
+  // this ctor could be factored out
   TypeI ()
   {
     addBuiltinParamInfo (idOrder);
@@ -186,7 +145,7 @@ struct TypeI : DesignBase, FilterClass
 template <class FilterClass>
 struct TypeII : DesignBase, FilterClass
 {
-  // in theory this ctor could be factored out
+  // this ctor could be factored out
   TypeII ()
   {
     addBuiltinParamInfo (idOrder);
@@ -196,6 +155,35 @@ struct TypeII : DesignBase, FilterClass
 
   void setParameters (const Parameters& params)
   {
+    FilterClass::setup (int(params[1]),
+                        params[0],
+                        params[2],
+                        params[3]);
+  }
+};
+
+template <class FilterClass>
+struct TypeIII : DesignBase, FilterClass
+{
+  // this ctor could be factored out
+  TypeIII ()
+  {
+    addBuiltinParamInfo (idOrder);
+    addBuiltinParamInfo (idFrequency);
+    addBuiltinParamInfo (idBandwidthHz);
+  }
+
+  void setParameters (const Parameters& params)
+  {
+    /*
+    double sampleRate = params[0];
+    double centerFrequency = params[2];
+    double octaveWidth = params[3];
+
+    double fc = centerFrequency / sampleRate;
+    double f0 = 2 * fc / (1 + pow (2., octaveWidth));
+    double fw = 2 * (fc - f0);
+    */
     FilterClass::setup (int(params[1]),
                         params[0],
                         params[2],
@@ -219,6 +207,18 @@ struct HighPassDescription
   const char* getName() const { return "Butterworth High Pass"; }
 };
 
+struct BandPassDescription
+{
+  Kind getKind () const { return kindHighPass; }
+  const char* getName() const { return "Butterworth Band Pass"; }
+};
+
+struct BandStopDescription
+{
+  Kind getKind () const { return kindHighPass; }
+  const char* getName() const { return "Butterworth Band Stop"; }
+};
+
 struct LowShelfDescription
 {
   Kind getKind () const { return kindLowShelf; }
@@ -233,6 +233,10 @@ struct HighShelfDescription
 
 //------------------------------------------------------------------------------
 
+//
+// Gui-friendly Design layer
+//
+
 template <int MaxOrder>
 struct LowPass : TypeI <Butterworth::LowPass <MaxOrder> >,
                  LowPassDescription
@@ -242,6 +246,18 @@ struct LowPass : TypeI <Butterworth::LowPass <MaxOrder> >,
 template <int MaxOrder>
 struct HighPass : TypeI <Butterworth::HighPass <MaxOrder> >,
                   HighPassDescription
+{
+};
+
+template <int MaxOrder>
+struct BandPass : TypeIII <Butterworth::BandPass <MaxOrder> >,
+                  BandPassDescription
+{
+};
+
+template <int MaxOrder>
+struct BandStop : TypeIII <Butterworth::BandStop <MaxOrder> >,
+                  BandStopDescription
 {
 };
 
@@ -258,137 +274,6 @@ struct HighShelf : TypeII <Butterworth::HighShelf <MaxOrder> >,
 };
 
 }
-
-//------------------------------------------------------------------------------
-
-#if 0
-template <int MaxPoles>
-class ButterLowPassDesign : public PoleZeroDesign <MaxPoles>
-{
-public:
-  Kind getKind () const { return kindLowPass; }
-
-  const std::string getName () const
-  {
-    return "Butterworth Low Pass";
-  }
-
-  void setup (double sampleRate,
-              int order,
-              double cutoffFrequency)
-  {
-    AnalogLowPassHalfband::design (order, m_prototype);
-    LowPassTransformation::transform (order,
-                                              cutoffFrequency / sampleRate,
-                                              m_design,
-                                              m_prototype);
-    const double w0 = 0;
-    setPoleZeros (order, m_design);
-    scale (1. / std::abs (response (w0/(2*doublePi))));    
-  }
-
-  void setParameters (const Parameters& params)
-  {
-    setup (params[0], int (params[1]), params[2]);
-  }
-};
-
-template <int MaxPoles>
-class ButterHighPassDesign : public PoleZeroDesign <MaxPoles>
-{
-public:
-  Kind getKind () const { return kindHighPass; }
-
-  const std::string getName () const
-  {
-    return "Butterworth High Pass";
-  }
-
-  void setup (double sampleRate,
-              int order,
-              double cutoffFrequency)
-  {
-    AnalogLowPassHalfband::design (MaxPoles, m_prototype);
-    HighPassTransformation::transform (MaxPoles,
-                                              cutoffFrequency / sampleRate,
-                                              m_design,
-                                              m_prototype);
-    const double w0 = doublePi;
-    setPoleZeros (MaxPoles, m_design);
-    scale (1. / std::abs (response (w0/(2*doublePi))));    
-  }
-
-  void setParameters (const Parameters& params)
-  {
-    setup (params[0], int (params[1]), params[2]);
-  }
-};
-
-template <int MaxPoles>
-class ButterBandPassDesign : public PoleZeroDesign <MaxPoles>
-{
-public:
-  Kind getKind () const { return kindBandPass; }
-
-  const std::string getName () const
-  {
-    return "Butterworth Band Pass";
-  }
-
-  void setup (double sampleRate,
-              int order,
-              double centerFrequency,
-              double normalizedWidth)
-  {
-    AnalogLowPassHalfband::design (MaxPoles, m_prototype);
-    BandPassTransformation::transform (MaxPoles,
-                                              centerFrequency / sampleRate,
-                                              normalizedWidth,
-                                              m_design,
-                                              m_prototype);
-    const double w0 = doublePi;
-    setPoleZeros (MaxPoles, m_design);
-    scale (1. / std::abs (response (w0/(2*doublePi))));    
-  }
-
-  void setParameters (const Parameters& params)
-  {
-    setup (params[0], int (params[1]), params[2], params[4]);
-  }
-};
-
-template <int MaxPoles>
-class ButterLowShelfDesign : public PoleZeroDesign <MaxPoles>
-{
-public:
-  Kind getKind () const { return kindLowShelf; }
-
-  const std::string getName () const
-  {
-    return "Butterworth Low Shelf";
-  }
-
-  void setup (double sampleRate,
-              int order,
-              double cutoffFrequency,
-              double gainDb)
-  {
-    AnalogLowShelfHalfband::design (MaxPoles, gainDb, m_prototype);
-    LowPassTransformation::transform (MaxPoles,
-                                              cutoffFrequency / sampleRate,
-                                              m_design,
-                                              m_prototype);
-    const double w0 = doublePi;
-    setPoleZeros (MaxPoles, m_design);
-    scale (1. / std::abs (response (w0/(2*doublePi))));    
-  }
-
-  void setParameters (const Parameters& params)
-  {
-    setup (params[0], int (params[1]), params[2], params[3]);
-  }
-};
-#endif
 
 }
 
