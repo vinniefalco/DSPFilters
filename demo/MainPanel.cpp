@@ -241,14 +241,6 @@ bool MainPanel::isEnabled (int familyId, int typeId)
   {
     switch (familyId)
     {
-    case 2:
-      switch (typeId)
-      {
-      case 8:
-        enabled = false;
-        break;
-      };
-      break;
     };
   }
 
@@ -353,6 +345,7 @@ void MainPanel::setFilter (int familyId, int typeId)
     case 5: createSmoothedFilter <Dsp::Butterworth::Design::BandStop <50> > (&f, &fo); break;
     case 6: createSmoothedFilter <Dsp::Butterworth::Design::LowShelf <50> > (&f, &fo); break;
     case 7: createSmoothedFilter <Dsp::Butterworth::Design::HighShelf <50> > (&f, &fo); break;
+    case 8: createSmoothedFilter <Dsp::Butterworth::Design::BandShelf <50> > (&f, &fo); break;
     };
   }
 

@@ -82,6 +82,15 @@ struct HighShelfBase : PoleFilterBase
               double gainDb);
 };
 
+struct BandShelfBase : PoleFilterBase
+{
+  void setup (int order,
+              double sampleRate,
+              double centerFrequency,
+              double widthFrequency,
+              double gainDb);
+};
+
 }
 
 //------------------------------------------------------------------------------
@@ -117,6 +126,11 @@ struct LowShelf : PoleFilter <detail::LowShelfBase, MaxOrder>
 
 template <int MaxOrder>
 struct HighShelf : PoleFilter <detail::HighShelfBase, MaxOrder>
+{
+};
+
+template <int MaxOrder>
+struct BandShelf : PoleFilter <detail::BandShelfBase, MaxOrder>
 {
 };
 
@@ -175,19 +189,32 @@ struct TypeIII : DesignBase, FilterClass
 
   void setParameters (const Parameters& params)
   {
-    /*
-    double sampleRate = params[0];
-    double centerFrequency = params[2];
-    double octaveWidth = params[3];
-
-    double fc = centerFrequency / sampleRate;
-    double f0 = 2 * fc / (1 + pow (2., octaveWidth));
-    double fw = 2 * (fc - f0);
-    */
     FilterClass::setup (int(params[1]),
                         params[0],
                         params[2],
                         params[3]);
+  }
+};
+
+template <class FilterClass>
+struct TypeIV : DesignBase, FilterClass
+{
+  // this ctor could be factored out
+  TypeIV ()
+  {
+    addBuiltinParamInfo (idOrder);
+    addBuiltinParamInfo (idFrequency);
+    addBuiltinParamInfo (idBandwidthHz);
+    addBuiltinParamInfo (idGain);
+  }
+
+  void setParameters (const Parameters& params)
+  {
+    FilterClass::setup (int(params[1]),
+                        params[0],
+                        params[2],
+                        params[3],
+                        params[4]);
   }
 };
 
@@ -231,6 +258,12 @@ struct HighShelfDescription
   const char* getName() const { return "Butterworth High Shelf"; }
 };
 
+struct BandShelfDescription
+{
+  Kind getKind () const { return kindBandShelf; }
+  const char* getName() const { return "Butterworth Band Shelf"; }
+};
+
 //------------------------------------------------------------------------------
 
 //
@@ -270,6 +303,12 @@ struct LowShelf : TypeII <Butterworth::LowShelf <MaxOrder> >,
 template <int MaxOrder>
 struct HighShelf : TypeII <Butterworth::HighShelf <MaxOrder> >,
                    HighShelfDescription
+{
+};
+
+template <int MaxOrder>
+struct BandShelf : TypeIV <Butterworth::BandShelf <MaxOrder> >,
+                   BandShelfDescription
 {
 };
 

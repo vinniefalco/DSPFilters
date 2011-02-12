@@ -119,7 +119,7 @@ void Biquad::setPoles (complex_t pole1, complex_t pole2)
 
   if (pole1.imag() != 0)
   {
-    //assert (pole2 == std::conj (pole1));
+    assert (pole2 == std::conj (pole1));
 
     m_a1 = -2 * pole1.real();
     m_a2 = std::norm (pole1);
