@@ -72,6 +72,11 @@ void AudioOutput::setFilterParameters (Dsp::Parameters parameters)
   m_queue.call (bond (&AudioOutput::doSetFilterParameters, this, parameters));
 }
 
+void AudioOutput::resetFilter ()
+{
+  m_queue.call (bond (&AudioOutput::doResetFilter, this));
+}
+
 void AudioOutput::doSetGain (float gain)
 {
   m_gainNext = gain;
@@ -113,6 +118,11 @@ void AudioOutput::doSetFilter (Dsp::Filter* filter)
 void AudioOutput::doSetFilterParameters (Dsp::Parameters parameters)
 {
   m_filteringAudioSource->setFilterParameters (parameters);
+}
+
+void AudioOutput::doResetFilter ()
+{
+  m_filteringAudioSource->reset();
 }
 
 AudioDeviceManager& AudioOutput::getAudioDeviceManager()

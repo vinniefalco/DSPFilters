@@ -38,6 +38,9 @@ private:
 protected:
   FilterListeners& m_listeners;
   Dsp::Filter* m_filter;
+  bool m_isDefined;
+  Path m_path;
+
   Colour m_cBack;
   Colour m_cFrame;
   Colour m_cAxis;

@@ -48,6 +48,7 @@ private:
   ComboBox* m_menuFamily;
   ComboBox* m_menuType;
   ComboBox* m_menuAudio;
+  Button* m_resetButton;
   Slider* m_volumeSlider;
   Slider* m_tempoSlider;
 

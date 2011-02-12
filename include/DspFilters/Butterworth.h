@@ -17,24 +17,15 @@ namespace Butterworth {
 
 // Half-band analog prototypes (s-plane)
 
-class AnalogLowPassHalfband
+struct AnalogLowPassHalfband
 {
-public:
-  static void design (const int numPoles,
-                      PoleZeroPair* pzArray);
-
   static void design (const int numPoles,
                       LayoutBase& proto);
 };
 
-class AnalogLowShelfHalfband
+struct AnalogLowShelfHalfband
 {
-public:
-  static void design (const int numPoles,
-                      double gainDb,
-                      PoleZeroPair* pzArray);
-
-  static void design (const int numPoles,
+  static void design (int numPoles,
                       double gainDb,
                       LayoutBase& proto);
 };
@@ -94,9 +85,10 @@ private:
   Layout <MaxDigitalPoles> m_digitalStorage;
 };
 
-/********/
-/* HERE */
-/********/
+//------------------------------------------------------------------------------
+
+// Factored implementations to reduce template instantiations
+
 struct LowPassBase : PoleFilterBase
 {
   void setup (int order,
@@ -104,12 +96,67 @@ struct LowPassBase : PoleFilterBase
               double cutoffFrequency);
 };
 
+struct HighPassBase : PoleFilterBase
+{
+  void setup (int order,
+              double sampleRate,
+              double cutoffFrequency);
+};
+
+struct LowShelfBase : PoleFilterBase
+{
+  void setup (int order,
+              double sampleRate,
+              double cutoffFrequency,
+              double gainDb);
+};
+
+struct HighShelfBase : PoleFilterBase
+{
+  void setup (int order,
+              double sampleRate,
+              double cutoffFrequency,
+              double gainDb);
+};
+
+//------------------------------------------------------------------------------
+
 template <int MaxOrder>
 struct LowPass : PoleFilter <MaxOrder, MaxOrder, LowPassBase>
                , Cascade <(MaxOrder+1)/2>
                  
 {
   LowPass () : Cascade <(MaxOrder+1)/2> (this)
+  {
+  }
+};
+
+template <int MaxOrder>
+struct HighPass : PoleFilter <MaxOrder, MaxOrder, HighPassBase>
+                , Cascade <(MaxOrder+1)/2>
+                 
+{
+  HighPass () : Cascade <(MaxOrder+1)/2> (this)
+  {
+  }
+};
+
+template <int MaxOrder>
+struct LowShelf : PoleFilter <MaxOrder, MaxOrder, LowShelfBase>
+               , Cascade <(MaxOrder+1)/2>
+                 
+{
+  LowShelf () : Cascade <(MaxOrder+1)/2> (this)
+  {
+  }
+};
+
+template <int MaxOrder>
+struct HighShelf : PoleFilter <MaxOrder, MaxOrder, HighShelfBase>
+                 , Cascade <(MaxOrder+1)/2>
+                 
+{
+  HighShelf () : Cascade <(MaxOrder+1)/2> (this)
   {
   }
 };
@@ -130,7 +177,29 @@ struct TypeI : DesignBase, FilterClass
 
   void setParameters (const Parameters& params)
   {
-    FilterClass::setup (int(params[1]), params[0], params[2]);
+    FilterClass::setup (int(params[1]),
+                        params[0],
+                        params[2]);
+  }
+};
+
+template <class FilterClass>
+struct TypeII : DesignBase, FilterClass
+{
+  // in theory this ctor could be factored out
+  TypeII ()
+  {
+    addBuiltinParamInfo (idOrder);
+    addBuiltinParamInfo (idFrequency);
+    addBuiltinParamInfo (idGain);
+  }
+
+  void setParameters (const Parameters& params)
+  {
+    FilterClass::setup (int(params[1]),
+                        params[0],
+                        params[2],
+                        params[3]);
   }
 };
 
@@ -144,11 +213,47 @@ struct LowPassDescription
   const char* getName() const { return "Butterworth Low Pass"; }
 };
 
+struct HighPassDescription
+{
+  Kind getKind () const { return kindHighPass; }
+  const char* getName() const { return "Butterworth High Pass"; }
+};
+
+struct LowShelfDescription
+{
+  Kind getKind () const { return kindLowShelf; }
+  const char* getName() const { return "Butterworth Low Shelf"; }
+};
+
+struct HighShelfDescription
+{
+  Kind getKind () const { return kindHighShelf; }
+  const char* getName() const { return "Butterworth High Shelf"; }
+};
+
 //------------------------------------------------------------------------------
 
 template <int MaxOrder>
 struct LowPass : TypeI <Butterworth::LowPass <MaxOrder> >,
                  LowPassDescription
+{
+};
+
+template <int MaxOrder>
+struct HighPass : TypeI <Butterworth::HighPass <MaxOrder> >,
+                  HighPassDescription
+{
+};
+
+template <int MaxOrder>
+struct LowShelf : TypeII <Butterworth::LowShelf <MaxOrder> >,
+                  LowShelfDescription
+{
+};
+
+template <int MaxOrder>
+struct HighShelf : TypeII <Butterworth::HighShelf <MaxOrder> >,
+                   HighShelfDescription
 {
 };
 

@@ -1,6 +1,9 @@
 #include "Common.h"
 #include "FilteringAudioSource.h"
 
+// Caller is responsible for synchronization.
+// This is the proper way to do it.
+
 FilteringAudioSource::FilteringAudioSource ()
   : m_sampleRate (0)
   , m_source (0)
@@ -11,14 +14,11 @@ FilteringAudioSource::~FilteringAudioSource()
 {
 }
 
-// Caller is responsible for synchronization.
-// This is the proper way to do it.
 void FilteringAudioSource::setSource (AudioSource* source)
 {
   m_source = source;
 }
 
-// Caller is responsible for synchronization.
 void FilteringAudioSource::setFilter (Dsp::Filter* filter)
 {
   m_filter = filter;
@@ -30,11 +30,16 @@ void FilteringAudioSource::setFilter (Dsp::Filter* filter)
   }
 }
 
-// Caller is responsible for synchronization.
 void FilteringAudioSource::setFilterParameters (Dsp::Parameters parameters)
 {
   if (m_filter)
     m_filter->setParameters (parameters);
+}
+
+void FilteringAudioSource::reset ()
+{
+  if (m_filter)
+    m_filter->reset();
 }
 
 void FilteringAudioSource::prepareToPlay (int samplesPerBlockExpected,

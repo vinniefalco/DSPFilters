@@ -56,10 +56,13 @@ void BrickWallChart::paintContents (Graphics& g)
 
 void BrickWallChart::update ()
 {
+  m_isDefined = false;
   m_path.clear();
 
   if (m_filter)
   {
+    m_isDefined = true;
+
     const Rectangle<int> bounds = getLocalBounds ();
     const Rectangle<int> r = bounds.reduced (4, 4);
 
@@ -70,13 +73,24 @@ void BrickWallChart::update ()
 
       Dsp::complex_t c = m_filter->response (f/2.f);
       float y = float (std::abs(c));
-      if (xi == 0)
-        m_path.startNewSubPath (x, y);
+
+      if (!Dsp::isnan (y))
+      {
+        if (xi == 0)
+          m_path.startNewSubPath (x, y);
+        else
+          m_path.lineTo (x, y);
+      }
       else
-        m_path.lineTo (x, y);
+      {
+        m_path.clear ();
+        m_isDefined = false;
+        break;
+      }
     }
 
-    m_path.startNewSubPath (0, 0);
+    if (m_isDefined)
+      m_path.startNewSubPath (0, 0);
   }
 
   float yh = m_path.getBounds().getHeight();

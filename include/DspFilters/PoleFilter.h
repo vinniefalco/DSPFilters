@@ -9,12 +9,6 @@
 
 namespace Dsp {
 
-
-
-  
-  
-  
-  
 /*
  * Base for filters designed via algorithmic placement of poles and zeros.
  *
@@ -25,64 +19,38 @@ namespace Dsp {
  *
  */
 
-// low pass to low pass transform
-class LowPassTransformation
+
+/*
+ * s-plane to z-plane transforms
+ *
+ * For pole filters, an analog prototype is created via placement of
+ * poles and zeros in the s-plane. The analog prototype is either
+ * a halfband low pass or a halfband low shelf. The poles, zeros,
+ * and normalization parameters are transformed into the z-plane
+ * using variants of the bilinear transformation.
+ *
+ */
+
+// low pass to low pass 
+struct LowPassTransform
 {
-private:
-  static inline void transform (const double k,
-                                complex_t& c,
-                                complex_t const& r)
-  {
-    if (r == infinity())
-    {
-      c = complex_t (-1, 0);
-    }
-    else
-    {
-      // frequency transform
-      c = r * k; 
-      // bilinear low pass transform
-      c = (1. + c) / (1. - c);
-    }
-  }
+  static complex_t transform (double f,
+                              complex_t c);
 
-public:
-  static void transform (int numPoles,
-                         double normalizedCornerFrequency,
-                         PoleZeroPair* resultArray,
-                         PoleZeroPair const* sourceArray);
-
-  static void transform (double normalizedCutoffFrequency,
-                         LayoutBase& digitalProto,
-                         LayoutBase const& analogProto);
+  static void transform (double fc,
+                         LayoutBase& digital,
+                         LayoutBase const& analog);
 };
 
-// low pass to high pass transform
-class HighPassTransformation
+// low pass to high pass
+struct HighPassTransform
 {
-private:
-  static inline void transform (const double k,
-                                complex_t& c,
-                                complex_t const& r)
-  {
-    if (r == infinity())
-    {
-      c = complex_t (1, 0);
-    }
-    else
-    {
-      // frequency transform
-      c = r * k; 
-      // bilinear high pass transform
-      c = - (1. + c) / (1. - c);
-    }
-  }
+  static complex_t transform (double omega0,
+                              complex_t c);
 
-public:
-  static void transform (int numPoles,
-                         double normalizedCornerFrequency,
-                         PoleZeroPair* resultArray,
-                         PoleZeroPair const* sourceArray);
+  static void transform (double fc,
+                         LayoutBase& digital,
+                         LayoutBase const& analog);
 };
 
 // low pass to band pass transform
@@ -92,7 +60,7 @@ private:
 
 public:
   static void transform (int numPoles,
-                         double normalizedCornerFrequency,
+                         double fc,
                          PoleZeroPair* resultArray,
                          PoleZeroPair const* sourceArray)
   {

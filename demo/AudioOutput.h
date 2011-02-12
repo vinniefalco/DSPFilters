@@ -25,6 +25,7 @@ public:
   void setSource (AudioSource* source);
   void setFilter (Dsp::Filter* filter);
   void setFilterParameters (Dsp::Parameters parameters);
+  void resetFilter ();
 
 protected:
   void doSetGain (float gain);
@@ -32,6 +33,7 @@ protected:
   void doSetSource (ResamplingAudioSource* source);
   void doSetFilter (Dsp::Filter* filter);
   void doSetFilterParameters (Dsp::Parameters parameters);
+  void doResetFilter ();
 
   void audioDeviceAboutToStart (AudioIODevice* device);
 

@@ -22,9 +22,6 @@ private:
   void update ();
   bool drawGroupDelayLine (Graphics& g, float seconds, bool drawLabel = true);
   AffineTransform calcTransform ();
-
-private:
-  Path m_path;
 };
 
 #endif

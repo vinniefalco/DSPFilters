@@ -43,10 +43,13 @@ void GroupDelayChart::paintContents (Graphics& g)
  */
 void GroupDelayChart::update ()
 {
+  m_isDefined = false;
   m_path.clear();
 
   if (m_filter)
   {
+    m_isDefined = true;
+
     const Rectangle<int> bounds = getLocalBounds ();
     const Rectangle<int> r = bounds.reduced (4, 4);
 
@@ -57,13 +60,23 @@ void GroupDelayChart::update ()
       const float w = float (Dsp::doublePi * (x/2.));
       const float y = float (-std::abs(m_filter->response (w)) / w);
 
-      if (xi == 1)
-        m_path.startNewSubPath (x, y);
+      if (!Dsp::isnan (y))
+      {
+        if (xi == 1)
+          m_path.startNewSubPath (x, y);
+        else
+          m_path.lineTo (x, y);
+      }
       else
-        m_path.lineTo (x, y);
+      {
+        m_path.clear ();
+        m_isDefined = false;
+        break;
+      }
     }
 
-    m_path.startNewSubPath (0, 0);
+    if (m_isDefined)
+      m_path.startNewSubPath (0, 0);
   }
 
   repaint();

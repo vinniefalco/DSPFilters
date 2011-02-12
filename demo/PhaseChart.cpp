@@ -43,10 +43,13 @@ void PhaseChart::paintContents (Graphics& g)
  */
 void PhaseChart::update ()
 {
+  m_isDefined = false;
   m_path.clear();
 
   if (m_filter)
   {
+    m_isDefined = true;
+
     const Rectangle<int> bounds = getLocalBounds ();
     const Rectangle<int> r = bounds.reduced (4, 4);
 
@@ -56,13 +59,23 @@ void PhaseChart::update ()
       Dsp::complex_t c = m_filter->response (x/2);
       float y = float (90 * (std::arg(c) / Dsp::doublePi));
 
-      if (xi == 0)
-        m_path.startNewSubPath (x, y);
+      if (!Dsp::isnan (y))
+      {
+        if (xi == 0)
+          m_path.startNewSubPath (x, y);
+        else
+          m_path.lineTo (x, y);
+      }
       else
-        m_path.lineTo (x, y);
+      {
+        m_path.clear ();
+        m_isDefined = false;
+        break;
+      }
     }
 
-    m_path.startNewSubPath (0, 0);
+    if (m_isDefined)
+      m_path.startNewSubPath (0, 0);
   }
 
   repaint();

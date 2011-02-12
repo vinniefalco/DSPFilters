@@ -3,73 +3,69 @@
 
 namespace Dsp {
 
-void LowPassTransformation::transform (int numPoles,
-                                       double normalizedCornerFrequency,
-                                       PoleZeroPair* resultArray,
-                                       PoleZeroPair const* sourceArray)
+//------------------------------------------------------------------------------
+
+complex_t LowPassTransform::transform (double f, complex_t c)
 {
-  double k = tan (doublePi * normalizedCornerFrequency); // prewarp
+  if (c == infinity())
+    return complex_t (-1, 0);
 
-  const int pairs = numPoles / 2;
-  for (int i = 0; i < pairs; ++i)
-  {
-    transform (k, resultArray->pole[0], sourceArray->pole[0]);
-    transform (k, resultArray->zero[0], sourceArray->zero[0]);
-    resultArray->pole[1] = std::conj (resultArray->pole[0]);
-    resultArray->zero[1] = std::conj (resultArray->zero[0]);
-    ++sourceArray;
-    ++resultArray;
-  }
-
-  if (numPoles & 1)
-  {
-    transform (k, resultArray->pole[0], sourceArray->pole[0]);
-    transform (k, resultArray->zero[0], sourceArray->zero[0]);
-  }
+  // frequency transform
+  c = f * c; 
+  
+  // bilinear low pass transform
+  return (1. + c) / (1. - c);
 }
 
-void LowPassTransformation::transform (double normalizedCutoffFrequency,
-                                       LayoutBase& digitalProto,
-                                       LayoutBase const& analogProto)
+void LowPassTransform::transform (double fc,
+                                  LayoutBase& digital,
+                                  LayoutBase const& analog)
 {
-  const int numPoles = analogProto.getNumPoles();
-  digitalProto.setNumPoles (numPoles);
+  digital.reset ();
 
-  double k = tan (doublePi * normalizedCutoffFrequency); // prewarp
+  // prewarp
+  const double f = tan (doublePi * fc);
 
+  const int numPoles = analog.getNumPoles ();
   for (int i = 0; i < numPoles; ++i)
-  {
-    transform (k, digitalProto.pole (i), analogProto.pole (i));
-    transform (k, digitalProto.zero (i), analogProto.zero (i));
-  }
+    digital.addPoleZero (transform (f, analog.pole(i)),
+                         transform (f, analog.zero(i)));
 
-  digitalProto.setNormal (analogProto.getNormalW(),
-                          analogProto.getNormalGain());
+  digital.setNormal (analog.getNormalW(),
+                     analog.getNormalGain());
 }
 
-void HighPassTransformation::transform (int numPoles,
-                                        double normalizedCornerFrequency,
-                                        PoleZeroPair* resultArray,
-                                        PoleZeroPair const* sourceArray)
+//------------------------------------------------------------------------------
+
+complex_t HighPassTransform::transform (double f,
+                                        complex_t c)
 {
-  double k = 1. / tan (doublePi * normalizedCornerFrequency); // prewarp
+  if (c == infinity())
+    return complex_t (1, 0);
 
-  const int pairs = numPoles / 2;
-  for (int i = 0; i < pairs; ++i)
-  {
-    transform (k, resultArray->pole[0], sourceArray->pole[0]);
-    transform (k, resultArray->zero[0], sourceArray->zero[0]);
-    resultArray->pole[1] = std::conj (resultArray->pole[0]);
-    resultArray->zero[1] = std::conj (resultArray->zero[0]);
-    ++sourceArray;
-    ++resultArray;
-  }
+  // frequency transform
+  c = f * c; 
 
-  if (numPoles & 1)
-  {
-    transform (k, resultArray->pole[0], sourceArray->pole[0]);
-    transform (k, resultArray->zero[0], sourceArray->zero[0]);
-  }
+  // bilinear high pass transform
+  return - (1. + c) / (1. - c);
+}
+
+void HighPassTransform::transform (double fc,
+                                   LayoutBase& digital,
+                                   LayoutBase const& analog)
+{
+  digital.reset ();
+
+  // prewarp
+  const double f = 1. / tan (doublePi * fc);
+
+  const int numPoles = analog.getNumPoles ();
+  for (int i = 0; i < numPoles; ++i)
+    digital.addPoleZero (transform (f, analog.pole(i)),
+                         transform (f, analog.zero(i)));
+
+  digital.setNormal (doublePi - analog.getNormalW(),
+                     analog.getNormalGain());
 }
 
 }

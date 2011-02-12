@@ -126,6 +126,18 @@ MainPanel::MainPanel()
   y = this->getChildComponent (this->getNumChildComponents()-1)->getBounds().getBottom() + gap;
   x = x0;
 
+  {
+    m_resetButton = new TextButton ("Reset");
+    m_resetButton->setBounds (x, y, 40, 24);
+    m_resetButton->setConnectedEdges (Button::ConnectedOnLeft | Button::ConnectedOnRight);
+    addToLayout (m_resetButton, anchorTopLeft);
+    addAndMakeVisible (m_resetButton);
+    m_resetButton->addListener (this);
+  }
+
+  y = this->getChildComponent (this->getNumChildComponents()-1)->getBounds().getBottom() + gap;
+  x = x0;
+
   const Rectangle<int> r (x, y, w - (x + gap), h - (y + gap));
   createCharts (r);
 
@@ -232,12 +244,8 @@ bool MainPanel::isEnabled (int familyId, int typeId)
     case 2:
       switch (typeId)
       {
-      case 2:
-      case 6:
-
       case 4:
       case 5:
-      case 7:
       case 8:
         enabled = false;
         break;
@@ -341,9 +349,10 @@ void MainPanel::setFilter (int familyId, int typeId)
   {
     switch (typeId)
     {
-    case 1: createSmoothedFilter <Dsp::Butterworth::Design::LowPass <12> > (&f, &fo); break;
-    //case 2: createSmoothedFilter <Dsp::Butterworth::ButterHighPassDesign <12> > (&f, &fo); break;
-    //case 6: createSmoothedFilter <Dsp::Butterworth::ButterLowShelfDesign <12> > (&f, &fo); break;
+    case 1: createSmoothedFilter <Dsp::Butterworth::Design::LowPass <50> > (&f, &fo); break;
+    case 2: createSmoothedFilter <Dsp::Butterworth::Design::HighPass <50> > (&f, &fo); break;
+    case 6: createSmoothedFilter <Dsp::Butterworth::Design::LowShelf <50> > (&f, &fo); break;
+    case 7: createSmoothedFilter <Dsp::Butterworth::Design::HighShelf <50> > (&f, &fo); break;
     };
   }
 
@@ -400,6 +409,10 @@ void MainPanel::setAudio (int audioId)
 
 void MainPanel::buttonClicked (Button* ctrl)
 {
+  if (ctrl == m_resetButton)
+  {
+    MainApp::getInstance().getAudioOutput().resetFilter();
+  }
 }
 
 void MainPanel::sliderValueChanged (Slider* ctrl)

@@ -72,10 +72,18 @@ functionality of the library, including these features:
 
 If you've been searching in futility on the Internet for some source code
 that does exactly what you need it to do, then look no further because
-this is the jackpot! Whether you are a student of C++, digital signal
-processing, or a writer of audio plugins, or even a VST synthesizer
-producer, "A Collection of Useful C++ Classes for Digital Signal
-Processing" has something for you!
+this is the jackpot! Whether you are a student of C++ or digital signal
+processing, a writer of audio plugins, or even a VST synthesizer coder,
+"A Collection of Useful C++ Classes for Digital Signal Processing" has
+something for you!
+
+Bibliography:
+
+[1] "Spectral Transformations for digital filters"
+     A. G. Constantinides, B.Sc.(Eng.) Ph.D.
+     (Proceedings of the IEEE, vol. 117, pp. 1585-1590, August 1970)
+
+
 
 */
 

@@ -58,10 +58,13 @@ void GainChart::paintContents (Graphics& g)
  */
 void GainChart::update ()
 {
+  m_isDefined = false;
   m_path.clear();
 
   if (m_filter)
   {
+    m_isDefined = false;
+
     const Rectangle<int> bounds = getLocalBounds ();
     const Rectangle<int> r = bounds.reduced (4, 4);
 
@@ -75,13 +78,23 @@ void GainChart::update ()
           y = 1e-5f;
       y = 20 * log10 (y);
 
-      if (xi == 0)
-        m_path.startNewSubPath (x, y);
+      if (!Dsp::isnan (y))
+      {
+        if (xi == 0)
+          m_path.startNewSubPath (x, y);
+        else
+          m_path.lineTo (x, y);
+      }
       else
-        m_path.lineTo (x, y);
+      {
+        m_path.clear ();
+        m_isDefined = false;
+        break;
+      }
     }
 
-    m_path.startNewSubPath (0, 0);
+    if (m_isDefined)
+      m_path.startNewSubPath (0, 0);
   }
 
   m_maxDb = float(floor(m_path.getBounds().getBottom()+0.5));

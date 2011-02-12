@@ -21,6 +21,8 @@ public:
   
   void setFilterParameters (Dsp::Parameters parameters);
 
+  void reset ();
+
   void prepareToPlay (int samplesPerBlockExpected,
                       double sampleRate);
 

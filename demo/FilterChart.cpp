@@ -4,6 +4,7 @@
 FilterChart::FilterChart (FilterListeners& listeners)
   : m_listeners (listeners)
   , m_filter (0)
+  , m_isDefined (false)
 {
   setOpaque (true);
 
