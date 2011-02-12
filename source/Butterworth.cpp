@@ -137,6 +137,23 @@ void HighShelfBase::setup (int order,
   Cascade::setup (m_digitalProto);
 }
 
+void BandShelfBase::setup (int order,
+                           double sampleRate,
+                           double centerFrequency,
+                           double widthFrequency,
+                           double gainDb)
+{
+  AnalogLowShelf::design (order, gainDb, m_analogProto);
+
+  BandPassTransform::transform (centerFrequency / sampleRate,
+                                widthFrequency / sampleRate,
+                                m_digitalProto,
+                                m_analogProto);
+
+  m_digitalProto.setNormal (((centerFrequency/sampleRate) < 0.25) ? doublePi : 0, 1);
+  Cascade::setup (m_digitalProto);
+}
+
 }
 
 }
