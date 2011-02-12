@@ -94,10 +94,10 @@ void CascadeBase::setup (const LayoutBase& proto)
   for (i = 0; i < pairs; ++i, ++stage)
   {
     complex_t pole[2], zero[2];
-    pole[2*i]   = proto.pole (2*i);
-    pole[2*i+1] = proto.pole (2*i+1);
-    zero[2*i]   = proto.zero (2*i);
-    zero[2*i+1] = proto.zero (2*i+1);
+    pole[0]   = proto.pole (2*i);
+    pole[1] = proto.pole (2*i+1);
+    zero[0]   = proto.zero (2*i);
+    zero[1] = proto.zero (2*i+1);
 
     stage->setPoleZeros (pole, zero);
   }

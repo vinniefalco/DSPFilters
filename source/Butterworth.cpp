@@ -5,56 +5,32 @@ namespace Dsp {
 
 namespace Butterworth {
 
-void AnalogLowPassHalfband::design (int numPoles, PoleZeroPair* pzArray)
+void AnalogLowPassHalfband::design (int numPoles,
+                                    LayoutBase& proto)
 {
+  proto.reset ();
+
+  const double n2 = 2 * numPoles;
   const int pairs = numPoles / 2;
   for (int i = 0; i < pairs; ++i)
   {
-    pzArray->pole[0] = std::polar (1., doublePi_2 + (2 * i + 1) * doublePi / (2 * numPoles));
-    pzArray->pole[1] = std::conj (pzArray->pole[0]);
-    pzArray->zero[0] = infinity();
-    pzArray->zero[1] = infinity();
-    ++pzArray;
+    complex_t c = std::polar (1., doublePi_2 + (2 * i + 1) * doublePi / n2);
+    proto.addPoleZero (c, infinity());
+    proto.addPoleZero (std::conj (c), infinity());
   }
 
   if (numPoles & 1)
-  {
-    pzArray->pole[0] = complex_t (-1, 0);
-    pzArray->zero[0] = infinity();
-  }
-
-  //m_normal.w=0;
-  //m_normal.gain=1;
-}
-
-void AnalogLowPassHalfband::design (int numPoles, LayoutBase& proto)
-{
-  proto.setNumPoles (numPoles);
-
-  const int pairs = numPoles / 2;
-
-  int i;
-  for (i = 0; i < pairs; ++i)
-  {
-    proto.pole (2*i)   = std::polar (1., doublePi_2 + 2 * (i + 1) * doublePi / (2 * numPoles));
-    proto.pole (2*i+1) = std::conj (proto.pole (i));
-    proto.zero (2*i)   = infinity();
-    proto.zero (2*i+1) = infinity();
-  }
-
-  if (numPoles & 1)
-  {
-    proto.pole (2*i) = complex_t (-1, 0);
-    proto.zero (2*i) = infinity();
-  }
+    proto.addPoleZero (-1, infinity());
 
   proto.setNormal (0, 1);
 }
 
 void AnalogLowShelfHalfband::design (int numPoles,
-                                  double gainDb,
-                                  PoleZeroPair* pzArray)
+                                     double gainDb,
+                                     LayoutBase& proto)
 {
+  proto.reset ();
+
   const double n2 = numPoles * 2;
   const double g = pow (pow (10., gainDb/20), 1. / n2);
   const double gp = -1. / g;
@@ -64,30 +40,67 @@ void AnalogLowShelfHalfband::design (int numPoles,
   for (int i = 1; i <= pairs; ++i)
   {
     const double theta = doublePi * (0.5 - (2 * i - 1) / n2);
-    pzArray->pole[0] = std::polar (gp, theta);
-    pzArray->zero[0] = std::polar (gz, theta);
-    pzArray->pole[1] = std::conj (pzArray->pole[0]);
-    pzArray->zero[1] = std::conj (pzArray->zero[0]);
-    ++pzArray;
+    proto.addPoleZeroConjugatePairs (std::polar (gp, theta), std::polar (gz, theta));
   }
   
   if (numPoles & 1)
-  {
-    pzArray->pole[0] = complex_t (-gp, 0);
-    pzArray->zero[0] = complex_t (-gz, 0);
-  }
+    proto.addPoleZero (gp, gz);
+
+  proto.setNormal (doublePi, 1);
 }
 
 //------------------------------------------------------------------------------
 
 void LowPassBase::setup (int order,
-                     double sampleRate,
-                     double cutoffFrequency)
+                         double sampleRate,
+                         double cutoffFrequency)
 {
   AnalogLowPassHalfband::design (order, m_analogProto);
-  LowPassTransformation::transform (cutoffFrequency / sampleRate,
-                                    m_digitalProto,
-                                    m_analogProto);
+
+  LowPassTransform::transform (cutoffFrequency / sampleRate,
+                               m_digitalProto,
+                               m_analogProto);
+
+  CascadeBase::setup (m_digitalProto);
+}
+
+void HighPassBase::setup (int order,
+                          double sampleRate,
+                          double cutoffFrequency)
+{
+  AnalogLowPassHalfband::design (order, m_analogProto);
+
+  HighPassTransform::transform (cutoffFrequency / sampleRate,
+                                m_digitalProto,
+                                m_analogProto);
+
+  CascadeBase::setup (m_digitalProto);
+}
+
+void LowShelfBase::setup (int order,
+                         double sampleRate,
+                         double cutoffFrequency,
+                         double gainDb)
+{
+  AnalogLowShelfHalfband::design (order, gainDb, m_analogProto);
+
+  LowPassTransform::transform (cutoffFrequency / sampleRate,
+                               m_digitalProto,
+                               m_analogProto);
+
+  CascadeBase::setup (m_digitalProto);
+}
+
+void HighShelfBase::setup (int order,
+                           double sampleRate,
+                           double cutoffFrequency,
+                           double gainDb)
+{
+  AnalogLowShelfHalfband::design (order, gainDb, m_analogProto);
+
+  HighPassTransform::transform (cutoffFrequency / sampleRate,
+                                m_digitalProto,
+                                m_analogProto);
 
   CascadeBase::setup (m_digitalProto);
 }

@@ -224,6 +224,23 @@ public:
     maxValue = 50;
     defaultValue = 2;
   }
+
+  double toControlValue (double nativeValue) const
+  {
+    return (nativeValue - minValue) / (maxValue - minValue);
+  }
+
+  double toNativeValue (double controlValue) const
+  {
+    return std::floor (minValue + controlValue * (maxValue - minValue) + 0.5);
+  }
+
+  std::string toString (double nativeValue) const
+  {
+    std::ostringstream os;
+    os << int(nativeValue);
+    return os.str();
+  }
 };
 
 }

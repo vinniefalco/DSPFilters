@@ -34,6 +34,11 @@ public:
   {
   }
 
+  void reset ()
+  {
+    m_numPoles = 0;
+  }
+
   int getNumPoles () const
   {
     return m_numPoles;
@@ -48,6 +53,22 @@ public:
   {
     assert (numPoles >= 1 && numPoles <= m_maxPoles);
     m_numPoles = numPoles;
+  }
+
+  void addPoleZero (const complex_t& p, const complex_t& z)
+  {
+    assert (m_numPoles < m_maxPoles);
+    m_poleArray[m_numPoles] = p;
+    m_zeroArray[m_numPoles++] = z;
+  }
+
+  void addPoleZeroConjugatePairs (const complex_t& p, const complex_t& z)
+  {
+    assert (m_numPoles < m_maxPoles);
+    m_poleArray[m_numPoles] = p;
+    m_zeroArray[m_numPoles++] = z;
+    m_poleArray[m_numPoles] = std::conj (p);
+    m_zeroArray[m_numPoles++] = std::conj (z);
   }
 
   complex_t& pole (int index)
