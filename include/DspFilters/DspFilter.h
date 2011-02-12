@@ -767,7 +767,7 @@ struct BiquadPeak: BiquadEq, BiquadFilter<channels>
 // zeroes, corresponding to complex-valued roots of
 // a rational transfer function. Storage is provided
 // by a derived class.
-struct Layout
+struct LayoutOld
 {
   // Return the number of available poles.
   int CountPoles( void ) const
@@ -864,11 +864,11 @@ protected:
 
 //--------------------------------------------------------------------------
 
-// Storage for a Layout.
+// Storage for a LayoutOld.
 template<int maxdegree>
-struct LayoutSpace : virtual Layout
+struct LayoutSpaceOld : virtual LayoutOld
 {
-  LayoutSpace()
+  LayoutSpaceOld()
   {
     m_pole=&m_poles;
     m_zero=&m_zeros;
@@ -891,7 +891,7 @@ struct Transformation
 // Low pass to low pass.
 struct LowPass : Transformation
 {
-  void Transform( const Spec& spec, Layout* result, const Layout& layout );
+  void Transform( const Spec& spec, LayoutOld* result, const LayoutOld& layout );
 protected:
   void Transform( const Spec& spec, Roots* result, const Roots& roots );
 };
@@ -899,7 +899,7 @@ protected:
 // Low pass to high pass.
 struct HighPass : Transformation
 {
-  void Transform( const Spec& spec, Layout* result, const Layout& layout );
+  void Transform( const Spec& spec, LayoutOld* result, const LayoutOld& layout );
 protected:
   void Transform( const Spec& spec, Roots* result, const Roots& roots );
 };
@@ -908,7 +908,7 @@ protected:
 // The number of poles and zeroes is doubled.
 struct BandPass : Transformation
 {
-  void Transform( const Spec& spec, Layout* result, const Layout& layout );
+  void Transform( const Spec& spec, LayoutOld* result, const LayoutOld& layout );
 protected:
   void Transform( const Spec& spec, Roots* result, const Roots& roots );
   Complex BandPassTransform( int i, const Complex& c );
@@ -920,9 +920,9 @@ protected:
 // The number of poles and zeroes is doubled.
 struct BandStop : Transformation
 {
-  void Transform( const Spec& spec, Layout* result, const Layout& layout );
+  void Transform( const Spec& spec, LayoutOld* result, const LayoutOld& layout );
   void Transform( const Spec& spec, Roots* result, const Roots& roots );
-  void DesignZeros( const Spec& spec, Layout* layout );
+  void DesignZeros( const Spec& spec, LayoutOld* layout );
 protected:
   Complex BandStopTransform( int i, const Complex& c );
   CalcT m_wc;
@@ -934,14 +934,14 @@ protected:
 // Abstract analog filter prototype. The filter is designed with fixed
 // specifications and then transformed to the desired response.
 // The layout is cached for fast parameter changes.
-struct Prototype : virtual Layout
+struct Prototype : virtual LayoutOld
 {
 };
 
 //--------------------------------------------------------------------------
 
 // Abstract digital pole filter base
-struct PoleFilterOld : CascadeFilter, virtual Layout
+struct PoleFilterOld : CascadeFilter, virtual LayoutOld
 {
   virtual void Setup( const Spec& spec )=0;
 };
@@ -951,7 +951,7 @@ struct PoleFilterOld : CascadeFilter, virtual Layout
 // Component aggregate for a cascade filter that provides storage
 // for coefficients, history buffer, and processing capabilities.
 template<class Proto, class Trans, int maxorder, int channels>
-struct PoleFilterSpace : PoleFilterOld, LayoutSpace<maxorder>, CascadeSpace<maxorder>
+struct PoleFilterSpace : PoleFilterOld, LayoutSpaceOld<maxorder>, CascadeSpace<maxorder>
 {
   PoleFilterSpace()
   {
@@ -974,7 +974,7 @@ struct PoleFilterSpace : PoleFilterOld, LayoutSpace<maxorder>, CascadeSpace<maxo
 
 private:
   template<class Base, int maxorder1>
-  struct PrototypeSpace : Base, LayoutSpace<maxorder1>
+  struct PrototypeSpace : Base, LayoutSpaceOld<maxorder1>
   {
   };
 

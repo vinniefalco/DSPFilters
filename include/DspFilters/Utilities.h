@@ -182,8 +182,7 @@ void deinterleave (int channels,
 	    int n = (samples + 7) / 8;
 	    switch (samples % 8)
       {
-	    case 0:
-              do
+	    case 0: do
               {	
                 *l++ = *src++; *r++ = *src++;
 	    case 7:		*l++ = *src++; *r++ = *src++;
@@ -283,8 +282,7 @@ void interleave (int channels,
       int n = (samples + 7) / 8;
 	    switch (samples % 8)
       {
-	    case 0:
-              do
+	    case 0: do
               {	
                 *dest++ = *l++; *dest++ = *r++;
 	    case 7:		*dest++ = *l++; *dest++ = *r++;
@@ -468,19 +466,19 @@ void zero (int samples,
            Ty* dest,
            int destSkip = 0)
 {
-    if (destSkip != 0)
+  if (destSkip != 0)
+  {
+    ++destSkip;
+    while (--samples >= 0)
     {
-      ++destSkip;
-      while (--samples >= 0)
-      {
-        *dest = Ty();
-        dest += destSkip;
-      }
+      *dest = Ty();
+      dest += destSkip;
     }
-    else
-    {
-      std::fill (dest, dest + samples, Ty());
-    }
+  }
+  else
+  {
+    std::fill (dest, dest + samples, Ty());
+  }
 }
 
 #endif

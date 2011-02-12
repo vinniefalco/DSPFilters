@@ -6,8 +6,6 @@
 #include "DspFilters/Filter.h"
 #include "DspFilters/PoleFilter.h"
 
-#if 0
-
 namespace Dsp {
 
 /*
@@ -26,7 +24,7 @@ public:
                       PoleZeroPair* pzArray);
 
   static void design (const int numPoles,
-                      PoleZeroPrototype* proto);
+                      LayoutBase& proto);
 };
 
 class AnalogLowShelfHalfband
@@ -38,7 +36,7 @@ public:
 
   static void design (const int numPoles,
                       double gainDb,
-                      PoleZeroPrototype* proto);
+                      LayoutBase& proto);
 };
 
 //------------------------------------------------------------------------------
@@ -46,12 +44,59 @@ public:
 class PoleFilterBase : public CascadeBase
 {
 public:
+  const PoleZeros getPoleZeros () const
+  {
+    const LayoutBase& proto = m_digitalProto;
+    const int numPoles = proto.getNumPoles ();
+    PoleZeros pz;
+    const int pairs = numPoles / 2;
+    for (int i = 0; i < pairs; ++i)
+    {
+      pz.poles.push_back (m_digitalProto.pole(2*i));
+      pz.poles.push_back (m_digitalProto.pole(2*i+1));
+      pz.zeros.push_back (m_digitalProto.zero(2*i));
+      pz.zeros.push_back (m_digitalProto.zero(2*i+1));
+    }
+    if (numPoles & 1)
+    {
+      pz.poles.push_back (m_digitalProto.pole (numPoles-1));
+      pz.zeros.push_back (m_digitalProto.zero (numPoles-1));
+    }
+    return pz;
+  }
 
 protected:
-  PoleZeroPrototype* m_analogProto;
-  PoleZeroPrototype* m_digitalProto;
+  void construct (const LayoutBase& analogStorage,
+                  const LayoutBase& digitalStorage)
+  {
+    m_analogProto = analogStorage;
+    m_digitalProto = digitalStorage;
+  }
+
+protected:
+  LayoutBase m_analogProto;
+  LayoutBase m_digitalProto;
 };
 
+template <int MaxAnalogPoles,
+          int MaxDigitalPoles,
+          class BaseClass>
+class PoleFilter : public BaseClass
+{
+public:
+  PoleFilter ()
+  {
+    BaseClass::construct (m_analogStorage, m_digitalStorage);
+  }
+
+private:
+  Layout <MaxAnalogPoles> m_analogStorage;
+  Layout <MaxDigitalPoles> m_digitalStorage;
+};
+
+/********/
+/* HERE */
+/********/
 struct LowPassBase : PoleFilterBase
 {
   void setup (int order,
@@ -59,16 +104,12 @@ struct LowPassBase : PoleFilterBase
               double cutoffFrequency);
 };
 
-template <int MaxOrder, class BaseClass>
-struct PoleFilter : BaseClass
-{
-private:
-};
-
 template <int MaxOrder>
-struct LowPass : Cascade <MaxOrder>, LowPassBase
+struct LowPass : PoleFilter <MaxOrder, MaxOrder, LowPassBase>
+               , Cascade <(MaxOrder+1)/2>
+                 
 {
-  LowPass () : Cascade (this)
+  LowPass () : Cascade <(MaxOrder+1)/2> (this)
   {
   }
 };
@@ -80,6 +121,7 @@ namespace Design {
 template <class FilterClass>
 struct TypeI : DesignBase, FilterClass
 {
+  // in theory this ctor could be factored out
   TypeI ()
   {
     addBuiltinParamInfo (idOrder);
@@ -94,14 +136,19 @@ struct TypeI : DesignBase, FilterClass
 
 //------------------------------------------------------------------------------
 
-struct LowPassBase
+// Factored descriptions to reduce template instantiations
+
+struct LowPassDescription
 {
   Kind getKind () const { return kindLowPass; }
   const char* getName() const { return "Butterworth Low Pass"; }
 };
 
-template<int MaxOrder>
-struct LowPass : TypeI <Butterworth::LowPass <MaxOrder>>, LowPassBase
+//------------------------------------------------------------------------------
+
+template <int MaxOrder>
+struct LowPass : TypeI <Butterworth::LowPass <MaxOrder> >,
+                 LowPassDescription
 {
 };
 
@@ -241,8 +288,6 @@ public:
 }
 
 }
-
-#endif
 
 #endif
 

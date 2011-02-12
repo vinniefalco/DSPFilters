@@ -81,26 +81,29 @@ void CascadeBase::setPoleZeros (int numPoles, const PoleZeroPair* pzArray)
   m_numStages = pairs + (numPoles & 1);
 }
 
-void CascadeBase::setup (const PoleZeroPrototype& proto)
+void CascadeBase::setup (const LayoutBase& proto)
 {
   const int numPoles = proto.getNumPoles();
   assert ((numPoles+1)/2 <= m_maxStages);
 
+  const int pairs = numPoles / 2;
+
   // THIS IS CRAP ON A STICK
   Biquad* stage = m_stageArray;
-  for (int i = 0; i < numPoles; i+=2, ++stage)
+  int i;
+  for (i = 0; i < pairs; ++i, ++stage)
   {
     complex_t pole[2], zero[2];
-    pole[0] = proto.pole (i);
-    pole[1] = proto.pole (i+1);
-    zero[0] = proto.zero (i);
-    zero[1] = proto.zero (i+1);
+    pole[2*i]   = proto.pole (2*i);
+    pole[2*i+1] = proto.pole (2*i+1);
+    zero[2*i]   = proto.zero (2*i);
+    zero[2*i+1] = proto.zero (2*i+1);
 
     stage->setPoleZeros (pole, zero);
   }
   
   if (numPoles & 1)
-    stage->setPoleZero (proto.pole (numPoles-1), proto.zero (numPoles-1));
+    stage->setPoleZero (proto.pole (2*i), proto.zero (2*i));
   
   m_numStages = (numPoles+1)/2;
 

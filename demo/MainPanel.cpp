@@ -210,8 +210,6 @@ bool MainPanel::isEnabled (int familyId)
 
   switch (familyId)
   {
-  case 2: // butterworth
-
   case 3:
   case 4:
   case 5:
@@ -343,7 +341,7 @@ void MainPanel::setFilter (int familyId, int typeId)
   {
     switch (typeId)
     {
-    //case 1: createSmoothedFilter <Dsp::Butterworth::Design::LowPass <12> > (&f, &fo); break;
+    case 1: createSmoothedFilter <Dsp::Butterworth::Design::LowPass <12> > (&f, &fo); break;
     //case 2: createSmoothedFilter <Dsp::Butterworth::ButterHighPassDesign <12> > (&f, &fo); break;
     //case 6: createSmoothedFilter <Dsp::Butterworth::ButterLowShelfDesign <12> > (&f, &fo); break;
     };
