@@ -5,8 +5,6 @@
 #include "DspFilters/MathSupplement.h"
 #include "DspFilters/Cascade.h"
 
-#include "DspFilters/Design.h" // REMOVE ASAP
-
 namespace Dsp {
 
 /*
@@ -19,6 +17,70 @@ namespace Dsp {
  *
  */
 
+// Factored implementation to reduce template instantiations
+class PoleFilterBase : public Cascade
+{
+public:
+  // This gets the poles/zeros directly from the digital
+  // prototype since apparently the code to get them from
+  // the cascade coefficients is not working.
+  const PoleZeros getPoleZeros () const
+  {
+    const LayoutBase& proto = m_digitalProto;
+    const int numPoles = proto.getNumPoles ();
+    PoleZeros pz;
+    const int pairs = numPoles / 2;
+    for (int i = 0; i < pairs; ++i)
+    {
+      pz.poles.push_back (m_digitalProto.pole(2*i));
+      pz.poles.push_back (m_digitalProto.pole(2*i+1));
+      pz.zeros.push_back (m_digitalProto.zero(2*i));
+      pz.zeros.push_back (m_digitalProto.zero(2*i+1));
+    }
+    if (numPoles & 1)
+    {
+      pz.poles.push_back (m_digitalProto.pole (numPoles-1));
+      pz.zeros.push_back (m_digitalProto.zero (numPoles-1));
+    }
+    return pz;
+  }
+
+protected:
+  void setPrototypeStorage (const LayoutBase& analogStorage,
+                            const LayoutBase& digitalStorage)
+  {
+    m_analogProto = analogStorage;
+    m_digitalProto = digitalStorage;
+  }
+
+protected:
+  LayoutBase m_analogProto;
+  LayoutBase m_digitalProto;
+};
+
+//------------------------------------------------------------------------------
+
+// Storage for pole filters
+template <class BaseClass,
+          int MaxAnalogPoles,
+          int MaxDigitalPoles = MaxAnalogPoles>
+struct PoleFilter : BaseClass
+                  , CascadeStages <(MaxDigitalPoles + 1) / 2>
+{
+  PoleFilter ()
+  {
+    // This glues together the factored base classes
+    // with the templatized storage classes.
+    BaseClass::setCascadeStorage (getCascadeStorage());
+    BaseClass::setPrototypeStorage (m_analogStorage, m_digitalStorage);
+  }
+
+private:
+  Layout <MaxAnalogPoles> m_analogStorage;
+  Layout <MaxDigitalPoles> m_digitalStorage;
+};
+
+//------------------------------------------------------------------------------
 
 /*
  * s-plane to z-plane transforms
@@ -45,7 +107,7 @@ struct LowPassTransform
 // low pass to high pass
 struct HighPassTransform
 {
-  static complex_t transform (double omega0,
+  static complex_t transform (double f,
                               complex_t c);
 
   static void transform (double fc,
@@ -54,58 +116,35 @@ struct HighPassTransform
 };
 
 // low pass to band pass transform
-class BandPassTransformation
+struct BandPassTransform
 {
-private:
+  static complex_t transform_bp (int i, double wc, double wc2, complex_t c);
 
-public:
-  static void transform (int numPoles,
-                         double fc,
-                         PoleZeroPair* resultArray,
-                         PoleZeroPair const* sourceArray)
-  {
-  }
+  static std::pair<complex_t, complex_t> transform1 (int i,
+                                                    double wc,
+                                                    double wc2,
+                                                    complex_t c);
+
+  static void transform (double fc,
+                         double fw,
+                         LayoutBase& digital,
+                         LayoutBase const& analog);
 };
 
-
-
-
-template <int MaxPoles>
-class PoleZeroDesign : public Cascade <(MaxPoles+1)/2>, public DesignBase
+// low pass to band stop transform
+struct BandStopTransform
 {
-public:
-  PoleZeroDesign ()
-  {
-    addBuiltinParamInfo (idOrder);
-    addBuiltinParamInfo (idFrequency);
-    addBuiltinParamInfo (idGain);
-    addBuiltinParamInfo (idBandwidth);
-  }
+  static complex_t transform_bs (int i, double wc, double wc2, complex_t c);
 
-#if 1
-  const PoleZeros getPoleZeros () const
-  {
-    PoleZeros pz;
-    const int pairs = MaxPoles / 2;
-    for (int i = 0; i < pairs; ++i)
-    {
-      pz.poles.push_back (m_design[i].pole[0]);
-      pz.poles.push_back (m_design[i].pole[1]);
-      pz.zeros.push_back (m_design[i].zero[0]);
-      pz.zeros.push_back (m_design[i].zero[1]);
-    }
-    if (MaxPoles & 1)
-    {
-      pz.poles.push_back (m_design[pairs].pole[0]);
-      pz.zeros.push_back (m_design[pairs].zero[0]);
-    }
-    return pz;
-  }
-#endif
+  static std::pair<complex_t, complex_t> transform1 (int i,
+                                                     double wc,
+                                                     double wc2,
+                                                     complex_t c);
 
-protected:
-  PoleZeroPair m_prototype[MaxPoles]; // s-plane analog prototype
-  PoleZeroPair m_design[MaxPoles]; // z-plane digital mapping
+  static void transform (double fc,
+                         double fw,
+                         LayoutBase& digital,
+                         LayoutBase const& analog);
 };
 
 }

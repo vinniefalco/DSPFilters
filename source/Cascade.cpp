@@ -3,14 +3,21 @@
 
 namespace Dsp {
 
-CascadeBase::CascadeBase ()
+Cascade::Cascade ()
+  : m_numStages (0)
+  , m_maxStages (0)
+  , m_stageArray (0)
 {
-  m_maxStages = 0;
-  m_numStages = 0;
-  m_stageArray = 0;
 }
 
-complex_t CascadeBase::response (double normalizedFrequency) const
+void Cascade::setCascadeStorage (const Storage& storage)
+{
+  m_numStages = 0;
+  m_maxStages = storage.maxStages;
+  m_stageArray = storage.stageArray;
+}
+
+complex_t Cascade::response (double normalizedFrequency) const
 {
   double w = 2 * doublePi * normalizedFrequency;
   const complex_t czn1 = std::polar (1., -w);
@@ -34,7 +41,7 @@ complex_t CascadeBase::response (double normalizedFrequency) const
   return ch / cbot;
 }
 
-const PoleZeros CascadeBase::getPoleZeros () const
+const PoleZeros Cascade::getPoleZeros () const
 {
   PoleZeros pz;
   const Stage* stage = m_stageArray;
@@ -61,7 +68,7 @@ const PoleZeros CascadeBase::getPoleZeros () const
   return pz;
 }
 
-void CascadeBase::scale (double factor)
+void Cascade::scale (double factor)
 {
   // For higher order filters it might be helpful
   // to spread this factor between all the stages.
@@ -69,7 +76,7 @@ void CascadeBase::scale (double factor)
   m_stageArray->scale (factor);
 }
 
-void CascadeBase::setPoleZeros (int numPoles, const PoleZeroPair* pzArray)
+void Cascade::setPoleZeros (int numPoles, const PoleZeroPair* pzArray)
 {
   const int pairs = numPoles / 2;
   assert (pairs <= m_maxStages);
@@ -81,7 +88,7 @@ void CascadeBase::setPoleZeros (int numPoles, const PoleZeroPair* pzArray)
   m_numStages = pairs + (numPoles & 1);
 }
 
-void CascadeBase::setup (const LayoutBase& proto)
+void Cascade::setup (const LayoutBase& proto)
 {
   const int numPoles = proto.getNumPoles();
   assert ((numPoles+1)/2 <= m_maxStages);

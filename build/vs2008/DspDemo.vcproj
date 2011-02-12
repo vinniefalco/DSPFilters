@@ -431,10 +431,6 @@
 		<Filter
 			Name="DspFilters"
 			>
-			<File
-				RelativePath="..\..\ToDo.txt"
-				>
-			</File>
 			<Filter
 				Name="include"
 				>
@@ -484,6 +480,10 @@
 				</File>
 				<File
 					RelativePath="..\..\include\DspFilters\Filter.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\DspFilters\Layout.h"
 					>
 				</File>
 				<File
@@ -602,6 +602,10 @@
 		</Filter>
 		<File
 			RelativePath="..\..\source\Documentation.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\ToDo.txt"
 			>
 		</File>
 	</Files>

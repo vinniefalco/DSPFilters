@@ -7,5 +7,7 @@
 
 - global remembered parameter settings by ParamID
 
+- wrapper template class for simple filter plus channel state
+
 Documentation, Bibliography
 

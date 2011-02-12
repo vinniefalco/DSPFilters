@@ -165,6 +165,45 @@ public:
 
 //------------------------------------------------------------------------------
 
+class BandwidthHzParamInfo : public ParamInfo
+{
+public:
+  BandwidthHzParamInfo ()
+    : ParamInfo (idBandwidth, "BW")
+  {
+    szName = "Bandwidth";
+    szUnits= "Hz";
+    minValue = 20;
+    maxValue = 20000;
+    defaultValue = 1720;
+  }
+
+  double toControlValue (double nativeValue) const
+  {
+    const double base = 1.5;
+    double l0 = log (minValue) / log (base);
+    double l1 = log (maxValue) / log (base);
+    return (log (nativeValue) / log(base) - l0) / (l1 - l0);
+  }
+
+  double toNativeValue (double controlValue) const
+  {
+    const double base = 1.5;
+    double l0 = log (minValue) / log (base);
+    double l1 = log (maxValue) / log (base);
+    return pow (base, l0 + controlValue * (l1 - l0));
+  }
+
+  std::string toString (double nativeValue) const
+  {
+    std::ostringstream os;
+    os << int(nativeValue+0.5) << " Hz";
+    return os.str();
+  }
+};
+
+//------------------------------------------------------------------------------
+
 class GainParamInfo : public ParamInfo
 {
 public:
@@ -247,13 +286,14 @@ public:
 
 //------------------------------------------------------------------------------
 
-static detail::SampleRateParamInfo builtinParamSampleRate;
-static detail::FrequencyParamInfo  builtinParamFrequency;
-static detail::QParamInfo          builtinParamQ;
-static detail::BandwidthParamInfo  builtinParamBandwidth;
-static detail::GainParamInfo       builtinParamGain;
-static detail::SlopeParamInfo      builtinParamSlope;
-static detail::OrderParamInfo      builtinParamOrder;
+static detail::SampleRateParamInfo  builtinParamSampleRate;
+static detail::FrequencyParamInfo   builtinParamFrequency;
+static detail::QParamInfo           builtinParamQ;
+static detail::BandwidthParamInfo   builtinParamBandwidth;
+static detail::BandwidthHzParamInfo builtinParamBandwidthHz;
+static detail::GainParamInfo        builtinParamGain;
+static detail::SlopeParamInfo       builtinParamSlope;
+static detail::OrderParamInfo       builtinParamOrder;
 
 DesignBase::DesignBase ()
   : m_numParams (0)
@@ -282,13 +322,14 @@ ParamInfo* DesignBase::getBuiltinParamInfo (int paramId)
 
   switch (paramId)
   {
-  case idSampleRate: p = &builtinParamSampleRate; break;
-  case idFrequency:  p = &builtinParamFrequency; break;
-  case idQ:          p = &builtinParamQ; break;
-  case idBandwidth:  p = &builtinParamBandwidth; break;
-  case idGain:       p = &builtinParamGain; break;
-  case idSlope:      p = &builtinParamSlope; break;
-  case idOrder:      p = &builtinParamOrder; break;
+  case idSampleRate:  p = &builtinParamSampleRate; break;
+  case idFrequency:   p = &builtinParamFrequency; break;
+  case idQ:           p = &builtinParamQ; break;
+  case idBandwidth:   p = &builtinParamBandwidth; break;
+  case idBandwidthHz: p = &builtinParamBandwidthHz; break;
+  case idGain:        p = &builtinParamGain; break;
+  case idSlope:       p = &builtinParamSlope; break;
+  case idOrder:       p = &builtinParamOrder; break;
   };
 
   assert (p);

@@ -56,17 +56,23 @@ void PoleZeroChart::paintContents (Graphics& g)
   for (size_t i = 0; i < m_pz.poles.size(); ++i)
   {
     Point<float> p (float(m_pz.poles[i].real()), float(m_pz.poles[i].imag()));
-    p = p.transformedBy (t);
-    g.drawLine (p.getX()-r, p.getY()-r, p.getX()+r, p.getY()+r);
-    g.drawLine (p.getX()+r, p.getY()-r, p.getX()-r, p.getY()+r);
+    if (!Dsp::isnan (p.getX()) && !Dsp::isnan (p.getY()))
+    {
+      p = p.transformedBy (t);
+      g.drawLine (p.getX()-r, p.getY()-r, p.getX()+r, p.getY()+r);
+      g.drawLine (p.getX()+r, p.getY()-r, p.getX()-r, p.getY()+r);
+    }
   }
 
 	g.setColour (cZero);
   for (size_t i = 0; i < m_pz.zeros.size(); ++i)
   {
     Point<float> p (float(m_pz.zeros[i].real()), float(m_pz.zeros[i].imag()));
-    p = p.transformedBy (t);
-	  g.drawEllipse (p.getX()-r, p.getY()-r, 2*r, 2*r, 1);
+    if (!Dsp::isnan (p.getX()) && !Dsp::isnan (p.getY()))
+    {
+      p = p.transformedBy (t);
+  	  g.drawEllipse (p.getX()-r, p.getY()-r, 2*r, 2*r, 1);
+    }
   }
 }
 

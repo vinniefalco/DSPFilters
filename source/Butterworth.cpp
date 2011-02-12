@@ -5,8 +5,10 @@ namespace Dsp {
 
 namespace Butterworth {
 
-void AnalogLowPassHalfband::design (int numPoles,
-                                    LayoutBase& proto)
+namespace detail {
+
+void AnalogLowPass::design (int numPoles,
+                            LayoutBase& proto)
 {
   proto.reset ();
 
@@ -25,9 +27,9 @@ void AnalogLowPassHalfband::design (int numPoles,
   proto.setNormal (0, 1);
 }
 
-void AnalogLowShelfHalfband::design (int numPoles,
-                                     double gainDb,
-                                     LayoutBase& proto)
+void AnalogLowShelf::design (int numPoles,
+                             double gainDb,
+                             LayoutBase& proto)
 {
   proto.reset ();
 
@@ -55,26 +57,56 @@ void LowPassBase::setup (int order,
                          double sampleRate,
                          double cutoffFrequency)
 {
-  AnalogLowPassHalfband::design (order, m_analogProto);
+  AnalogLowPass::design (order, m_analogProto);
 
   LowPassTransform::transform (cutoffFrequency / sampleRate,
                                m_digitalProto,
                                m_analogProto);
 
-  CascadeBase::setup (m_digitalProto);
+  Cascade::setup (m_digitalProto);
 }
 
 void HighPassBase::setup (int order,
                           double sampleRate,
                           double cutoffFrequency)
 {
-  AnalogLowPassHalfband::design (order, m_analogProto);
+  AnalogLowPass::design (order, m_analogProto);
 
   HighPassTransform::transform (cutoffFrequency / sampleRate,
                                 m_digitalProto,
                                 m_analogProto);
 
-  CascadeBase::setup (m_digitalProto);
+  Cascade::setup (m_digitalProto);
+}
+
+void BandPassBase::setup (int order,
+                          double sampleRate,
+                          double centerFrequency,
+                          double widthFrequency)
+{
+  AnalogLowPass::design (order, m_analogProto);
+
+  BandPassTransform::transform (centerFrequency / sampleRate,
+                                widthFrequency / sampleRate,
+                                m_digitalProto,
+                                m_analogProto);
+
+  Cascade::setup (m_digitalProto);
+}
+
+void BandStopBase::setup (int order,
+                          double sampleRate,
+                          double centerFrequency,
+                          double widthFrequency)
+{
+  AnalogLowPass::design (order, m_analogProto);
+
+  BandStopTransform::transform (centerFrequency / sampleRate,
+                                widthFrequency / sampleRate,
+                                m_digitalProto,
+                                m_analogProto);
+
+  Cascade::setup (m_digitalProto);
 }
 
 void LowShelfBase::setup (int order,
@@ -82,13 +114,13 @@ void LowShelfBase::setup (int order,
                          double cutoffFrequency,
                          double gainDb)
 {
-  AnalogLowShelfHalfband::design (order, gainDb, m_analogProto);
+  AnalogLowShelf::design (order, gainDb, m_analogProto);
 
   LowPassTransform::transform (cutoffFrequency / sampleRate,
                                m_digitalProto,
                                m_analogProto);
 
-  CascadeBase::setup (m_digitalProto);
+  Cascade::setup (m_digitalProto);
 }
 
 void HighShelfBase::setup (int order,
@@ -96,13 +128,15 @@ void HighShelfBase::setup (int order,
                            double cutoffFrequency,
                            double gainDb)
 {
-  AnalogLowShelfHalfband::design (order, gainDb, m_analogProto);
+  AnalogLowShelf::design (order, gainDb, m_analogProto);
 
   HighPassTransform::transform (cutoffFrequency / sampleRate,
                                 m_digitalProto,
                                 m_analogProto);
 
-  CascadeBase::setup (m_digitalProto);
+  Cascade::setup (m_digitalProto);
+}
+
 }
 
 }
