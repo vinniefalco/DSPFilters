@@ -1175,11 +1175,11 @@ void BiquadEq::SetupFast( CalcT normFreq, CalcT dB, CalcT bandWidth )
 
 //******************************************************************************
 //
-// Layout
+// LayoutOld
 //
 //******************************************************************************
 
-void Layout::Realize( CascadeOld* cascade )
+void LayoutOld::Realize( CascadeOld* cascade )
 {
   // Calculate number of second order sections required.
   {
@@ -1228,7 +1228,7 @@ void Layout::Realize( CascadeOld* cascade )
 
 //------------------------------------------------------------------------------
 
-void Layout::BuildA( CascadeOld* cascade, CalcT x1, CalcT x2, int* na )
+void LayoutOld::BuildA( CascadeOld* cascade, CalcT x1, CalcT x2, int* na )
 {
   if( x2!=0 )
   {
@@ -1262,7 +1262,7 @@ void Layout::BuildA( CascadeOld* cascade, CalcT x1, CalcT x2, int* na )
 
 //------------------------------------------------------------------------------
 
-void Layout::BuildB( CascadeOld* cascade, CalcT x0, CalcT x1, CalcT x2, int* nb )
+void LayoutOld::BuildB( CascadeOld* cascade, CalcT x0, CalcT x1, CalcT x2, int* nb )
 {
   if( x2!=0 )
   {
@@ -1304,7 +1304,7 @@ void Layout::BuildB( CascadeOld* cascade, CalcT x0, CalcT x1, CalcT x2, int* nb 
 //
 //******************************************************************************
 
-void LowPass::Transform( const Spec& spec, Layout* result, const Layout& layout )
+void LowPass::Transform( const Spec& spec, LayoutOld* result, const LayoutOld& layout )
 {
   Transform( spec, &result->Poles(), layout.Poles() );
   Transform( spec, &result->Zeros(), layout.Zeros() );
@@ -1343,7 +1343,7 @@ void LowPass::Transform( const Spec& spec, Roots* result, const Roots& roots )
 
 //------------------------------------------------------------------------------
 
-void HighPass::Transform( const Spec& spec, Layout* result, const Layout& layout )
+void HighPass::Transform( const Spec& spec, LayoutOld* result, const LayoutOld& layout )
 {
   Transform( spec, &result->Poles(), layout.Poles() );
   Transform( spec, &result->Zeros(), layout.Zeros() );
@@ -1382,7 +1382,7 @@ void HighPass::Transform( const Spec& spec, Roots* result, const Roots& roots )
 
 //------------------------------------------------------------------------------
 
-void BandPass::Transform( const Spec& spec, Layout* result, const Layout& layout )
+void BandPass::Transform( const Spec& spec, LayoutOld* result, const LayoutOld& layout )
 {
   Transform( spec, &result->Poles(), layout.Poles() );
   Transform( spec, &result->Zeros(), layout.Zeros() );
@@ -1470,7 +1470,7 @@ Complex BandPass::BandPassTransform( int i, const Complex& c )
 
 //------------------------------------------------------------------------------
 
-void BandStop::Transform( const Spec& spec, Layout* result, const Layout& layout )
+void BandStop::Transform( const Spec& spec, LayoutOld* result, const LayoutOld& layout )
 {
   Transform( spec, &result->Poles(), layout.Poles() );
   Transform( spec, &result->Zeros(), layout.Zeros() );
@@ -1514,7 +1514,7 @@ void BandStop::Transform( const Spec& spec, Roots* result, const Roots& roots )
 
 //------------------------------------------------------------------------------
 
-void BandStop::DesignZeros( const Spec& spec, Layout* layout )
+void BandStop::DesignZeros( const Spec& spec, LayoutOld* layout )
 {
   int n=spec.order;
   Roots* roots=&layout->Zeros();
@@ -2120,7 +2120,7 @@ void RootFinder::laguerre( int degree, Complex a[], Complex& x, int& its)
     else x -= frac[iter/MT]*dx;
   }
 
-  throw;
+  //throw;
 }
 
 //------------------------------------------------------------------------------

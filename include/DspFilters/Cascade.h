@@ -8,11 +8,32 @@
 
 namespace Dsp {
 
-// Analog or digital pole filter prototype, specified by
-// a set of pole/zeros and normalization information.
-class PoleZeroPrototype
+//
+// Describes a filter as a collection of poles and zeros along with
+// normalization information to achieve a specified gain at a specified
+// frequency. The poles and zeros may lie either in the s or the z plane.
+//
+
+// Base uses pointers to reduce template instantiations
+class LayoutBase
 {
 public:
+  LayoutBase ()
+    : m_maxPoles (0)
+    , m_numPoles (0)
+  {
+  }
+
+  LayoutBase (int maxPoles,
+              complex_t* poleArray,
+              complex_t* zeroArray)
+    : m_maxPoles (maxPoles)
+    , m_poleArray (poleArray)
+    , m_zeroArray (zeroArray)
+    , m_numPoles (0)
+  {
+  }
+
   int getNumPoles () const
   {
     return m_numPoles;
@@ -69,24 +90,28 @@ public:
     m_normalGain = g;
   }
 
-protected:
-  PoleZeroPrototype (int maxPoles,
-                     complex_t* poleArray,
-                     complex_t* zeroArray)
-    : m_maxPoles (maxPoles)
-    , m_poleArray (poleArray)
-    , m_zeroArray (zeroArray)
-    , m_numPoles (0)
-  {
-  }
-
 private:
-  const int m_maxPoles;
+  int m_maxPoles;
   complex_t* m_poleArray;
   complex_t* m_zeroArray;
   int m_numPoles;
   double m_normalW;
   double m_normalGain;
+};
+
+// Storage for Layout
+template <int MaxPoles>
+class Layout
+{
+public:
+  operator LayoutBase ()
+  {
+    return LayoutBase (MaxPoles, m_poles, m_zeros);
+  }
+
+private:
+  complex_t m_poles[MaxPoles];
+  complex_t m_zeros[MaxPoles];
 };
 
 /*
@@ -99,7 +124,7 @@ class CascadeBase
 {
 public:
   template <class StateType>
-  class State
+  class StateBase
   {
   public:
     template <typename Sample>
@@ -114,7 +139,7 @@ public:
     }
 
   protected:
-    State (StateType* stateArray)
+    StateBase (StateType* stateArray)
       : m_stateArray (stateArray)
     {
     }
@@ -147,7 +172,7 @@ protected:
 
   void scale (double factor);
   void setPoleZeros (int numPoles, const PoleZeroPair* pzArray);
-  void setup (const PoleZeroPrototype& proto);
+  void setup (const LayoutBase& proto);
 
 public:
   // set by derived classes???
@@ -163,12 +188,12 @@ class Cascade
 {
 public:
   template <class StateType>
-  class State : public CascadeBase::State <StateType>
+  class State : public CascadeBase::StateBase <StateType>
   {
   public:
-    State() : CascadeBase::State <StateType> (m_states)
+    State() : CascadeBase::StateBase <StateType> (m_states)
     {
-      CascadeBase::State <StateType>::m_stateArray = m_states;
+      CascadeBase::StateBase <StateType>::m_stateArray = m_states;
       reset ();
     }
 

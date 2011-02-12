@@ -131,6 +131,10 @@ template <int Channels, class StateType = DirectFormI>
 class ChannelsState
 {
 public:
+  ChannelsState ()
+  {
+  }
+
   const int getNumChannels() const
   {
     return Channels;

@@ -53,8 +53,8 @@ public:
                          PoleZeroPair const* sourceArray);
 
   static void transform (double normalizedCutoffFrequency,
-                         PoleZeroPrototype* digitalProto,
-                         PoleZeroPrototype const* analogProto);
+                         LayoutBase& digitalProto,
+                         LayoutBase const& analogProto);
 };
 
 // low pass to high pass transform

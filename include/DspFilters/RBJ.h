@@ -9,7 +9,7 @@
 namespace Dsp {
 
 /*
- * Filter designs based on Robert Bristol-Johnson formulae:
+ * Filter realizations based on Robert Bristol-Johnson formulae:
  *
  * http://www.musicdsp.org/files/Audio-EQ-Cookbook.txt
  *

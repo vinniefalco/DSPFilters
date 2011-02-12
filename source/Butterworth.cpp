@@ -1,8 +1,6 @@
 #include "DspFilters/Common.h"
 #include "DspFilters/Butterworth.h"
 
-#if 0
-
 namespace Dsp {
 
 namespace Butterworth {
@@ -29,25 +27,28 @@ void AnalogLowPassHalfband::design (int numPoles, PoleZeroPair* pzArray)
   //m_normal.gain=1;
 }
 
-void AnalogLowPassHalfband::design (int numPoles, PoleZeroPrototype* proto)
+void AnalogLowPassHalfband::design (int numPoles, LayoutBase& proto)
 {
-  proto->setNumPoles (numPoles);
+  proto.setNumPoles (numPoles);
 
-  for (int i = 0; i < numPoles; i+=2)
+  const int pairs = numPoles / 2;
+
+  int i;
+  for (i = 0; i < pairs; ++i)
   {
-    proto->pole (i)   = std::polar (1., doublePi_2 + (i + 1) * doublePi / (2 * numPoles));
-    proto->pole (i+1) = std::conj (proto->pole (i));
-    proto->zero (i)   = infinity();
-    proto->zero (i+1) = infinity();
+    proto.pole (2*i)   = std::polar (1., doublePi_2 + 2 * (i + 1) * doublePi / (2 * numPoles));
+    proto.pole (2*i+1) = std::conj (proto.pole (i));
+    proto.zero (2*i)   = infinity();
+    proto.zero (2*i+1) = infinity();
   }
 
   if (numPoles & 1)
   {
-    proto->pole (numPoles-1) = complex_t (-1, 0);
-    proto->zero (numPoles-1) = infinity();
+    proto.pole (2*i) = complex_t (-1, 0);
+    proto.zero (2*i) = infinity();
   }
 
-  proto->setNormal (0, 1);
+  proto.setNormal (0, 1);
 }
 
 void AnalogLowShelfHalfband::design (int numPoles,
@@ -88,11 +89,9 @@ void LowPassBase::setup (int order,
                                     m_digitalProto,
                                     m_analogProto);
 
-  CascadeBase::setup (*m_digitalProto);
+  CascadeBase::setup (m_digitalProto);
 }
 
 }
 
 }
-
-#endif
