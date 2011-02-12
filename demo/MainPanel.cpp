@@ -222,7 +222,6 @@ bool MainPanel::isEnabled (int familyId)
 
   switch (familyId)
   {
-  case 3:
   case 4:
   case 5:
   case 6:
@@ -292,6 +291,17 @@ void MainPanel::buildTypeMenu (ComboBox* ctrl)
 	  ctrl->addItem ("High Shelf",  7); ctrl->setItemEnabled (7, isEnabled (2, 7));
 	  ctrl->addItem ("Band Shelf",  8); ctrl->setItemEnabled (8, isEnabled (2, 8));
 	  break;
+
+  case 3: // Chebyshev I
+    ctrl->addItem ("Low Pass",    1); ctrl->setItemEnabled (1, isEnabled (3, 1));
+	  ctrl->addItem ("High Pass",   2); ctrl->setItemEnabled (2, isEnabled (3, 2));
+    // 3
+	  ctrl->addItem ("Band Pass",   4); ctrl->setItemEnabled (4, isEnabled (3, 4));
+	  ctrl->addItem ("Band Stop",   5); ctrl->setItemEnabled (5, isEnabled (3, 5));
+	  ctrl->addItem ("Low Shelf",   6); ctrl->setItemEnabled (6, isEnabled (3, 6));
+	  ctrl->addItem ("High Shelf",  7); ctrl->setItemEnabled (7, isEnabled (3, 7));
+	  ctrl->addItem ("Band Shelf",  8); ctrl->setItemEnabled (8, isEnabled (3, 8));
+	  break;
   };
 }
 
@@ -346,6 +356,22 @@ void MainPanel::setFilter (int familyId, int typeId)
     case 6: createSmoothedFilter <Dsp::Butterworth::Design::LowShelf <50> > (&f, &fo); break;
     case 7: createSmoothedFilter <Dsp::Butterworth::Design::HighShelf <50> > (&f, &fo); break;
     case 8: createSmoothedFilter <Dsp::Butterworth::Design::BandShelf <50> > (&f, &fo); break;
+    };
+  }
+  //
+  // Chebyshev I
+  //
+  else if (familyId == 3)
+  {
+    switch (typeId)
+    {
+    case 1: createSmoothedFilter <Dsp::ChebyshevI::Design::LowPass <50> > (&f, &fo); break;
+    case 2: createSmoothedFilter <Dsp::ChebyshevI::Design::HighPass <50> > (&f, &fo); break;
+    case 4: createSmoothedFilter <Dsp::ChebyshevI::Design::BandPass <50> > (&f, &fo); break;
+    case 5: createSmoothedFilter <Dsp::ChebyshevI::Design::BandStop <50> > (&f, &fo); break;
+    case 6: createSmoothedFilter <Dsp::ChebyshevI::Design::LowShelf <50> > (&f, &fo); break;
+    case 7: createSmoothedFilter <Dsp::ChebyshevI::Design::HighShelf <50> > (&f, &fo); break;
+    case 8: createSmoothedFilter <Dsp::ChebyshevI::Design::BandShelf <50> > (&f, &fo); break;
     };
   }
 
