@@ -218,6 +218,8 @@ public:
   }
 };
 
+//------------------------------------------------------------------------------
+
 class SlopeParamInfo : public ParamInfo
 {
 public:
@@ -282,6 +284,22 @@ public:
   }
 };
 
+//------------------------------------------------------------------------------
+
+class PassbandRippleDbInfo : public ParamInfo
+{
+public:
+  PassbandRippleDbInfo ()
+    : ParamInfo (idGain, "P. Rip")
+  {
+    szName = "Passband Ripple";
+    szUnits= "dB";
+    minValue = 0.00001;
+    maxValue = 3;
+    defaultValue = 0.01;
+  }
+};
+
 }
 
 //------------------------------------------------------------------------------
@@ -294,6 +312,7 @@ static detail::BandwidthHzParamInfo builtinParamBandwidthHz;
 static detail::GainParamInfo        builtinParamGain;
 static detail::SlopeParamInfo       builtinParamSlope;
 static detail::OrderParamInfo       builtinParamOrder;
+static detail::PassbandRippleDbInfo builtinPassbandRippleDb;
 
 DesignBase::DesignBase ()
   : m_numParams (0)
@@ -322,14 +341,15 @@ ParamInfo* DesignBase::getBuiltinParamInfo (int paramId)
 
   switch (paramId)
   {
-  case idSampleRate:  p = &builtinParamSampleRate; break;
-  case idFrequency:   p = &builtinParamFrequency; break;
-  case idQ:           p = &builtinParamQ; break;
-  case idBandwidth:   p = &builtinParamBandwidth; break;
-  case idBandwidthHz: p = &builtinParamBandwidthHz; break;
-  case idGain:        p = &builtinParamGain; break;
-  case idSlope:       p = &builtinParamSlope; break;
-  case idOrder:       p = &builtinParamOrder; break;
+  case idSampleRate:       p = &builtinParamSampleRate; break;
+  case idFrequency:        p = &builtinParamFrequency; break;
+  case idQ:                p = &builtinParamQ; break;
+  case idBandwidth:        p = &builtinParamBandwidth; break;
+  case idBandwidthHz:      p = &builtinParamBandwidthHz; break;
+  case idGain:             p = &builtinParamGain; break;
+  case idSlope:            p = &builtinParamSlope; break;
+  case idOrder:            p = &builtinParamOrder; break;
+  case idPassbandRippleDb: p = &builtinPassbandRippleDb; break;
   };
 
   assert (p);

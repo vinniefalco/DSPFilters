@@ -46,7 +46,8 @@ enum ParamID
   idBandwidthHz,
   idGain,
   idSlope,
-  idOrder
+  idOrder,
+  idPassbandRippleDb
 };
 
 class ParamInfo
