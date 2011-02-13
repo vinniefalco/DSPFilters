@@ -117,68 +117,85 @@ void BandPassTransform::transform (double fc,
                                    LayoutBase& digital,
                                    LayoutBase const& analog)
 {
-  digital.reset ();
-
-  const double ww = 2 * doublePi * fw;
-
-  double wc2 = 2 * doublePi * fc - (ww / 2);
-  double wc  = wc2 + ww;
-
-  if (wc2 < 1e-8)
-      wc2 = 1e-8;
-  if (wc  > doublePi-1e-8)
-      wc  = doublePi-1e-8;
-
-  const int numPoles = analog.getNumPoles ();
-  const int pairs = numPoles / 2;
-  int i;
-  for (i = 0; i < pairs; ++i)
+  const double fw_2 = fw / 2;
+  
+  // handle degenerate cases efficiently
+  // THIS DOESNT WORK because the cascade states won't match
+#if 0
+  if (fc - fw_2 < 0)
   {
-    std::pair<complex_t, complex_t> p1 = transform1 (digital.getNumPoles(),
-                                                     wc,
-                                                     wc2,
-                                                     analog.pole (2*i));
-
-    std::pair<complex_t, complex_t> z1 = transform1 (digital.getNumPoles(),
-                                                     wc,
-                                                     wc2,
-                                                     analog.zero (2*i));
-
-    std::pair<complex_t, complex_t> p2 = transform1 (digital.getNumPoles(),
-                                                     wc,
-                                                     wc2,
-                                                     analog.pole (2*i+1));
-
-    std::pair<complex_t, complex_t> z2 = transform1 (digital.getNumPoles(),
-                                                     wc,
-                                                     wc2,
-                                                     analog.zero (2*i+1));
-
-    digital.addPoleZero (p1.first, z1.first);
-    digital.addPoleZero (p2.first, z2.first);
-    digital.addPoleZero (p1.second, z1.second);
-    digital.addPoleZero (p2.second, z2.second);
+    LowPassTransform::transform (fc + fw_2, digital, analog);
   }
-
-  if (numPoles & 1)
+  else if (fc + fw_2 >= 0.5)
   {
-    std::pair<complex_t, complex_t> p = transform1 (digital.getNumPoles(),
-                                                    wc,
-                                                    wc2,
-                                                    analog.pole (2*i));
-
-    std::pair<complex_t, complex_t> z = transform1 (digital.getNumPoles(),
-                                                    wc,
-                                                    wc2,
-                                                    analog.zero (2*i));
-
-    digital.addPoleZero (p.first,  z.first);
-    digital.addPoleZero (p.second, z.second);
+    HighPassTransform::transform (fc - fw_2, digital, analog);
   }
+  else
+#endif
+  {
+    digital.reset ();
 
-  double wn = analog.getNormalW();
-  digital.setNormal (2 * atan (sqrt (tan ((wc + wn)* 0.5) * tan((wc2 + wn)* 0.5))),
-                     analog.getNormalGain());
+    const double ww = 2 * doublePi * fw;
+
+    double wc2 = 2 * doublePi * fc - (ww / 2);
+    double wc  = wc2 + ww;
+
+    if (wc2 < 1e-8)
+        wc2 = 1e-8;
+    if (wc  > doublePi-1e-8)
+        wc  = doublePi-1e-8;
+
+    const int numPoles = analog.getNumPoles ();
+    const int pairs = numPoles / 2;
+    int i;
+    for (i = 0; i < pairs; ++i)
+    {
+      std::pair<complex_t, complex_t> p1 = transform1 (digital.getNumPoles(),
+                                                       wc,
+                                                       wc2,
+                                                       analog.pole (2*i));
+
+      std::pair<complex_t, complex_t> z1 = transform1 (digital.getNumPoles(),
+                                                       wc,
+                                                       wc2,
+                                                       analog.zero (2*i));
+
+      std::pair<complex_t, complex_t> p2 = transform1 (digital.getNumPoles(),
+                                                       wc,
+                                                       wc2,
+                                                       analog.pole (2*i+1));
+
+      std::pair<complex_t, complex_t> z2 = transform1 (digital.getNumPoles(),
+                                                       wc,
+                                                       wc2,
+                                                       analog.zero (2*i+1));
+
+      digital.addPoleZero (p1.first, z1.first);
+      digital.addPoleZero (p2.first, z2.first);
+      digital.addPoleZero (p1.second, z1.second);
+      digital.addPoleZero (p2.second, z2.second);
+    }
+
+    if (numPoles & 1)
+    {
+      std::pair<complex_t, complex_t> p = transform1 (digital.getNumPoles(),
+                                                      wc,
+                                                      wc2,
+                                                      analog.pole (2*i));
+
+      std::pair<complex_t, complex_t> z = transform1 (digital.getNumPoles(),
+                                                      wc,
+                                                      wc2,
+                                                      analog.zero (2*i));
+
+      digital.addPoleZero (p.first,  z.first);
+      digital.addPoleZero (p.second, z.second);
+    }
+
+    double wn = analog.getNormalW();
+    digital.setNormal (2 * atan (sqrt (tan ((wc + wn)* 0.5) * tan((wc2 + wn)* 0.5))),
+                       analog.getNormalGain());
+  }
 }
 
 //------------------------------------------------------------------------------

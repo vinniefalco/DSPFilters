@@ -298,21 +298,68 @@ public:
     maxValue = 3;
     defaultValue = 0.01;
   }
+
+  std::string toString (double nativeValue) const
+  {
+    const double af = fabs (nativeValue);
+    int prec;
+    if (af < 1)
+      prec = 3;
+    else if (af < 10)
+      prec = 2;
+    else
+      prec = 1;
+    std::ostringstream os;
+    os << std::fixed << std::setprecision (prec) << nativeValue << " " << szUnits;
+    return os.str();
+  }
+};
+
+//------------------------------------------------------------------------------
+
+class StopAttenuationDbInfo : public ParamInfo
+{
+public:
+  StopAttenuationDbInfo ()
+    : ParamInfo (idGain, "Stop")
+  {
+    szName = "Stopband Attenuation";
+    szUnits= "dB";
+    minValue = 0.00001;
+    maxValue = 60;
+    defaultValue = 48;
+  }
+
+  std::string toString (double nativeValue) const
+  {
+    const double af = fabs (nativeValue);
+    int prec;
+    if (af < 1)
+      prec = 3;
+    else if (af < 10)
+      prec = 2;
+    else
+      prec = 1;
+    std::ostringstream os;
+    os << std::fixed << std::setprecision (prec) << nativeValue << " " << szUnits;
+    return os.str();
+  }
 };
 
 }
 
 //------------------------------------------------------------------------------
 
-static detail::SampleRateParamInfo  builtinParamSampleRate;
-static detail::FrequencyParamInfo   builtinParamFrequency;
-static detail::QParamInfo           builtinParamQ;
-static detail::BandwidthParamInfo   builtinParamBandwidth;
-static detail::BandwidthHzParamInfo builtinParamBandwidthHz;
-static detail::GainParamInfo        builtinParamGain;
-static detail::SlopeParamInfo       builtinParamSlope;
-static detail::OrderParamInfo       builtinParamOrder;
-static detail::PassbandRippleDbInfo builtinPassbandRippleDb;
+static detail::SampleRateParamInfo   builtinParamSampleRate;
+static detail::FrequencyParamInfo    builtinParamFrequency;
+static detail::QParamInfo            builtinParamQ;
+static detail::BandwidthParamInfo    builtinParamBandwidth;
+static detail::BandwidthHzParamInfo  builtinParamBandwidthHz;
+static detail::GainParamInfo         builtinParamGain;
+static detail::SlopeParamInfo        builtinParamSlope;
+static detail::OrderParamInfo        builtinParamOrder;
+static detail::PassbandRippleDbInfo  builtinPassbandRippleDb;
+static detail::StopAttenuationDbInfo builtinStopAttenuationDb;
 
 DesignBase::DesignBase ()
   : m_numParams (0)
@@ -341,15 +388,16 @@ ParamInfo* DesignBase::getBuiltinParamInfo (int paramId)
 
   switch (paramId)
   {
-  case idSampleRate:       p = &builtinParamSampleRate; break;
-  case idFrequency:        p = &builtinParamFrequency; break;
-  case idQ:                p = &builtinParamQ; break;
-  case idBandwidth:        p = &builtinParamBandwidth; break;
-  case idBandwidthHz:      p = &builtinParamBandwidthHz; break;
-  case idGain:             p = &builtinParamGain; break;
-  case idSlope:            p = &builtinParamSlope; break;
-  case idOrder:            p = &builtinParamOrder; break;
-  case idPassbandRippleDb: p = &builtinPassbandRippleDb; break;
+  case idSampleRate:        p = &builtinParamSampleRate; break;
+  case idFrequency:         p = &builtinParamFrequency; break;
+  case idQ:                 p = &builtinParamQ; break;
+  case idBandwidth:         p = &builtinParamBandwidth; break;
+  case idBandwidthHz:       p = &builtinParamBandwidthHz; break;
+  case idGain:              p = &builtinParamGain; break;
+  case idSlope:             p = &builtinParamSlope; break;
+  case idOrder:             p = &builtinParamOrder; break;
+  case idPassbandRippleDb:  p = &builtinPassbandRippleDb; break;
+  case idStopAttenuationDb: p = &builtinStopAttenuationDb; break;
   };
 
   assert (p);

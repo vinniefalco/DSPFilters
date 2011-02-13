@@ -26,8 +26,9 @@ void AnalogLowPass::design (int numPoles,
     double a = sinh_v0 * cos (k * doublePi / n2);
     double b = cosh_v0 * sin (k * doublePi / n2);
 
-    proto.addPoleZero (complex_t (a, b), infinity());
-    proto.addPoleZero (complex_t (a, -b), infinity());
+    //proto.addPoleZero (complex_t (a, b), infinity());
+    //proto.addPoleZero (complex_t (a, -b), infinity());
+    proto.addPoleZeroConjugatePairs (complex_t (a, b), infinity());
   }
 
   if (numPoles & 1)
@@ -39,9 +40,14 @@ void AnalogLowPass::design (int numPoles,
   {
     proto.setNormal (0, pow (10, -rippleDb/20.));
   }
-
 }
 
+//
+// Chebyshev Type I low pass shelf prototype
+// From "High-Order Digital Parametric Equalizer Design"
+// Sophocles J. Orfanidis
+// http://www.ece.rutgers.edu/~orfanidi/ece521/hpeq.pdf
+//
 void AnalogLowShelf::design (int numPoles,
                              double gainDb,
                              double rippleDb,
@@ -49,20 +55,45 @@ void AnalogLowShelf::design (int numPoles,
 {
   proto.reset ();
 
-  const double n2 = numPoles * 2;
-  const double g = pow (pow (10., gainDb/20), 1. / n2);
-  const double gp = -1. / g;
-  const double gz = -g;
+  gainDb = -gainDb;
 
+  if (rippleDb >= abs(gainDb))
+    rippleDb = abs (gainDb);
+  if (gainDb<0)
+    rippleDb = -rippleDb;
+
+  const double G  = std::pow (10., gainDb / 20.0 );
+  const double Gb = std::pow (10., (gainDb - rippleDb) / 20.0);
+  const double G0 = 1;
+  const double g0 = pow (G0 , 1. / numPoles);
+
+  double eps;
+  if (Gb != G0 )
+    eps = sqrt((G*G-Gb*Gb)/(Gb*Gb-G0*G0));
+  else
+    eps = G-1; // This is surely wrong
+
+  const double b = pow (G/eps+Gb*sqrt(1+1/(eps*eps)), 1./numPoles);
+  const double u = log (b / g0);
+  const double v = log (pow (1. / eps+sqrt(1+1/(eps*eps)),1./numPoles));
+  
+  const double sinh_u = sinh (u);
+  const double sinh_v = sinh (v);
+  const double cosh_u = cosh (u);
+  const double cosh_v = cosh (v);
+  const double n2 = 2 * numPoles;
   const int pairs = numPoles / 2;
   for (int i = 1; i <= pairs; ++i)
   {
-    const double theta = doublePi * (0.5 - (2 * i - 1) / n2);
-    proto.addPoleZeroConjugatePairs (std::polar (gp, theta), std::polar (gz, theta));
+    const double a = doublePi * (2 * i - 1) / n2;
+    const double sn = sin (a);
+    const double cs = cos (a);
+    proto.addPoleZeroConjugatePairs (complex_t (-sn * sinh_u, cs * cosh_u),
+                                     complex_t (-sn * sinh_v, cs * cosh_v));
   }
-  
+
   if (numPoles & 1)
-    proto.addPoleZero (gp, gz);
+    proto.addPoleZero (-sinh_u, -sinh_v);
 
   proto.setNormal (doublePi, 1);
 }
