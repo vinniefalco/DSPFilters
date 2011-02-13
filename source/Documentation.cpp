@@ -211,6 +211,8 @@ static void UsageExamples ()
   // and 1dB ripple in the passband. The simle API has a smaller
   // footprint, but no introspection or smoothing.
   {
+    // Note we use the raw filter instead of the one
+    // from the Design namespace.
     Dsp::SimpleFilter <Dsp::ChebyshevI::BandStop <3>, 2> f;
     f.setup (3,    // order
              44100,// sample rate
