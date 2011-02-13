@@ -147,9 +147,9 @@ public:
   {
     double d2 = m_v2 = m_v1;
     double d1 = m_v1 = m_v0;
-    double a1i = 1. / s.getA1();
-    double d0 = m_v0 = in - (s.getA1() * d1 + s.getA2() * d2) * a1i;
-    double out = (s.getB0() * d0 + s.getB1() * d1 + s.getB2() * d2) * a1i  + ac();
+    double a0i = 1. / s.getA0();
+    double d0 = m_v0 = in - (s.getA1() * d1 + s.getA2() * d2) * a0i;
+    double out = (s.getB0() * d0 + s.getB1() * d1 + s.getB2() * d2) * a0i + ac();
     return static_cast<Sample> (out);
   }
 
