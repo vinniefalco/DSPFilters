@@ -54,6 +54,7 @@ THE SOFTWARE.
 #include "DspFilters/Butterworth.h"
 #include "DspFilters/ChebyshevI.h"
 #include "DspFilters/ChebyshevII.h"
+#include "DspFilters/CustomBiquad.h"
 #include "DspFilters/Elliptic.h"
 #include "DspFilters/RBJ.h"
 

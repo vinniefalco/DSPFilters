@@ -114,6 +114,7 @@ public:
   // Process a block of samples, interpolating from the old section's coefficients
   // to this section's coefficients, over numSamples. This implements smooth
   // parameter changes.
+#if 0
   template <class StateType, typename Sample>
   void process (int numSamples,
                 Sample* dest,
@@ -167,6 +168,7 @@ public:
       *dest++ = state.process (*dest, Biquad (zPrev));
     }
   }
+#endif
 
 public:
   // Set the poles and zeros from two-element arrays.

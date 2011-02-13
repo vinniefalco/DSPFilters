@@ -35,6 +35,7 @@ THE SOFTWARE.
 
 #include "DspFilters/Common.h"
 #include "DspFilters/Design.h"
+#include "DspFilters/MathSupplement.h"
 #include <sstream>
 #include <iostream>
 #include <iomanip>
@@ -325,7 +326,7 @@ class PassbandRippleDbInfo : public ParamInfo
 {
 public:
   PassbandRippleDbInfo ()
-    : ParamInfo (idGain, "P. Rip")
+    : ParamInfo (idPassbandRippleDb, "Ripple")
   {
     szName = "Passband Ripple";
     szUnits= "dB";
@@ -356,7 +357,7 @@ class StopAttenuationDbInfo : public ParamInfo
 {
 public:
   StopAttenuationDbInfo ()
-    : ParamInfo (idGain, "Stop")
+    : ParamInfo (idStopAttenuationDb, "Stop")
   {
     szName = "Stopband Attenuation";
     szUnits= "dB";
@@ -381,6 +382,64 @@ public:
   }
 };
 
+//------------------------------------------------------------------------------
+
+class PoleRhoInfo : public ParamInfo
+{
+public:
+  PoleRhoInfo ()
+    : ParamInfo (idPoleRho, "P.Rho")
+  {
+    szName = "Pole Rho";
+    szUnits= "";
+    minValue = 0;
+    maxValue = 1;
+    defaultValue = 0.5;
+  }
+};
+
+class PoleThetaInfo : public ParamInfo
+{
+public:
+  PoleThetaInfo ()
+    : ParamInfo (idPoleTheta, "P.Theta")
+  {
+    szName = "Pole Theta";
+    szUnits= "";
+    minValue = 0;
+    maxValue = doublePi;
+    defaultValue = doublePi/2;
+  }
+};
+
+class ZeroRhoInfo : public ParamInfo
+{
+public:
+  ZeroRhoInfo ()
+    : ParamInfo (idZeroRho, "Z.Rho")
+  {
+    szName = "Zero Rho";
+    szUnits= "";
+    minValue = 0;
+    maxValue = 1;
+    defaultValue = 0.5;
+  }
+};
+
+class ZeroThetaInfo : public ParamInfo
+{
+public:
+  ZeroThetaInfo ()
+    : ParamInfo (idZeroTheta, "Z.Theta")
+  {
+    szName = "Zero Theta";
+    szUnits= "";
+    minValue = 0;
+    maxValue = doublePi;
+    defaultValue = doublePi/2;
+  }
+};
+
 }
 
 //------------------------------------------------------------------------------
@@ -395,6 +454,11 @@ static detail::SlopeParamInfo        builtinParamSlope;
 static detail::OrderParamInfo        builtinParamOrder;
 static detail::PassbandRippleDbInfo  builtinPassbandRippleDb;
 static detail::StopAttenuationDbInfo builtinStopAttenuationDb;
+
+static detail::PoleRhoInfo   builtinPoleRho;
+static detail::PoleThetaInfo builtinPoleTheta;
+static detail::ZeroRhoInfo   builtinZeroRho;
+static detail::ZeroThetaInfo builtinZeroTheta;
 
 DesignBase::DesignBase ()
   : m_numParams (0)
@@ -433,6 +497,11 @@ ParamInfo* DesignBase::getBuiltinParamInfo (int paramId)
   case idOrder:             p = &builtinParamOrder; break;
   case idPassbandRippleDb:  p = &builtinPassbandRippleDb; break;
   case idStopAttenuationDb: p = &builtinStopAttenuationDb; break;
+  
+  case idPoleRho:           p = &builtinPoleRho; break;
+  case idPoleTheta:         p = &builtinPoleTheta; break;
+  case idZeroRho:           p = &builtinZeroRho; break;
+  case idZeroTheta:         p = &builtinZeroTheta; break;
   };
 
   assert (p);

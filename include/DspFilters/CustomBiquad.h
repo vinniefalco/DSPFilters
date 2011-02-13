@@ -33,97 +33,75 @@ THE SOFTWARE.
 
 *******************************************************************************/
 
-#ifndef DSPFILTERS_PARAMS_H
-#define DSPFILTERS_PARAMS_H
+#ifndef DSPFILTERS_CUSTOM_BIQUAD_H
+#define DSPFILTERS_CUSTOM_BIQUAD_H
 
 #include "DspFilters/Common.h"
-#include "DspFilters/Types.h"
+#include "DspFilters/Biquad.h"
+#include "DspFilters/Design.h"
+#include "DspFilters/Filter.h"
 
 namespace Dsp {
 
 /*
- * System for abstracting parameterizable filter specifications.
- *
- * This provides a "GUI-friendly" layer to the filters. Note that
- * it is not necessary to use this layer, it is possible to instantiate
- * the filters and their associated processing state directly,
- * and bypass the overhead for this API if it is not needed.
+ * Biquad with parameters allowing for directly setting the poles and zeros
  *
  */
 
-// Unique IDs to help identify parameters
-enum ParamID
+namespace Custom {
+
+//
+// Raw filter
+//
+
+struct UserDefined : Biquad
 {
-  idSampleRate,
-  idFrequency,
-  idQ,
-  idBandwidth,
-  idBandwidthHz,
-  idGain,
-  idSlope,
-  idOrder,
-  idPassbandRippleDb,
-  idStopAttenuationDb,
-  idPoleRho,
-  idPoleTheta,
-  idZeroRho,
-  idZeroTheta
+  void setup (double poleRho,
+              double poleTheta,
+              double zeroRho,
+              double zeroTheta);
 };
 
-enum
+//------------------------------------------------------------------------------
+
+//
+// Gui-friendly Design layer
+//
+
+namespace Design {
+
+struct UserDefined : DesignBase, Custom::UserDefined
 {
-  maxParameters = 8
+  UserDefined ()
+  {
+    addBuiltinParamInfo (idPoleRho);
+    addBuiltinParamInfo (idPoleTheta);
+    addBuiltinParamInfo (idZeroRho);
+    addBuiltinParamInfo (idZeroTheta);
+  }
+
+  Kind getKind () const
+  {
+    return kindOther;
+  }
+
+  const char* getName() const
+  {
+    return "Custom Biquad";
+  }
+
+  void setParameters (const Parameters& params)
+  {
+    setup (params[1],
+           params[2],
+           params[3],
+           params[4]);
+  }
 };
 
-struct Parameters
-{
-  double& operator[] (int index)
-  {
-    return value[index];
-  }
+}
 
-  const double& operator[] (int index) const
-  {
-    return value[index];
-  }
-
-  double value[maxParameters];
-};
-
-class ParamInfo
-{
-public:
-  ParamID getId () const
-  {
-    return m_id;
-  }
-
-  const char* getLabel () const
-  {
-    return m_szLabel;
-  }
-
-  const char* szName;
-  const char* szUnits;
-  double minValue;
-  double maxValue;
-  double defaultValue;
-
-  virtual double toControlValue (double nativeValue) const;
-  virtual double toNativeValue (double controlValue) const;
-  virtual std::string toString (double nativeValue) const;
-
-protected:
-  ParamInfo (ParamID id,
-             const char* szLabel);
-
-private:
-  ParamInfo (const ParamInfo& other);
-
-private:
-  ParamID m_id;
-  const char* m_szLabel;
-};
+}
 
 }
 

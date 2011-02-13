@@ -33,98 +33,25 @@ THE SOFTWARE.
 
 *******************************************************************************/
 
-#ifndef DSPFILTERS_PARAMS_H
-#define DSPFILTERS_PARAMS_H
-
 #include "DspFilters/Common.h"
-#include "DspFilters/Types.h"
+#include "DspFilters/CustomBiquad.h"
 
 namespace Dsp {
 
-/*
- * System for abstracting parameterizable filter specifications.
- *
- * This provides a "GUI-friendly" layer to the filters. Note that
- * it is not necessary to use this layer, it is possible to instantiate
- * the filters and their associated processing state directly,
- * and bypass the overhead for this API if it is not needed.
- *
- */
+namespace Custom {
 
-// Unique IDs to help identify parameters
-enum ParamID
+void UserDefined::setup (double poleRho,
+                         double poleTheta,
+                         double zeroRho,
+                         double zeroTheta)
 {
-  idSampleRate,
-  idFrequency,
-  idQ,
-  idBandwidth,
-  idBandwidthHz,
-  idGain,
-  idSlope,
-  idOrder,
-  idPassbandRippleDb,
-  idStopAttenuationDb,
-  idPoleRho,
-  idPoleTheta,
-  idZeroRho,
-  idZeroTheta
-};
+  complex_t pole = std::polar (poleRho, poleTheta);
+  complex_t zero = std::polar (zeroRho, zeroTheta);
 
-enum
-{
-  maxParameters = 8
-};
-
-struct Parameters
-{
-  double& operator[] (int index)
-  {
-    return value[index];
-  }
-
-  const double& operator[] (int index) const
-  {
-    return value[index];
-  }
-
-  double value[maxParameters];
-};
-
-class ParamInfo
-{
-public:
-  ParamID getId () const
-  {
-    return m_id;
-  }
-
-  const char* getLabel () const
-  {
-    return m_szLabel;
-  }
-
-  const char* szName;
-  const char* szUnits;
-  double minValue;
-  double maxValue;
-  double defaultValue;
-
-  virtual double toControlValue (double nativeValue) const;
-  virtual double toNativeValue (double controlValue) const;
-  virtual std::string toString (double nativeValue) const;
-
-protected:
-  ParamInfo (ParamID id,
-             const char* szLabel);
-
-private:
-  ParamInfo (const ParamInfo& other);
-
-private:
-  ParamID m_id;
-  const char* m_szLabel;
-};
+  setPoles (pole, std::conj (pole));
+  setZeros (zero, std::conj (zero));
+}
 
 }
 
-#endif
+}
