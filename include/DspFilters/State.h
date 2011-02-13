@@ -187,10 +187,10 @@ public:
     return m_state[index];
   }
 
-  template <class FilterDesign, typename Sample>
+  template <class Filter, typename Sample>
   void process (int numSamples,
                 Sample* const* arrayOfChannels,
-                FilterDesign& filter)
+                Filter& filter)
   {
     for (int i = 0; i < Channels; ++i)
       filter.process (numSamples, arrayOfChannels[i], m_state[i]);
@@ -214,13 +214,6 @@ public:
   {
     assert (0);
   }
-
-  /*
-  StateType& operator[] (int index)
-  {
-    assert(0);
-  }
-  */
 
   template <class FilterDesign, typename Sample>
   void process (int numSamples,

@@ -224,6 +224,42 @@ protected:
                  typename DesignClass::template State <StateType> > m_state;
 };
 
+//------------------------------------------------------------------------------
+
+/*
+ * This container combines a raw filter with state information
+ * so it can process channels. In order to set up the filter you
+ * must call a setup function directly. Smooth changes are
+ * not supported, but this class has a smaller footprint.
+ *
+ */
+template <class FilterClass,
+          int Channels = 0,
+          class StateType = DirectFormI>
+class SimpleFilter : public FilterClass
+{
+public:
+  int getNumChannels()
+  {
+    return m_state.getNumChannels();
+  }
+
+  void reset ()
+  {
+    m_state.reset();
+  }
+
+  template <typename Sample>
+  void process (int numSamples, Sample* const* arrayOfChannels)
+  {
+    m_state.process (numSamples, arrayOfChannels, *((FilterClass*)this));
+  }
+
+protected:
+  ChannelsState <Channels,
+                 typename FilterClass::template State <StateType> > m_state;
+};
+
 }
 
 #endif

@@ -121,7 +121,8 @@ static void UsageExamples ()
   audioData[0] = new float[numSamples];
   audioData[1] = new float[numSamples];
 
-  // create a 2-channel RBJ Low Pass with parameter smoothing and apply it to the audio data
+  // create a 2-channel RBJ Low Pass with parameter smoothing
+  // and apply it to the audio data
   {
     // "1024" is the number of samples over which to fade parameter changes
     Dsp::Filter* f = new Dsp::SmoothedFilterDesign
@@ -171,5 +172,14 @@ static void UsageExamples ()
     params[1] = 4000; // cutoff frequency
     f->setParameters (params);
     f->process (numSamples, audioData);
+  }
+
+  // Use the simple filter API to create a Chebyshev Band Stop of order 3
+  // and 1dB ripple in the passband. The simle API has a smaller
+  // footprint, but no introspection or smoothing.
+  {
+    Dsp::SimpleFilter <Dsp::ChebyshevI::BandStop <3>, 2> f;
+    f.setup (3, 44100, 4000, 880, 1);
+    f.process (numSamples, audioData);
   }
 }
