@@ -169,8 +169,24 @@ static void UsageExamples ()
       <Dsp::Butterworth::Design::BandPass <4>, 2> (1024);
     Dsp::Parameters params;
     params[0] = 44100; // sample rate
-    params[1] = 4000; // center frequency
-    params[2] = 880; // band width
+    params[1] = 4; // order
+    params[2] = 4000; // center frequency
+    params[3] = 880; // band width
+    f->setParameters (params);
+    f->process (numSamples, audioData);
+  }
+ 
+  // create a 2-channel Inverse Chebyshev Low Shelf of order 5
+  // and passband ripple 0.1dB, without parameter smoothing and apply it.
+  {
+    Dsp::Filter* f = new Dsp::FilterDesign
+      <Dsp::ChebyshevII::Design::LowShelf <5>, 2>;
+    Dsp::Parameters params;
+    params[0] = 44100; // sample rate
+    params[1] = 5; // order
+    params[2] = 4000; // corner frequency
+    params[3] = 6; // shelf gain
+    params[4] = 0.1; // passband ripple
     f->setParameters (params);
     f->process (numSamples, audioData);
   }
@@ -180,10 +196,11 @@ static void UsageExamples ()
   // (i.e. extract poles and zeros).
   {
     Dsp::Filter* f = new Dsp::FilterDesign
-      <Dsp::Butterworth::Design::HighPass <2> >;
+      <Dsp::Butterworth::Design::HighPass <4> >;
     Dsp::Parameters params;
     params[0] = 44100; // sample rate
-    params[1] = 4000; // cutoff frequency
+    params[1] = 4; // order
+    params[2] = 4000; // cutoff frequency
     f->setParameters (params);
     // this will cause a runtime assertion
     f->process (numSamples, audioData);
