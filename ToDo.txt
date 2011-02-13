@@ -13,4 +13,9 @@
 
 - put private stuff in detail namespace
 
+- SmoothedFilterDesign API to allow changing the transition samples
+
+- SmoothedFilterDesign API to use sample rate to allow specification
+  of transition time in milliseconds
+
 More Documentation, Bibliography
