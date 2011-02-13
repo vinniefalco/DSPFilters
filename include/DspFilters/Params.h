@@ -16,6 +16,21 @@ namespace Dsp {
  *
  */
 
+// Unique IDs to help identify parameters
+enum ParamID
+{
+  idSampleRate,
+  idFrequency,
+  idQ,
+  idBandwidth,
+  idBandwidthHz,
+  idGain,
+  idSlope,
+  idOrder,
+  idPassbandRippleDb,
+  idStopAttenuationDb
+};
+
 enum
 {
   maxParameters = 8
@@ -34,20 +49,6 @@ struct Parameters
   }
 
   double value[maxParameters];
-};
-
-// Unique IDs to help identify parameters
-enum ParamID
-{
-  idSampleRate,
-  idFrequency,
-  idQ,
-  idBandwidth,
-  idBandwidthHz,
-  idGain,
-  idSlope,
-  idOrder,
-  idPassbandRippleDb
 };
 
 class ParamInfo
