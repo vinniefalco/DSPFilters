@@ -6,7 +6,7 @@
 Official project location:
 http://code.google.com/p/dspfilterscpp/
 
-See Documentation.h for contact information, notes, and bibliography.
+See Documentation.cpp for contact information, notes, and bibliography.
 
 --------------------------------------------------------------------------------
 
@@ -129,17 +129,17 @@ private:
 //------------------------------------------------------------------------------
 
 /*
- * FilterType
+ * FilterDesign
  *
- * Concrete instance of Filter. Supply a DesignClass, and optional
- * values for Channels and StateType if you want to process samples.
+ * This container holds a filter Design (Gui-friendly layer) and
+ * optionally combines it with the necessary state information to
+ * process channel data.
  *
  */
 
-// This wraps up the design independent of the channel
-// count to reduce the number of template instantiations.
+// Factored to reduce template instantiations
 template <class DesignClass>
-class FilterBase : public Filter
+class FilterDesignBase : public Filter
 {
 public:
   Kind getKind () const
@@ -190,10 +190,10 @@ protected:
 template <class DesignClass,
           int Channels = 0,
           class StateType = DirectFormI>
-class FilterType : public FilterBase <DesignClass>
+class FilterDesign : public FilterDesignBase <DesignClass>
 {
 public:
-  FilterType ()
+  FilterDesign ()
   {
   }
 
@@ -210,13 +210,13 @@ public:
   void process (int numSamples, float* const* arrayOfChannels)
   {
     m_state.process (numSamples, arrayOfChannels,
-                     FilterBase<DesignClass>::m_design);
+                     FilterDesignBase<DesignClass>::m_design);
   }
 
   void process (int numSamples, double* const* arrayOfChannels)
   {
     m_state.process (numSamples, arrayOfChannels,
-                     FilterBase<DesignClass>::m_design);
+                     FilterDesignBase<DesignClass>::m_design);
   }
 
 protected:

@@ -601,7 +601,7 @@
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\..\source\Documentation.h"
+			RelativePath="..\..\source\Documentation.cpp"
 			>
 		</File>
 		<File

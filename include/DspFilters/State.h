@@ -6,7 +6,7 @@
 Official project location:
 http://code.google.com/p/dspfilterscpp/
 
-See Documentation.h for contact information, notes, and bibliography.
+See Documentation.cpp for contact information, notes, and bibliography.
 
 --------------------------------------------------------------------------------
 
@@ -187,10 +187,10 @@ public:
     return m_state[index];
   }
 
-  template <class FilterType, typename Sample>
+  template <class FilterDesign, typename Sample>
   void process (int numSamples,
                 Sample* const* arrayOfChannels,
-                FilterType& filter)
+                FilterDesign& filter)
   {
     for (int i = 0; i < Channels; ++i)
       filter.process (numSamples, arrayOfChannels[i], m_state[i]);
@@ -222,10 +222,10 @@ public:
   }
   */
 
-  template <class FilterType, typename Sample>
+  template <class FilterDesign, typename Sample>
   void process (int numSamples,
                 Sample* const* arrayOfChannels,
-                FilterType& filter)
+                FilterDesign& filter)
   {
     assert (0);
   }

@@ -6,7 +6,7 @@
 Official project location:
 http://code.google.com/p/dspfilterscpp/
 
-See Documentation.h for contact information, notes, and bibliography.
+See Documentation.cpp for contact information, notes, and bibliography.
 
 --------------------------------------------------------------------------------
 
@@ -150,6 +150,8 @@ MainPanel::MainPanel()
 
   x = this->getChildComponent (this->getNumChildComponents() - 1)->getBounds().getX() - gap;
  
+  int x1 = x - x0 + gap;
+
   {
     FilterControls* c = new FilterControls (m_listeners);
     c->setBounds (x0, y, x - x0, hfc);
@@ -160,6 +162,22 @@ MainPanel::MainPanel()
 
   y = this->getChildComponent (this->getNumChildComponents()-1)->getBounds().getBottom() + gap;
   x = x0;
+
+  {
+    ComboBox* c = new ComboBox;
+    c->setBounds (x, y, 120, 24);
+    c->addItem ("Direct Form I", 1);
+    c->addItem ("Direct Form II", 2);
+    c->addItem ("Lattice Form", 3); c->setItemEnabled (3, false);
+    c->addItem ("State Variable", 4); c->setItemEnabled (4, false);
+    c->setSelectedId (1);
+    addToLayout (c, anchorTopLeft);
+    addAndMakeVisible (c);
+    m_menuStateType = c;    
+    c->addListener (this);
+  }
+
+  x = this->getChildComponent (this->getNumChildComponents() - 1)->getBounds().getRight() + gap;
 
   {
     ComboBox* c = new ComboBox;
@@ -179,9 +197,9 @@ MainPanel::MainPanel()
 
   {
     m_resetButton = new TextButton ("Reset");
-    m_resetButton->setBounds (x, y, 60, 24);
+    m_resetButton->setBounds (x1 - 60, y, 60, 24);
     m_resetButton->setConnectedEdges (Button::ConnectedOnLeft | Button::ConnectedOnRight);
-    addToLayout (m_resetButton, anchorTopLeft);
+    addToLayout (m_resetButton, anchorTopRight);
     addAndMakeVisible (m_resetButton);
     m_resetButton->addListener (this);
   }
@@ -344,19 +362,32 @@ void MainPanel::paint (Graphics& g)
 
 //------------------------------------------------------------------------------
 
-template <class DesignType>
-void MainPanel::createFilter (Dsp::Filter** pFilter, Dsp::Filter** pAudioFilter)
+template <class DesignType, class StateType>
+void MainPanel::createFilterDesign (Dsp::Filter** pFilter, Dsp::Filter** pAudioFilter)
 {
-  *pFilter = new Dsp::FilterType <DesignType>;
   switch (m_menuSmoothing->getSelectedId())
   {
   case 1:
-    *pAudioFilter = new Dsp::SmoothedFilter <DesignType, 2> (1024);
+    *pAudioFilter = new Dsp::SmoothedFilterDesign <DesignType, 2, StateType> (1024);
     break;
 
   default:
-    *pAudioFilter = new Dsp::FilterType <DesignType, 2>;
+    *pAudioFilter = new Dsp::FilterDesign <DesignType, 2, StateType>;
     break;
+  };
+}
+
+template <class DesignType>
+void MainPanel::createFilterState (Dsp::Filter** pFilter, Dsp::Filter** pAudioFilter)
+{
+  *pFilter = new Dsp::FilterDesign <DesignType>;
+
+  switch (m_menuStateType->getSelectedId())
+  {
+  case 1: createFilterDesign <DesignType, Dsp::DirectFormI> (pFilter, pAudioFilter); break;
+  case 2: createFilterDesign <DesignType, Dsp::DirectFormII> (pFilter, pAudioFilter); break;
+  default:
+    createFilterDesign <DesignType, Dsp::DirectFormI> (pFilter, pAudioFilter);
   };
 }
 
@@ -375,15 +406,15 @@ void MainPanel::createFilter ()
   {
     switch (typeId)
     {
-    case 1: createFilter <Dsp::RBJ::Design::LowPass> (&f, &fo); break;
-    case 2: createFilter <Dsp::RBJ::Design::HighPass> (&f, &fo); break;
-    case 3: createFilter <Dsp::RBJ::Design::BandPass1> (&f, &fo); break;
-    case 4: createFilter <Dsp::RBJ::Design::BandPass2> (&f, &fo); break;
-    case 5: createFilter <Dsp::RBJ::Design::BandStop> (&f, &fo); break;
-    case 6: createFilter <Dsp::RBJ::Design::LowShelf> (&f, &fo); break;
-    case 7: createFilter <Dsp::RBJ::Design::HighShelf> (&f, &fo); break;
-    case 8: createFilter <Dsp::RBJ::Design::BandShelf> (&f, &fo); break;
-    case 9: createFilter <Dsp::RBJ::Design::AllPass> (&f, &fo); break;
+    case 1: createFilterState <Dsp::RBJ::Design::LowPass> (&f, &fo); break;
+    case 2: createFilterState <Dsp::RBJ::Design::HighPass> (&f, &fo); break;
+    case 3: createFilterState <Dsp::RBJ::Design::BandPass1> (&f, &fo); break;
+    case 4: createFilterState <Dsp::RBJ::Design::BandPass2> (&f, &fo); break;
+    case 5: createFilterState <Dsp::RBJ::Design::BandStop> (&f, &fo); break;
+    case 6: createFilterState <Dsp::RBJ::Design::LowShelf> (&f, &fo); break;
+    case 7: createFilterState <Dsp::RBJ::Design::HighShelf> (&f, &fo); break;
+    case 8: createFilterState <Dsp::RBJ::Design::BandShelf> (&f, &fo); break;
+    case 9: createFilterState <Dsp::RBJ::Design::AllPass> (&f, &fo); break;
     };
   }
   //
@@ -393,13 +424,13 @@ void MainPanel::createFilter ()
   {
     switch (typeId)
     {
-    case 1: createFilter <Dsp::Butterworth::Design::LowPass <50> > (&f, &fo); break;
-    case 2: createFilter <Dsp::Butterworth::Design::HighPass <50> > (&f, &fo); break;
-    case 4: createFilter <Dsp::Butterworth::Design::BandPass <50> > (&f, &fo); break;
-    case 5: createFilter <Dsp::Butterworth::Design::BandStop <50> > (&f, &fo); break;
-    case 6: createFilter <Dsp::Butterworth::Design::LowShelf <50> > (&f, &fo); break;
-    case 7: createFilter <Dsp::Butterworth::Design::HighShelf <50> > (&f, &fo); break;
-    case 8: createFilter <Dsp::Butterworth::Design::BandShelf <50> > (&f, &fo); break;
+    case 1: createFilterState <Dsp::Butterworth::Design::LowPass <50> > (&f, &fo); break;
+    case 2: createFilterState <Dsp::Butterworth::Design::HighPass <50> > (&f, &fo); break;
+    case 4: createFilterState <Dsp::Butterworth::Design::BandPass <50> > (&f, &fo); break;
+    case 5: createFilterState <Dsp::Butterworth::Design::BandStop <50> > (&f, &fo); break;
+    case 6: createFilterState <Dsp::Butterworth::Design::LowShelf <50> > (&f, &fo); break;
+    case 7: createFilterState <Dsp::Butterworth::Design::HighShelf <50> > (&f, &fo); break;
+    case 8: createFilterState <Dsp::Butterworth::Design::BandShelf <50> > (&f, &fo); break;
     };
   }
   //
@@ -409,13 +440,13 @@ void MainPanel::createFilter ()
   {
     switch (typeId)
     {
-    case 1: createFilter <Dsp::ChebyshevI::Design::LowPass <50> > (&f, &fo); break;
-    case 2: createFilter <Dsp::ChebyshevI::Design::HighPass <50> > (&f, &fo); break;
-    case 4: createFilter <Dsp::ChebyshevI::Design::BandPass <50> > (&f, &fo); break;
-    case 5: createFilter <Dsp::ChebyshevI::Design::BandStop <50> > (&f, &fo); break;
-    case 6: createFilter <Dsp::ChebyshevI::Design::LowShelf <50> > (&f, &fo); break;
-    case 7: createFilter <Dsp::ChebyshevI::Design::HighShelf <50> > (&f, &fo); break;
-    case 8: createFilter <Dsp::ChebyshevI::Design::BandShelf <50> > (&f, &fo); break;
+    case 1: createFilterState <Dsp::ChebyshevI::Design::LowPass <50> > (&f, &fo); break;
+    case 2: createFilterState <Dsp::ChebyshevI::Design::HighPass <50> > (&f, &fo); break;
+    case 4: createFilterState <Dsp::ChebyshevI::Design::BandPass <50> > (&f, &fo); break;
+    case 5: createFilterState <Dsp::ChebyshevI::Design::BandStop <50> > (&f, &fo); break;
+    case 6: createFilterState <Dsp::ChebyshevI::Design::LowShelf <50> > (&f, &fo); break;
+    case 7: createFilterState <Dsp::ChebyshevI::Design::HighShelf <50> > (&f, &fo); break;
+    case 8: createFilterState <Dsp::ChebyshevI::Design::BandShelf <50> > (&f, &fo); break;
     };
   }
 
@@ -426,13 +457,13 @@ void MainPanel::createFilter ()
   {
     switch (typeId)
     {
-    case 1: createFilter <Dsp::ChebyshevII::Design::LowPass <50> > (&f, &fo); break;
-    case 2: createFilter <Dsp::ChebyshevII::Design::HighPass <50> > (&f, &fo); break;
-    case 4: createFilter <Dsp::ChebyshevII::Design::BandPass <50> > (&f, &fo); break;
-    case 5: createFilter <Dsp::ChebyshevII::Design::BandStop <50> > (&f, &fo); break;
-    case 6: createFilter <Dsp::ChebyshevII::Design::LowShelf <50> > (&f, &fo); break;
-    case 7: createFilter <Dsp::ChebyshevII::Design::HighShelf <50> > (&f, &fo); break;
-    case 8: createFilter <Dsp::ChebyshevII::Design::BandShelf <50> > (&f, &fo); break;
+    case 1: createFilterState <Dsp::ChebyshevII::Design::LowPass <50> > (&f, &fo); break;
+    case 2: createFilterState <Dsp::ChebyshevII::Design::HighPass <50> > (&f, &fo); break;
+    case 4: createFilterState <Dsp::ChebyshevII::Design::BandPass <50> > (&f, &fo); break;
+    case 5: createFilterState <Dsp::ChebyshevII::Design::BandStop <50> > (&f, &fo); break;
+    case 6: createFilterState <Dsp::ChebyshevII::Design::LowShelf <50> > (&f, &fo); break;
+    case 7: createFilterState <Dsp::ChebyshevII::Design::HighShelf <50> > (&f, &fo); break;
+    case 8: createFilterState <Dsp::ChebyshevII::Design::BandShelf <50> > (&f, &fo); break;
     };
   }
 
@@ -530,6 +561,10 @@ void MainPanel::comboBoxChanged (ComboBox* ctrl)
   {
     m_lastTypeId = m_menuType->getSelectedId();
 
+    createFilter ();
+  }
+  else if (ctrl == m_menuStateType )
+  {
     createFilter ();
   }
   else if (ctrl == m_menuSmoothing)

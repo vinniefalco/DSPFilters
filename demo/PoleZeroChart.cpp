@@ -6,7 +6,7 @@
 Official project location:
 http://code.google.com/p/dspfilterscpp/
 
-See Documentation.h for contact information, notes, and bibliography.
+See Documentation.cpp for contact information, notes, and bibliography.
 
 --------------------------------------------------------------------------------
 

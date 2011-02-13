@@ -6,7 +6,7 @@
 Official project location:
 http://code.google.com/p/dspfilterscpp/
 
-See Documentation.h for contact information, notes, and bibliography.
+See Documentation.cpp for contact information, notes, and bibliography.
 
 --------------------------------------------------------------------------------
 
@@ -72,8 +72,11 @@ public:
   void menuItemSelected (int menuItemID, int topLevelMenuIndex);
 
 private:
+  template <class DesignType, class StateType>
+  void createFilterDesign (Dsp::Filter** pFilter, Dsp::Filter** pAudioFilter);
+
   template <class DesignType>
-  void createFilter (Dsp::Filter** pFilter, Dsp::Filter** pAudioFilter);
+  void createFilterState (Dsp::Filter** pFilter, Dsp::Filter** pAudioFilter);
 
   void createFilter ();
 
@@ -82,6 +85,7 @@ private:
   ComboBox* m_menuFamily;
   ComboBox* m_menuType;
   ComboBox* m_menuAudio;
+  ComboBox* m_menuStateType;
   ComboBox* m_menuSmoothing;
   Button* m_resetButton;
   Slider* m_volumeSlider;

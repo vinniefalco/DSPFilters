@@ -11,4 +11,6 @@
 
 - reuse calculations in filters when only some parameters change
 
+- put private stuff in detail namespace
+
 More Documentation, Bibliography
