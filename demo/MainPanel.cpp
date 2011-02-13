@@ -168,6 +168,7 @@ MainPanel::MainPanel()
     c->addItem ("Pole/Zero Interpolation", 2); c->setItemEnabled (2, false);
     c->addItem ("Coefficient Interpolation", 3); c->setItemEnabled (3, false);
     c->addItem ("No Smoothing", 4);
+    c->setSelectedId (1);
     addToLayout (c, anchorTopLeft);
     addAndMakeVisible (c);
     m_menuSmoothing = c;    
@@ -178,7 +179,7 @@ MainPanel::MainPanel()
 
   {
     m_resetButton = new TextButton ("Reset");
-    m_resetButton->setBounds (x, y, 40, 24);
+    m_resetButton->setBounds (x, y, 60, 24);
     m_resetButton->setConnectedEdges (Button::ConnectedOnLeft | Button::ConnectedOnRight);
     addToLayout (m_resetButton, anchorTopLeft);
     addAndMakeVisible (m_resetButton);
