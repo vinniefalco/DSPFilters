@@ -16,11 +16,10 @@ template <class DesignClass,
 class SmoothedFilter
   : public FilterType <DesignClass,
                        Channels,
-                       typename DesignClass::template State <StateType> >
+                       StateType>
 {
 public:
-  typedef FilterType <DesignClass, Channels,
-    typename DesignClass::template State <StateType> > filter_type_t;
+  typedef FilterType <DesignClass, Channels, StateType> filter_type_t;
 
   SmoothedFilter (int transitionSamples)
     : m_transitionSamples (transitionSamples)

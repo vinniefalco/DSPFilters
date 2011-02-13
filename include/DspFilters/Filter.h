@@ -185,7 +185,8 @@ public:
   }
 
 protected:
-  ChannelsState <Channels, StateType> m_state;
+  ChannelsState <Channels,
+                 typename DesignClass::template State <StateType> > m_state;
 };
 
 }
