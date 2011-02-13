@@ -163,10 +163,11 @@ static void UsageExamples ()
   }
 
   // create a 2-channel Butterworth Band Pass of order 4,
-  // with parameter smoothing and apply it to the audio data
+  // with parameter smoothing and apply it to the audio data.
+  // Output samples are generated using Direct Form II realization.
   {
     Dsp::Filter* f = new Dsp::SmoothedFilterDesign
-      <Dsp::Butterworth::Design::BandPass <4>, 2> (1024);
+      <Dsp::Butterworth::Design::BandPass <4>, 2, Dsp::DirectFormII> (1024);
     Dsp::Parameters params;
     params[0] = 44100; // sample rate
     params[1] = 4; // order
