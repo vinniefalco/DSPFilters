@@ -463,6 +463,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\include\DspFilters\CustomBiquad.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\include\DspFilters\Design.h"
 					>
 				</File>
@@ -544,6 +548,10 @@
 				</File>
 				<File
 					RelativePath="..\..\source\ChebyshevII.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\CustomBiquad.cpp"
 					>
 				</File>
 				<File

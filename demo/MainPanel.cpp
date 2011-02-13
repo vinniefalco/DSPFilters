@@ -295,6 +295,7 @@ void MainPanel::buildFamilyMenu (ComboBox* ctrl)
   ctrl->addItem ("Chebyshev II", 4);
   ctrl->addItem ("Elliptic",     5); ctrl->setItemEnabled (5, false);
   ctrl->addItem ("Bessel",       6); ctrl->setItemEnabled (6, false);
+  ctrl->addItem ("Custom",       7);
 }
 
 void MainPanel::buildTypeMenu (ComboBox* ctrl)
@@ -352,6 +353,9 @@ void MainPanel::buildTypeMenu (ComboBox* ctrl)
 	  ctrl->addItem ("High Shelf",  7);
 	  ctrl->addItem ("Band Shelf",  8);
 	  break;
+
+  case 7: // Custom
+    ctrl->addItem ("User Defined", 1);
   };
 }
 
@@ -464,6 +468,17 @@ void MainPanel::createFilter ()
     case 6: createFilterState <Dsp::ChebyshevII::Design::LowShelf <50> > (&f, &fo); break;
     case 7: createFilterState <Dsp::ChebyshevII::Design::HighShelf <50> > (&f, &fo); break;
     case 8: createFilterState <Dsp::ChebyshevII::Design::BandShelf <50> > (&f, &fo); break;
+    };
+  }
+
+  //
+  // Custom
+  //
+  else if (familyId == 7)
+  {
+    switch (typeId)
+    {
+    case 1: createFilterState <Dsp::Custom::Design::UserDefined> (&f, &fo); break;
     };
   }
 

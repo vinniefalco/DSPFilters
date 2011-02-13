@@ -40,10 +40,10 @@ _"Techniques for digital signal processing are well guarded and held
 close to the chest, as they have valuable applications for multimedia
 content. The black art of Infinite Impulse Response ("IIR") filtering
 has remained shrouded in secrecy with little publicly available source
-code....until now." - Vincent Falco_
+code....until now."_
 
 ----
-Building on the work of cherished luminaries such as Sophocles Orfanidis, Andreas Antoniou, Martin Holters, and Udo Zolzer, this library harnesses the power of C++ templates to obtain the holy grail of digital signal processing: the realization of multichannel IIR filters of arbitrary order and prescribed specifications with various response types such as Butterworth, Chebyshev, and Elliptic functions. The library is provided under the MIT license and is therefore fully compatible with proprietary usage.
+Building on the work of cherished luminaries such as Sophocles Orfanidis, Andreas Antoniou, Martin Holters, and Udo Zolzer, this library harnesses the power of C++ templates to solve a useful problem in digital signal processing: the realization of multichannel IIR filters of arbitrary order and prescribed specifications with various properties such as Butterworth, Chebyshev, and Elliptic responses. The library is provided under the MIT license and is therefore fully compatible with proprietary usage.
 
 Classes are designed as independent re-usable building blocks. Use some or all of the provided features, or extend the functionality by writing your own objects that plug into the robust framework. Only the code that you need will get linked into your application. Here's a list of features:
 
@@ -61,7 +61,7 @@ Classes are designed as independent re-usable building blocks. Use some or all o
 	* No calls to malloc or new, great for embedded systems
 	* No external dependencies, just the standard C++ library!
 
-An accompanying demonstration application, which works on most popular platforms by using the seperately licensed Juce source library (included), exercises all the functionality of the library, including these features:
+An accompanying demonstration application, which works on most popular platforms by using the separately licensed Juce source library (included), exercises all the functionality of the library, including these features:
 
 	* Dynamic interface creates itself using filter introspection capabilities
 	* Audio playback with real time application of a selected filter
@@ -83,7 +83,7 @@ Using these filters is easy:
     f.process (numSamples, arrayOfChannels);
 }}}
 
-If you've been searching in futility on the Internet for some source code that does exactly what you need it to do, then look no further because this is the jackpot! Whether you are a student of C++ or digital signal processing, a writer of audio plugins, or even a VST synthesizer coder, "A Collection of Useful C++ Classes for Digital Signal Processing" has something for you!
+If you've been searching in futility on the Internet for some source code for implementing high order filters, then look no further because this is it! Whether you are a student of C++ or digital signal processing, a writer of audio plugins, or even a VST synthesizer coder, "A Collection of Useful C++ Classes for Digital Signal Processing" might have something for you!
 
 -----
 Notes

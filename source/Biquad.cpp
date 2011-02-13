@@ -54,6 +54,7 @@ BiquadBase::PoleZeroForm::PoleZeroForm (const BiquadBase& s)
     assert (!Dsp::isnan (pole[0]) && !Dsp::isnan (pole[1]));
   }
 
+#if 1
   {
     const complex_t c = sqrt (complex_t (
       s.m_b1 * s.m_b1 - 4 * s.m_b0 * s.m_b2, 0));
@@ -62,7 +63,23 @@ BiquadBase::PoleZeroForm::PoleZeroForm (const BiquadBase& s)
     zero[1] = -(s.m_b1 + c) / d;
     assert (!Dsp::isnan (zero[0]) && !Dsp::isnan (zero[1]));
   }
-
+#else
+  {
+    double d = s.m_b1 * s.m_b1 - 4 * s.m_b0;
+    if (d >= 0)
+    {
+      double r = (sqrt (d) - s.m_b1) / 2;
+      zero[0] = complex_t (r, 0);
+      zero[1] = complex_t (-r, 0);
+    }
+    else
+    {
+      double d = s.m_b0 - (s.m_b1 * s.m_b1 / 4);
+      zero[0] = complex_t (-s.m_b1 / 2, sqrt (d));
+      zero[1] = std::conj (zero[0]);
+    }
+  }
+#endif
   gain = s.m_b0;
 }
 
@@ -177,7 +194,7 @@ void Biquad::setZeros (complex_t zero1, complex_t zero2)
 
   if (zero1.imag() != 0)
   {
-    //assert (zero2 == std::conj (zero1));
+    assert (zero2 == std::conj (zero1));
 
     m_b0 = std::norm (zero1);
     m_b1 = -2 * zero1.real();
