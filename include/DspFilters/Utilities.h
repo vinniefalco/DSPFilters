@@ -1,13 +1,17 @@
-/*
+/*******************************************************************************
+
 "A Collection of Useful C++ Classes for Digital Signal Processing"
-By Vincent Falco
+ By Vincent Falco
 
 Official project location:
 http://code.google.com/p/dspfilterscpp/
 
-Copyright (c) 2009-2011 by Vincent Falco All Rights Reserved Worldwide
+See Documentation.h for contact information, notes, and bibliography.
+
+--------------------------------------------------------------------------------
 
 License: MIT License (http://www.opensource.org/licenses/mit-license.php)
+Copyright (c) 2009 by Vincent Falco
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

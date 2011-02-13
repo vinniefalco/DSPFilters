@@ -1,12 +1,12 @@
 /*******************************************************************************
 
 "A Collection of Useful C++ Classes for Digital Signal Processing"
-By Vincent Falco
+ By Vincent Falco
 
 Official project location:
 http://code.google.com/p/dspfilterscpp/
 
-See DspFilter.cpp for notes and bibliography.
+See Documentation.h for contact information, notes, and bibliography.
 
 --------------------------------------------------------------------------------
 
@@ -32,6 +32,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 *******************************************************************************/
+
+/*
+ * THIS IS AN OLD VERSION OF THE CODE HERE FOR LEGACY PURPOSES DO NOT USE
+ *
+ */
 
 #ifndef DSP_FILTER_H
 #define DSP_FILTER_H
