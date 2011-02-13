@@ -38,6 +38,7 @@ THE SOFTWARE.
 
 #include "DspFilters/Common.h"
 #include "DspFilters/Cascade.h"
+#include "DspFilters/Design.h"
 #include "DspFilters/Filter.h"
 #include "DspFilters/PoleFilter.h"
 
@@ -188,9 +189,9 @@ struct TypeI : DesignBase, FilterClass
   // this ctor could be factored out
   TypeI ()
   {
-    addBuiltinParamInfo (idOrder);
-    addBuiltinParamInfo (idFrequency);
-    addBuiltinParamInfo (idPassbandRippleDb);
+    this->addBuiltinParamInfo (idOrder);
+    this->addBuiltinParamInfo (idFrequency);
+    this->addBuiltinParamInfo (idPassbandRippleDb);
   }
 
   void setParameters (const Parameters& params)
@@ -208,10 +209,10 @@ struct TypeII : DesignBase, FilterClass
   // this ctor could be factored out
   TypeII ()
   {
-    addBuiltinParamInfo (idOrder);
-    addBuiltinParamInfo (idFrequency);
-    addBuiltinParamInfo (idGain);
-    addBuiltinParamInfo (idPassbandRippleDb);
+    this->addBuiltinParamInfo (idOrder);
+    this->addBuiltinParamInfo (idFrequency);
+    this->addBuiltinParamInfo (idGain);
+    this->addBuiltinParamInfo (idPassbandRippleDb);
   }
 
   void setParameters (const Parameters& params)
@@ -230,10 +231,10 @@ struct TypeIII : DesignBase, FilterClass
   // this ctor could be factored out
   TypeIII ()
   {
-    addBuiltinParamInfo (idOrder);
-    addBuiltinParamInfo (idFrequency);
-    addBuiltinParamInfo (idBandwidthHz);
-    addBuiltinParamInfo (idPassbandRippleDb);
+    this->addBuiltinParamInfo (idOrder);
+    this->addBuiltinParamInfo (idFrequency);
+    this->addBuiltinParamInfo (idBandwidthHz);
+    this->addBuiltinParamInfo (idPassbandRippleDb);
   }
 
   void setParameters (const Parameters& params)
@@ -252,11 +253,11 @@ struct TypeIV : DesignBase, FilterClass
   // this ctor could be factored out
   TypeIV ()
   {
-    addBuiltinParamInfo (idOrder);
-    addBuiltinParamInfo (idFrequency);
-    addBuiltinParamInfo (idBandwidthHz);
-    addBuiltinParamInfo (idGain);
-    addBuiltinParamInfo (idPassbandRippleDb);
+    this->addBuiltinParamInfo (idOrder);
+    this->addBuiltinParamInfo (idFrequency);
+    this->addBuiltinParamInfo (idBandwidthHz);
+    this->addBuiltinParamInfo (idGain);
+    this->addBuiltinParamInfo (idPassbandRippleDb);
   }
 
   void setParameters (const Parameters& params)

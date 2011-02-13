@@ -106,7 +106,7 @@ struct PoleFilter : BaseClass
   {
     // This glues together the factored base classes
     // with the templatized storage classes.
-    BaseClass::setCascadeStorage (getCascadeStorage());
+    BaseClass::setCascadeStorage (this->getCascadeStorage());
     BaseClass::setPrototypeStorage (m_analogStorage, m_digitalStorage);
   }
 
