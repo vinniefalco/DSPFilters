@@ -62,7 +62,7 @@ public:
   static double ac ()
   {
     // technically not thread safe but does it matter?
-    static double v = 1e-35;
+    static double v = 1e-16;
     return v = -v;
   }
 };
