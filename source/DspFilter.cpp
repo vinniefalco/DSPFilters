@@ -31,81 +31,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-********************************************************************************
-
-Please direct all comments to either the music-dsp mailing list or
-the DSP and Plug-in Development forum:
-
-	http://music.columbia.edu/cmc/music-dsp/
-
-	http://www.kvraudio.com/forum/viewforum.php?f=33
-	http://www.kvraudio.com/forum/
-
-Support is provided for performing N-order Dsp floating point filter
-operations on M-channel data with a caller specified floating point type.
-The implementation breaks a high order IIR filter down into a series of
-cascaded second order stages. Tests conclude that numerical stability is
-maintained even at higher orders. For example the Butterworth low pass
-filter is stable at up to 53 poles.
-
-Processing functions are provided to use either Direct Form I or Direct
-Form II of the filter transfer function. Direct Form II is slightly faster
-but can cause discontinuities in the output if filter parameters are changed
-during processing. Direct Form I is slightly slower, but maintains fidelity
-even when parameters are changed during processing.
-
-To support fast parameter changes, filters provide two functions for
-adjusting parameters. A high accuracy Setup() function, and a faster
-form called SetupFast() that uses approximations for trigonometric
-functions. The approximations work quite well and should be suitable for
-most applications.
-
-Channels are stored in an interleaved format with M samples per frame
-arranged contiguously. A single class instance can process all M channels
-simultaneously in an efficient manner. A 'skip' parameter causes the
-processing function to advance by skip additional samples in the destination
-buffer in between every frame. Through manipulation of the skip paramter it
-is possible to exclude channels from processing (for example, only processing
-the left half of stereo interleaved data). For multichannel data which is
-not interleaved, it will be necessary to instantiate multiple instance of
-the filter and set skip=0.
-
-There are a few other utility classes and functions included that may prove useful.
-
-Classes:
-
-Order for filter derived classes is specified in the number of poles,
-except for band pass and band stop filters, for which the number of pole pairs
-is specified.
-
-For some filters there are two versions of Setup(), the one called
-SetupFast() uses approximations to trigonometric functions for speed.
-This is an option if you are doing frequent parameter changes to the filter.
-
-There is an example function at the bottom that shows how to use the classes.
-
-
-For a tutorial on digital filter design these are useful resources:
-
-http://crca.ucsd.edu/~msp/techniques/v0.08/book-html/node1.html
-
-	- Need fast version of pow( 10, x )
-
-	- Able to specify band-width in octaves
-
-	- Specify center frequency by midi note number
-		F = 440 * 2^((d-69)/12) where D is your midi note.
-		know that middle C is considered 60.
-		http://en.wikipedia.org/wiki/MIDI_Tuning_Standard
-
---------------------------------------------------------------------------------
-
-Filter ideas are based on a java applet (http://www.falstad.com/dfilter/)
-developed by Paul Falstad.
-
-All of this code was written by the author Vincent Falco except where marked.
-
 *******************************************************************************/
+
+/*
+ * THIS IS AN OLD VERSION OF THE CODE HERE FOR LEGACY PURPOSES DO NOT USE
+ *
+ */
 
 #include <limits>
 

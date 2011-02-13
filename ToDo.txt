@@ -11,5 +11,4 @@
 
 - reuse calculations in filters when only some parameters change
 
-Documentation, Bibliography
-
+More Documentation, Bibliography

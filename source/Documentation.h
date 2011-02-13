@@ -1,3 +1,38 @@
+/*******************************************************************************
+
+"A Collection of Useful C++ Classes for Digital Signal Processing"
+ By Vincent Falco
+
+Official project location:
+http://code.google.com/p/dspfilterscpp/
+
+See Documentation.h for contact information, notes, and bibliography.
+
+--------------------------------------------------------------------------------
+
+License: MIT License (http://www.opensource.org/licenses/mit-license.php)
+Copyright (c) 2009 by Vincent Falco
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+*******************************************************************************/
+
 /*
 
 "A Collection of Useful C++ Classes for Digital Signal Processing"
@@ -55,21 +90,36 @@ processing, a writer of audio plugins, or even a VST synthesizer coder,
 "A Collection of Useful C++ Classes for Digital Signal Processing" has
 something for you!
 
-Bibliography:
+-----
+Notes
+-----
+
+Please direct all comments this DSP and Plug-in Development forum:
+
+http://www.kvraudio.com/forum/viewforum.php?f=33
+
+-------
+Credits
+-------
+
+All of this code was written by the author Vincent Falco except where marked.
+
+Some filter ideas are based on a java applet (http://www.falstad.com/dfilter/)
+developed by Paul Falstad.
+
+------------
+Bibliography
+------------
 
 "High-Order Digital Parametric Equalizer Design"
  Sophocles J. Orfanidis
  (Journal of the Audio Engineering Society, vol 53. pp 1026-1046)
 
+http://crca.ucsd.edu/~msp/techniques/v0.08/book-html/node1.html
  
+"Spectral Transformations for digital filters"
+ A. G. Constantinides, B.Sc.(Eng.) Ph.D.
+ (Proceedings of the IEEE, vol. 117, pp. 1585-1590, August 1970)
+
  
- 
---- "Spectral Transformations for digital filters"
-     A. G. Constantinides, B.Sc.(Eng.) Ph.D.
-     (Proceedings of the IEEE, vol. 117, pp. 1585-1590, August 1970)
-
-
-
 */
-
-
