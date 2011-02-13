@@ -6,7 +6,7 @@
 Official project location:
 http://code.google.com/p/dspfilterscpp/
 
-See Documentation.h for contact information, notes, and bibliography.
+See Documentation.cpp for contact information, notes, and bibliography.
 
 --------------------------------------------------------------------------------
 
@@ -48,15 +48,15 @@ namespace Dsp {
 template <class DesignClass,
           int Channels,
           class StateType = DirectFormI>
-class SmoothedFilter
-  : public FilterType <DesignClass,
+class SmoothedFilterDesign
+  : public FilterDesign <DesignClass,
                        Channels,
                        StateType>
 {
 public:
-  typedef FilterType <DesignClass, Channels, StateType> filter_type_t;
+  typedef FilterDesign <DesignClass, Channels, StateType> filter_type_t;
 
-  SmoothedFilter (int transitionSamples)
+  SmoothedFilterDesign (int transitionSamples)
     : m_transitionSamples (transitionSamples)
     , m_remainingSamples (-1) // first time flag
   {
