@@ -171,6 +171,7 @@ static void UsageExamples ()
     params[0] = 44100; // sample rate
     params[1] = 4000; // cutoff frequency
     f->setParameters (params);
+    // this will cause a runtime assertion
     f->process (numSamples, audioData);
   }
 
@@ -179,7 +180,12 @@ static void UsageExamples ()
   // footprint, but no introspection or smoothing.
   {
     Dsp::SimpleFilter <Dsp::ChebyshevI::BandStop <3>, 2> f;
-    f.setup (3, 44100, 4000, 880, 1);
+    f.setup (3,    // order
+             44100,// sample rate
+             4000, // center frequency
+             880,  // band width
+             1     // ripple dB
+             );
     f.process (numSamples, audioData);
   }
 }
