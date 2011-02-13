@@ -61,13 +61,27 @@ Classes are designed as independent re-usable building blocks. Use some or all o
 	* No calls to malloc or new, great for embedded systems
 	* No external dependencies, just the standard C++ library!
 
-An accompanying demonstration application, which works on most popular platforms by using the seperately licensed Juce library, exercises all the functionality of the library, including these features:
+An accompanying demonstration application, which works on most popular platforms by using the seperately licensed Juce source library (included), exercises all the functionality of the library, including these features:
 
 	* Dynamic interface creates itself using filter introspection capabilities
 	* Audio playback with real time application of a selected filter
 	* Live time stretching and amplitude modulation without clicks or popping
 	* Charts to show magnitude, phase response and pole/zero placement
 	* Thread safety "best practices" for audio applications
+
+Using these filters is easy:
+
+{{{
+    // Create a Chebyshev type I Band Stop filter of order 3
+    // with state for processing 2 channels of audio.
+    Dsp::SimpleFilter <Dsp::ChebyshevI::BandStop <3>, 2> f;
+    f.setup (3,    // order
+             44100,// sample rate
+             4000, // center frequency
+             880,  // band width
+             1);   // ripple dB
+    f.process (numSamples, arrayOfChannels);
+}}}
 
 If you've been searching in futility on the Internet for some source code that does exactly what you need it to do, then look no further because this is the jackpot! Whether you are a student of C++ or digital signal processing, a writer of audio plugins, or even a VST synthesizer coder, "A Collection of Useful C++ Classes for Digital Signal Processing" has something for you!
 
@@ -184,8 +198,7 @@ static void UsageExamples ()
              44100,// sample rate
              4000, // center frequency
              880,  // band width
-             1     // ripple dB
-             );
+             1);   // ripple dB
     f.process (numSamples, audioData);
   }
 }
