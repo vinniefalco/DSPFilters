@@ -104,8 +104,6 @@ private:
     setMaximumHeight (from.getMaximumHeight());
     setFixedAspectRatio (from.getFixedAspectRatio());
 
-    // This is post-1.5.2 Juce
-#if 0
     int minimumWhenOffTheTop;
     int minimumWhenOffTheLeft;
     int minimumWhenOffTheBottom;
@@ -120,7 +118,6 @@ private:
                                minimumWhenOffTheLeft,
                                minimumWhenOffTheBottom,
                                minimumWhenOffTheRight);
-#endif
   }
 
   static int addWithoutOverflow (int a, int b)
@@ -134,10 +131,8 @@ private:
   // adjusts the current constraints to take into account decorations
   void adjustConstraints()
   {
-    BorderSize peerFrameBorder = m_resizableWindow->getPeer()->getFrameSize();
-    // requires post-1.5.2 Juce
-    //BorderSize contentCompBorder = m_resizableWindow->getContentComponentBorder();
-    BorderSize contentCompBorder (0);
+    BorderSize<int> peerFrameBorder = m_resizableWindow->getPeer()->getFrameSize();
+    BorderSize<int> contentCompBorder = m_resizableWindow->getContentComponentBorder();
     
     int extraWidth = peerFrameBorder.getLeftAndRight() + contentCompBorder.getLeftAndRight();
     int extraHeight = peerFrameBorder.getTopAndBottom() + contentCompBorder.getTopAndBottom();

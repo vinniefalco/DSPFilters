@@ -50,6 +50,15 @@
 
 */
 
+/* This line is here just to help catch syntax errors caused by mistakes in other header
+   files that are included before juce.h. If you hit an error at this line, it must be some
+   kind of syntax problem in whatever code immediately precedes this header.
+
+   This also acts as a sanity-check in case you're trying to build with a C or obj-C compiler
+   rather than a proper C++ one.
+*/
+namespace JuceDummyNamespace {}
+
 #define JUCE_PUBLIC_INCLUDES 1
 
 // (this includes things that need defining outside of the JUCE namespace)
@@ -63,8 +72,8 @@
 	See also SystemStats::getJUCEVersion() for a string version.
 */
 #define JUCE_MAJOR_VERSION	  1
-#define JUCE_MINOR_VERSION	  52
-#define JUCE_BUILDNUMBER	110
+#define JUCE_MINOR_VERSION	  53
+#define JUCE_BUILDNUMBER	30
 
 /** Current Juce version number.
 
@@ -96,9 +105,12 @@
 #if (defined (_WIN32) || defined (_WIN64))
   #define	   JUCE_WIN32 1
   #define	   JUCE_WINDOWS 1
+#elif defined (JUCE_ANDROID)
+  #undef	JUCE_ANDROID
+  #define	   JUCE_ANDROID 1
 #elif defined (LINUX) || defined (__linux__)
   #define	 JUCE_LINUX 1
-#elif defined(__APPLE_CPP__) || defined(__APPLE_CC__)
+#elif defined (__APPLE_CPP__) || defined(__APPLE_CC__)
   #include <CoreFoundation/CoreFoundation.h> // (needed to find out what platform we're using)
 
   #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
@@ -175,15 +187,19 @@
 
 #endif
 
-#if JUCE_LINUX
+#if JUCE_LINUX || JUCE_ANDROID
 
   #ifdef _DEBUG
 	#define JUCE_DEBUG 1
   #endif
 
   // Allow override for big-endian Linux platforms
-  #ifndef JUCE_BIG_ENDIAN
+  #if defined (__LITTLE_ENDIAN__) || ! defined (JUCE_BIG_ENDIAN)
 	#define JUCE_LITTLE_ENDIAN 1
+	#undef JUCE_BIG_ENDIAN
+  #else
+	#undef JUCE_LITTLE_ENDIAN
+	#define JUCE_BIG_ENDIAN 1
   #endif
 
   #if defined (__LP64__) || defined (_LP64)
@@ -192,7 +208,9 @@
 	#define JUCE_32BIT 1
   #endif
 
-  #define JUCE_INTEL 1
+  #if __MMX__ || __SSE__ || __amd64__
+	#define JUCE_INTEL 1
+  #endif
 #endif
 
 // Compiler type macros.
@@ -214,7 +232,7 @@
 	#endif
   #endif
 
-  #if ! JUCE_VC7_OR_EARLIER
+  #if ! JUCE_VC7_OR_EARLIER && ! defined (__INTEL_COMPILER)
 	#define JUCE_USE_INTRINSICS 1
   #endif
 #else
@@ -300,7 +318,7 @@
 	If you're building on Windows, you'll need to have the Apple QuickTime SDK
 	installed, and its header files will need to be on your include path.
 */
-#if ! (defined (JUCE_QUICKTIME) || JUCE_LINUX || JUCE_IOS || (JUCE_WINDOWS && ! JUCE_MSVC))
+#if ! (defined (JUCE_QUICKTIME) || JUCE_LINUX || JUCE_IOS || JUCE_ANDROID || (JUCE_WINDOWS && ! JUCE_MSVC))
   #define JUCE_QUICKTIME 0
 #endif
 
@@ -311,7 +329,7 @@
 /** JUCE_OPENGL: Enables the OpenGLComponent class (available on all platforms).
 	If you're not using OpenGL, you might want to turn this off to reduce your binary's size.
 */
-#ifndef JUCE_OPENGL
+#if ! (defined (JUCE_OPENGL) || JUCE_ANDROID)
   #define JUCE_OPENGL 1
 #endif
 
@@ -579,9 +597,7 @@
 	#endif
   #elif JUCE_MAC
 	#define juce_breakDebugger		  Debugger();
-  #elif JUCE_IOS
-	#define juce_breakDebugger		  kill (0, SIGTRAP);
-  #elif JUCE_LINUX
+  #elif JUCE_IOS || JUCE_LINUX || JUCE_ANDROID
 	#define juce_breakDebugger		  kill (0, SIGTRAP);
   #endif
 
@@ -623,15 +639,17 @@
 #endif
 
 #ifndef DOXYGEN
+  BEGIN_JUCE_NAMESPACE
   template <bool b> struct JuceStaticAssert;
   template <> struct JuceStaticAssert <true> { static void dummy() {} };
+  END_JUCE_NAMESPACE
 #endif
 
 /** A compile-time assertion macro.
 
 	If the expression parameter is false, the macro will cause a compile error.
 */
-#define static_jassert(expression)	  JuceStaticAssert<expression>::dummy();
+#define static_jassert(expression)	  JUCE_NAMESPACE::JuceStaticAssert<expression>::dummy();
 
 /** This is a shorthand macro for declaring stubs for a class's copy constructor and
 	operator=.
@@ -660,13 +678,13 @@
 */
 #define JUCE_DECLARE_NON_COPYABLE(className) \
 	className (const className&);\
-	className& operator= (const className&);
+	className& operator= (const className&)
 
 /** This is a shorthand way of writing both a JUCE_DECLARE_NON_COPYABLE and
 	JUCE_LEAK_DETECTOR macro for a class.
 */
 #define JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(className) \
-	JUCE_DECLARE_NON_COPYABLE(className)\
+	JUCE_DECLARE_NON_COPYABLE(className);\
 	JUCE_LEAK_DETECTOR(className)
 
 #if ! DOXYGEN
@@ -755,6 +773,15 @@
  #define JUCE_DEPRECATED(functionDef)	 functionDef
 #endif
 
+#if JUCE_ANDROID && ! DOXYGEN
+ #define JUCE_MODAL_LOOPS_PERMITTED 0
+#else
+ /** Some operating environments don't provide a modal loop mechanism, so this flag can be
+	 used to disable any functions that try to run a modal loop.
+ */
+ #define JUCE_MODAL_LOOPS_PERMITTED 1
+#endif
+
 #endif   // __JUCE_PLATFORMDEFS_JUCEHEADER__
 /*** End of inlined file: juce_PlatformDefs.h ***/
 
@@ -825,6 +852,11 @@
   #endif
 #endif
 
+#if JUCE_ANDROID
+  #include <sys/atomics.h>
+  #include <byteswap.h>
+#endif
+
 // DLL building settings on Win32
 #if JUCE_MSVC
   #ifdef JUCE_DLL_BUILD
@@ -833,6 +865,9 @@
   #elif defined (JUCE_DLL)
 	#define JUCE_API __declspec (dllimport)
 	#pragma warning (disable: 4251)
+  #endif
+  #ifdef __INTEL_COMPILER
+   #pragma warning (disable: 1125) // (virtual override warning)
   #endif
 #elif defined (__GNUC__) && ((__GNUC__ >= 4) || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4))
   #ifdef JUCE_DLL_BUILD
@@ -1075,9 +1110,6 @@ typedef unsigned int		uint32;
   typedef unsigned int		  pointer_sized_uint;
 #endif
 
-/** A platform-independent unicode character type. */
-typedef wchar_t			 juce_wchar;
-
 // Some indispensible min/max functions
 
 /** Returns the larger of two values. */
@@ -1263,7 +1295,7 @@ inline void swapVariables (Type& variable1, Type& variable2)
 	inline int numElementsInArray (Type (&array)[N])
 	{
 		(void) array; // (required to avoid a spurious warning in MS compilers)
-		sizeof (0[array]); // This line should cause an error if you pass an object with a user-defined subscript operator
+		(void) sizeof (0[array]); // This line should cause an error if you pass an object with a user-defined subscript operator
 		return N;
 	}
 #endif
@@ -1325,6 +1357,8 @@ inline bool juce_isfinite (FloatingPointType value)
 {
 	#if JUCE_WINDOWS
 	  return _finite (value);
+	#elif JUCE_ANDROID
+	  return isfinite (value);
 	#else
 	  return std::isfinite (value);
 	#endif
@@ -1532,18 +1566,22 @@ inline uint32 ByteOrder::swap (uint32 n)
 {
   #if JUCE_MAC || JUCE_IOS
 	return OSSwapInt32 (n);
-  #elif JUCE_GCC
+  #elif JUCE_GCC && JUCE_INTEL
 	asm("bswap %%eax" : "=a"(n) : "a"(n));
 	return n;
   #elif JUCE_USE_INTRINSICS
 	return _byteswap_ulong (n);
-  #else
+  #elif JUCE_MSVC
 	__asm {
 		mov eax, n
 		bswap eax
 		mov n, eax
 	}
 	return n;
+  #elif JUCE_ANDROID
+	return bswap_32 (n);
+  #else
+	return (n << 24) | (n >> 24) | ((n & 0xff00) << 8) | ((n & 0xff0000) >> 8);
   #endif
 }
 
@@ -1607,28 +1645,49 @@ inline void ByteOrder::bigEndian24BitToChars (const int value, char* const destB
 #ifndef __JUCE_CHARACTERFUNCTIONS_JUCEHEADER__
 #define __JUCE_CHARACTERFUNCTIONS_JUCEHEADER__
 
-#define JUCE_T(stringLiteral)	 (L##stringLiteral)
-typedef juce_wchar		tchar;
-
-#if ! JUCE_DONT_DEFINE_MACROS
-
-/** The 'T' macro allows a literal string to be compiled as unicode.
-
-	If you write your string literals in the form T("xyz"), it will be compiled as L"xyz"
-	or "xyz", depending on which representation is best for the String class to work with.
-
-	Because the 'T' symbol is occasionally used inside 3rd-party library headers which you
-	may need to include after juce.h, you can use the juce_withoutMacros.h file (in
-	the juce/src directory) to avoid defining this macro. See the comments in
-	juce_withoutMacros.h for more info.
-*/
-#define T(stringLiteral)		JUCE_T(stringLiteral)
-
+#if JUCE_WINDOWS && ! DOXYGEN
+ #define JUCE_NATIVE_WCHAR_IS_UTF8	  0
+ #define JUCE_NATIVE_WCHAR_IS_UTF16	 1
+ #define JUCE_NATIVE_WCHAR_IS_UTF32	 0
+#else
+ /** This macro will be set to 1 if the compiler's native wchar_t is an 8-bit type. */
+ #define JUCE_NATIVE_WCHAR_IS_UTF8	  0
+ /** This macro will be set to 1 if the compiler's native wchar_t is a 16-bit type. */
+ #define JUCE_NATIVE_WCHAR_IS_UTF16	 0
+ /** This macro will be set to 1 if the compiler's native wchar_t is a 32-bit type. */
+ #define JUCE_NATIVE_WCHAR_IS_UTF32	 1
 #endif
 
+#if JUCE_NATIVE_WCHAR_IS_UTF32 || DOXYGEN
+ /** A platform-independent 32-bit unicode character type. */
+ typedef wchar_t	juce_wchar;
+#else
+ typedef uint32	 juce_wchar;
+#endif
+
+/** This macro is deprecated, but preserved for compatibility with old code.*/
+#define JUCE_T(stringLiteral)	  (L##stringLiteral)
+
+#if ! JUCE_DONT_DEFINE_MACROS
+ /** The 'T' macro is an alternative for using the "L" prefix in front of a string literal.
+
+	 This macro is deprectated, but kept here for compatibility with old code. The best (i.e.
+	 most portable) way to encode your string literals is just as standard 8-bit strings, but
+	 using escaped utf-8 character codes for extended characters.
+
+	 Because the 'T' symbol is occasionally used inside 3rd-party library headers which you
+	 may need to include after juce.h, you can use the juce_withoutMacros.h file (in
+	 the juce/src directory) to avoid defining this macro. See the comments in
+	 juce_withoutMacros.h for more info.
+ */
+ #define T(stringLiteral)		JUCE_T(stringLiteral)
+#endif
+
+#undef max
+#undef min
+
 /**
-	A set of methods for manipulating characters and character strings, with
-	duplicate methods to handle 8-bit and unicode characters.
+	A set of methods for manipulating characters and character strings.
 
 	These are defined as wrappers around the basic C string handlers, to provide
 	a clean, cross-platform layer, (because various platforms differ in the
@@ -1639,71 +1698,11 @@ typedef juce_wchar		tchar;
 class JUCE_API  CharacterFunctions
 {
 public:
-	static int length (const char* s) throw();
-	static int length (const juce_wchar* s) throw();
 
-	static void copy (char* dest, const char* src, int maxBytes) throw();
-	static void copy (juce_wchar* dest, const juce_wchar* src, int maxChars) throw();
-
-	static void copy (juce_wchar* dest, const char* src, int maxChars) throw();
-	static void copy (char* dest, const juce_wchar* src, int maxBytes) throw();
-	static int bytesRequiredForCopy (const juce_wchar* src) throw();
-
-	static void append (char* dest, const char* src) throw();
-	static void append (juce_wchar* dest, const juce_wchar* src) throw();
-
-	static int compare (const char* s1, const char* s2) throw();
-	static int compare (const juce_wchar* s1, const juce_wchar* s2) throw();
-	static int compare (const juce_wchar* s1, const char* s2) throw();
-	static int compare (const char* s1, const juce_wchar* s2) throw();
-
-	static int compare (const char* s1, const char* s2, int maxChars) throw();
-	static int compare (const juce_wchar* s1, const juce_wchar* s2, int maxChars) throw();
-
-	static int compareIgnoreCase (const char* s1, const char* s2) throw();
-	static int compareIgnoreCase (const juce_wchar* s1, const juce_wchar* s2) throw();
-	static int compareIgnoreCase (const juce_wchar* s1, const char* s2) throw();
-
-	static int compareIgnoreCase (const char* s1, const char* s2, int maxChars) throw();
-	static int compareIgnoreCase (const juce_wchar* s1, const juce_wchar* s2, int maxChars) throw();
-
-	static const char* find (const char* haystack, const char* needle) throw();
-	static const juce_wchar* find (const juce_wchar* haystack, const juce_wchar* needle) throw();
-
-	static int indexOfChar (const char* haystack, char needle, bool ignoreCase) throw();
-	static int indexOfChar (const juce_wchar* haystack, juce_wchar needle, bool ignoreCase) throw();
-
-	static int indexOfCharFast (const char* haystack, char needle) throw();
-	static int indexOfCharFast (const juce_wchar* haystack, juce_wchar needle) throw();
-
-	static int getIntialSectionContainingOnly (const char* text, const char* allowedChars) throw();
-	static int getIntialSectionContainingOnly (const juce_wchar* text, const juce_wchar* allowedChars) throw();
-
-	static int ftime (char* dest, int maxChars, const char* format, const struct tm* tm) throw();
-	static int ftime (juce_wchar* dest, int maxChars, const juce_wchar* format, const struct tm* tm) throw();
-
-	static int getIntValue (const char* s) throw();
-	static int getIntValue (const juce_wchar* s) throw();
-
-	static int64 getInt64Value (const char* s) throw();
-	static int64 getInt64Value (const juce_wchar* s) throw();
-
-	static double getDoubleValue (const char* s) throw();
-	static double getDoubleValue (const juce_wchar* s) throw();
-
-	static char toUpperCase (char character) throw();
 	static juce_wchar toUpperCase (juce_wchar character) throw();
-	static void toUpperCase (char* s) throw();
-
-	static void toUpperCase (juce_wchar* s) throw();
-	static bool isUpperCase (char character) throw();
-	static bool isUpperCase (juce_wchar character) throw();
-
-	static char toLowerCase (char character) throw();
 	static juce_wchar toLowerCase (juce_wchar character) throw();
-	static void toLowerCase (char* s) throw();
-	static void toLowerCase (juce_wchar* s) throw();
-	static bool isLowerCase (char character) throw();
+
+	static bool isUpperCase (juce_wchar character) throw();
 	static bool isLowerCase (juce_wchar character) throw();
 
 	static bool isWhitespace (char character) throw();
@@ -1718,14 +1717,2405 @@ public:
 	static bool isLetterOrDigit (char character) throw();
 	static bool isLetterOrDigit (juce_wchar character) throw();
 
-	/** Returns 0 to 16 for '0' to 'F", or -1 for characters that aren't a legel
-		hex digit.
-	*/
+	/** Returns 0 to 16 for '0' to 'F", or -1 for characters that aren't a legal hex digit. */
 	static int getHexDigitValue (juce_wchar digit) throw();
+
+	template <typename CharPointerType>
+	static double readDoubleValue (CharPointerType& text) throw()
+	{
+		double result[3] = { 0, 0, 0 }, accumulator[2] = { 0, 0 };
+		int exponentAdjustment[2] = { 0, 0 }, exponentAccumulator[2] = { -1, -1 };
+		int exponent = 0, decPointIndex = 0, digit = 0;
+		int lastDigit = 0, numSignificantDigits = 0;
+		bool isNegative = false, digitsFound = false;
+		const int maxSignificantDigits = 15 + 2;
+
+		text = text.findEndOfWhitespace();
+		juce_wchar c = *text;
+
+		switch (c)
+		{
+			case '-':   isNegative = true; // fall-through..
+			case '+':   c = *++text;
+		}
+
+		switch (c)
+		{
+			case 'n':
+			case 'N':
+				if ((text[1] == 'a' || text[1] == 'A') && (text[2] == 'n' || text[2] == 'N'))
+					return std::numeric_limits<double>::quiet_NaN();
+				break;
+
+			case 'i':
+			case 'I':
+				if ((text[1] == 'n' || text[1] == 'N') && (text[2] == 'f' || text[2] == 'F'))
+					return std::numeric_limits<double>::infinity();
+				break;
+		}
+
+		for (;;)
+		{
+			if (text.isDigit())
+			{
+				lastDigit = digit;
+				digit = text.getAndAdvance() - '0';
+				digitsFound = true;
+
+				if (decPointIndex != 0)
+					exponentAdjustment[1]++;
+
+				if (numSignificantDigits == 0 && digit == 0)
+					continue;
+
+				if (++numSignificantDigits > maxSignificantDigits)
+				{
+					if (digit > 5)
+						++accumulator [decPointIndex];
+					else if (digit == 5 && (lastDigit & 1) != 0)
+						++accumulator [decPointIndex];
+
+					if (decPointIndex > 0)
+						exponentAdjustment[1]--;
+					else
+						exponentAdjustment[0]++;
+
+					while (text.isDigit())
+					{
+						++text;
+						if (decPointIndex == 0)
+							exponentAdjustment[0]++;
+					}
+				}
+				else
+				{
+					const double maxAccumulatorValue = (double) ((std::numeric_limits<unsigned int>::max() - 9) / 10);
+					if (accumulator [decPointIndex] > maxAccumulatorValue)
+					{
+						result [decPointIndex] = mulexp10 (result [decPointIndex], exponentAccumulator [decPointIndex])
+													+ accumulator [decPointIndex];
+						accumulator [decPointIndex] = 0;
+						exponentAccumulator [decPointIndex] = 0;
+					}
+
+					accumulator [decPointIndex] = accumulator[decPointIndex] * 10 + digit;
+					exponentAccumulator [decPointIndex]++;
+				}
+			}
+			else if (decPointIndex == 0 && *text == '.')
+			{
+				++text;
+				decPointIndex = 1;
+
+				if (numSignificantDigits > maxSignificantDigits)
+				{
+					while (text.isDigit())
+						++text;
+					break;
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		result[0] = mulexp10 (result[0], exponentAccumulator[0]) + accumulator[0];
+
+		if (decPointIndex != 0)
+			result[1] = mulexp10 (result[1], exponentAccumulator[1]) + accumulator[1];
+
+		c = *text;
+		if ((c == 'e' || c == 'E') && digitsFound)
+		{
+			bool negativeExponent = false;
+
+			switch (*++text)
+			{
+				case '-':   negativeExponent = true; // fall-through..
+				case '+':   ++text;
+			}
+
+			while (text.isDigit())
+				exponent = (exponent * 10) + (text.getAndAdvance() - '0');
+
+			if (negativeExponent)
+				exponent = -exponent;
+		}
+
+		double r = mulexp10 (result[0], exponent + exponentAdjustment[0]);
+		if (decPointIndex != 0)
+			r += mulexp10 (result[1], exponent - exponentAdjustment[1]);
+
+		return isNegative ? -r : r;
+	}
+
+	template <typename CharPointerType>
+	static double getDoubleValue (const CharPointerType& text) throw()
+	{
+		CharPointerType t (text);
+		return readDoubleValue (t);
+	}
+
+	template <typename IntType, typename CharPointerType>
+	static IntType getIntValue (const CharPointerType& text) throw()
+	{
+		IntType v = 0;
+		CharPointerType s (text.findEndOfWhitespace());
+
+		const bool isNeg = *s == '-';
+		if (isNeg)
+			++s;
+
+		for (;;)
+		{
+			const juce_wchar c = s.getAndAdvance();
+
+			if (c >= '0' && c <= '9')
+				v = v * 10 + (IntType) (c - '0');
+			else
+				break;
+		}
+
+		return isNeg ? -v : v;
+	}
+
+	static int ftime (char* dest, int maxChars, const char* format, const struct tm* tm) throw();
+	static int ftime (juce_wchar* dest, int maxChars, const juce_wchar* format, const struct tm* tm) throw();
+
+	template <typename CharPointerType>
+	static size_t lengthUpTo (const CharPointerType& text, const size_t maxCharsToCount) throw()
+	{
+		size_t len = 0;
+		CharPointerType t (text);
+
+		while (len < maxCharsToCount && t.getAndAdvance() != 0)
+			++len;
+
+		return len;
+	}
+
+	template <typename DestCharPointerType, typename SrcCharPointerType>
+	static void copyAll (DestCharPointerType& dest, SrcCharPointerType src) throw()
+	{
+		for (;;)
+		{
+			const juce_wchar c = src.getAndAdvance();
+
+			if (c == 0)
+				break;
+
+			dest.write (c);
+		}
+
+		dest.writeNull();
+	}
+
+	template <typename DestCharPointerType, typename SrcCharPointerType>
+	static int copyWithDestByteLimit (DestCharPointerType& dest, SrcCharPointerType src, int maxBytes) throw()
+	{
+		int numBytesDone = 0;
+		maxBytes -= sizeof (typename DestCharPointerType::CharType); // (allow for a terminating null)
+
+		for (;;)
+		{
+			const juce_wchar c = src.getAndAdvance();
+			const int bytesNeeded = (int) DestCharPointerType::getBytesRequiredFor (c);
+
+			maxBytes -= bytesNeeded;
+			if (c == 0 || maxBytes < 0)
+				break;
+
+			numBytesDone += bytesNeeded;
+			dest.write (c);
+		}
+
+		dest.writeNull();
+		return numBytesDone;
+	}
+
+	template <typename DestCharPointerType, typename SrcCharPointerType>
+	static void copyWithCharLimit (DestCharPointerType& dest, SrcCharPointerType src, int maxChars) throw()
+	{
+		while (--maxChars > 0)
+		{
+			const juce_wchar c = src.getAndAdvance();
+			if (c == 0)
+				break;
+
+			dest.write (c);
+		}
+
+		dest.writeNull();
+	}
+
+	template <typename CharPointerType1, typename CharPointerType2>
+	static int compare (CharPointerType1 s1, CharPointerType2 s2) throw()
+	{
+		for (;;)
+		{
+			const int c1 = (int) s1.getAndAdvance();
+			const int c2 = (int) s2.getAndAdvance();
+
+			const int diff = c1 - c2;
+			if (diff != 0)
+				return diff < 0 ? -1 : 1;
+			else if (c1 == 0)
+				break;
+		}
+
+		return 0;
+	}
+
+	template <typename CharPointerType1, typename CharPointerType2>
+	static int compareUpTo (CharPointerType1 s1, CharPointerType2 s2, int maxChars) throw()
+	{
+		while (--maxChars >= 0)
+		{
+			const int c1 = (int) s1.getAndAdvance();
+			const int c2 = (int) s2.getAndAdvance();
+
+			const int diff = c1 - c2;
+			if (diff != 0)
+				return diff < 0 ? -1 : 1;
+			else if (c1 == 0)
+				break;
+		}
+
+		return 0;
+	}
+
+	template <typename CharPointerType1, typename CharPointerType2>
+	static int compareIgnoreCase (CharPointerType1 s1, CharPointerType2 s2) throw()
+	{
+		for (;;)
+		{
+			int c1 = s1.toUpperCase();
+			int c2 = s2.toUpperCase();
+			++s1;
+			++s2;
+
+			const int diff = c1 - c2;
+			if (diff != 0)
+				return diff < 0 ? -1 : 1;
+			else if (c1 == 0)
+				break;
+		}
+
+		return 0;
+	}
+
+	template <typename CharPointerType1, typename CharPointerType2>
+	static int compareIgnoreCaseUpTo (CharPointerType1 s1, CharPointerType2 s2, int maxChars) throw()
+	{
+		while (--maxChars >= 0)
+		{
+			int c1 = s1.toUpperCase();
+			int c2 = s2.toUpperCase();
+			++s1;
+			++s2;
+
+			const int diff = c1 - c2;
+			if (diff != 0)
+				return diff < 0 ? -1 : 1;
+			else if (c1 == 0)
+				break;
+		}
+
+		return 0;
+	}
+
+	template <typename CharPointerType1, typename CharPointerType2>
+	static int indexOf (CharPointerType1 haystack, const CharPointerType2& needle) throw()
+	{
+		int index = 0;
+		const int needleLength = (int) needle.length();
+
+		for (;;)
+		{
+			if (haystack.compareUpTo (needle, needleLength) == 0)
+				return index;
+
+			if (haystack.getAndAdvance() == 0)
+				return -1;
+
+			++index;
+		}
+	}
+
+	template <typename Type>
+	static int indexOfChar (Type text, const juce_wchar charToFind) throw()
+	{
+		int i = 0;
+
+		while (! text.isEmpty())
+		{
+			if (text.getAndAdvance() == charToFind)
+				return i;
+
+			++i;
+		}
+
+		return -1;
+	}
+
+	template <typename Type>
+	static int indexOfCharIgnoreCase (Type text, juce_wchar charToFind) throw()
+	{
+		charToFind = CharacterFunctions::toLowerCase (charToFind);
+		int i = 0;
+
+		while (! text.isEmpty())
+		{
+			if (text.toLowerCase() == charToFind)
+				return i;
+
+			++text;
+			++i;
+		}
+
+		return -1;
+	}
+
+	template <typename Type>
+	static Type findEndOfWhitespace (const Type& text) throw()
+	{
+		Type p (text);
+
+		while (p.isWhitespace())
+			++p;
+
+		return p;
+	}
+
+private:
+	static double mulexp10 (const double value, int exponent) throw();
 };
 
 #endif   // __JUCE_CHARACTERFUNCTIONS_JUCEHEADER__
 /*** End of inlined file: juce_CharacterFunctions.h ***/
+
+#if JUCE_MSVC
+  #pragma warning (push)
+  #pragma warning (disable: 4514 4996)
+#endif
+
+
+/*** Start of inlined file: juce_Atomic.h ***/
+#ifndef __JUCE_ATOMIC_JUCEHEADER__
+#define __JUCE_ATOMIC_JUCEHEADER__
+
+/**
+	Simple class to hold a primitive value and perform atomic operations on it.
+
+	The type used must be a 32 or 64 bit primitive, like an int, pointer, etc.
+	There are methods to perform most of the basic atomic operations.
+*/
+template <typename Type>
+class Atomic
+{
+public:
+	/** Creates a new value, initialised to zero. */
+	inline Atomic() throw()
+		: value (0)
+	{
+	}
+
+	/** Creates a new value, with a given initial value. */
+	inline Atomic (const Type initialValue) throw()
+		: value (initialValue)
+	{
+	}
+
+	/** Copies another value (atomically). */
+	inline Atomic (const Atomic& other) throw()
+		: value (other.get())
+	{
+	}
+
+	/** Destructor. */
+	inline ~Atomic() throw()
+	{
+		// This class can only be used for types which are 32 or 64 bits in size.
+		static_jassert (sizeof (Type) == 4 || sizeof (Type) == 8);
+	}
+
+	/** Atomically reads and returns the current value. */
+	Type get() const throw();
+
+	/** Copies another value onto this one (atomically). */
+	inline Atomic& operator= (const Atomic& other) throw()	  { exchange (other.get()); return *this; }
+
+	/** Copies another value onto this one (atomically). */
+	inline Atomic& operator= (const Type newValue) throw()	  { exchange (newValue); return *this; }
+
+	/** Atomically sets the current value. */
+	void set (Type newValue) throw()				{ exchange (newValue); }
+
+	/** Atomically sets the current value, returning the value that was replaced. */
+	Type exchange (Type value) throw();
+
+	/** Atomically adds a number to this value, returning the new value. */
+	Type operator+= (Type amountToAdd) throw();
+
+	/** Atomically subtracts a number from this value, returning the new value. */
+	Type operator-= (Type amountToSubtract) throw();
+
+	/** Atomically increments this value, returning the new value. */
+	Type operator++() throw();
+
+	/** Atomically decrements this value, returning the new value. */
+	Type operator--() throw();
+
+	/** Atomically compares this value with a target value, and if it is equal, sets
+		this to be equal to a new value.
+
+		This operation is the atomic equivalent of doing this:
+		@code
+		bool compareAndSetBool (Type newValue, Type valueToCompare)
+		{
+			if (get() == valueToCompare)
+			{
+				set (newValue);
+				return true;
+			}
+
+			return false;
+		}
+		@endcode
+
+		@returns true if the comparison was true and the value was replaced; false if
+				 the comparison failed and the value was left unchanged.
+		@see compareAndSetValue
+	*/
+	bool compareAndSetBool (Type newValue, Type valueToCompare) throw();
+
+	/** Atomically compares this value with a target value, and if it is equal, sets
+		this to be equal to a new value.
+
+		This operation is the atomic equivalent of doing this:
+		@code
+		Type compareAndSetValue (Type newValue, Type valueToCompare)
+		{
+			Type oldValue = get();
+			if (oldValue == valueToCompare)
+				set (newValue);
+
+			return oldValue;
+		}
+		@endcode
+
+		@returns the old value before it was changed.
+		@see compareAndSetBool
+	*/
+	Type compareAndSetValue (Type newValue, Type valueToCompare) throw();
+
+	/** Implements a memory read/write barrier. */
+	static void memoryBarrier() throw();
+
+	JUCE_ALIGN(8)
+
+	/** The raw value that this class operates on.
+		This is exposed publically in case you need to manipulate it directly
+		for performance reasons.
+	*/
+	volatile Type value;
+
+private:
+	static inline Type castFrom32Bit (int32 value) throw()	{ return *(Type*) &value; }
+	static inline Type castFrom64Bit (int64 value) throw()	{ return *(Type*) &value; }
+	static inline int32 castTo32Bit (Type value) throw()	  { return *(int32*) &value; }
+	static inline int64 castTo64Bit (Type value) throw()	  { return *(int64*) &value; }
+
+	Type operator++ (int); // better to just use pre-increment with atomics..
+	Type operator-- (int);
+};
+
+/*
+	The following code is in the header so that the atomics can be inlined where possible...
+*/
+#if (JUCE_IOS && (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_2 || ! defined (__IPHONE_3_2))) \
+	  || (JUCE_MAC && (JUCE_PPC || __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 2)))
+  #define JUCE_ATOMICS_MAC 1	// Older OSX builds using gcc4.1 or earlier
+
+  #if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
+	#define JUCE_MAC_ATOMICS_VOLATILE
+  #else
+	#define JUCE_MAC_ATOMICS_VOLATILE volatile
+  #endif
+
+  #if JUCE_PPC || JUCE_IOS
+	// None of these atomics are available for PPC or for iPhoneOS 3.1 or earlier!!
+	template <typename Type> static Type OSAtomicAdd64Barrier (Type b, JUCE_MAC_ATOMICS_VOLATILE Type* a) throw()   { jassertfalse; return *a += b; }
+	template <typename Type> static Type OSAtomicIncrement64Barrier (JUCE_MAC_ATOMICS_VOLATILE Type* a) throw()	 { jassertfalse; return ++*a; }
+	template <typename Type> static Type OSAtomicDecrement64Barrier (JUCE_MAC_ATOMICS_VOLATILE Type* a) throw()	 { jassertfalse; return --*a; }
+	template <typename Type> static bool OSAtomicCompareAndSwap64Barrier (Type old, Type newValue, JUCE_MAC_ATOMICS_VOLATILE Type* value) throw()
+		{ jassertfalse; if (old == *value) { *value = newValue; return true; } return false; }
+	#define JUCE_64BIT_ATOMICS_UNAVAILABLE 1
+  #endif
+
+#elif JUCE_ANDROID
+  #define JUCE_ATOMICS_ANDROID 1	// Android atomic functions
+  #define JUCE_64BIT_ATOMICS_UNAVAILABLE 1
+
+#elif JUCE_GCC
+  #define JUCE_ATOMICS_GCC 1	// GCC with intrinsics
+
+  #if JUCE_IOS
+	#define JUCE_64BIT_ATOMICS_UNAVAILABLE 1  // (on the iphone, the 64-bit ops will compile but not link)
+  #endif
+
+#else
+  #define JUCE_ATOMICS_WINDOWS 1	// Windows with intrinsics
+
+  #if JUCE_USE_INTRINSICS || JUCE_64BIT
+	#pragma intrinsic (_InterlockedExchange, _InterlockedIncrement, _InterlockedDecrement, _InterlockedCompareExchange, \
+					   _InterlockedCompareExchange64, _InterlockedExchangeAdd, _ReadWriteBarrier)
+	#define juce_InterlockedExchange(a, b)		  _InterlockedExchange(a, b)
+	#define juce_InterlockedIncrement(a)		_InterlockedIncrement(a)
+	#define juce_InterlockedDecrement(a)		_InterlockedDecrement(a)
+	#define juce_InterlockedExchangeAdd(a, b)	   _InterlockedExchangeAdd(a, b)
+	#define juce_InterlockedCompareExchange(a, b, c)	_InterlockedCompareExchange(a, b, c)
+	#define juce_InterlockedCompareExchange64(a, b, c)  _InterlockedCompareExchange64(a, b, c)
+	#define juce_MemoryBarrier _ReadWriteBarrier
+  #else
+	// (these are defined in juce_win32_Threads.cpp)
+	long juce_InterlockedExchange (volatile long* a, long b) throw();
+	long juce_InterlockedIncrement (volatile long* a) throw();
+	long juce_InterlockedDecrement (volatile long* a) throw();
+	long juce_InterlockedExchangeAdd (volatile long* a, long b) throw();
+	long juce_InterlockedCompareExchange (volatile long* a, long b, long c) throw();
+	__int64 juce_InterlockedCompareExchange64 (volatile __int64* a, __int64 b, __int64 c) throw();
+	inline void juce_MemoryBarrier() throw()   { long x = 0; juce_InterlockedIncrement (&x); }
+  #endif
+
+  #if JUCE_64BIT
+	#pragma intrinsic (_InterlockedExchangeAdd64, _InterlockedExchange64, _InterlockedIncrement64, _InterlockedDecrement64)
+	#define juce_InterlockedExchangeAdd64(a, b)	 _InterlockedExchangeAdd64(a, b)
+	#define juce_InterlockedExchange64(a, b)	_InterlockedExchange64(a, b)
+	#define juce_InterlockedIncrement64(a)	  _InterlockedIncrement64(a)
+	#define juce_InterlockedDecrement64(a)	  _InterlockedDecrement64(a)
+  #else
+	// None of these atomics are available in a 32-bit Windows build!!
+	template <typename Type> static Type juce_InterlockedExchangeAdd64 (volatile Type* a, Type b) throw()   { jassertfalse; Type old = *a; *a += b; return old; }
+	template <typename Type> static Type juce_InterlockedExchange64 (volatile Type* a, Type b) throw()	  { jassertfalse; Type old = *a; *a = b; return old; }
+	template <typename Type> static Type juce_InterlockedIncrement64 (volatile Type* a) throw()		 { jassertfalse; return ++*a; }
+	template <typename Type> static Type juce_InterlockedDecrement64 (volatile Type* a) throw()		 { jassertfalse; return --*a; }
+	#define JUCE_64BIT_ATOMICS_UNAVAILABLE 1
+  #endif
+#endif
+
+#if JUCE_MSVC
+  #pragma warning (push)
+  #pragma warning (disable: 4311)  // (truncation warning)
+#endif
+
+template <typename Type>
+inline Type Atomic<Type>::get() const throw()
+{
+  #if JUCE_ATOMICS_MAC
+	return sizeof (Type) == 4 ? castFrom32Bit ((int32) OSAtomicAdd32Barrier ((int32_t) 0, (JUCE_MAC_ATOMICS_VOLATILE int32_t*) &value))
+							  : castFrom64Bit ((int64) OSAtomicAdd64Barrier ((int64_t) 0, (JUCE_MAC_ATOMICS_VOLATILE int64_t*) &value));
+  #elif JUCE_ATOMICS_WINDOWS
+	return sizeof (Type) == 4 ? castFrom32Bit ((int32) juce_InterlockedExchangeAdd ((volatile long*) &value, (long) 0))
+							  : castFrom64Bit ((int64) juce_InterlockedExchangeAdd64 ((volatile __int64*) &value, (__int64) 0));
+  #elif JUCE_ATOMICS_ANDROID
+	return value;
+  #elif JUCE_ATOMICS_GCC
+	return sizeof (Type) == 4 ? castFrom32Bit ((int32) __sync_add_and_fetch ((volatile int32*) &value, 0))
+							  : castFrom64Bit ((int64) __sync_add_and_fetch ((volatile int64*) &value, 0));
+  #endif
+}
+
+template <typename Type>
+inline Type Atomic<Type>::exchange (const Type newValue) throw()
+{
+  #if JUCE_ATOMICS_ANDROID
+	return castFrom32Bit (__atomic_swap (castTo32Bit (newValue), (volatile int*) &value));
+  #elif JUCE_ATOMICS_MAC || JUCE_ATOMICS_GCC
+	Type currentVal = value;
+	while (! compareAndSetBool (newValue, currentVal)) { currentVal = value; }
+	return currentVal;
+  #elif JUCE_ATOMICS_WINDOWS
+	return sizeof (Type) == 4 ? castFrom32Bit ((int32) juce_InterlockedExchange ((volatile long*) &value, (long) castTo32Bit (newValue)))
+							  : castFrom64Bit ((int64) juce_InterlockedExchange64 ((volatile __int64*) &value, (__int64) castTo64Bit (newValue)));
+  #endif
+}
+
+template <typename Type>
+inline Type Atomic<Type>::operator+= (const Type amountToAdd) throw()
+{
+  #if JUCE_ATOMICS_MAC
+	return sizeof (Type) == 4 ? (Type) OSAtomicAdd32Barrier ((int32_t) castTo32Bit (amountToAdd), (JUCE_MAC_ATOMICS_VOLATILE int32_t*) &value)
+							  : (Type) OSAtomicAdd64Barrier ((int64_t) amountToAdd, (JUCE_MAC_ATOMICS_VOLATILE int64_t*) &value);
+  #elif JUCE_ATOMICS_WINDOWS
+	return sizeof (Type) == 4 ? (Type) (juce_InterlockedExchangeAdd ((volatile long*) &value, (long) amountToAdd) + (long) amountToAdd)
+							  : (Type) (juce_InterlockedExchangeAdd64 ((volatile __int64*) &value, (__int64) amountToAdd) + (__int64) amountToAdd);
+  #elif JUCE_ATOMICS_ANDROID
+	for (;;)
+	{
+		const Type oldValue (value);
+		const Type newValue (castFrom32Bit (castTo32Bit (oldValue) + castTo32Bit (amountToAdd)));
+		if (compareAndSetBool (newValue, oldValue))
+			return newValue;
+	}
+  #elif JUCE_ATOMICS_GCC
+	return (Type) __sync_add_and_fetch (&value, amountToAdd);
+  #endif
+}
+
+template <typename Type>
+inline Type Atomic<Type>::operator-= (const Type amountToSubtract) throw()
+{
+	return operator+= (juce_negate (amountToSubtract));
+}
+
+template <typename Type>
+inline Type Atomic<Type>::operator++() throw()
+{
+  #if JUCE_ATOMICS_MAC
+	return sizeof (Type) == 4 ? (Type) OSAtomicIncrement32Barrier ((JUCE_MAC_ATOMICS_VOLATILE int32_t*) &value)
+							  : (Type) OSAtomicIncrement64Barrier ((JUCE_MAC_ATOMICS_VOLATILE int64_t*) &value);
+  #elif JUCE_ATOMICS_WINDOWS
+	return sizeof (Type) == 4 ? (Type) juce_InterlockedIncrement ((volatile long*) &value)
+							  : (Type) juce_InterlockedIncrement64 ((volatile __int64*) &value);
+  #elif JUCE_ATOMICS_ANDROID
+	return (Type) (__atomic_inc ((volatile int*) &value) + 1);
+  #elif JUCE_ATOMICS_GCC
+	return (Type) __sync_add_and_fetch (&value, 1);
+  #endif
+}
+
+template <typename Type>
+inline Type Atomic<Type>::operator--() throw()
+{
+  #if JUCE_ATOMICS_MAC
+	return sizeof (Type) == 4 ? (Type) OSAtomicDecrement32Barrier ((JUCE_MAC_ATOMICS_VOLATILE int32_t*) &value)
+							  : (Type) OSAtomicDecrement64Barrier ((JUCE_MAC_ATOMICS_VOLATILE int64_t*) &value);
+  #elif JUCE_ATOMICS_WINDOWS
+	return sizeof (Type) == 4 ? (Type) juce_InterlockedDecrement ((volatile long*) &value)
+							  : (Type) juce_InterlockedDecrement64 ((volatile __int64*) &value);
+  #elif JUCE_ATOMICS_ANDROID
+	return (Type) (__atomic_dec ((volatile int*) &value) - 1);
+  #elif JUCE_ATOMICS_GCC
+	return (Type) __sync_add_and_fetch (&value, -1);
+  #endif
+}
+
+template <typename Type>
+inline bool Atomic<Type>::compareAndSetBool (const Type newValue, const Type valueToCompare) throw()
+{
+  #if JUCE_ATOMICS_MAC
+	return sizeof (Type) == 4 ? OSAtomicCompareAndSwap32Barrier ((int32_t) castTo32Bit (valueToCompare), (int32_t) castTo32Bit (newValue), (JUCE_MAC_ATOMICS_VOLATILE int32_t*) &value)
+							  : OSAtomicCompareAndSwap64Barrier ((int64_t) castTo64Bit (valueToCompare), (int64_t) castTo64Bit (newValue), (JUCE_MAC_ATOMICS_VOLATILE int64_t*) &value);
+  #elif JUCE_ATOMICS_WINDOWS
+	return compareAndSetValue (newValue, valueToCompare) == valueToCompare;
+  #elif JUCE_ATOMICS_ANDROID
+	return __atomic_cmpxchg (castTo32Bit (valueToCompare), castTo32Bit (newValue), (volatile int*) &value) == 0;
+  #elif JUCE_ATOMICS_GCC
+	return sizeof (Type) == 4 ? __sync_bool_compare_and_swap ((volatile int32*) &value, castTo32Bit (valueToCompare), castTo32Bit (newValue))
+							  : __sync_bool_compare_and_swap ((volatile int64*) &value, castTo64Bit (valueToCompare), castTo64Bit (newValue));
+  #endif
+}
+
+template <typename Type>
+inline Type Atomic<Type>::compareAndSetValue (const Type newValue, const Type valueToCompare) throw()
+{
+  #if JUCE_ATOMICS_MAC || JUCE_ATOMICS_ANDROID
+	for (;;) // Annoying workaround for only having a bool CAS operation..
+	{
+		if (compareAndSetBool (newValue, valueToCompare))
+			return valueToCompare;
+
+		const Type result = value;
+		if (result != valueToCompare)
+			return result;
+	}
+
+  #elif JUCE_ATOMICS_WINDOWS
+	return sizeof (Type) == 4 ? castFrom32Bit ((int32) juce_InterlockedCompareExchange ((volatile long*) &value, (long) castTo32Bit (newValue), (long) castTo32Bit (valueToCompare)))
+							  : castFrom64Bit ((int64) juce_InterlockedCompareExchange64 ((volatile __int64*) &value, (__int64) castTo64Bit (newValue), (__int64) castTo64Bit (valueToCompare)));
+  #elif JUCE_ATOMICS_GCC
+	return sizeof (Type) == 4 ? castFrom32Bit ((int32) __sync_val_compare_and_swap ((volatile int32*) &value, castTo32Bit (valueToCompare), castTo32Bit (newValue)))
+							  : castFrom64Bit ((int64) __sync_val_compare_and_swap ((volatile int64*) &value, castTo64Bit (valueToCompare), castTo64Bit (newValue)));
+  #endif
+}
+
+template <typename Type>
+inline void Atomic<Type>::memoryBarrier() throw()
+{
+  #if JUCE_ATOMICS_MAC
+	OSMemoryBarrier();
+  #elif JUCE_ATOMICS_GCC
+	__sync_synchronize();
+  #elif JUCE_ATOMICS_WINDOWS
+	juce_MemoryBarrier();
+  #endif
+}
+
+#if JUCE_MSVC
+  #pragma warning (pop)
+#endif
+
+#endif   // __JUCE_ATOMIC_JUCEHEADER__
+/*** End of inlined file: juce_Atomic.h ***/
+
+
+/*** Start of inlined file: juce_CharPointer_UTF8.h ***/
+#ifndef __JUCE_CHARPOINTER_UTF8_JUCEHEADER__
+#define __JUCE_CHARPOINTER_UTF8_JUCEHEADER__
+
+/**
+	Wraps a pointer to a null-terminated UTF-8 character string, and provides
+	various methods to operate on the data.
+	@see CharPointer_UTF16, CharPointer_UTF32
+*/
+class CharPointer_UTF8
+{
+public:
+	typedef char CharType;
+
+	inline explicit CharPointer_UTF8 (const CharType* const rawPointer) throw()
+		: data (const_cast <CharType*> (rawPointer))
+	{
+	}
+
+	inline CharPointer_UTF8 (const CharPointer_UTF8& other) throw()
+		: data (other.data)
+	{
+	}
+
+	inline CharPointer_UTF8& operator= (const CharPointer_UTF8& other) throw()
+	{
+		data = other.data;
+		return *this;
+	}
+
+	inline CharPointer_UTF8& operator= (const CharType* text) throw()
+	{
+		data = const_cast <CharType*> (text);
+		return *this;
+	}
+
+	/** This is a pointer comparison, it doesn't compare the actual text. */
+	inline bool operator== (const CharPointer_UTF8& other) const throw()
+	{
+		return data == other.data;
+	}
+
+	/** This is a pointer comparison, it doesn't compare the actual text. */
+	inline bool operator!= (const CharPointer_UTF8& other) const throw()
+	{
+		return data == other.data;
+	}
+
+	/** Returns the address that this pointer is pointing to. */
+	inline CharType* getAddress() const throw()	 { return data; }
+
+	/** Returns the address that this pointer is pointing to. */
+	inline operator const CharType*() const throw()	 { return data; }
+
+	/** Returns true if this pointer is pointing to a null character. */
+	inline bool isEmpty() const throw()		 { return *data == 0; }
+
+	/** Returns the unicode character that this pointer is pointing to. */
+	juce_wchar operator*() const throw()
+	{
+		const char byte = *data;
+
+		if (byte >= 0)
+			return byte;
+
+		uint32 n = (uint32) (uint8) byte;
+		uint32 mask = 0x7f;
+		uint32 bit = 0x40;
+		size_t numExtraValues = 0;
+
+		while ((n & bit) != 0 && bit > 0x10)
+		{
+			mask >>= 1;
+			++numExtraValues;
+			bit >>= 1;
+		}
+
+		n &= mask;
+
+		for (size_t i = 1; i <= numExtraValues; ++i)
+		{
+			const juce_wchar nextByte = data [i];
+
+			if ((nextByte & 0xc0) != 0x80)
+				break;
+
+			n <<= 6;
+			n |= (nextByte & 0x3f);
+		}
+
+		return (juce_wchar) n;
+	}
+
+	/** Moves this pointer along to the next character in the string. */
+	CharPointer_UTF8& operator++() throw()
+	{
+		const char n = *data++;
+
+		if (n < 0)
+		{
+			juce_wchar bit = 0x40;
+
+			while ((n & bit) != 0 && bit > 0x8)
+			{
+				++data;
+				bit >>= 1;
+			}
+		}
+
+		return *this;
+	}
+
+	/** Returns the character that this pointer is currently pointing to, and then
+		advances the pointer to point to the next character. */
+	juce_wchar getAndAdvance() throw()
+	{
+		const char byte = *data++;
+
+		if (byte >= 0)
+			return byte;
+
+		uint32 n = (uint32) (uint8) byte;
+		uint32 mask = 0x7f;
+		uint32 bit = 0x40;
+		int numExtraValues = 0;
+
+		while ((n & bit) != 0 && bit > 0x8)
+		{
+			mask >>= 1;
+			++numExtraValues;
+			bit >>= 1;
+		}
+
+		n &= mask;
+
+		while (--numExtraValues >= 0)
+		{
+			const uint32 nextByte = (uint32) (uint8) *data++;
+
+			if ((nextByte & 0xc0) != 0x80)
+				break;
+
+			n <<= 6;
+			n |= (nextByte & 0x3f);
+		}
+
+		return (juce_wchar) n;
+	}
+
+	/** Moves this pointer along to the next character in the string. */
+	CharPointer_UTF8 operator++ (int) throw()
+	{
+		CharPointer_UTF8 temp (*this);
+		++*this;
+		return temp;
+	}
+
+	/** Moves this pointer forwards by the specified number of characters. */
+	void operator+= (int numToSkip) throw()
+	{
+		jassert (numToSkip >= 0);
+
+		while (--numToSkip >= 0)
+			++*this;
+	}
+
+	/** Returns the character at a given character index from the start of the string. */
+	juce_wchar operator[] (int characterIndex) const throw()
+	{
+		CharPointer_UTF8 p (*this);
+		p += characterIndex;
+		return *p;
+	}
+
+	/** Returns a pointer which is moved forwards from this one by the specified number of characters. */
+	CharPointer_UTF8 operator+ (int numToSkip) const throw()
+	{
+		CharPointer_UTF8 p (*this);
+		p += numToSkip;
+		return p;
+	}
+
+	/** Returns the number of characters in this string. */
+	size_t length() const throw()
+	{
+		const CharType* d = data;
+		size_t count = 0;
+
+		for (;;)
+		{
+			const uint32 n = (uint32) (uint8) *d++;
+
+			if ((n & 0x80) != 0)
+			{
+				uint32 bit = 0x40;
+
+				while ((n & bit) != 0)
+				{
+					++d;
+					bit >>= 1;
+
+					if (bit == 0)
+						break; // illegal utf-8 sequence
+				}
+			}
+			else if (n == 0)
+				break;
+
+			++count;
+		}
+
+		return count;
+	}
+
+	/** Returns the number of characters in this string, or the given value, whichever is lower. */
+	size_t lengthUpTo (const size_t maxCharsToCount) const throw()
+	{
+		return CharacterFunctions::lengthUpTo (*this, maxCharsToCount);
+	}
+
+	/** Returns the number of bytes that are used to represent this string.
+		This includes the terminating null character.
+	*/
+	size_t sizeInBytes() const throw()
+	{
+		return strlen (data) + 1;
+	}
+
+	/** Returns the number of bytes that would be needed to represent the given
+		unicode character in this encoding format.
+	*/
+	static size_t getBytesRequiredFor (const juce_wchar charToWrite) throw()
+	{
+		size_t num = 1;
+		const uint32 c = (uint32) charToWrite;
+
+		if (c >= 0x80)
+		{
+			++num;
+			if (c >= 0x800)
+			{
+				++num;
+				if (c >= 0x10000)
+					++num;
+			}
+		}
+
+		return num;
+	}
+
+	/** Returns the number of bytes that would be needed to represent the given
+		string in this encoding format.
+		The value returned does NOT include the terminating null character.
+	*/
+	template <class CharPointer>
+	static size_t getBytesRequiredFor (CharPointer text) throw()
+	{
+		size_t count = 0;
+		juce_wchar n;
+
+		while ((n = text.getAndAdvance()) != 0)
+			count += getBytesRequiredFor (n);
+
+		return count;
+	}
+
+	/** Returns a pointer to the null character that terminates this string. */
+	CharPointer_UTF8 findTerminatingNull() const throw()
+	{
+		return CharPointer_UTF8 (data + strlen (data));
+	}
+
+	/** Writes a unicode character to this string, and advances this pointer to point to the next position. */
+	void write (const juce_wchar charToWrite) throw()
+	{
+		const uint32 c = (uint32) charToWrite;
+
+		if (c >= 0x80)
+		{
+			int numExtraBytes = 1;
+			if (c >= 0x800)
+			{
+				++numExtraBytes;
+				if (c >= 0x10000)
+					++numExtraBytes;
+			}
+
+			*data++ = (CharType) ((0xff << (7 - numExtraBytes)) | (c >> (numExtraBytes * 6)));
+
+			while (--numExtraBytes >= 0)
+				*data++ = (CharType) (0x80 | (0x3f & (c >> (numExtraBytes * 6))));
+		}
+		else
+		{
+			*data++ = (CharType) c;
+		}
+	}
+
+	/** Writes a null character to this string (leaving the pointer's position unchanged). */
+	inline void writeNull() const throw()
+	{
+		*data = 0;
+	}
+
+	/** Copies a source string to this pointer, advancing this pointer as it goes. */
+	template <typename CharPointer>
+	void writeAll (const CharPointer& src) throw()
+	{
+		CharacterFunctions::copyAll (*this, src);
+	}
+
+	/** Copies a source string to this pointer, advancing this pointer as it goes. */
+	void writeAll (const CharPointer_UTF8& src) throw()
+	{
+		const CharType* s = src.data;
+
+		while ((*data = *s) != 0)
+		{
+			++data;
+			++s;
+		}
+	}
+
+	/** Copies a source string to this pointer, advancing this pointer as it goes.
+		The maxDestBytes parameter specifies the maximum number of bytes that can be written
+		to the destination buffer before stopping.
+	*/
+	template <typename CharPointer>
+	int writeWithDestByteLimit (const CharPointer& src, const int maxDestBytes) throw()
+	{
+		return CharacterFunctions::copyWithDestByteLimit (*this, src, maxDestBytes);
+	}
+
+	/** Copies a source string to this pointer, advancing this pointer as it goes.
+		The maxChars parameter specifies the maximum number of characters that can be
+		written to the destination buffer before stopping (including the terminating null).
+	*/
+	template <typename CharPointer>
+	void writeWithCharLimit (const CharPointer& src, const int maxChars) throw()
+	{
+		CharacterFunctions::copyWithCharLimit (*this, src, maxChars);
+	}
+
+	/** Compares this string with another one. */
+	template <typename CharPointer>
+	int compare (const CharPointer& other) const throw()
+	{
+		return CharacterFunctions::compare (*this, other);
+	}
+
+	/** Compares this string with another one, up to a specified number of characters. */
+	template <typename CharPointer>
+	int compareUpTo (const CharPointer& other, const int maxChars) const throw()
+	{
+		return CharacterFunctions::compareUpTo (*this, other, maxChars);
+	}
+
+	/** Compares this string with another one. */
+	template <typename CharPointer>
+	int compareIgnoreCase (const CharPointer& other) const throw()
+	{
+		return CharacterFunctions::compareIgnoreCase (*this, other);
+	}
+
+	/** Compares this string with another one. */
+	int compareIgnoreCase (const CharPointer_UTF8& other) const throw()
+	{
+	   #if JUCE_WINDOWS
+		return stricmp (data, other.data);
+	   #else
+		return strcasecmp (data, other.data);
+	   #endif
+	}
+
+	/** Compares this string with another one, up to a specified number of characters. */
+	template <typename CharPointer>
+	int compareIgnoreCaseUpTo (const CharPointer& other, const int maxChars) const throw()
+	{
+		return CharacterFunctions::compareIgnoreCaseUpTo (*this, other, maxChars);
+	}
+
+	/** Compares this string with another one, up to a specified number of characters. */
+	int compareIgnoreCaseUpTo (const CharPointer_UTF8& other, const int maxChars) const throw()
+	{
+	   #if JUCE_WINDOWS
+		return strnicmp (data, other.data, maxChars);
+	   #else
+		return strncasecmp (data, other.data, maxChars);
+	   #endif
+	}
+
+	/** Returns the character index of a substring, or -1 if it isn't found. */
+	template <typename CharPointer>
+	int indexOf (const CharPointer& stringToFind) const throw()
+	{
+		return CharacterFunctions::indexOf (*this, stringToFind);
+	}
+
+	/** Returns the character index of a unicode character, or -1 if it isn't found. */
+	int indexOf (const juce_wchar charToFind) const throw()
+	{
+		return CharacterFunctions::indexOfChar (*this, charToFind);
+	}
+
+	/** Returns the character index of a unicode character, or -1 if it isn't found. */
+	int indexOf (const juce_wchar charToFind, const bool ignoreCase) const throw()
+	{
+		return ignoreCase ? CharacterFunctions::indexOfCharIgnoreCase (*this, charToFind)
+						  : CharacterFunctions::indexOfChar (*this, charToFind);
+	}
+
+	/** Returns true if the first character of this string is whitespace. */
+	bool isWhitespace() const throw()	   { return *data == ' ' || (*data <= 13 && *data >= 9); }
+	/** Returns true if the first character of this string is a digit. */
+	bool isDigit() const throw()		{ return *data >= '0' && *data <= '9'; }
+	/** Returns true if the first character of this string is a letter. */
+	bool isLetter() const throw()	   { return CharacterFunctions::isLetter (operator*()) != 0; }
+	/** Returns true if the first character of this string is a letter or digit. */
+	bool isLetterOrDigit() const throw()	{ return CharacterFunctions::isLetterOrDigit (operator*()) != 0; }
+	/** Returns true if the first character of this string is upper-case. */
+	bool isUpperCase() const throw()	{ return CharacterFunctions::isUpperCase (operator*()) != 0; }
+	/** Returns true if the first character of this string is lower-case. */
+	bool isLowerCase() const throw()	{ return CharacterFunctions::isLowerCase (operator*()) != 0; }
+
+	/** Returns an upper-case version of the first character of this string. */
+	juce_wchar toUpperCase() const throw()  { return CharacterFunctions::toUpperCase (operator*()); }
+	/** Returns a lower-case version of the first character of this string. */
+	juce_wchar toLowerCase() const throw()  { return CharacterFunctions::toLowerCase (operator*()); }
+
+	/** Parses this string as a 32-bit integer. */
+	int getIntValue32() const throw()	   { return atoi (data); }
+
+	/** Parses this string as a 64-bit integer. */
+	int64 getIntValue64() const throw()
+	{
+	   #if JUCE_LINUX || JUCE_ANDROID
+		return atoll (data);
+	   #elif JUCE_WINDOWS
+		return _atoi64 (data);
+	   #else
+		return CharacterFunctions::getIntValue <int64, CharPointer_UTF8> (*this);
+	   #endif
+	}
+
+	/** Parses this string as a floating point double. */
+	double getDoubleValue() const throw()   { return CharacterFunctions::getDoubleValue (*this); }
+
+	/** Returns the first non-whitespace character in the string. */
+	CharPointer_UTF8 findEndOfWhitespace() const throw()	{ return CharacterFunctions::findEndOfWhitespace (*this); }
+
+	/** Returns true if the given unicode character can be represented in this encoding. */
+	static bool canRepresent (juce_wchar character) throw()
+	{
+		return ((unsigned int) character) < (unsigned int) 0x10ffff;
+	}
+
+	/** Returns true if this data contains a valid string in this encoding. */
+	static bool isValidString (const CharType* dataToTest, int maxBytesToRead)
+	{
+		while (--maxBytesToRead >= 0 && *dataToTest != 0)
+		{
+			const char byte = *dataToTest;
+
+			if (byte < 0)
+			{
+				uint32 n = (uint32) (uint8) byte;
+				uint32 mask = 0x7f;
+				uint32 bit = 0x40;
+				int numExtraValues = 0;
+
+				while ((n & bit) != 0)
+				{
+					if (bit <= 0x10)
+						return false;
+
+					mask >>= 1;
+					++numExtraValues;
+					bit >>= 1;
+				}
+
+				n &= mask;
+
+				while (--numExtraValues >= 0)
+				{
+					const uint32 nextByte = (uint32) (uint8) *dataToTest++;
+
+					if ((nextByte & 0xc0) != 0x80)
+						return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/** These values are the byte-order-mark (BOM) values for a UTF-8 stream. */
+	enum
+	{
+		byteOrderMark1 = 0xef,
+		byteOrderMark2 = 0xbb,
+		byteOrderMark3 = 0xbf
+	};
+
+private:
+	CharType* data;
+};
+
+#endif   // __JUCE_CHARPOINTER_UTF8_JUCEHEADER__
+/*** End of inlined file: juce_CharPointer_UTF8.h ***/
+
+
+/*** Start of inlined file: juce_CharPointer_UTF16.h ***/
+#ifndef __JUCE_CHARPOINTER_UTF16_JUCEHEADER__
+#define __JUCE_CHARPOINTER_UTF16_JUCEHEADER__
+
+/**
+	Wraps a pointer to a null-terminated UTF-16 character string, and provides
+	various methods to operate on the data.
+	@see CharPointer_UTF8, CharPointer_UTF32
+*/
+class CharPointer_UTF16
+{
+public:
+   #if JUCE_NATIVE_WCHAR_IS_UTF16
+	typedef wchar_t CharType;
+   #else
+	typedef int16 CharType;
+   #endif
+
+	inline explicit CharPointer_UTF16 (const CharType* const rawPointer) throw()
+		: data (const_cast <CharType*> (rawPointer))
+	{
+	}
+
+	inline CharPointer_UTF16 (const CharPointer_UTF16& other) throw()
+		: data (other.data)
+	{
+	}
+
+	inline CharPointer_UTF16& operator= (const CharPointer_UTF16& other) throw()
+	{
+		data = other.data;
+		return *this;
+	}
+
+	inline CharPointer_UTF16& operator= (const CharType* text) throw()
+	{
+		data = const_cast <CharType*> (text);
+		return *this;
+	}
+
+	/** This is a pointer comparison, it doesn't compare the actual text. */
+	inline bool operator== (const CharPointer_UTF16& other) const throw()
+	{
+		return data == other.data;
+	}
+
+	/** This is a pointer comparison, it doesn't compare the actual text. */
+	inline bool operator!= (const CharPointer_UTF16& other) const throw()
+	{
+		return data == other.data;
+	}
+
+	/** Returns the address that this pointer is pointing to. */
+	inline CharType* getAddress() const throw()	 { return data; }
+
+	/** Returns the address that this pointer is pointing to. */
+	inline operator const CharType*() const throw()	 { return data; }
+
+	/** Returns true if this pointer is pointing to a null character. */
+	inline bool isEmpty() const throw()		 { return *data == 0; }
+
+	/** Returns the unicode character that this pointer is pointing to. */
+	juce_wchar operator*() const throw()
+	{
+		uint32 n = (uint32) (uint16) *data;
+
+		if (n >= 0xd800 && n <= 0xdfff && ((uint32) (uint16) data[1]) >= 0xdc00)
+			n = 0x10000 + (((n - 0xd800) << 10) | (((uint32) (uint16) data[1]) - 0xdc00));
+
+		return (juce_wchar) n;
+	}
+
+	/** Moves this pointer along to the next character in the string. */
+	CharPointer_UTF16& operator++() throw()
+	{
+		const juce_wchar n = *data++;
+
+		if (n >= 0xd800 && n <= 0xdfff && ((uint32) (uint16) *data) >= 0xdc00)
+			++data;
+
+		return *this;
+	}
+
+	/** Returns the character that this pointer is currently pointing to, and then
+		advances the pointer to point to the next character. */
+	juce_wchar getAndAdvance() throw()
+	{
+		uint32 n = (uint32) (uint16) *data++;
+
+		if (n >= 0xd800 && n <= 0xdfff && ((uint32) (uint16) *data) >= 0xdc00)
+			n = 0x10000 + ((((n - 0xd800) << 10) | (((uint32) (uint16) *data++) - 0xdc00)));
+
+		return (juce_wchar) n;
+	}
+
+	/** Moves this pointer along to the next character in the string. */
+	CharPointer_UTF16 operator++ (int) throw()
+	{
+		CharPointer_UTF16 temp (*this);
+		++*this;
+		return temp;
+	}
+
+	/** Moves this pointer forwards by the specified number of characters. */
+	void operator+= (int numToSkip) throw()
+	{
+		jassert (numToSkip >= 0);
+
+		while (--numToSkip >= 0)
+			++*this;
+	}
+
+	/** Returns the character at a given character index from the start of the string. */
+	juce_wchar operator[] (const int characterIndex) const throw()
+	{
+		CharPointer_UTF16 p (*this);
+		p += characterIndex;
+		return *p;
+	}
+
+	/** Returns a pointer which is moved forwards from this one by the specified number of characters. */
+	CharPointer_UTF16 operator+ (const int numToSkip) const throw()
+	{
+		CharPointer_UTF16 p (*this);
+		p += numToSkip;
+		return p;
+	}
+
+	/** Writes a unicode character to this string, and advances this pointer to point to the next position. */
+	void write (juce_wchar charToWrite) throw()
+	{
+		if (charToWrite >= 0x10000)
+		{
+			charToWrite -= 0x10000;
+			*data++ = (CharType) (0xd800 + (charToWrite >> 10));
+			*data++ = (CharType) (0xdc00 + (charToWrite & 0x3ff));
+		}
+		else
+		{
+			*data++ = (CharType) charToWrite;
+		}
+	}
+
+	/** Writes a null character to this string (leaving the pointer's position unchanged). */
+	inline void writeNull() const throw()
+	{
+		*data = 0;
+	}
+
+	/** Returns the number of characters in this string. */
+	size_t length() const throw()
+	{
+		const CharType* d = data;
+		size_t count = 0;
+
+		for (;;)
+		{
+			const int n = *d++;
+
+			if (n >= 0xd800 && n <= 0xdfff)
+			{
+				if (*d++ == 0)
+					break;
+			}
+			else if (n == 0)
+				break;
+
+			++count;
+		}
+
+		return count;
+	}
+
+	/** Returns the number of characters in this string, or the given value, whichever is lower. */
+	size_t lengthUpTo (const size_t maxCharsToCount) const throw()
+	{
+		return CharacterFunctions::lengthUpTo (*this, maxCharsToCount);
+	}
+
+	/** Returns the number of bytes that are used to represent this string.
+		This includes the terminating null character.
+	*/
+	size_t sizeInBytes() const throw()
+	{
+		return sizeof (CharType) * (findNullIndex (data) + 1);
+	}
+
+	/** Returns the number of bytes that would be needed to represent the given
+		unicode character in this encoding format.
+	*/
+	static size_t getBytesRequiredFor (const juce_wchar charToWrite) throw()
+	{
+		return (charToWrite >= 0x10000) ? (sizeof (CharType) * 2) : sizeof (CharType);
+	}
+
+	/** Returns the number of bytes that would be needed to represent the given
+		string in this encoding format.
+		The value returned does NOT include the terminating null character.
+	*/
+	template <class CharPointer>
+	static size_t getBytesRequiredFor (CharPointer text) throw()
+	{
+		size_t count = 0;
+		juce_wchar n;
+
+		while ((n = text.getAndAdvance()) != 0)
+			count += getBytesRequiredFor (n);
+
+		return count;
+	}
+
+	/** Returns a pointer to the null character that terminates this string. */
+	CharPointer_UTF16 findTerminatingNull() const throw()
+	{
+		const CharType* t = data;
+
+		while (*t != 0)
+			++t;
+
+		return CharPointer_UTF16 (t);
+	}
+
+	/** Copies a source string to this pointer, advancing this pointer as it goes. */
+	template <typename CharPointer>
+	void writeAll (const CharPointer& src) throw()
+	{
+		CharacterFunctions::copyAll (*this, src);
+	}
+
+	/** Copies a source string to this pointer, advancing this pointer as it goes. */
+	void writeAll (const CharPointer_UTF16& src) throw()
+	{
+		const CharType* s = src.data;
+
+		while ((*data = *s) != 0)
+		{
+			++data;
+			++s;
+		}
+	}
+
+	/** Copies a source string to this pointer, advancing this pointer as it goes.
+		The maxDestBytes parameter specifies the maximum number of bytes that can be written
+		to the destination buffer before stopping.
+	*/
+	template <typename CharPointer>
+	int writeWithDestByteLimit (const CharPointer& src, const int maxDestBytes) throw()
+	{
+		return CharacterFunctions::copyWithDestByteLimit (*this, src, maxDestBytes);
+	}
+
+	/** Copies a source string to this pointer, advancing this pointer as it goes.
+		The maxChars parameter specifies the maximum number of characters that can be
+		written to the destination buffer before stopping (including the terminating null).
+	*/
+	template <typename CharPointer>
+	void writeWithCharLimit (const CharPointer& src, const int maxChars) throw()
+	{
+		CharacterFunctions::copyWithCharLimit (*this, src, maxChars);
+	}
+
+	/** Compares this string with another one. */
+	template <typename CharPointer>
+	int compare (const CharPointer& other) const throw()
+	{
+		return CharacterFunctions::compare (*this, other);
+	}
+
+	/** Compares this string with another one, up to a specified number of characters. */
+	template <typename CharPointer>
+	int compareUpTo (const CharPointer& other, const int maxChars) const throw()
+	{
+		return CharacterFunctions::compareUpTo (*this, other, maxChars);
+	}
+
+	/** Compares this string with another one. */
+	template <typename CharPointer>
+	int compareIgnoreCase (const CharPointer& other) const throw()
+	{
+		return CharacterFunctions::compareIgnoreCase (*this, other);
+	}
+
+	/** Compares this string with another one, up to a specified number of characters. */
+	template <typename CharPointer>
+	int compareIgnoreCaseUpTo (const CharPointer& other, const int maxChars) const throw()
+	{
+		return CharacterFunctions::compareIgnoreCaseUpTo (*this, other, maxChars);
+	}
+
+   #if JUCE_WINDOWS && ! DOXYGEN
+	int compareIgnoreCase (const CharPointer_UTF16& other) const throw()
+	{
+		return _wcsicmp (data, other.data);
+	}
+
+	int compareIgnoreCaseUpTo (const CharPointer_UTF16& other, int maxChars) const throw()
+	{
+		return _wcsnicmp (data, other.data, maxChars);
+	}
+
+	int indexOf (const CharPointer_UTF16& stringToFind) const throw()
+	{
+		const CharType* const t = wcsstr (data, stringToFind.getAddress());
+		return t == 0 ? -1 : (int) (t - data);
+	}
+   #endif
+
+	/** Returns the character index of a substring, or -1 if it isn't found. */
+	template <typename CharPointer>
+	int indexOf (const CharPointer& stringToFind) const throw()
+	{
+		return CharacterFunctions::indexOf (*this, stringToFind);
+	}
+
+	/** Returns the character index of a unicode character, or -1 if it isn't found. */
+	int indexOf (const juce_wchar charToFind) const throw()
+	{
+		return CharacterFunctions::indexOfChar (*this, charToFind);
+	}
+
+	/** Returns the character index of a unicode character, or -1 if it isn't found. */
+	int indexOf (const juce_wchar charToFind, const bool ignoreCase) const throw()
+	{
+		return ignoreCase ? CharacterFunctions::indexOfCharIgnoreCase (*this, charToFind)
+						  : CharacterFunctions::indexOfChar (*this, charToFind);
+	}
+
+	/** Returns true if the first character of this string is whitespace. */
+	bool isWhitespace() const throw()	   { return CharacterFunctions::isWhitespace (operator*()) != 0; }
+	/** Returns true if the first character of this string is a digit. */
+	bool isDigit() const throw()		{ return CharacterFunctions::isDigit (operator*()) != 0; }
+	/** Returns true if the first character of this string is a letter. */
+	bool isLetter() const throw()	   { return CharacterFunctions::isLetter (operator*()) != 0; }
+	/** Returns true if the first character of this string is a letter or digit. */
+	bool isLetterOrDigit() const throw()	{ return CharacterFunctions::isLetterOrDigit (operator*()) != 0; }
+	/** Returns true if the first character of this string is upper-case. */
+	bool isUpperCase() const throw()	{ return CharacterFunctions::isUpperCase (operator*()) != 0; }
+	/** Returns true if the first character of this string is lower-case. */
+	bool isLowerCase() const throw()	{ return CharacterFunctions::isLowerCase (operator*()) != 0; }
+
+	/** Returns an upper-case version of the first character of this string. */
+	juce_wchar toUpperCase() const throw()  { return CharacterFunctions::toUpperCase (operator*()); }
+	/** Returns a lower-case version of the first character of this string. */
+	juce_wchar toLowerCase() const throw()  { return CharacterFunctions::toLowerCase (operator*()); }
+
+	/** Parses this string as a 32-bit integer. */
+	int getIntValue32() const throw()
+	{
+	   #if JUCE_WINDOWS
+		return _wtoi (data);
+	   #else
+		return CharacterFunctions::getIntValue <int, CharPointer_UTF16> (*this);
+	   #endif
+	}
+
+	/** Parses this string as a 64-bit integer. */
+	int64 getIntValue64() const throw()
+	{
+	   #if JUCE_WINDOWS
+		return _wtoi64 (data);
+	   #else
+		return CharacterFunctions::getIntValue <int64, CharPointer_UTF16> (*this);
+	   #endif
+	}
+
+	/** Parses this string as a floating point double. */
+	double getDoubleValue() const throw()   { return CharacterFunctions::getDoubleValue (*this); }
+
+	/** Returns the first non-whitespace character in the string. */
+	CharPointer_UTF16 findEndOfWhitespace() const throw()	{ return CharacterFunctions::findEndOfWhitespace (*this); }
+
+	/** Returns true if the given unicode character can be represented in this encoding. */
+	static bool canRepresent (juce_wchar character) throw()
+	{
+		return ((unsigned int) character) < (unsigned int) 0x10ffff
+				 && (((unsigned int) character) < 0xd800 || ((unsigned int) character) > 0xdfff);
+	}
+
+	/** Returns true if this data contains a valid string in this encoding. */
+	static bool isValidString (const CharType* dataToTest, int maxBytesToRead)
+	{
+		maxBytesToRead /= sizeof (CharType);
+
+		while (--maxBytesToRead >= 0 && *dataToTest != 0)
+		{
+			const uint32 n = (uint32) (uint16) *dataToTest++;
+
+			if (n >= 0xd800)
+			{
+				if (n > 0x10ffff)
+					return false;
+
+				if (n <= 0xdfff)
+				{
+					if (n > 0xdc00)
+						return false;
+
+					const uint32 nextChar = (uint32) (uint16) *dataToTest++;
+
+					if (nextChar < 0xdc00 || nextChar > 0xdfff)
+						return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/** These values are the byte-order-mark (BOM) values for a UTF-16 stream. */
+	enum
+	{
+		byteOrderMarkBE1 = 0xfe,
+		byteOrderMarkBE2 = 0xff,
+		byteOrderMarkLE1 = 0xff,
+		byteOrderMarkLE2 = 0xfe
+	};
+
+private:
+	CharType* data;
+
+	static int findNullIndex (const CharType* const t) throw()
+	{
+		int n = 0;
+
+		while (t[n] != 0)
+			++n;
+
+		return n;
+	}
+};
+
+#endif   // __JUCE_CHARPOINTER_UTF16_JUCEHEADER__
+/*** End of inlined file: juce_CharPointer_UTF16.h ***/
+
+
+/*** Start of inlined file: juce_CharPointer_UTF32.h ***/
+#ifndef __JUCE_CHARPOINTER_UTF32_JUCEHEADER__
+#define __JUCE_CHARPOINTER_UTF32_JUCEHEADER__
+
+/**
+	Wraps a pointer to a null-terminated UTF-32 character string, and provides
+	various methods to operate on the data.
+	@see CharPointer_UTF8, CharPointer_UTF16
+*/
+class CharPointer_UTF32
+{
+public:
+	typedef juce_wchar CharType;
+
+	inline explicit CharPointer_UTF32 (const CharType* const rawPointer) throw()
+		: data (const_cast <CharType*> (rawPointer))
+	{
+	}
+
+	inline CharPointer_UTF32 (const CharPointer_UTF32& other) throw()
+		: data (other.data)
+	{
+	}
+
+	inline CharPointer_UTF32& operator= (const CharPointer_UTF32& other) throw()
+	{
+		data = other.data;
+		return *this;
+	}
+
+	inline CharPointer_UTF32& operator= (const CharType* text) throw()
+	{
+		data = const_cast <CharType*> (text);
+		return *this;
+	}
+
+	/** This is a pointer comparison, it doesn't compare the actual text. */
+	inline bool operator== (const CharPointer_UTF32& other) const throw()
+	{
+		return data == other.data;
+	}
+
+	/** This is a pointer comparison, it doesn't compare the actual text. */
+	inline bool operator!= (const CharPointer_UTF32& other) const throw()
+	{
+		return data == other.data;
+	}
+
+	/** Returns the address that this pointer is pointing to. */
+	inline CharType* getAddress() const throw()	 { return data; }
+
+	/** Returns the address that this pointer is pointing to. */
+	inline operator const CharType*() const throw()	 { return data; }
+
+	/** Returns true if this pointer is pointing to a null character. */
+	inline bool isEmpty() const throw()		 { return *data == 0; }
+
+	/** Returns the unicode character that this pointer is pointing to. */
+	inline juce_wchar operator*() const throw()	 { return *data; }
+
+	/** Moves this pointer along to the next character in the string. */
+	inline CharPointer_UTF32& operator++() throw()
+	{
+		++data;
+		return *this;
+	}
+
+	/** Moves this pointer to the previous character in the string. */
+	inline CharPointer_UTF32& operator--() throw()
+	{
+		--data;
+		return *this;
+	}
+
+	/** Returns the character that this pointer is currently pointing to, and then
+		advances the pointer to point to the next character. */
+	inline juce_wchar getAndAdvance() throw()   { return *data++; }
+
+	/** Moves this pointer along to the next character in the string. */
+	CharPointer_UTF32 operator++ (int) throw()
+	{
+		CharPointer_UTF32 temp (*this);
+		++data;
+		return temp;
+	}
+
+	/** Moves this pointer forwards by the specified number of characters. */
+	inline void operator+= (const int numToSkip) throw()
+	{
+		data += numToSkip;
+	}
+
+	inline void operator-= (const int numToSkip) throw()
+	{
+		data -= numToSkip;
+	}
+
+	/** Returns the character at a given character index from the start of the string. */
+	inline juce_wchar& operator[] (const int characterIndex) const throw()
+	{
+		return data [characterIndex];
+	}
+
+	/** Returns a pointer which is moved forwards from this one by the specified number of characters. */
+	CharPointer_UTF32 operator+ (const int numToSkip) const throw()
+	{
+		return CharPointer_UTF32 (data + numToSkip);
+	}
+
+	/** Returns a pointer which is moved backwards from this one by the specified number of characters. */
+	CharPointer_UTF32 operator- (const int numToSkip) const throw()
+	{
+		return CharPointer_UTF32 (data - numToSkip);
+	}
+
+	/** Writes a unicode character to this string, and advances this pointer to point to the next position. */
+	inline void write (const juce_wchar charToWrite) throw()
+	{
+		*data++ = charToWrite;
+	}
+
+	inline void replaceChar (const juce_wchar newChar) throw()
+	{
+		*data = newChar;
+	}
+
+	/** Writes a null character to this string (leaving the pointer's position unchanged). */
+	inline void writeNull() const throw()
+	{
+		*data = 0;
+	}
+
+	/** Returns the number of characters in this string. */
+	size_t length() const throw()
+	{
+	   #if JUCE_NATIVE_WCHAR_IS_UTF32 && ! JUCE_ANDROID
+		return wcslen (data);
+	   #else
+		size_t n = 0;
+		while (data[n] != 0)
+			++n;
+		return n;
+	   #endif
+	}
+
+	/** Returns the number of characters in this string, or the given value, whichever is lower. */
+	size_t lengthUpTo (const size_t maxCharsToCount) const throw()
+	{
+		return CharacterFunctions::lengthUpTo (*this, maxCharsToCount);
+	}
+
+	/** Returns the number of bytes that are used to represent this string.
+		This includes the terminating null character.
+	*/
+	size_t sizeInBytes() const throw()
+	{
+		return sizeof (CharType) * (length() + 1);
+	}
+
+	/** Returns the number of bytes that would be needed to represent the given
+		unicode character in this encoding format.
+	*/
+	static inline size_t getBytesRequiredFor (const juce_wchar) throw()
+	{
+		return sizeof (CharType);
+	}
+
+	/** Returns the number of bytes that would be needed to represent the given
+		string in this encoding format.
+		The value returned does NOT include the terminating null character.
+	*/
+	template <class CharPointer>
+	static size_t getBytesRequiredFor (const CharPointer& text) throw()
+	{
+		return sizeof (CharType) * text.length();
+	}
+
+	/** Returns a pointer to the null character that terminates this string. */
+	CharPointer_UTF32 findTerminatingNull() const throw()
+	{
+		return CharPointer_UTF32 (data + length());
+	}
+
+	/** Copies a source string to this pointer, advancing this pointer as it goes. */
+	template <typename CharPointer>
+	void writeAll (const CharPointer& src) throw()
+	{
+		CharacterFunctions::copyAll (*this, src);
+	}
+
+	/** Copies a source string to this pointer, advancing this pointer as it goes. */
+	void writeAll (const CharPointer_UTF32& src) throw()
+	{
+		const CharType* s = src.data;
+
+		while ((*data = *s) != 0)
+		{
+			++data;
+			++s;
+		}
+	}
+
+	/** Copies a source string to this pointer, advancing this pointer as it goes.
+		The maxDestBytes parameter specifies the maximum number of bytes that can be written
+		to the destination buffer before stopping.
+	*/
+	template <typename CharPointer>
+	int writeWithDestByteLimit (const CharPointer& src, const int maxDestBytes) throw()
+	{
+		return CharacterFunctions::copyWithDestByteLimit (*this, src, maxDestBytes);
+	}
+
+	/** Copies a source string to this pointer, advancing this pointer as it goes.
+		The maxChars parameter specifies the maximum number of characters that can be
+		written to the destination buffer before stopping (including the terminating null).
+	*/
+	template <typename CharPointer>
+	void writeWithCharLimit (const CharPointer& src, const int maxChars) throw()
+	{
+		CharacterFunctions::copyWithCharLimit (*this, src, maxChars);
+	}
+
+	/** Compares this string with another one. */
+	template <typename CharPointer>
+	int compare (const CharPointer& other) const throw()
+	{
+		return CharacterFunctions::compare (*this, other);
+	}
+
+   #if JUCE_NATIVE_WCHAR_IS_UTF32 && ! JUCE_ANDROID
+	/** Compares this string with another one. */
+	int compare (const CharPointer_UTF32& other) const throw()
+	{
+		return wcscmp (data, other.data);
+	}
+   #endif
+
+	/** Compares this string with another one, up to a specified number of characters. */
+	template <typename CharPointer>
+	int compareUpTo (const CharPointer& other, const int maxChars) const throw()
+	{
+		return CharacterFunctions::compareUpTo (*this, other, maxChars);
+	}
+
+	/** Compares this string with another one. */
+	template <typename CharPointer>
+	int compareIgnoreCase (const CharPointer& other) const
+	{
+		return CharacterFunctions::compareIgnoreCase (*this, other);
+	}
+
+	/** Compares this string with another one, up to a specified number of characters. */
+	template <typename CharPointer>
+	int compareIgnoreCaseUpTo (const CharPointer& other, const int maxChars) const throw()
+	{
+		return CharacterFunctions::compareIgnoreCaseUpTo (*this, other, maxChars);
+	}
+
+	/** Returns the character index of a substring, or -1 if it isn't found. */
+	template <typename CharPointer>
+	int indexOf (const CharPointer& stringToFind) const throw()
+	{
+		return CharacterFunctions::indexOf (*this, stringToFind);
+	}
+
+	/** Returns the character index of a unicode character, or -1 if it isn't found. */
+	int indexOf (const juce_wchar charToFind) const throw()
+	{
+		int i = 0;
+
+		while (data[i] != 0)
+		{
+			if (data[i] == charToFind)
+				return i;
+
+			++i;
+		}
+
+		return -1;
+	}
+
+	/** Returns the character index of a unicode character, or -1 if it isn't found. */
+	int indexOf (const juce_wchar charToFind, const bool ignoreCase) const throw()
+	{
+		return ignoreCase ? CharacterFunctions::indexOfCharIgnoreCase (*this, charToFind)
+						  : CharacterFunctions::indexOfChar (*this, charToFind);
+	}
+
+	/** Returns true if the first character of this string is whitespace. */
+	bool isWhitespace() const		   { return CharacterFunctions::isWhitespace (*data) != 0; }
+	/** Returns true if the first character of this string is a digit. */
+	bool isDigit() const			{ return CharacterFunctions::isDigit (*data) != 0; }
+	/** Returns true if the first character of this string is a letter. */
+	bool isLetter() const		   { return CharacterFunctions::isLetter (*data) != 0; }
+	/** Returns true if the first character of this string is a letter or digit. */
+	bool isLetterOrDigit() const		{ return CharacterFunctions::isLetterOrDigit (*data) != 0; }
+	/** Returns true if the first character of this string is upper-case. */
+	bool isUpperCase() const		{ return CharacterFunctions::isUpperCase (*data) != 0; }
+	/** Returns true if the first character of this string is lower-case. */
+	bool isLowerCase() const		{ return CharacterFunctions::isLowerCase (*data) != 0; }
+
+	/** Returns an upper-case version of the first character of this string. */
+	juce_wchar toUpperCase() const throw()  { return CharacterFunctions::toUpperCase (*data); }
+	/** Returns a lower-case version of the first character of this string. */
+	juce_wchar toLowerCase() const throw()  { return CharacterFunctions::toLowerCase (*data); }
+
+	/** Parses this string as a 32-bit integer. */
+	int getIntValue32() const throw()	   { return CharacterFunctions::getIntValue <int, CharPointer_UTF32> (*this); }
+	/** Parses this string as a 64-bit integer. */
+	int64 getIntValue64() const throw()	 { return CharacterFunctions::getIntValue <int64, CharPointer_UTF32> (*this); }
+
+	/** Parses this string as a floating point double. */
+	double getDoubleValue() const throw()   { return CharacterFunctions::getDoubleValue (*this); }
+
+	/** Returns the first non-whitespace character in the string. */
+	CharPointer_UTF32 findEndOfWhitespace() const throw()	{ return CharacterFunctions::findEndOfWhitespace (*this); }
+
+	/** Returns true if the given unicode character can be represented in this encoding. */
+	static bool canRepresent (juce_wchar character) throw()
+	{
+		return ((unsigned int) character) < (unsigned int) 0x10ffff;
+	}
+
+	/** Returns true if this data contains a valid string in this encoding. */
+	static bool isValidString (const CharType* dataToTest, int maxBytesToRead)
+	{
+		maxBytesToRead /= sizeof (CharType);
+
+		while (--maxBytesToRead >= 0 && *dataToTest != 0)
+			if (! canRepresent (*dataToTest++))
+				return false;
+
+		return true;
+	}
+
+	/** Atomically swaps this pointer for a new value, returning the previous value. */
+	CharPointer_UTF32 atomicSwap (const CharPointer_UTF32& newValue)
+	{
+		return CharPointer_UTF32 (reinterpret_cast <Atomic<CharType*>&> (data).exchange (newValue.data));
+	}
+
+private:
+	CharType* data;
+};
+
+#endif   // __JUCE_CHARPOINTER_UTF32_JUCEHEADER__
+/*** End of inlined file: juce_CharPointer_UTF32.h ***/
+
+
+/*** Start of inlined file: juce_CharPointer_ASCII.h ***/
+#ifndef __JUCE_CHARPOINTER_ASCII_JUCEHEADER__
+#define __JUCE_CHARPOINTER_ASCII_JUCEHEADER__
+
+/**
+	Wraps a pointer to a null-terminated ASCII character string, and provides
+	various methods to operate on the data.
+
+	A valid ASCII string is assumed to not contain any characters above 127.
+
+	@see CharPointer_UTF8, CharPointer_UTF16, CharPointer_UTF32
+*/
+class CharPointer_ASCII
+{
+public:
+	typedef char CharType;
+
+	inline explicit CharPointer_ASCII (const CharType* const rawPointer) throw()
+		: data (const_cast <CharType*> (rawPointer))
+	{
+	}
+
+	inline CharPointer_ASCII (const CharPointer_ASCII& other) throw()
+		: data (other.data)
+	{
+	}
+
+	inline CharPointer_ASCII& operator= (const CharPointer_ASCII& other) throw()
+	{
+		data = other.data;
+		return *this;
+	}
+
+	inline CharPointer_ASCII& operator= (const CharType* text) throw()
+	{
+		data = const_cast <CharType*> (text);
+		return *this;
+	}
+
+	/** This is a pointer comparison, it doesn't compare the actual text. */
+	inline bool operator== (const CharPointer_ASCII& other) const throw()
+	{
+		return data == other.data;
+	}
+
+	/** This is a pointer comparison, it doesn't compare the actual text. */
+	inline bool operator!= (const CharPointer_ASCII& other) const throw()
+	{
+		return data == other.data;
+	}
+
+	/** Returns the address that this pointer is pointing to. */
+	inline CharType* getAddress() const throw()	 { return data; }
+
+	/** Returns the address that this pointer is pointing to. */
+	inline operator const CharType*() const throw()	 { return data; }
+
+	/** Returns true if this pointer is pointing to a null character. */
+	inline bool isEmpty() const throw()		 { return *data == 0; }
+
+	/** Returns the unicode character that this pointer is pointing to. */
+	inline juce_wchar operator*() const throw()	 { return *data; }
+
+	/** Moves this pointer along to the next character in the string. */
+	inline CharPointer_ASCII& operator++() throw()
+	{
+		++data;
+		return *this;
+	}
+
+	/** Moves this pointer to the previous character in the string. */
+	inline CharPointer_ASCII& operator--() throw()
+	{
+		--data;
+		return *this;
+	}
+
+	/** Returns the character that this pointer is currently pointing to, and then
+		advances the pointer to point to the next character. */
+	inline juce_wchar getAndAdvance() throw()   { return *data++; }
+
+	/** Moves this pointer along to the next character in the string. */
+	CharPointer_ASCII operator++ (int) throw()
+	{
+		CharPointer_ASCII temp (*this);
+		++data;
+		return temp;
+	}
+
+	/** Moves this pointer forwards by the specified number of characters. */
+	inline void operator+= (const int numToSkip) throw()
+	{
+		data += numToSkip;
+	}
+
+	inline void operator-= (const int numToSkip) throw()
+	{
+		data -= numToSkip;
+	}
+
+	/** Returns the character at a given character index from the start of the string. */
+	inline juce_wchar operator[] (const int characterIndex) const throw()
+	{
+		return (juce_wchar) (unsigned char) data [characterIndex];
+	}
+
+	/** Returns a pointer which is moved forwards from this one by the specified number of characters. */
+	CharPointer_ASCII operator+ (const int numToSkip) const throw()
+	{
+		return CharPointer_ASCII (data + numToSkip);
+	}
+
+	/** Returns a pointer which is moved backwards from this one by the specified number of characters. */
+	CharPointer_ASCII operator- (const int numToSkip) const throw()
+	{
+		return CharPointer_ASCII (data - numToSkip);
+	}
+
+	/** Writes a unicode character to this string, and advances this pointer to point to the next position. */
+	inline void write (const juce_wchar charToWrite) throw()
+	{
+		*data++ = (char) charToWrite;
+	}
+
+	inline void replaceChar (const juce_wchar newChar) throw()
+	{
+		*data = (char) newChar;
+	}
+
+	/** Writes a null character to this string (leaving the pointer's position unchanged). */
+	inline void writeNull() const throw()
+	{
+		*data = 0;
+	}
+
+	/** Returns the number of characters in this string. */
+	size_t length() const throw()
+	{
+		return (size_t) strlen (data);
+	}
+
+	/** Returns the number of characters in this string, or the given value, whichever is lower. */
+	size_t lengthUpTo (const size_t maxCharsToCount) const throw()
+	{
+		return CharacterFunctions::lengthUpTo (*this, maxCharsToCount);
+	}
+
+	/** Returns the number of bytes that are used to represent this string.
+		This includes the terminating null character.
+	*/
+	size_t sizeInBytes() const throw()
+	{
+		return length() + 1;
+	}
+
+	/** Returns the number of bytes that would be needed to represent the given
+		unicode character in this encoding format.
+	*/
+	static inline size_t getBytesRequiredFor (const juce_wchar) throw()
+	{
+		return 1;
+	}
+
+	/** Returns the number of bytes that would be needed to represent the given
+		string in this encoding format.
+		The value returned does NOT include the terminating null character.
+	*/
+	template <class CharPointer>
+	static size_t getBytesRequiredFor (const CharPointer& text) throw()
+	{
+		return text.length();
+	}
+
+	/** Returns a pointer to the null character that terminates this string. */
+	CharPointer_ASCII findTerminatingNull() const throw()
+	{
+		return CharPointer_ASCII (data + length());
+	}
+
+	/** Copies a source string to this pointer, advancing this pointer as it goes. */
+	template <typename CharPointer>
+	void writeAll (const CharPointer& src) throw()
+	{
+		CharacterFunctions::copyAll (*this, src);
+	}
+
+	/** Copies a source string to this pointer, advancing this pointer as it goes. */
+	void writeAll (const CharPointer_ASCII& src) throw()
+	{
+		strcpy (data, src.data);
+	}
+
+	/** Copies a source string to this pointer, advancing this pointer as it goes.
+		The maxDestBytes parameter specifies the maximum number of bytes that can be written
+		to the destination buffer before stopping.
+	*/
+	template <typename CharPointer>
+	int writeWithDestByteLimit (const CharPointer& src, const int maxDestBytes) throw()
+	{
+		return CharacterFunctions::copyWithDestByteLimit (*this, src, maxDestBytes);
+	}
+
+	/** Copies a source string to this pointer, advancing this pointer as it goes.
+		The maxChars parameter specifies the maximum number of characters that can be
+		written to the destination buffer before stopping (including the terminating null).
+	*/
+	template <typename CharPointer>
+	void writeWithCharLimit (const CharPointer& src, const int maxChars) throw()
+	{
+		CharacterFunctions::copyWithCharLimit (*this, src, maxChars);
+	}
+
+	/** Compares this string with another one. */
+	template <typename CharPointer>
+	int compare (const CharPointer& other) const throw()
+	{
+		return CharacterFunctions::compare (*this, other);
+	}
+
+	/** Compares this string with another one. */
+	int compare (const CharPointer_ASCII& other) const throw()
+	{
+		return strcmp (data, other.data);
+	}
+
+	/** Compares this string with another one, up to a specified number of characters. */
+	template <typename CharPointer>
+	int compareUpTo (const CharPointer& other, const int maxChars) const throw()
+	{
+		return CharacterFunctions::compareUpTo (*this, other, maxChars);
+	}
+
+	/** Compares this string with another one, up to a specified number of characters. */
+	int compareUpTo (const CharPointer_ASCII& other, const int maxChars) const throw()
+	{
+		return strncmp (data, other.data, (size_t) maxChars);
+	}
+
+	/** Compares this string with another one. */
+	template <typename CharPointer>
+	int compareIgnoreCase (const CharPointer& other) const
+	{
+		return CharacterFunctions::compareIgnoreCase (*this, other);
+	}
+
+	int compareIgnoreCase (const CharPointer_ASCII& other) const
+	{
+	   #if JUCE_WINDOWS
+		return stricmp (data, other.data);
+	   #else
+		return strcasecmp (data, other.data);
+	   #endif
+	}
+
+	/** Compares this string with another one, up to a specified number of characters. */
+	template <typename CharPointer>
+	int compareIgnoreCaseUpTo (const CharPointer& other, const int maxChars) const throw()
+	{
+		return CharacterFunctions::compareIgnoreCaseUpTo (*this, other, maxChars);
+	}
+
+	/** Returns the character index of a substring, or -1 if it isn't found. */
+	template <typename CharPointer>
+	int indexOf (const CharPointer& stringToFind) const throw()
+	{
+		return CharacterFunctions::indexOf (*this, stringToFind);
+	}
+
+	/** Returns the character index of a unicode character, or -1 if it isn't found. */
+	int indexOf (const juce_wchar charToFind) const throw()
+	{
+		int i = 0;
+
+		while (data[i] != 0)
+		{
+			if (data[i] == (char) charToFind)
+				return i;
+
+			++i;
+		}
+
+		return -1;
+	}
+
+	/** Returns the character index of a unicode character, or -1 if it isn't found. */
+	int indexOf (const juce_wchar charToFind, const bool ignoreCase) const throw()
+	{
+		return ignoreCase ? CharacterFunctions::indexOfCharIgnoreCase (*this, charToFind)
+						  : CharacterFunctions::indexOfChar (*this, charToFind);
+	}
+
+	/** Returns true if the first character of this string is whitespace. */
+	bool isWhitespace() const		   { return CharacterFunctions::isWhitespace (*data) != 0; }
+	/** Returns true if the first character of this string is a digit. */
+	bool isDigit() const			{ return CharacterFunctions::isDigit (*data) != 0; }
+	/** Returns true if the first character of this string is a letter. */
+	bool isLetter() const		   { return CharacterFunctions::isLetter (*data) != 0; }
+	/** Returns true if the first character of this string is a letter or digit. */
+	bool isLetterOrDigit() const		{ return CharacterFunctions::isLetterOrDigit (*data) != 0; }
+	/** Returns true if the first character of this string is upper-case. */
+	bool isUpperCase() const		{ return CharacterFunctions::isUpperCase (*data) != 0; }
+	/** Returns true if the first character of this string is lower-case. */
+	bool isLowerCase() const		{ return CharacterFunctions::isLowerCase (*data) != 0; }
+
+	/** Returns an upper-case version of the first character of this string. */
+	juce_wchar toUpperCase() const throw()  { return CharacterFunctions::toUpperCase (*data); }
+	/** Returns a lower-case version of the first character of this string. */
+	juce_wchar toLowerCase() const throw()  { return CharacterFunctions::toLowerCase (*data); }
+
+	/** Parses this string as a 32-bit integer. */
+	int getIntValue32() const throw()	   { return atoi (data); }
+
+	/** Parses this string as a 64-bit integer. */
+	int64 getIntValue64() const throw()
+	{
+	   #if JUCE_LINUX || JUCE_ANDROID
+		return atoll (data);
+	   #elif JUCE_WINDOWS
+		return _atoi64 (data);
+	   #else
+		return CharacterFunctions::getIntValue <int64, CharPointer_ASCII> (*this);
+	   #endif
+	}
+
+	/** Parses this string as a floating point double. */
+	double getDoubleValue() const throw()   { return CharacterFunctions::getDoubleValue (*this); }
+
+	/** Returns the first non-whitespace character in the string. */
+	CharPointer_ASCII findEndOfWhitespace() const throw()	{ return CharacterFunctions::findEndOfWhitespace (*this); }
+
+	/** Returns true if the given unicode character can be represented in this encoding. */
+	static bool canRepresent (juce_wchar character) throw()
+	{
+		return ((unsigned int) character) < (unsigned int) 128;
+	}
+
+	/** Returns true if this data contains a valid string in this encoding. */
+	static bool isValidString (const CharType* dataToTest, int maxBytesToRead)
+	{
+		while (--maxBytesToRead >= 0)
+		{
+			if (*dataToTest <= 0)
+				return *dataToTest == 0;
+
+			++dataToTest;
+		}
+
+		return true;
+	}
+
+private:
+	CharType* data;
+};
+
+#endif   // __JUCE_CHARPOINTER_ASCII_JUCEHEADER__
+/*** End of inlined file: juce_CharPointer_ASCII.h ***/
+
+#if JUCE_MSVC
+  #pragma warning (pop)
+#endif
 
 class OutputStream;
 
@@ -1743,7 +4133,6 @@ class JUCE_API  String
 public:
 
 	/** Creates an empty string.
-
 		@see empty
 	*/
 	String() throw();
@@ -1751,15 +4140,36 @@ public:
 	/** Creates a copy of another string. */
 	String (const String& other) throw();
 
-	/** Creates a string from a zero-terminated text string.
-		The string is assumed to be stored in the default system encoding.
+	/** Creates a string from a zero-terminated ascii text string.
+
+		The string passed-in must not contain any characters with a value above 127, because
+		these can't be converted to unicode without knowing the original encoding that was
+		used to create the string. If you attempt to pass-in values above 127, you'll get an
+		assertion.
+
+		To create strings with extended characters from UTF-8, you should explicitly call
+		String (CharPointer_UTF8 ("my utf8 string..")). It's *highly* recommended that you
+		use UTF-8 with escape characters in your source code to represent extended characters,
+		because there's no other way to represent unicode strings in a way that isn't dependent
+		on the compiler, source code editor and platform.
 	*/
 	String (const char* text);
 
-	/** Creates a string from an string of characters.
+	/** Creates a string from a string of 8-bit ascii characters.
 
-		This will use up the the first maxChars characters of the string (or
-		less if the string is actually shorter)
+		The string passed-in must not contain any characters with a value above 127, because
+		these can't be converted to unicode without knowing the original encoding that was
+		used to create the string. If you attempt to pass-in values above 127, you'll get an
+		assertion.
+
+		To create strings with extended characters from UTF-8, you should explicitly call
+		String (CharPointer_UTF8 ("my utf8 string..")). It's *highly* recommended that you
+		use UTF-8 with escape characters in your source code to represent extended characters,
+		because there's no other way to represent unicode strings in a way that isn't dependent
+		on the compiler, source code editor and platform.
+
+		This will use up the the first maxChars characters of the string (or less if the string
+		is actually shorter).
 	*/
 	String (const char* text, size_t maxChars);
 
@@ -1773,6 +4183,29 @@ public:
 	*/
 	String (const juce_wchar* unicodeText, size_t maxChars);
 
+	/** Creates a string from a UTF-8 character string */
+	String (const CharPointer_UTF8& text);
+
+	/** Creates a string from a UTF-16 character string */
+	String (const CharPointer_UTF16& text);
+
+	/** Creates a string from a UTF-32 character string */
+	String (const CharPointer_UTF32& text);
+
+	/** Creates a string from a UTF-32 character string */
+	String (const CharPointer_UTF32& text, size_t maxChars);
+
+	/** Creates a string from an ASCII character string */
+	String (const CharPointer_ASCII& text);
+
+   #if ! JUCE_NATIVE_WCHAR_IS_UTF32
+	/** Creates a string from a UTF-16 character string */
+	String (const wchar_t* text);
+
+	/** Creates a string from a UTF-16 character string */
+	String (const wchar_t* text, size_t maxChars);
+   #endif
+
 	/** Creates a string from a single character. */
 	static const String charToString (juce_wchar character);
 
@@ -1785,6 +4218,9 @@ public:
 		and is more efficient.
 	*/
 	static const String empty;
+
+	/** This is the character encoding type used internally to store the string. */
+	typedef CharPointer_UTF32 CharPointerType;
 
 	/** Generates a probably-unique 32-bit hashcode from this string. */
 	int hashCode() const throw();
@@ -1808,17 +4244,63 @@ public:
 	String& operator+= (char characterToAppend);
 	/** Appends a character at the end of this string. */
 	String& operator+= (juce_wchar characterToAppend);
+   #if ! JUCE_NATIVE_WCHAR_IS_UTF32
+	/** Appends a character at the end of this string. */
+	String& operator+= (wchar_t characterToAppend);
+	/** Appends another string at the end of this one. */
+	String& operator+= (const wchar_t* textToAppend);
+   #endif
 	/** Appends a decimal number at the end of this string. */
 	String& operator+= (int numberToAppend);
-	/** Appends a decimal number at the end of this string. */
-	String& operator+= (unsigned int numberToAppend);
 
-	/** Appends a string at the end of this one.
+	/** Appends a string to the end of this one.
 
 		@param textToAppend	 the string to add
 		@param maxCharsToTake   the maximum number of characters to take from the string passed in
 	*/
-	void append (const juce_wchar* textToAppend, int maxCharsToTake);
+	void append (const String& textToAppend, size_t maxCharsToTake);
+
+	/** Appends a string to the end of this one.
+
+		@param textToAppend	 the string to add
+		@param maxCharsToTake   the maximum number of characters to take from the string passed in
+	*/
+	template <class CharPointer>
+	void appendCharPointer (const CharPointer& textToAppend, size_t maxCharsToTake)
+	{
+		if (textToAppend.getAddress() != 0)
+		{
+			const size_t numExtraChars = textToAppend.lengthUpTo (maxCharsToTake);
+
+			if (numExtraChars > 0)
+			{
+				const int oldLen = length();
+				preallocateStorage (oldLen + numExtraChars);
+				CharPointerType (text + oldLen).writeWithCharLimit (textToAppend, (int) (numExtraChars + 1));
+			}
+		}
+	}
+
+	/** Appends a string to the end of this one.
+
+		@param textToAppend	 the string to add
+		@param maxCharsToTake   the maximum number of characters to take from the string passed in
+	*/
+	template <class CharPointer>
+	void appendCharPointer (const CharPointer& textToAppend)
+	{
+		if (textToAppend.getAddress() != 0)
+		{
+			const size_t numExtraChars = textToAppend.length();
+
+			if (numExtraChars > 0)
+			{
+				const int oldLen = length();
+				preallocateStorage (oldLen + numExtraChars);
+				CharPointerType (text + oldLen).writeAll (textToAppend);
+			}
+		}
+	}
 
 	// Comparison methods..
 
@@ -2133,16 +4615,7 @@ public:
 
 		No checks are made to see if the index is within a valid range, so be careful!
 	*/
-	inline const juce_wchar& operator[] (int index) const throw()  { jassert (isPositiveAndNotGreaterThan (index, length())); return text [index]; }
-
-	/** Returns a character from the string such that it can also be altered.
-
-		This can be used as a way of easily changing characters in the string.
-
-		Note that the index passed-in is not checked to see whether it's in-range, so
-		be careful when using this.
-	*/
-	juce_wchar& operator[] (int index);
+	const juce_wchar operator[] (int index) const throw();
 
 	/** Returns the final character of the string.
 
@@ -2584,15 +5057,15 @@ public:
 		that is returned must not be stored anywhere, as it can become invalid whenever
 		any string methods (even some const ones!) are called.
 	*/
-	inline operator const juce_wchar*() const throw()   { return text; }
+	inline operator const juce_wchar*() const throw()	   { return toUTF32().getAddress(); }
 
-	/** Returns a unicode version of this string.
+	/** Returns the character pointer currently being used to store this string.
 
 		Because it returns a reference to the string's internal data, the pointer
-		that is returned must not be stored anywhere, as it can become invalid whenever
-		any string methods (even some const ones!) are called.
+		that is returned must not be stored anywhere, as it can be deleted whenever the
+		string changes.
 	*/
-	inline operator juce_wchar*() throw()		   { return text; }
+	inline const CharPointerType& getCharPointer() const throw()	 { return text; }
 
 	/** Returns a pointer to a UTF-8 version of this string.
 
@@ -2600,12 +5073,37 @@ public:
 		that is returned must not be stored anywhere, as it can be deleted whenever the
 		string changes.
 
-		@see getNumBytesAsUTF8, fromUTF8, copyToUTF8, toCString
+		To find out how many bytes you need to store this string as UTF-8, you can call
+		CharPointer_UTF8::getBytesRequiredFor (myString.getCharPointer())
+
+		@see getCharPointer, toUTF16, toUTF32
 	*/
-	const char* toUTF8() const;
+	const CharPointer_UTF8 toUTF8() const;
+
+	/** Returns a pointer to a UTF-32 version of this string.
+
+		Because it returns a reference to the string's internal data, the pointer
+		that is returned must not be stored anywhere, as it can be deleted whenever the
+		string changes.
+
+		To find out how many bytes you need to store this string as UTF-16, you can call
+		CharPointer_UTF16::getBytesRequiredFor (myString.getCharPointer())
+
+		@see getCharPointer, toUTF8, toUTF32
+	*/
+	CharPointer_UTF16 toUTF16() const;
+
+	/** Returns a pointer to a UTF-32 version of this string.
+
+		Because it returns a reference to the string's internal data, the pointer
+		that is returned must not be stored anywhere, as it can be deleted whenever the
+		string changes.
+
+		@see getCharPointer, toUTF8, toUTF16
+	*/
+	inline CharPointer_UTF32 toUTF32() const throw()	{ return text; }
 
 	/** Creates a String from a UTF-8 encoded buffer.
-
 		If the size is < 0, it'll keep reading until it hits a zero.
 	*/
 	static const String fromUTF8 (const char* utf8buffer, int bufferSizeBytes = -1);
@@ -2621,15 +5119,34 @@ public:
 		Returns the number of bytes copied to the buffer, including the terminating null
 		character.
 
-		@param destBuffer	   the place to copy it to; if this is a null pointer,
-								the method just returns the number of bytes required
-								(including the terminating null character).
-		@param maxBufferSizeBytes  the size of the destination buffer, in bytes. If the
-								string won't fit, it'll put in as many as it can while
-								still allowing for a terminating null char at the end, and
-								will return the number of bytes that were actually used.
+		To find out how many bytes you need to store this string as UTF-8, you can call
+		CharPointer_UTF8::getBytesRequiredFor (myString.getCharPointer())
+
+		@param destBuffer	   the place to copy it to; if this is a null pointer, the method just
+								returns the number of bytes required (including the terminating null character).
+		@param maxBufferSizeBytes  the size of the destination buffer, in bytes. If the string won't fit, it'll
+								put in as many as it can while still allowing for a terminating null char at the
+								end, and will return the number of bytes that were actually used.
+		@see CharPointer_UTF8::writeWithDestByteLimit
 	*/
-	int copyToUTF8 (char* destBuffer, int maxBufferSizeBytes) const throw();
+	int copyToUTF8 (CharPointer_UTF8::CharType* destBuffer, int maxBufferSizeBytes) const throw();
+
+	/** Copies the string to a buffer as UTF-16 characters.
+
+		Returns the number of bytes copied to the buffer, including the terminating null
+		character.
+
+		To find out how many bytes you need to store this string as UTF-16, you can call
+		CharPointer_UTF16::getBytesRequiredFor (myString.getCharPointer())
+
+		@param destBuffer	   the place to copy it to; if this is a null pointer, the method just
+								returns the number of bytes required (including the terminating null character).
+		@param maxBufferSizeBytes  the size of the destination buffer, in bytes. If the string won't fit, it'll
+								put in as many as it can while still allowing for a terminating null char at the
+								end, and will return the number of bytes that were actually used.
+		@see CharPointer_UTF16::writeWithDestByteLimit
+	*/
+	int copyToUTF16 (CharPointer_UTF16::CharType* destBuffer, int maxBufferSizeBytes) const throw();
 
 	/** Returns a version of this string using the default 8-bit multi-byte system encoding.
 
@@ -2641,7 +5158,9 @@ public:
 	*/
 	const char* toCString() const;
 
-	/** Returns the number of bytes
+	/** Returns the number of bytes required to represent this string as C-string.
+		The number returned does NOT include the trailing zero.
+		Note that you can also get this value by using CharPointer_UTF8::getBytesRequiredFor (myString.getCharPointer())
 	*/
 	int getNumBytesAsCString() const throw();
 
@@ -2656,15 +5175,6 @@ public:
 								will return the number of bytes that were actually used.
 	*/
 	int copyToCString (char* destBuffer, int maxBufferSizeBytes) const throw();
-
-	/** Copies the string to a unicode buffer.
-
-		@param destBuffer	   the place to copy it to
-		@param maxCharsToCopy   the maximum number of characters to copy to the buffer,
-								NOT including the trailing zero, so this shouldn't be
-								larger than the size of your destination buffer - 1
-	*/
-	void copyToUnicode (juce_wchar* destBuffer, int maxCharsToCopy) const throw();
 
 	/** Increases the string's internally allocated storage.
 
@@ -2713,7 +5223,7 @@ public:
 
 private:
 
-	juce_wchar* text;
+	CharPointerType text;
 
 	struct Preallocation
 	{
@@ -2725,8 +5235,10 @@ private:
 	explicit String (const Preallocation&);
 	String (const String& stringToCopy, size_t charsToAllocate);
 
-	void createInternal (const juce_wchar* text, size_t numChars);
-	void appendInternal (const juce_wchar* text, int numExtraChars);
+	void appendFixedLength (const juce_wchar* text, int numExtraChars);
+
+	void enlarge (size_t newTotalNumChars);
+	void* createSpaceAtEndOfBuffer (size_t numExtraBytes) const;
 
 	// This private cast operator should prevent strings being accidentally cast
 	// to bools (this is possible because the compiler can add an implicit cast
@@ -2753,6 +5265,14 @@ JUCE_API const String JUCE_CALLTYPE operator+  (String string1, const juce_wchar
 JUCE_API const String JUCE_CALLTYPE operator+  (String string1, char characterToAppend);
 /** Concatenates two strings. */
 JUCE_API const String JUCE_CALLTYPE operator+  (String string1, juce_wchar characterToAppend);
+#if ! JUCE_NATIVE_WCHAR_IS_UTF32
+/** Concatenates two strings. */
+JUCE_API const String JUCE_CALLTYPE operator+  (String string1, wchar_t characterToAppend);
+/** Concatenates two strings. */
+JUCE_API const String JUCE_CALLTYPE operator+  (String string1, const wchar_t* string2);
+/** Concatenates two strings. */
+JUCE_API const String JUCE_CALLTYPE operator+  (const wchar_t* string1, const String& string2);
+#endif
 
 /** Appends a character at the end of a string. */
 JUCE_API String& JUCE_CALLTYPE operator<< (String& string1, char characterToAppend);
@@ -2770,11 +5290,7 @@ JUCE_API String& JUCE_CALLTYPE operator<< (String& string1, short number);
 /** Appends a decimal number at the end of a string. */
 JUCE_API String& JUCE_CALLTYPE operator<< (String& string1, int number);
 /** Appends a decimal number at the end of a string. */
-JUCE_API String& JUCE_CALLTYPE operator<< (String& string1, unsigned int number);
-/** Appends a decimal number at the end of a string. */
 JUCE_API String& JUCE_CALLTYPE operator<< (String& string1, long number);
-/** Appends a decimal number at the end of a string. */
-JUCE_API String& JUCE_CALLTYPE operator<< (String& string1, unsigned long number);
 /** Appends a decimal number at the end of a string. */
 JUCE_API String& JUCE_CALLTYPE operator<< (String& string1, float number);
 /** Appends a decimal number at the end of a string. */
@@ -2787,11 +5303,23 @@ JUCE_API bool JUCE_CALLTYPE operator== (const String& string1, const char* strin
 /** Case-sensitive comparison of two strings. */
 JUCE_API bool JUCE_CALLTYPE operator== (const String& string1, const juce_wchar* string2) throw();
 /** Case-sensitive comparison of two strings. */
+JUCE_API bool JUCE_CALLTYPE operator== (const String& string1, const CharPointer_UTF8& string2) throw();
+/** Case-sensitive comparison of two strings. */
+JUCE_API bool JUCE_CALLTYPE operator== (const String& string1, const CharPointer_UTF16& string2) throw();
+/** Case-sensitive comparison of two strings. */
+JUCE_API bool JUCE_CALLTYPE operator== (const String& string1, const CharPointer_UTF32& string2) throw();
+/** Case-sensitive comparison of two strings. */
 JUCE_API bool JUCE_CALLTYPE operator!= (const String& string1, const String& string2) throw();
 /** Case-sensitive comparison of two strings. */
 JUCE_API bool JUCE_CALLTYPE operator!= (const String& string1, const char* string2) throw();
 /** Case-sensitive comparison of two strings. */
 JUCE_API bool JUCE_CALLTYPE operator!= (const String& string1, const juce_wchar* string2) throw();
+/** Case-sensitive comparison of two strings. */
+JUCE_API bool JUCE_CALLTYPE operator!= (const String& string1, const CharPointer_UTF8& string2) throw();
+/** Case-sensitive comparison of two strings. */
+JUCE_API bool JUCE_CALLTYPE operator!= (const String& string1, const CharPointer_UTF16& string2) throw();
+/** Case-sensitive comparison of two strings. */
+JUCE_API bool JUCE_CALLTYPE operator!= (const String& string1, const CharPointer_UTF32& string2) throw();
 /** Case-sensitive comparison of two strings. */
 JUCE_API bool JUCE_CALLTYPE operator>  (const String& string1, const String& string2) throw();
 /** Case-sensitive comparison of two strings. */
@@ -2805,9 +5333,9 @@ JUCE_API bool JUCE_CALLTYPE operator<= (const String& string1, const String& str
 	This is very handy for writing strings to std::cout, std::cerr, etc.
 */
 template <class charT, class traits>
-JUCE_API std::basic_ostream <charT, traits>& JUCE_CALLTYPE operator<< (std::basic_ostream <charT, traits>& stream, const String& stringToWrite)
+std::basic_ostream <charT, traits>& JUCE_CALLTYPE operator<< (std::basic_ostream <charT, traits>& stream, const String& stringToWrite)
 {
-	return stream << stringToWrite.toUTF8();
+	return stream << stringToWrite.toUTF8().getAddress();
 }
 
 /** Writes a string to an OutputStream as UTF8. */
@@ -2882,344 +5410,6 @@ private:
 /*** Start of inlined file: juce_LeakedObjectDetector.h ***/
 #ifndef __JUCE_LEAKEDOBJECTDETECTOR_JUCEHEADER__
 #define __JUCE_LEAKEDOBJECTDETECTOR_JUCEHEADER__
-
-
-/*** Start of inlined file: juce_Atomic.h ***/
-#ifndef __JUCE_ATOMIC_JUCEHEADER__
-#define __JUCE_ATOMIC_JUCEHEADER__
-
-/**
-	Simple class to hold a primitive value and perform atomic operations on it.
-
-	The type used must be a 32 or 64 bit primitive, like an int, pointer, etc.
-	There are methods to perform most of the basic atomic operations.
-*/
-template <typename Type>
-class Atomic
-{
-public:
-	/** Creates a new value, initialised to zero. */
-	inline Atomic() throw()
-		: value (0)
-	{
-	}
-
-	/** Creates a new value, with a given initial value. */
-	inline Atomic (const Type initialValue) throw()
-		: value (initialValue)
-	{
-	}
-
-	/** Copies another value (atomically). */
-	inline Atomic (const Atomic& other) throw()
-		: value (other.get())
-	{
-	}
-
-	/** Destructor. */
-	inline ~Atomic() throw()
-	{
-		// This class can only be used for types which are 32 or 64 bits in size.
-		static_jassert (sizeof (Type) == 4 || sizeof (Type) == 8);
-	}
-
-	/** Atomically reads and returns the current value. */
-	Type get() const throw();
-
-	/** Copies another value onto this one (atomically). */
-	inline Atomic& operator= (const Atomic& other) throw()	  { exchange (other.get()); return *this; }
-
-	/** Copies another value onto this one (atomically). */
-	inline Atomic& operator= (const Type newValue) throw()	  { exchange (newValue); return *this; }
-
-	/** Atomically sets the current value. */
-	void set (Type newValue) throw()				{ exchange (newValue); }
-
-	/** Atomically sets the current value, returning the value that was replaced. */
-	Type exchange (Type value) throw();
-
-	/** Atomically adds a number to this value, returning the new value. */
-	Type operator+= (Type amountToAdd) throw();
-
-	/** Atomically subtracts a number from this value, returning the new value. */
-	Type operator-= (Type amountToSubtract) throw();
-
-	/** Atomically increments this value, returning the new value. */
-	Type operator++() throw();
-
-	/** Atomically decrements this value, returning the new value. */
-	Type operator--() throw();
-
-	/** Atomically compares this value with a target value, and if it is equal, sets
-		this to be equal to a new value.
-
-		This operation is the atomic equivalent of doing this:
-		@code
-		bool compareAndSetBool (Type newValue, Type valueToCompare)
-		{
-			if (get() == valueToCompare)
-			{
-				set (newValue);
-				return true;
-			}
-
-			return false;
-		}
-		@endcode
-
-		@returns true if the comparison was true and the value was replaced; false if
-				 the comparison failed and the value was left unchanged.
-		@see compareAndSetValue
-	*/
-	bool compareAndSetBool (Type newValue, Type valueToCompare) throw();
-
-	/** Atomically compares this value with a target value, and if it is equal, sets
-		this to be equal to a new value.
-
-		This operation is the atomic equivalent of doing this:
-		@code
-		Type compareAndSetValue (Type newValue, Type valueToCompare)
-		{
-			Type oldValue = get();
-			if (oldValue == valueToCompare)
-				set (newValue);
-
-			return oldValue;
-		}
-		@endcode
-
-		@returns the old value before it was changed.
-		@see compareAndSetBool
-	*/
-	Type compareAndSetValue (Type newValue, Type valueToCompare) throw();
-
-	/** Implements a memory read/write barrier. */
-	static void memoryBarrier() throw();
-
-	JUCE_ALIGN(8)
-
-	/** The raw value that this class operates on.
-		This is exposed publically in case you need to manipulate it directly
-		for performance reasons.
-	*/
-	volatile Type value;
-
-private:
-	static inline Type castFrom32Bit (int32 value) throw()	{ return *(Type*) &value; }
-	static inline Type castFrom64Bit (int64 value) throw()	{ return *(Type*) &value; }
-	static inline int32 castTo32Bit (Type value) throw()	  { return *(int32*) &value; }
-	static inline int64 castTo64Bit (Type value) throw()	  { return *(int64*) &value; }
-
-	Type operator++ (int); // better to just use pre-increment with atomics..
-	Type operator-- (int);
-};
-
-/*
-	The following code is in the header so that the atomics can be inlined where possible...
-*/
-#if (JUCE_IOS && (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_2 || ! defined (__IPHONE_3_2))) \
-	  || (JUCE_MAC && (JUCE_PPC || __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 2)))
-  #define JUCE_ATOMICS_MAC 1	// Older OSX builds using gcc4.1 or earlier
-
-  #if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
-	#define JUCE_MAC_ATOMICS_VOLATILE
-  #else
-	#define JUCE_MAC_ATOMICS_VOLATILE volatile
-  #endif
-
-  #if JUCE_PPC || JUCE_IOS
-	// None of these atomics are available for PPC or for iPhoneOS 3.1 or earlier!!
-	template <typename Type> static Type OSAtomicAdd64Barrier (Type b, JUCE_MAC_ATOMICS_VOLATILE Type* a) throw()   { jassertfalse; return *a += b; }
-	template <typename Type> static Type OSAtomicIncrement64Barrier (JUCE_MAC_ATOMICS_VOLATILE Type* a) throw()	 { jassertfalse; return ++*a; }
-	template <typename Type> static Type OSAtomicDecrement64Barrier (JUCE_MAC_ATOMICS_VOLATILE Type* a) throw()	 { jassertfalse; return --*a; }
-	template <typename Type> static bool OSAtomicCompareAndSwap64Barrier (Type old, Type newValue, JUCE_MAC_ATOMICS_VOLATILE Type* value) throw()
-		{ jassertfalse; if (old == *value) { *value = newValue; return true; } return false; }
-	#define JUCE_64BIT_ATOMICS_UNAVAILABLE 1
-  #endif
-
-#elif JUCE_GCC
-  #define JUCE_ATOMICS_GCC 1	// GCC with intrinsics
-
-  #if JUCE_IOS
-	#define JUCE_64BIT_ATOMICS_UNAVAILABLE 1  // (on the iphone, the 64-bit ops will compile but not link)
-  #endif
-
-#else
-  #define JUCE_ATOMICS_WINDOWS 1	// Windows with intrinsics
-
-  #if JUCE_USE_INTRINSICS || JUCE_64BIT
-	#pragma intrinsic (_InterlockedExchange, _InterlockedIncrement, _InterlockedDecrement, _InterlockedCompareExchange, \
-					   _InterlockedCompareExchange64, _InterlockedExchangeAdd, _ReadWriteBarrier)
-	#define juce_InterlockedExchange(a, b)		  _InterlockedExchange(a, b)
-	#define juce_InterlockedIncrement(a)		_InterlockedIncrement(a)
-	#define juce_InterlockedDecrement(a)		_InterlockedDecrement(a)
-	#define juce_InterlockedExchangeAdd(a, b)	   _InterlockedExchangeAdd(a, b)
-	#define juce_InterlockedCompareExchange(a, b, c)	_InterlockedCompareExchange(a, b, c)
-	#define juce_InterlockedCompareExchange64(a, b, c)  _InterlockedCompareExchange64(a, b, c)
-	#define juce_MemoryBarrier _ReadWriteBarrier
-  #else
-	// (these are defined in juce_win32_Threads.cpp)
-	long juce_InterlockedExchange (volatile long* a, long b) throw();
-	long juce_InterlockedIncrement (volatile long* a) throw();
-	long juce_InterlockedDecrement (volatile long* a) throw();
-	long juce_InterlockedExchangeAdd (volatile long* a, long b) throw();
-	long juce_InterlockedCompareExchange (volatile long* a, long b, long c) throw();
-	__int64 juce_InterlockedCompareExchange64 (volatile __int64* a, __int64 b, __int64 c) throw();
-	inline void juce_MemoryBarrier() throw()   { long x = 0; juce_InterlockedIncrement (&x); }
-  #endif
-
-  #if JUCE_64BIT
-	#pragma intrinsic (_InterlockedExchangeAdd64, _InterlockedExchange64, _InterlockedIncrement64, _InterlockedDecrement64)
-	#define juce_InterlockedExchangeAdd64(a, b)	 _InterlockedExchangeAdd64(a, b)
-	#define juce_InterlockedExchange64(a, b)	_InterlockedExchange64(a, b)
-	#define juce_InterlockedIncrement64(a)	  _InterlockedIncrement64(a)
-	#define juce_InterlockedDecrement64(a)	  _InterlockedDecrement64(a)
-  #else
-	// None of these atomics are available in a 32-bit Windows build!!
-	template <typename Type> static Type juce_InterlockedExchangeAdd64 (volatile Type* a, Type b) throw()   { jassertfalse; Type old = *a; *a += b; return old; }
-	template <typename Type> static Type juce_InterlockedExchange64 (volatile Type* a, Type b) throw()	  { jassertfalse; Type old = *a; *a = b; return old; }
-	template <typename Type> static Type juce_InterlockedIncrement64 (volatile Type* a) throw()		 { jassertfalse; return ++*a; }
-	template <typename Type> static Type juce_InterlockedDecrement64 (volatile Type* a) throw()		 { jassertfalse; return --*a; }
-	#define JUCE_64BIT_ATOMICS_UNAVAILABLE 1
-  #endif
-#endif
-
-#if JUCE_MSVC
-  #pragma warning (push)
-  #pragma warning (disable: 4311)  // (truncation warning)
-#endif
-
-template <typename Type>
-inline Type Atomic<Type>::get() const throw()
-{
-  #if JUCE_ATOMICS_MAC
-	return sizeof (Type) == 4 ? castFrom32Bit ((int32) OSAtomicAdd32Barrier ((int32_t) 0, (JUCE_MAC_ATOMICS_VOLATILE int32_t*) &value))
-							  : castFrom64Bit ((int64) OSAtomicAdd64Barrier ((int64_t) 0, (JUCE_MAC_ATOMICS_VOLATILE int64_t*) &value));
-  #elif JUCE_ATOMICS_WINDOWS
-	return sizeof (Type) == 4 ? castFrom32Bit ((int32) juce_InterlockedExchangeAdd ((volatile long*) &value, (long) 0))
-							  : castFrom64Bit ((int64) juce_InterlockedExchangeAdd64 ((volatile __int64*) &value, (__int64) 0));
-  #elif JUCE_ATOMICS_GCC
-	return sizeof (Type) == 4 ? castFrom32Bit ((int32) __sync_add_and_fetch ((volatile int32*) &value, 0))
-							  : castFrom64Bit ((int64) __sync_add_and_fetch ((volatile int64*) &value, 0));
-  #endif
-}
-
-template <typename Type>
-inline Type Atomic<Type>::exchange (const Type newValue) throw()
-{
-  #if JUCE_ATOMICS_MAC || JUCE_ATOMICS_GCC
-	Type currentVal = value;
-	while (! compareAndSetBool (newValue, currentVal)) { currentVal = value; }
-	return currentVal;
-  #elif JUCE_ATOMICS_WINDOWS
-	return sizeof (Type) == 4 ? castFrom32Bit ((int32) juce_InterlockedExchange ((volatile long*) &value, (long) castTo32Bit (newValue)))
-							  : castFrom64Bit ((int64) juce_InterlockedExchange64 ((volatile __int64*) &value, (__int64) castTo64Bit (newValue)));
-  #endif
-}
-
-template <typename Type>
-inline Type Atomic<Type>::operator+= (const Type amountToAdd) throw()
-{
-  #if JUCE_ATOMICS_MAC
-	return sizeof (Type) == 4 ? (Type) OSAtomicAdd32Barrier ((int32_t) castTo32Bit (amountToAdd), (JUCE_MAC_ATOMICS_VOLATILE int32_t*) &value)
-							  : (Type) OSAtomicAdd64Barrier ((int64_t) amountToAdd, (JUCE_MAC_ATOMICS_VOLATILE int64_t*) &value);
-  #elif JUCE_ATOMICS_WINDOWS
-	return sizeof (Type) == 4 ? (Type) (juce_InterlockedExchangeAdd ((volatile long*) &value, (long) amountToAdd) + (long) amountToAdd)
-							  : (Type) (juce_InterlockedExchangeAdd64 ((volatile __int64*) &value, (__int64) amountToAdd) + (__int64) amountToAdd);
-  #elif JUCE_ATOMICS_GCC
-	return (Type) __sync_add_and_fetch (&value, amountToAdd);
-  #endif
-}
-
-template <typename Type>
-inline Type Atomic<Type>::operator-= (const Type amountToSubtract) throw()
-{
-	return operator+= (juce_negate (amountToSubtract));
-}
-
-template <typename Type>
-inline Type Atomic<Type>::operator++() throw()
-{
-  #if JUCE_ATOMICS_MAC
-	return sizeof (Type) == 4 ? (Type) OSAtomicIncrement32Barrier ((JUCE_MAC_ATOMICS_VOLATILE int32_t*) &value)
-							  : (Type) OSAtomicIncrement64Barrier ((JUCE_MAC_ATOMICS_VOLATILE int64_t*) &value);
-  #elif JUCE_ATOMICS_WINDOWS
-	return sizeof (Type) == 4 ? (Type) juce_InterlockedIncrement ((volatile long*) &value)
-							  : (Type) juce_InterlockedIncrement64 ((volatile __int64*) &value);
-  #elif JUCE_ATOMICS_GCC
-	return (Type) __sync_add_and_fetch (&value, 1);
-  #endif
-}
-
-template <typename Type>
-inline Type Atomic<Type>::operator--() throw()
-{
-  #if JUCE_ATOMICS_MAC
-	return sizeof (Type) == 4 ? (Type) OSAtomicDecrement32Barrier ((JUCE_MAC_ATOMICS_VOLATILE int32_t*) &value)
-							  : (Type) OSAtomicDecrement64Barrier ((JUCE_MAC_ATOMICS_VOLATILE int64_t*) &value);
-  #elif JUCE_ATOMICS_WINDOWS
-	return sizeof (Type) == 4 ? (Type) juce_InterlockedDecrement ((volatile long*) &value)
-							  : (Type) juce_InterlockedDecrement64 ((volatile __int64*) &value);
-  #elif JUCE_ATOMICS_GCC
-	return (Type) __sync_add_and_fetch (&value, -1);
-  #endif
-}
-
-template <typename Type>
-inline bool Atomic<Type>::compareAndSetBool (const Type newValue, const Type valueToCompare) throw()
-{
-  #if JUCE_ATOMICS_MAC
-	return sizeof (Type) == 4 ? OSAtomicCompareAndSwap32Barrier ((int32_t) castTo32Bit (valueToCompare), (int32_t) castTo32Bit (newValue), (JUCE_MAC_ATOMICS_VOLATILE int32_t*) &value)
-							  : OSAtomicCompareAndSwap64Barrier ((int64_t) castTo64Bit (valueToCompare), (int64_t) castTo64Bit (newValue), (JUCE_MAC_ATOMICS_VOLATILE int64_t*) &value);
-  #elif JUCE_ATOMICS_WINDOWS
-	return compareAndSetValue (newValue, valueToCompare) == valueToCompare;
-  #elif JUCE_ATOMICS_GCC
-	return sizeof (Type) == 4 ? __sync_bool_compare_and_swap ((volatile int32*) &value, castTo32Bit (valueToCompare), castTo32Bit (newValue))
-							  : __sync_bool_compare_and_swap ((volatile int64*) &value, castTo64Bit (valueToCompare), castTo64Bit (newValue));
-  #endif
-}
-
-template <typename Type>
-inline Type Atomic<Type>::compareAndSetValue (const Type newValue, const Type valueToCompare) throw()
-{
-  #if JUCE_ATOMICS_MAC
-	for (;;) // Annoying workaround for OSX only having a bool CAS operation..
-	{
-		if (compareAndSetBool (newValue, valueToCompare))
-			return valueToCompare;
-
-		const Type result = value;
-		if (result != valueToCompare)
-			return result;
-	}
-
-  #elif JUCE_ATOMICS_WINDOWS
-	return sizeof (Type) == 4 ? castFrom32Bit ((int32) juce_InterlockedCompareExchange ((volatile long*) &value, (long) castTo32Bit (newValue), (long) castTo32Bit (valueToCompare)))
-							  : castFrom64Bit ((int64) juce_InterlockedCompareExchange64 ((volatile __int64*) &value, (__int64) castTo64Bit (newValue), (__int64) castTo64Bit (valueToCompare)));
-  #elif JUCE_ATOMICS_GCC
-	return sizeof (Type) == 4 ? castFrom32Bit ((int32) __sync_val_compare_and_swap ((volatile int32*) &value, castTo32Bit (valueToCompare), castTo32Bit (newValue)))
-							  : castFrom64Bit ((int64) __sync_val_compare_and_swap ((volatile int64*) &value, castTo64Bit (valueToCompare), castTo64Bit (newValue)));
-  #endif
-}
-
-template <typename Type>
-inline void Atomic<Type>::memoryBarrier() throw()
-{
-  #if JUCE_ATOMICS_MAC
-	OSMemoryBarrier();
-  #elif JUCE_ATOMICS_GCC
-	__sync_synchronize();
-  #elif JUCE_ATOMICS_WINDOWS
-	juce_MemoryBarrier();
-  #endif
-}
-
-#if JUCE_MSVC
-  #pragma warning (pop)
-#endif
-
-#endif   // __JUCE_ATOMIC_JUCEHEADER__
-/*** End of inlined file: juce_Atomic.h ***/
 
 /**
 	Embedding an instance of this class inside another class can be used as a low-overhead
@@ -3316,7 +5506,7 @@ private:
 
 	  @see JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR, LeakedObjectDetector
   */
-  #define JUCE_LEAK_DETECTOR(OwnerClass)	 LeakedObjectDetector<OwnerClass> JUCE_JOIN_MACRO (leakDetector, __LINE__);
+  #define JUCE_LEAK_DETECTOR(OwnerClass)	 JUCE_NAMESPACE::LeakedObjectDetector<OwnerClass> JUCE_JOIN_MACRO (leakDetector, __LINE__);
  #else
   #define JUCE_LEAK_DETECTOR(OwnerClass)
  #endif
@@ -3338,6 +5528,9 @@ BEGIN_JUCE_NAMESPACE
   #pragma pack (push, 8)
   #pragma warning (push)
   #pragma warning (disable: 4786) // (old vc6 warning about long class names)
+  #ifdef __INTEL_COMPILER
+   #pragma warning (disable: 1125)
+  #endif
 #endif
 
 // this is where all the class header files get brought in..
@@ -4106,8 +6299,8 @@ public:
 #define __JUCE_CRITICALSECTION_JUCEHEADER__
 
 #ifndef DOXYGEN
- class JUCE_API  ScopedLock;
- class JUCE_API  ScopedUnlock;
+ class ScopedLock;
+ class ScopedUnlock;
 #endif
 
 /**
@@ -5227,7 +7420,7 @@ public:
 		The pool will own all the pointers that it returns, deleting them when the pool itself
 		is deleted.
 	*/
-	const juce_wchar* getPooledString (const String& original);
+	const String::CharPointerType getPooledString (const String& original);
 
 	/** Returns a pointer to a copy of the string that is passed in.
 
@@ -5235,7 +7428,7 @@ public:
 		The pool will own all the pointers that it returns, deleting them when the pool itself
 		is deleted.
 	*/
-	const juce_wchar* getPooledString (const char* original);
+	const String::CharPointerType getPooledString (const char* original);
 
 	/** Returns a pointer to a copy of the string that is passed in.
 
@@ -5243,7 +7436,7 @@ public:
 		The pool will own all the pointers that it returns, deleting them when the pool itself
 		is deleted.
 	*/
-	const juce_wchar* getPooledString (const juce_wchar* original);
+	const String::CharPointerType getPooledString (const juce_wchar* original);
 
 	/** Returns the number of strings in the pool. */
 	int size() const throw();
@@ -5951,6 +8144,9 @@ public:
 	*/
 	virtual void writeDoubleBigEndian (double value);
 
+	/** Writes a byte to the output stream a given number of times. */
+	virtual void writeRepeatedByte (uint8 byte, int numTimesToRepeat);
+
 	/** Writes a condensed binary encoding of a 32-bit integer.
 
 		If you're storing a lot of integers which are unlikely to have very large values,
@@ -5979,15 +8175,15 @@ public:
 
 	/** Writes a string of text to the stream.
 
-		It can either write it as UTF8 characters or as unicode, and
-		can also add unicode header bytes (0xff, 0xfe) to indicate the endianness (this
-		should only be done at the start of a file).
+		It can either write the text as UTF-8 or UTF-16, and can also add the UTF-16 byte-order-mark
+		bytes (0xff, 0xfe) to indicate the endianness (these should only be used at the start
+		of a file).
 
 		The method also replaces '\\n' characters in the text with '\\r\\n'.
 	*/
 	virtual void writeText (const String& text,
-							bool asUnicode,
-							bool writeUnicodeHeaderBytes);
+							bool asUTF16,
+							bool writeUTF16ByteOrderMark);
 
 	/** Reads data from an input stream and writes it to this stream.
 
@@ -6045,7 +8241,7 @@ OutputStream& JUCE_CALLTYPE operator<< (OutputStream& stream, const NewLine&);
 /*** End of inlined file: juce_OutputStream.h ***/
 
 #ifndef DOXYGEN
- class JUCE_API  DynamicObject;
+ class DynamicObject;
 #endif
 
 /**
@@ -6147,6 +8343,11 @@ public:
 	/** Returns true if this var has the same value as the one supplied. */
 	bool equals (const var& other) const throw();
 
+	/** Returns true if this var has the same value and type as the one supplied.
+		This differs from equals() because e.g. "0" and 0 will be considered different.
+	*/
+	bool equalsWithSameType (const var& other) const throw();
+
 private:
 	class VariantType;
 	friend class VariantType;
@@ -6188,6 +8389,328 @@ bool operator!= (const var& v1, const String& v2) throw();
 
 #endif   // __JUCE_VARIANT_JUCEHEADER__
 /*** End of inlined file: juce_Variant.h ***/
+
+
+/*** Start of inlined file: juce_LinkedListPointer.h ***/
+#ifndef __JUCE_LINKEDLISTPOINTER_JUCEHEADER__
+#define __JUCE_LINKEDLISTPOINTER_JUCEHEADER__
+
+/**
+	Helps to manipulate singly-linked lists of objects.
+
+	For objects that are designed to contain a pointer to the subsequent item in the
+	list, this class contains methods to deal with the list. To use it, the ObjectType
+	class that it points to must contain a LinkedListPointer called nextListItem, e.g.
+
+	@code
+	struct MyObject
+	{
+		int x, y, z;
+
+		// A linkable object must contain a member with this name and type, which must be
+		// accessible by the LinkedListPointer class. (This doesn't mean it has to be public -
+		// you could make your class a friend of a LinkedListPointer<MyObject> instead).
+		LinkedListPointer<MyObject> nextListItem;
+	};
+
+	LinkedListPointer<MyObject> myList;
+	myList.append (new MyObject());
+	myList.append (new MyObject());
+
+	int numItems = myList.size(); // returns 2
+	MyObject* lastInList = myList.getLast();
+	@endcode
+*/
+template <class ObjectType>
+class LinkedListPointer
+{
+public:
+
+	/** Creates a null pointer to an empty list. */
+	LinkedListPointer() throw()
+		: item (0)
+	{
+	}
+
+	/** Creates a pointer to a list whose head is the item provided. */
+	explicit LinkedListPointer (ObjectType* const headItem) throw()
+		: item (headItem)
+	{
+	}
+
+	/** Sets this pointer to point to a new list. */
+	LinkedListPointer& operator= (ObjectType* const newItem) throw()
+	{
+		item = newItem;
+		return *this;
+	}
+
+	/** Returns the item which this pointer points to. */
+	inline operator ObjectType*() const throw()
+	{
+		return item;
+	}
+
+	/** Returns the item which this pointer points to. */
+	inline ObjectType* get() const throw()
+	{
+		return item;
+	}
+
+	/** Returns the last item in the list which this pointer points to.
+		This will iterate the list and return the last item found. Obviously the speed
+		of this operation will be proportional to the size of the list. If the list is
+		empty the return value will be this object.
+		If you're planning on appending a number of items to your list, it's much more
+		efficient to use the Appender class than to repeatedly call getLast() to find the end.
+	*/
+	LinkedListPointer& getLast() throw()
+	{
+		LinkedListPointer* l = this;
+
+		while (l->item != 0)
+			l = &(l->item->nextListItem);
+
+		return *l;
+	}
+
+	/** Returns the number of items in the list.
+		Obviously with a simple linked list, getting the size involves iterating the list, so
+		this can be a lengthy operation - be careful when using this method in your code.
+	*/
+	int size() const throw()
+	{
+		int total = 0;
+
+		for (ObjectType* i = item; i != 0; i = i->nextListItem)
+			++total;
+
+		return total;
+	}
+
+	/** Returns the item at a given index in the list.
+		Since the only way to find an item is to iterate the list, this operation can obviously
+		be slow, depending on its size, so you should be careful when using this in algorithms.
+	*/
+	LinkedListPointer& operator[] (int index) throw()
+	{
+		LinkedListPointer* l = this;
+
+		while (--index >= 0 && l->item != 0)
+			l = &(l->item->nextListItem);
+
+		return *l;
+	}
+
+	/** Returns the item at a given index in the list.
+		Since the only way to find an item is to iterate the list, this operation can obviously
+		be slow, depending on its size, so you should be careful when using this in algorithms.
+	*/
+	const LinkedListPointer& operator[] (int index) const throw()
+	{
+		const LinkedListPointer* l = this;
+
+		while (--index >= 0 && l->item != 0)
+			l = &(l->item->nextListItem);
+
+		return *l;
+	}
+
+	/** Returns true if the list contains the given item. */
+	bool contains (const ObjectType* const itemToLookFor) const throw()
+	{
+		for (ObjectType* i = item; i != 0; i = i->nextListItem)
+			if (itemToLookFor == i)
+				return true;
+
+		return false;
+	}
+
+	/** Inserts an item into the list, placing it before the item that this pointer
+		currently points to.
+	*/
+	void insertNext (ObjectType* const newItem)
+	{
+		jassert (newItem != 0);
+		jassert (newItem->nextListItem == 0);
+		newItem->nextListItem = item;
+		item = newItem;
+	}
+
+	/** Inserts an item at a numeric index in the list.
+		Obviously this will involve iterating the list to find the item at the given index,
+		so be careful about the impact this may have on execution time.
+	*/
+	void insertAtIndex (int index, ObjectType* newItem)
+	{
+		jassert (newItem != 0);
+		LinkedListPointer* l = this;
+
+		while (index != 0 && l->item != 0)
+		{
+			l = &(l->item->nextListItem);
+			--index;
+		}
+
+		l->insertNext (newItem);
+	}
+
+	/** Replaces the object that this pointer points to, appending the rest of the list to
+		the new object, and returning the old one.
+	*/
+	ObjectType* replaceNext (ObjectType* const newItem) throw()
+	{
+		jassert (newItem != 0);
+		jassert (newItem->nextListItem == 0);
+
+		ObjectType* const oldItem = item;
+		item = newItem;
+		item->nextListItem = oldItem->nextListItem.item;
+		oldItem->nextListItem = (ObjectType*) 0;
+		return oldItem;
+	}
+
+	/** Adds an item to the end of the list.
+
+		This operation involves iterating the whole list, so can be slow - if you need to
+		append a number of items to your list, it's much more efficient to use the Appender
+		class than to repeatedly call append().
+	*/
+	void append (ObjectType* const newItem)
+	{
+		getLast().item = newItem;
+	}
+
+	/** Creates copies of all the items in another list and adds them to this one.
+		This will use the ObjectType's copy constructor to try to create copies of each
+		item in the other list, and appends them to this list.
+	*/
+	void addCopyOfList (const LinkedListPointer& other)
+	{
+		LinkedListPointer* insertPoint = this;
+
+		for (ObjectType* i = other.item; i != 0; i = i->nextListItem)
+		{
+			insertPoint->insertNext (new ObjectType (*i));
+			insertPoint = &(insertPoint->item->nextListItem);
+		}
+	}
+
+	/** Removes the head item from the list.
+		This won't delete the object that is removed, but returns it, so the caller can
+		delete it if necessary.
+	*/
+	ObjectType* removeNext() throw()
+	{
+		ObjectType* const oldItem = item;
+
+		if (oldItem != 0)
+		{
+			item = oldItem->nextListItem;
+			oldItem->nextListItem = (ObjectType*) 0;
+		}
+
+		return oldItem;
+	}
+
+	/** Removes a specific item from the list.
+		Note that this will not delete the item, it simply unlinks it from the list.
+	*/
+	void remove (ObjectType* const itemToRemove)
+	{
+		LinkedListPointer* const l = findPointerTo (itemToRemove);
+
+		if (l != 0)
+			l->removeNext();
+	}
+
+	/** Iterates the list, calling the delete operator on all of its elements and
+		leaving this pointer empty.
+	*/
+	void deleteAll()
+	{
+		while (item != 0)
+		{
+			ObjectType* const oldItem = item;
+			item = oldItem->nextListItem;
+			delete oldItem;
+		}
+	}
+
+	/** Finds a pointer to a given item.
+		If the item is found in the list, this returns the pointer that points to it. If
+		the item isn't found, this returns null.
+	*/
+	LinkedListPointer* findPointerTo (ObjectType* const itemToLookFor) throw()
+	{
+		LinkedListPointer* l = this;
+
+		while (l->item != 0)
+		{
+			if (l->item == itemToLookFor)
+				return l;
+
+			l = &(l->item->nextListItem);
+		}
+
+		return 0;
+	}
+
+	/** Copies the items in the list to an array.
+		The destArray must contain enough elements to hold the entire list - no checks are
+		made for this!
+	*/
+	void copyToArray (ObjectType** destArray) const throw()
+	{
+		jassert (destArray != 0);
+
+		for (ObjectType* i = item; i != 0; i = i->nextListItem)
+			*destArray++ = i;
+	}
+
+	/**
+		Allows efficient repeated insertions into a list.
+
+		You can create an Appender object which points to the last element in your
+		list, and then repeatedly call Appender::append() to add items to the end
+		of the list in O(1) time.
+	*/
+	class Appender
+	{
+	public:
+		/** Creates an appender which will add items to the given list.
+		*/
+		Appender (LinkedListPointer& endOfListPointer) throw()
+			: endOfList (&endOfListPointer)
+		{
+			// This can only be used to add to the end of a list.
+			jassert (endOfListPointer.item == 0);
+		}
+
+		/** Appends an item to the list. */
+		void append (ObjectType* const newItem) throw()
+		{
+			*endOfList = newItem;
+			endOfList = &(newItem->nextListItem);
+		}
+
+	private:
+		LinkedListPointer* endOfList;
+
+		JUCE_DECLARE_NON_COPYABLE (Appender);
+	};
+
+private:
+
+	ObjectType* item;
+
+	JUCE_DECLARE_NON_COPYABLE (LinkedListPointer);
+};
+
+#endif   // __JUCE_LINKEDLISTPOINTER_JUCEHEADER__
+/*** End of inlined file: juce_LinkedListPointer.h ***/
+
+class XmlElement;
 
 /** Holds a set of named var objects.
 
@@ -6242,14 +8765,12 @@ public:
 	bool remove (const Identifier& name);
 
 	/** Returns the name of the value at a given index.
-		The index must be between 0 and size() - 1. Out-of-range indexes will
-		return an empty identifier.
+		The index must be between 0 and size() - 1.
 	*/
 	const Identifier getName (int index) const;
 
 	/** Returns the value of the item at a given index.
-		The index must be between 0 and size() - 1. Out-of-range indexes will
-		return an empty identifier.
+		The index must be between 0 and size() - 1.
 	*/
 	const var getValueAt (int index) const;
 
@@ -6264,19 +8785,35 @@ public:
 	*/
 	var* getVarPointer (const Identifier& name) const;
 
+	/** Sets properties to the values of all of an XML element's attributes. */
+	void setFromXmlAttributes (const XmlElement& xml);
+
+	/** Sets attributes in an XML element corresponding to each of this object's
+		properties.
+	*/
+	void copyToXmlAttributes (XmlElement& xml) const;
+
 private:
 
-	struct NamedValue
+	class NamedValue
 	{
+	public:
 		NamedValue() throw();
+		NamedValue (const NamedValue&);
 		NamedValue (const Identifier& name, const var& value);
+		NamedValue& operator= (const NamedValue&);
 		bool operator== (const NamedValue& other) const throw();
 
+		LinkedListPointer<NamedValue> nextListItem;
 		Identifier name;
 		var value;
+
+	private:
+		JUCE_LEAK_DETECTOR (NamedValue);
 	};
 
-	Array <NamedValue> values;
+	friend class LinkedListPointer<NamedValue>;
+	LinkedListPointer<NamedValue> values;
 };
 
 #endif   // __JUCE_NAMEDVALUESET_JUCEHEADER__
@@ -6623,6 +9160,9 @@ private:
 
 #endif
 #ifndef __JUCE_ELEMENTCOMPARATOR_JUCEHEADER__
+
+#endif
+#ifndef __JUCE_LINKEDLISTPOINTER_JUCEHEADER__
 
 #endif
 #ifndef __JUCE_NAMEDVALUESET_JUCEHEADER__
@@ -7672,8 +10212,8 @@ public:
 	*/
 	void appendNumbersToDuplicates (bool ignoreCaseWhenComparing,
 									bool appendNumberToFirstInstance,
-									const juce_wchar* preNumberString = 0,
-									const juce_wchar* postNumberString = 0);
+									CharPointer_UTF8 preNumberString = CharPointer_UTF8 (0),
+									CharPointer_UTF8 postNumberString = CharPointer_UTF8 (0));
 
 	/** Joins the strings in the array together into one string.
 
@@ -8330,27 +10870,27 @@ private:
 };
 
 /** Adds a RelativeTime to a Time. */
-const Time operator+ (const Time& time, const RelativeTime& delta);
+JUCE_API const Time operator+ (const Time& time, const RelativeTime& delta);
 /** Adds a RelativeTime to a Time. */
-const Time operator+ (const RelativeTime& delta, const Time& time);
+JUCE_API const Time operator+ (const RelativeTime& delta, const Time& time);
 
 /** Subtracts a RelativeTime from a Time. */
-const Time operator- (const Time& time, const RelativeTime& delta);
+JUCE_API const Time operator- (const Time& time, const RelativeTime& delta);
 /** Returns the relative time difference between two times. */
-const RelativeTime operator- (const Time& time1, const Time& time2);
+JUCE_API const RelativeTime operator- (const Time& time1, const Time& time2);
 
 /** Compares two Time objects. */
-bool operator== (const Time& time1, const Time& time2);
+JUCE_API bool operator== (const Time& time1, const Time& time2);
 /** Compares two Time objects. */
-bool operator!= (const Time& time1, const Time& time2);
+JUCE_API bool operator!= (const Time& time1, const Time& time2);
 /** Compares two Time objects. */
-bool operator<  (const Time& time1, const Time& time2);
+JUCE_API bool operator<  (const Time& time1, const Time& time2);
 /** Compares two Time objects. */
-bool operator<= (const Time& time1, const Time& time2);
+JUCE_API bool operator<= (const Time& time1, const Time& time2);
 /** Compares two Time objects. */
-bool operator>  (const Time& time1, const Time& time2);
+JUCE_API bool operator>  (const Time& time1, const Time& time2);
 /** Compares two Time objects. */
-bool operator>= (const Time& time1, const Time& time2);
+JUCE_API bool operator>= (const Time& time1, const Time& time2);
 
 #endif   // __JUCE_TIME_JUCEHEADER__
 /*** End of inlined file: juce_Time.h ***/
@@ -8668,7 +11208,7 @@ public:
 
 	/** Creates a relative path that refers to a file relatively to a given directory.
 
-		e.g. File ("/moose/foo.txt").getRelativePathFrom ("/moose/fish/haddock")
+		e.g. File ("/moose/foo.txt").getRelativePathFrom (File ("/moose/fish/haddock"))
 			 would return "../../foo.txt".
 
 		If it's not possible to navigate from one file to the other, an absolute
@@ -9113,7 +11653,7 @@ public:
 		the file first and then re-writing it, it creates a new temporary file,
 		writes the data to that, and then moves the new file to replace the existing
 		file. This means that if the power gets pulled out or something crashes,
-		you're a lot less likely to end up with an empty file..
+		you're a lot less likely to end up with a corrupted or unfinished file..
 
 		Returns true if the operation succeeds, or false if it fails.
 
@@ -9835,7 +12375,7 @@ public:
 
 		@see getNextElement, isTextElement, forEachXmlChildElement
 	*/
-	inline XmlElement* getNextElement() const throw()	   { return nextElement; }
+	inline XmlElement* getNextElement() const throw()	   { return nextListItem; }
 
 	/** Returns the next of this element's siblings which has the specified tag
 		name.
@@ -9967,13 +12507,11 @@ public:
 		To improve performance, the compareElements() method can be declared as static or const.
 
 		@param comparator   the comparator to use for comparing elements.
-		@param retainOrderOfEquivalentItems	 if this is true, then items
-							which the comparator says are equivalent will be
-							kept in the order in which they currently appear
-							in the array. This is slower to perform, but may
-							be important in some cases. If it's false, a faster
-							algorithm is used, but equivalent elements may be
-							rearranged.
+		@param retainOrderOfEquivalentItems	 if this is true, then items which the comparator
+							says are equivalent will be kept in the order in which they
+							currently appear in the array. This is slower to perform, but
+							may be important in some cases. If it's false, a faster algorithm
+							is used, but equivalent elements may be rearranged.
 	*/
 	template <class ElementComparator>
 	void sortChildElements (ElementComparator& comparator,
@@ -10020,7 +12558,8 @@ public:
 	/** Sets the text in a text element.
 
 		Note that this is only a valid call if this element is a text element. If it's
-		not, then no action will be performed.
+		not, then no action will be performed. If you're trying to add text inside a normal
+		element, you probably want to use addTextElement() instead.
 	*/
 	void setText (const String& newText);
 
@@ -10067,19 +12606,13 @@ public:
 	static XmlElement* createTextElement (const String& text);
 
 private:
-	friend class XmlDocument;
-
-	String tagName;
-	XmlElement* firstChildElement;
-	XmlElement* nextElement;
-
 	struct XmlAttributeNode
 	{
 		XmlAttributeNode (const XmlAttributeNode& other) throw();
 		XmlAttributeNode (const String& name, const String& value) throw();
 
+		LinkedListPointer<XmlAttributeNode> nextListItem;
 		String name, value;
-		XmlAttributeNode* next;
 
 		bool hasName (const String& name) const throw();
 
@@ -10087,7 +12620,15 @@ private:
 		XmlAttributeNode& operator= (const XmlAttributeNode&);
 	};
 
-	XmlAttributeNode* attributes;
+	friend class XmlDocument;
+	friend class LinkedListPointer<XmlAttributeNode>;
+	friend class LinkedListPointer <XmlElement>;
+	friend class LinkedListPointer <XmlElement>::Appender;
+
+	LinkedListPointer <XmlElement> nextListItem;
+	LinkedListPointer <XmlElement> firstChildElement;
+	LinkedListPointer <XmlAttributeNode> attributes;
+	String tagName;
 
 	XmlElement (int) throw();
 	void copyChildrenAndAttributesFrom (const XmlElement& other);
@@ -10987,6 +13528,82 @@ private:
 
 
 #endif
+#ifndef __JUCE_SCOPEDVALUESETTER_JUCEHEADER__
+
+/*** Start of inlined file: juce_ScopedValueSetter.h ***/
+#ifndef __JUCE_SCOPEDVALUESETTER_JUCEHEADER__
+#define __JUCE_SCOPEDVALUESETTER_JUCEHEADER__
+
+/**
+	Helper class providing an RAII-based mechanism for temporarily setting and
+	then re-setting a value.
+
+	E.g. @code
+	int x = 1;
+
+	{
+		ScopedValueSetter setter (x, 2);
+
+		// x is now 2
+	}
+
+	// x is now 1 again
+
+	{
+		ScopedValueSetter setter (x, 3, 4);
+
+		// x is now 3
+	}
+
+	// x is now 4
+	@endcode
+
+*/
+template <typename ValueType>
+class ScopedValueSetter
+{
+public:
+	/** Creates a ScopedValueSetter that will immediately change the specified value to the
+		given new value, and will then reset it to its original value when this object is deleted.
+	*/
+	ScopedValueSetter (ValueType& valueToSet,
+					   const ValueType& newValue)
+		: value (valueToSet),
+		  originalValue (valueToSet)
+	{
+		valueToSet = newValue;
+	}
+
+	/** Creates a ScopedValueSetter that will immediately change the specified value to the
+		given new value, and will then reset it to be valueWhenDeleted when this object is deleted.
+	*/
+	ScopedValueSetter (ValueType& valueToSet,
+					   const ValueType& newValue,
+					   const ValueType& valueWhenDeleted)
+		: value (valueToSet),
+		  originalValue (valueWhenDeleted)
+	{
+		valueToSet = newValue;
+	}
+
+	~ScopedValueSetter()
+	{
+		value = originalValue;
+	}
+
+private:
+
+	ValueType& value;
+	const ValueType originalValue;
+
+	JUCE_DECLARE_NON_COPYABLE (ScopedValueSetter);
+};
+
+#endif   // __JUCE_SCOPEDVALUESETTER_JUCEHEADER__
+/*** End of inlined file: juce_ScopedValueSetter.h ***/
+
+
+#endif
 #ifndef __JUCE_SORTEDSET_JUCEHEADER__
 
 /*** Start of inlined file: juce_SortedSet.h ***/
@@ -11775,11 +14392,6 @@ public:
 	{
 	}
 
-	/** Destructor. */
-	~SparseSet()
-	{
-	}
-
 	/** Clears the set. */
 	void clear()
 	{
@@ -11829,7 +14441,7 @@ public:
 			index -= len;
 		}
 
-		return Type (0);
+		return Type();
 	}
 
 	/** Checks whether a particular value is in the set. */
@@ -13443,16 +16055,34 @@ public:
 		virtual void valueTreePropertyChanged (ValueTree& treeWhosePropertyHasChanged,
 											   const Identifier& property) = 0;
 
-		/** This method is called when a child sub-tree is added or removed.
-
-			The tree parameter indicates the tree whose child was added or removed.
+		/** This method is called when a child sub-tree is added.
 
 			Note that when you register a listener to a tree, it will receive this callback for
-			child changes in that tree, and also in any of its children, (recursively, at any depth).
+			child changes in both that tree and any of its children, (recursively, at any depth).
 			If your tree has sub-trees but you only want to know about changes to the top level tree,
-			simply check the tree parameter in this callback to make sure it's the tree you're interested in.
+			just check the parentTree parameter to make sure it's the one that you're interested in.
 		*/
-		virtual void valueTreeChildrenChanged (ValueTree& treeWhoseChildHasChanged) = 0;
+		virtual void valueTreeChildAdded (ValueTree& parentTree,
+										  ValueTree& childWhichHasBeenAdded) = 0;
+
+		/** This method is called when a child sub-tree is removed.
+
+			Note that when you register a listener to a tree, it will receive this callback for
+			child changes in both that tree and any of its children, (recursively, at any depth).
+			If your tree has sub-trees but you only want to know about changes to the top level tree,
+			just check the parentTree parameter to make sure it's the one that you're interested in.
+		*/
+		virtual void valueTreeChildRemoved (ValueTree& parentTree,
+											ValueTree& childWhichHasBeenRemoved) = 0;
+
+		/** This method is called when a tree's children have been re-shuffled.
+
+			Note that when you register a listener to a tree, it will receive this callback for
+			child changes in both that tree and any of its children, (recursively, at any depth).
+			If your tree has sub-trees but you only want to know about changes to the top level tree,
+			just check the parameter to make sure it's the tree that you're interested in.
+		*/
+		virtual void valueTreeChildOrderChanged (ValueTree& parentTreeWhoseChildrenHaveMoved) = 0;
 
 		/** This method is called when a tree has been added or removed from a parent node.
 
@@ -13544,8 +16174,12 @@ private:
 
 		void sendPropertyChangeMessage (const Identifier& property);
 		void sendPropertyChangeMessage (ValueTree& tree, const Identifier& property);
-		void sendChildChangeMessage();
-		void sendChildChangeMessage (ValueTree& tree);
+		void sendChildAddedMessage (ValueTree& parent, ValueTree& child);
+		void sendChildAddedMessage (ValueTree child);
+		void sendChildRemovedMessage (ValueTree& parent, ValueTree& child);
+		void sendChildRemovedMessage (ValueTree child);
+		void sendChildOrderChangedMessage (ValueTree& parent);
+		void sendChildOrderChangedMessage();
 		void sendParentChangeMessage();
 		const var& getProperty (const Identifier& name) const;
 		const var getProperty (const Identifier& name, const var& defaultReturnValue) const;
@@ -13793,7 +16427,11 @@ public:
 	See the JUCEApplication class documentation (juce_Application.h) for more details.
 
 */
-#if defined (JUCE_GCC) || defined (__MWERKS__)
+#if JUCE_ANDROID
+  #define START_JUCE_APPLICATION(AppClass) \
+	JUCE_NAMESPACE::JUCEApplication* juce_CreateApplication() { return new AppClass(); }
+
+#elif defined (JUCE_GCC) || defined (__MWERKS__)
 
   #define START_JUCE_APPLICATION(AppClass) \
 	static JUCE_NAMESPACE::JUCEApplication* juce_CreateApplication() { return new AppClass(); } \
@@ -14104,10 +16742,9 @@ private:
 
 #if JUCE_MAC || JUCE_IOS
 
-/** A handy C++ wrapper that creates and deletes an NSAutoreleasePool object
-	using RAII.
+/** A handy C++ wrapper that creates and deletes an NSAutoreleasePool object using RAII.
 */
-class ScopedAutoReleasePool
+class JUCE_API  ScopedAutoReleasePool
 {
 public:
 	ScopedAutoReleasePool();
@@ -14271,7 +16908,7 @@ private:
 
 	@see CriticalSection, ScopedUnlock
 */
-class JUCE_API  ScopedLock
+class ScopedLock
 {
 public:
 
@@ -14660,6 +17297,7 @@ public:
 
 		MacOSX	  = 0x1000,
 		Linux	   = 0x2000,
+		Android	 = 0x3000,
 
 		Win95	   = 0x4001,
 		Win98	   = 0x4002,
@@ -17391,7 +20029,7 @@ private:
 	evaluated.
 
 	Expressions which use identifiers and functions require a subclass of
-	Expression::EvaluationContext to be supplied when evaluating them, and this object
+	Expression::Scope to be supplied when evaluating them, and this object
 	is expected to be able to resolve the symbol names and perform the functions that
 	are used.
 */
@@ -17440,24 +20078,28 @@ public:
 	/** Returns an Expression which is a function call. */
 	static const Expression function (const String& functionName, const Array<Expression>& parameters);
 
-	/** Returns an Expression which parses a string from a specified character index.
+	/** Returns an Expression which parses a string from a character pointer, and updates the pointer
+		to indicate where it finished.
 
-		The index value is incremented so that on return, it indicates the character that follows
+		The pointer is incremented so that on return, it indicates the character that follows
 		the end of the expression that was parsed.
 
 		If there's a syntax error in the string, this will throw a ParseError exception.
 		@throws ParseError
 	*/
-	static const Expression parse (const String& stringToParse, int& textIndexToStartFrom);
+	static const Expression parse (String::CharPointerType& stringToParse);
 
 	/** When evaluating an Expression object, this class is used to resolve symbols and
 		perform functions that the expression uses.
 	*/
-	class JUCE_API  EvaluationContext
+	class JUCE_API  Scope
 	{
 	public:
-		EvaluationContext();
-		virtual ~EvaluationContext();
+		Scope();
+		virtual ~Scope();
+
+		/** Returns some kind of globally unique ID that identifies this scope. */
+		virtual const String getScopeUID() const;
 
 		/** Returns the value of a symbol.
 			If the symbol is unknown, this can throw an Expression::EvaluationError exception.
@@ -17465,70 +20107,102 @@ public:
 			one, e.g. for "foo.bar", symbol = "foo" and member = "bar".
 			@throws Expression::EvaluationError
 		*/
-		virtual const Expression getSymbolValue (const String& symbol, const String& member) const;
+		virtual const Expression getSymbolValue (const String& symbol) const;
 
 		/** Executes a named function.
 			If the function name is unknown, this can throw an Expression::EvaluationError exception.
 			@throws Expression::EvaluationError
 		*/
-		virtual double evaluateFunction (const String& functionName, const double* parameters, int numParams) const;
+		virtual double evaluateFunction (const String& functionName,
+										 const double* parameters, int numParameters) const;
+
+		/** Used as a callback by the Scope::visitRelativeScope() method.
+			You should never create an instance of this class yourself, it's used by the
+			expression evaluation code.
+		*/
+		class Visitor
+		{
+		public:
+			virtual ~Visitor() {}
+			virtual void visit (const Scope&) = 0;
+		};
+
+		/** Creates a Scope object for a named scope, and then calls a visitor
+			to do some kind of processing with this new scope.
+
+			If the name is valid, this method must create a suitable (temporary) Scope
+			object to represent it, and must call the Visitor::visit() method with this
+			new scope.
+		*/
+		virtual void visitRelativeScope (const String& scopeName, Visitor& visitor) const;
 	};
 
-	/** Evaluates this expression, without using an EvaluationContext.
-		Without an EvaluationContext, no symbols can be used, and only basic functions such as sin, cos, tan,
+	/** Evaluates this expression, without using a Scope.
+		Without a Scope, no symbols can be used, and only basic functions such as sin, cos, tan,
 		min, max are available.
-		@throws Expression::EvaluationError
+		To find out about any errors during evaluation, use the other version of this method which
+		takes a String parameter.
 	*/
 	double evaluate() const;
 
-	/** Evaluates this expression, providing a context that should be able to evaluate any symbols
+	/** Evaluates this expression, providing a scope that should be able to evaluate any symbols
 		or functions that it uses.
-		@throws Expression::EvaluationError
+		To find out about any errors during evaluation, use the other version of this method which
+		takes a String parameter.
 	*/
-	double evaluate (const EvaluationContext& context) const;
+	double evaluate (const Scope& scope) const;
+
+	/** Evaluates this expression, providing a scope that should be able to evaluate any symbols
+		or functions that it uses.
+	*/
+	double evaluate (const Scope& scope, String& evaluationError) const;
 
 	/** Attempts to return an expression which is a copy of this one, but with a constant adjusted
 		to make the expression resolve to a target value.
 
 		E.g. if the expression is "x + 10" and x is 5, then asking for a target value of 8 will return
 		the expression "x + 3". Obviously some expressions can't be reversed in this way, in which
-		case they might just be adjusted by adding a constant to them.
+		case they might just be adjusted by adding a constant to the original expression.
 
 		@throws Expression::EvaluationError
 	*/
-	const Expression adjustedToGiveNewResult (double targetValue, const EvaluationContext& context) const;
+	const Expression adjustedToGiveNewResult (double targetValue, const Scope& scope) const;
+
+	/** Represents a symbol that is used in an Expression. */
+	struct Symbol
+	{
+		Symbol (const String& scopeUID, const String& symbolName);
+		bool operator== (const Symbol&) const throw();
+		bool operator!= (const Symbol&) const throw();
+
+		String scopeUID;	/**< The unique ID of the Scope that contains this symbol. */
+		String symbolName;  /**< The name of the symbol. */
+	};
 
 	/** Returns a copy of this expression in which all instances of a given symbol have been renamed. */
-	const Expression withRenamedSymbol (const String& oldSymbol, const String& newSymbol) const;
+	const Expression withRenamedSymbol (const Symbol& oldSymbol, const String& newName, const Scope& scope) const;
 
 	/** Returns true if this expression makes use of the specified symbol.
-		If a suitable context is supplied, the search will dereference and recursively check
+		If a suitable scope is supplied, the search will dereference and recursively check
 		all symbols, so that it can be determined whether this expression relies on the given
-		symbol at any level in its evaluation. If the context parameter is null, this just checks
+		symbol at any level in its evaluation. If the scope parameter is null, this just checks
 		whether the expression contains any direct references to the symbol.
 
 		@throws Expression::EvaluationError
 	*/
-	bool referencesSymbol (const String& symbol, const EvaluationContext* context) const;
+	bool referencesSymbol (const Symbol& symbol, const Scope& scope) const;
 
 	/** Returns true if this expression contains any symbols. */
 	bool usesAnySymbols() const;
+
+	/** Returns a list of all symbols that may be needed to resolve this expression in the given scope. */
+	void findReferencedSymbols (Array<Symbol>& results, const Scope& scope) const;
 
 	/** An exception that can be thrown by Expression::parse(). */
 	class ParseError  : public std::exception
 	{
 	public:
 		ParseError (const String& message);
-
-		String description;
-	};
-
-	/** An exception that can be thrown by Expression::evaluate(). */
-	class EvaluationError  : public std::exception
-	{
-	public:
-		EvaluationError (const String& message);
-		EvaluationError (const String& symbolName, const String& memberName);
 
 		String description;
 	};
@@ -17547,16 +20221,8 @@ public:
 	/** Returns the type of this expression. */
 	Type getType() const throw();
 
-	/** If this expression is a symbol, this returns its name. */
-	const String getSymbol() const;
-
-	/** If this expression is a function, this returns its name. */
-	const String getFunction() const;
-
-	/** If this expression is an operator, this returns its name.
-		E.g. "+", "-", "*", "/", etc.
-	*/
-	const String getOperator() const;
+	/** If this expression is a symbol, function or operator, this returns its identifier. */
+	const String getSymbolOrFunction() const;
 
 	/** Returns the number of inputs to this expression.
 		@see getInput
@@ -17570,35 +20236,12 @@ public:
 
 private:
 
+	class Term;
 	class Helpers;
+	friend class Term;
 	friend class Helpers;
-
-	class Term  : public ReferenceCountedObject
-	{
-	public:
-		Term() {}
-		virtual ~Term() {}
-
-		virtual Term* clone() const = 0;
-		virtual double evaluate (const EvaluationContext&, int recursionDepth) const = 0;
-		virtual int getNumInputs() const = 0;
-		virtual Term* getInput (int index) const = 0;
-		virtual int getInputIndexFor (const Term* possibleInput) const;
-		virtual const String toString() const = 0;
-		virtual int getOperatorPrecedence() const;
-		virtual bool referencesSymbol (const String& symbol, const EvaluationContext*, int recursionDepth) const;
-		virtual const ReferenceCountedObjectPtr<Term> createTermToEvaluateInput (const EvaluationContext&, const Term* inputTerm,
-																				 double overallTarget, Term* topLevelTerm) const;
-		virtual const ReferenceCountedObjectPtr<Term> negated();
-		virtual Type getType() const throw() = 0;
-		virtual const String getSymbolName() const;
-		virtual const String getFunctionName() const;
-
-	private:
-		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Term);
-	};
-
 	friend class ScopedPointer<Term>;
+	friend class ReferenceCountedObjectPtr<Term>;
 	ReferenceCountedObjectPtr<Term> term;
 
 	explicit Expression (Term* term);
@@ -17930,6 +20573,18 @@ private:
 #ifndef __JUCE_CHARACTERFUNCTIONS_JUCEHEADER__
 
 #endif
+#ifndef __JUCE_CHARPOINTER_ASCII_JUCEHEADER__
+
+#endif
+#ifndef __JUCE_CHARPOINTER_UTF16_JUCEHEADER__
+
+#endif
+#ifndef __JUCE_CHARPOINTER_UTF32_JUCEHEADER__
+
+#endif
+#ifndef __JUCE_CHARPOINTER_UTF8_JUCEHEADER__
+
+#endif
 #ifndef __JUCE_IDENTIFIER_JUCEHEADER__
 
 #endif
@@ -18234,7 +20889,7 @@ public:
 
 private:
 	String originalText;
-	const juce_wchar* input;
+	String::CharPointerType input;
 	bool outOfData, errorOccurred;
 
 	String lastError, dtdText;
@@ -19395,6 +22050,8 @@ private:
 #ifndef __JUCE_TIMESLICETHREAD_JUCEHEADER__
 #define __JUCE_TIMESLICETHREAD_JUCEHEADER__
 
+class TimeSliceThread;
+
 /**
 	Used by the TimeSliceThread class.
 
@@ -19420,13 +22077,18 @@ public:
 		The implementation of this method should use its time-slice to do something that's
 		quick - never block for longer than absolutely necessary.
 
-		@returns	Your method should return true if it needs more time, or false if it's
-					not too busy and doesn't need calling back urgently. If all the thread's
-					clients indicate that they're not busy, then it'll save CPU by sleeping for
-					up to half a second in between callbacks. You can force the TimeSliceThread
-					to wake up and poll again immediately by calling its notify() method.
+		@returns	Your method should return the number of milliseconds which it would like to wait before being called
+					again. Returning 0 will make the thread call again as soon as possible (after possibly servicing
+					other busy clients). If you return a value below zero, your client will be removed from the list of clients,
+					and won't be called again. The value you specify isn't a guaranteee, and is only used as a hint by the
+					thread - the actual time before the next callback may be more or less than specified.
+					You can force the TimeSliceThread to wake up and poll again immediately by calling its notify() method.
 	*/
-	virtual bool useTimeSlice() = 0;
+	virtual int useTimeSlice() = 0;
+
+private:
+	friend class TimeSliceThread;
+	Time nextCallTime;
 };
 
 /**
@@ -19458,10 +22120,10 @@ public:
 
 	/** Adds a client to the list.
 
-		The client's callbacks will start immediately (possibly before the method
-		has returned).
+		The client's callbacks will start after the number of milliseconds specified
+		by millisecondsBeforeStarting (and this may happen before this method has returned).
 	*/
-	void addTimeSliceClient (TimeSliceClient* client);
+	void addTimeSliceClient (TimeSliceClient* client, int millisecondsBeforeStarting = 0);
 
 	/** Removes a client from the list.
 
@@ -19482,9 +22144,9 @@ public:
 private:
 	CriticalSection callbackLock, listLock;
 	Array <TimeSliceClient*> clients;
-	int index;
 	TimeSliceClient* clientBeingCalled;
-	bool clientsChanged;
+
+	TimeSliceClient* getNextClient (int index) const;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TimeSliceThread);
 };
@@ -20243,7 +22905,7 @@ class Point
 public:
 
 	/** Creates a point with co-ordinates (0, 0). */
-	Point() throw()  : x (0), y (0) {}
+	Point() throw()  : x(), y() {}
 
 	/** Creates a copy of another point. */
 	Point (const Point& other) throw()  : x (other.x), y (other.y)  {}
@@ -20354,11 +23016,14 @@ public:
 	const Point transformedBy (const AffineTransform& transform) const throw()	{ return Point (transform.mat00 * x + transform.mat01 * y + transform.mat02,
 																								  transform.mat10 * x + transform.mat11 * y + transform.mat12); }
 
+	/** Casts this point to a Point<int> object. */
+	const Point<int> toInt() const throw()				  { return Point<int> (static_cast <int> (x), static_cast<int> (y)); }
+
 	/** Casts this point to a Point<float> object. */
 	const Point<float> toFloat() const throw()			  { return Point<float> (static_cast <float> (x), static_cast<float> (y)); }
 
-	/** Casts this point to a Point<int> object. */
-	const Point<int> toInt() const throw()				  { return Point<int> (static_cast <int> (x), static_cast<int> (y)); }
+	/** Casts this point to a Point<double> object. */
+	const Point<double> toDouble() const throw()			{ return Point<double> (static_cast <double> (x), static_cast<double> (y)); }
 
 	/** Returns the point as a string in the form "x, y". */
 	const String toString() const                                       { return String (x) + ", " + String (y); }
@@ -20652,7 +23317,6 @@ private:
 	static int doubleClickTimeOutMs;
 
 	MouseEvent& operator= (const MouseEvent&);
-	JUCE_LEAK_DETECTOR (MouseEvent);
 };
 
 #endif   // __JUCE_MOUSEEVENT_JUCEHEADER__
@@ -21505,7 +24169,7 @@ public:
 		The default co-ordinates will be (0, 0, 0, 0).
 	*/
 	Rectangle() throw()
-	  : x (0), y (0), w (0), h (0)
+	  : x(), y(), w(), h()
 	{
 	}
 
@@ -21526,7 +24190,7 @@ public:
 
 	/** Creates a rectangle with a given size, and a position of (0, 0). */
 	Rectangle (const ValueType width, const ValueType height) throw()
-	  : x (0), y (0), w (width), h (height)
+	  : x(), y(), w (width), h (height)
 	{
 	}
 
@@ -21537,8 +24201,8 @@ public:
 		w (corner1.getX() - corner2.getX()),
 		h (corner1.getY() - corner2.getY())
 	{
-		if (w < 0) w = -w;
-		if (h < 0) h = -h;
+		if (w < ValueType()) w = -w;
+		if (h < ValueType()) h = -h;
 	}
 
 	/** Creates a Rectangle from a set of left, right, top, bottom coordinates.
@@ -21562,7 +24226,7 @@ public:
 	~Rectangle() throw() {}
 
 	/** Returns true if the rectangle's width and height are both zero or less */
-	bool isEmpty() const throw()					{ return w <= 0 || h <= 0; }
+	bool isEmpty() const throw()					{ return w <= ValueType() || h <= ValueType(); }
 
 	/** Returns the x co-ordinate of the rectangle's left-hand-side. */
 	inline ValueType getX() const throw()			   { return x; }
@@ -21604,6 +24268,9 @@ public:
 
 	/** Changes the position of the rectangle's top-left corner (leaving its size unchanged). */
 	void setPosition (const ValueType newX, const ValueType newY) throw()			   { x = newX; y = newY; }
+
+	/** Returns a rectangle with the same size as this one, but a new position. */
+	const Rectangle withPosition (const ValueType newX, const ValueType newY) const throw()	 { return Rectangle (newX, newY, w, h); }
 
 	/** Returns a rectangle with the same size as this one, but a new position. */
 	const Rectangle withPosition (const Point<ValueType>& newPos) const throw()			 { return Rectangle (newPos.getX(), newPos.getY(), w, h); }
@@ -21954,12 +24621,12 @@ public:
 		const int maxX = jmax (otherX, x);
 		otherW = jmin (otherX + otherW, x + w) - maxX;
 
-		if (otherW > 0)
+		if (otherW > ValueType())
 		{
 			const int maxY = jmax (otherY, y);
 			otherH = jmin (otherY + otherH, y + h) - maxY;
 
-			if (otherH > 0)
+			if (otherH > ValueType())
 			{
 				otherX = maxX; otherY = maxY;
 				return true;
@@ -22125,12 +24792,12 @@ public:
 		const ValueType x = jmax (x1, x2);
 		w1 = jmin (x1 + w1, x2 + w2) - x;
 
-		if (w1 > 0)
+		if (w1 > ValueType())
 		{
 			const ValueType y = jmax (y1, y2);
 			h1 = jmin (y1 + h1, y2 + h2) - y;
 
-			if (h1 > 0)
+			if (h1 > ValueType())
 			{
 				x1 = x; y1 = y;
 				return true;
@@ -22235,8 +24902,30 @@ public:
 		The (x, y) position of the rectangle will be updated to position it inside the
 		given space according to the justification flags.
 	*/
-	void applyToRectangle (int& x, int& y, int w, int h,
-						   int spaceX, int spaceY, int spaceW, int spaceH) const throw();
+	template <typename ValueType>
+	void applyToRectangle (ValueType& x, ValueType& y, ValueType w, ValueType h,
+						   ValueType spaceX, ValueType spaceY, ValueType spaceW, ValueType spaceH) const throw()
+	{
+		x = spaceX;
+		if ((flags & horizontallyCentred) != 0)	 x += (spaceW - w) / (ValueType) 2;
+		else if ((flags & right) != 0)		  x += spaceW - w;
+
+		y = spaceY;
+		if ((flags & verticallyCentred) != 0)	   y += (spaceH - h) / (ValueType) 2;
+		else if ((flags & bottom) != 0)		 y += spaceH - h;
+	}
+
+	/** Returns the new position of a rectangle that has been justified to fit within a given space.
+	*/
+	template <typename ValueType>
+	const Rectangle<ValueType> appliedToRectangle (const Rectangle<ValueType>& areaToAdjust,
+												   const Rectangle<ValueType>& targetSpace) const throw()
+	{
+		ValueType x = areaToAdjust.getX(), y = areaToAdjust.getY();
+		applyToRectangle (x, y, areaToAdjust.getWidth(), areaToAdjust.getHeight(),
+						  targetSpace.getX(), targetSpace.getY(), targetSpace.getWidth(), targetSpace.getHeight());
+		return areaToAdjust.withPosition (x, y);
+	}
 
 	/** Flag values that can be combined and used in the constructor. */
 	enum
@@ -23064,6 +25753,12 @@ public:
 	/** Destructor. */
 	virtual ~Typeface();
 
+	/** Returns true if this typeface can be used to render the specified font.
+		When called, the font will already have been checked to make sure that its name and
+		style flags match the typeface.
+	*/
+	virtual bool isSuitableForFont (const Font&) const	  { return true; }
+
 	/** Returns the ascent of the font, as a proportion of its height.
 		The height is considered to always be normalised as 1.0, so this will be a
 		value less that 1.0, indicating the proportion of the font that lies above
@@ -23099,6 +25794,12 @@ public:
 		The path returned will be normalised to a font height of 1.0.
 	*/
 	virtual bool getOutlineForGlyph (int glyphNumber, Path& path) = 0;
+
+	/** Returns true if the typeface uses hinting. */
+	virtual bool isHinted() const			   { return false; }
+
+	/** Changes the number of fonts that are cached in memory. */
+	static void setTypefaceCacheSize (int numFontsToCache);
 
 protected:
 
@@ -23542,10 +26243,12 @@ private:
 	class SharedFontInternal  : public ReferenceCountedObject
 	{
 	public:
-		SharedFontInternal (const String& typefaceName, float height, float horizontalScale,
-							float kerning, float ascent, int styleFlags,
-							Typeface* typeface) throw();
+		SharedFontInternal (float height, int styleFlags) throw();
+		SharedFontInternal (const String& typefaceName, float height, int styleFlags) throw();
+		SharedFontInternal (const Typeface::Ptr& typeface) throw();
 		SharedFontInternal (const SharedFontInternal& other) throw();
+
+		bool operator== (const SharedFontInternal&) const throw();
 
 		String typefaceName;
 		float height, horizontalScale, kerning, ascent;
@@ -23785,7 +26488,9 @@ public:
 	{
 	}
 
-	forcedinline uint32 getARGB() const throw()	 { return argb; }
+	forcedinline uint32 getARGB() const throw()		 { return argb; }
+	forcedinline uint32 getUnpremultipliedARGB() const throw()  { PixelARGB p (argb); p.unpremultiply(); return p.getARGB(); }
+
 	forcedinline uint32 getRB() const throw()	   { return 0x00ff00ff & argb; }
 	forcedinline uint32 getAG() const throw()	   { return 0x00ff00ff & (argb >> 8); }
 
@@ -24016,7 +26721,9 @@ public:
 		b = (uint8) (argb);
 	}
 
-	forcedinline uint32 getARGB() const throw()	 { return 0xff000000 | b | (g << 8) | (r << 16); }
+	forcedinline uint32 getARGB() const throw()		 { return 0xff000000 | b | (g << 8) | (r << 16); }
+	forcedinline uint32 getUnpremultipliedARGB() const throw()  { return getARGB(); }
+
 	forcedinline uint32 getRB() const throw()	   { return b | (uint32) (r << 16); }
 	forcedinline uint32 getAG() const throw()	   { return 0xff0000 | g; }
 
@@ -24178,7 +26885,9 @@ public:
 		a = (uint8) (argb >> 24);
 	}
 
-	forcedinline uint32 getARGB() const throw()	 { return (((uint32) a) << 24) | (((uint32) a) << 16) | (((uint32) a) << 8) | a; }
+	forcedinline uint32 getARGB() const throw()		 { return (((uint32) a) << 24) | (((uint32) a) << 16) | (((uint32) a) << 8) | a; }
+	forcedinline uint32 getUnpremultipliedARGB() const throw()  { return (((uint32) a) << 24) | 0xffffff; }
+
 	forcedinline uint32 getRB() const throw()	   { return (((uint32) a) << 16) | a; }
 	forcedinline uint32 getAG() const throw()	   { return (((uint32) a) << 16) | a; }
 
@@ -24959,6 +27668,20 @@ public:
 	/** Returns the transform that should be applied to these source co-ordinates to fit them
 		into the destination rectangle using the current flags.
 	*/
+	template <typename ValueType>
+	const Rectangle<ValueType> appliedTo (const Rectangle<ValueType>& source,
+										  const Rectangle<ValueType>& destination) const throw()
+	{
+		double x = source.getX(), y = source.getY(), w = source.getWidth(), h = source.getHeight();
+		applyTo (x, y, w, h, static_cast <double> (destination.getX()), static_cast <double> (destination.getY()),
+				 static_cast <double> (destination.getWidth()), static_cast <double> (destination.getHeight()));
+		return Rectangle<ValueType> (static_cast <ValueType> (x), static_cast <ValueType> (y),
+									 static_cast <ValueType> (w), static_cast <ValueType> (h));
+	}
+
+	/** Returns the transform that should be applied to these source co-ordinates to fit them
+		into the destination rectangle using the current flags.
+	*/
 	const AffineTransform getTransformToFit (const Rectangle<float>& source,
 											 const Rectangle<float>& destination) const throw();
 
@@ -25302,21 +28025,19 @@ public:
 
 	/** Draws a dashed line using a custom set of dash-lengths.
 
-		@param startX	   the line's start x co-ordinate
-		@param startY	   the line's start y co-ordinate
-		@param endX		 the line's end x co-ordinate
-		@param endY		 the line's end y co-ordinate
+		@param line		 the line to draw
 		@param dashLengths	  a series of lengths to specify the on/off lengths - e.g.
 								{ 4, 5, 6, 7 } will draw a line of 4 pixels, skip 5 pixels,
 								draw 6 pixels, skip 7 pixels, and then repeat.
 		@param numDashLengths   the number of elements in the array (this must be an even number).
 		@param lineThickness	the thickness of the line to draw
+		@param dashIndexToStartFrom	 the index in the dash-length array to use for the first segment
 		@see PathStrokeType::createDashedStroke
 	*/
-	void drawDashedLine (float startX, float startY,
-						 float endX, float endY,
+	void drawDashedLine (const Line<float>& line,
 						 const float* dashLengths, int numDashLengths,
-						 float lineThickness = 1.0f) const;
+						 float lineThickness = 1.0f,
+						 int dashIndexToStartFrom = 0) const;
 
 	/** Draws a vertical line of pixels at a given x position.
 
@@ -25919,9 +28640,16 @@ public:
 	class BitmapData
 	{
 	public:
-		BitmapData (Image& image, int x, int y, int w, int h, bool needsToBeWritable);
+		enum ReadWriteMode
+		{
+			readOnly,
+			writeOnly,
+			readWrite
+		};
+
+		BitmapData (Image& image, int x, int y, int w, int h, ReadWriteMode mode);
 		BitmapData (const Image& image, int x, int y, int w, int h);
-		BitmapData (const Image& image, bool needsToBeWritable);
+		BitmapData (const Image& image, ReadWriteMode mode);
 		~BitmapData();
 
 		/** Returns a pointer to the start of a line in the image.
@@ -25949,8 +28677,19 @@ public:
 		void setPixelColour (int x, int y, const Colour& colour) const throw();
 
 		uint8* data;
-		const PixelFormat pixelFormat;
+		PixelFormat pixelFormat;
 		int lineStride, pixelStride, width, height;
+
+		/** Used internally by custom image types to manage pixel data lifetime. */
+		class BitmapDataReleaser
+		{
+		protected:
+			BitmapDataReleaser() {}
+		public:
+			virtual ~BitmapDataReleaser() {}
+		};
+
+		ScopedPointer<BitmapDataReleaser> dataReleaser;
 
 	private:
 		JUCE_DECLARE_NON_COPYABLE (BitmapData);
@@ -26011,6 +28750,7 @@ public:
 		virtual LowLevelGraphicsContext* createLowLevelContext() = 0;
 		virtual SharedImage* clone() = 0;
 		virtual ImageType getType() const = 0;
+		virtual void initialiseBitmapData (BitmapData& bitmapData, int x, int y, BitmapData::ReadWriteMode mode) = 0;
 
 		static SharedImage* createNativeImage (PixelFormat format, int width, int height, bool clearImage);
 		static SharedImage* createSoftwareImage (PixelFormat format, int width, int height, bool clearImage);
@@ -26018,17 +28758,12 @@ public:
 		const PixelFormat getPixelFormat() const throw()	{ return format; }
 		int getWidth() const throw()			{ return width; }
 		int getHeight() const throw()			   { return height; }
-		int getPixelStride() const throw()		  { return pixelStride; }
-		int getLineStride() const throw()		   { return lineStride; }
-		uint8* getPixelData (int x, int y) const throw();
 
 	protected:
 		friend class Image;
 		friend class BitmapData;
 		const PixelFormat format;
 		const int width, height;
-		int pixelStride, lineStride;
-		uint8* imageData;
 		NamedValueSet userData;
 
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SharedImage);
@@ -26232,7 +28967,7 @@ public:
 	const Path toPath() const;
 
 	/** An iterator for accessing all the rectangles in a RectangleList. */
-	class Iterator
+	class JUCE_API  Iterator
 	{
 	public:
 
@@ -26280,82 +29015,113 @@ private:
 
 	@see Rectangle
 */
-class JUCE_API  BorderSize
+template <typename ValueType>
+class BorderSize
 {
 public:
 
 	/** Creates a null border.
-
 		All sizes are left as 0.
 	*/
-	BorderSize() throw();
+	BorderSize() throw()
+		: top(), left(), bottom(), right()
+	{
+	}
 
 	/** Creates a copy of another border. */
-	BorderSize (const BorderSize& other) throw();
+	BorderSize (const BorderSize& other) throw()
+		: top (other.top), left (other.left), bottom (other.bottom), right (other.right)
+	{
+	}
 
 	/** Creates a border with the given gaps. */
-	BorderSize (int topGap,
-				int leftGap,
-				int bottomGap,
-				int rightGap) throw();
+	BorderSize (ValueType topGap, ValueType leftGap, ValueType bottomGap, ValueType rightGap) throw()
+		: top (topGap), left (leftGap), bottom (bottomGap), right (rightGap)
+	{
+	}
 
 	/** Creates a border with the given gap on all sides. */
-	explicit BorderSize (int allGaps) throw();
-
-	/** Destructor. */
-	~BorderSize() throw();
-
-	/** Returns the gap that should be left at the top of the region. */
-	int getTop() const throw()			  { return top; }
+	explicit BorderSize (ValueType allGaps) throw()
+		: top (allGaps), left (allGaps), bottom (allGaps), right (allGaps)
+	{
+	}
 
 	/** Returns the gap that should be left at the top of the region. */
-	int getLeft() const throw()			 { return left; }
+	ValueType getTop() const throw()			{ return top; }
 
 	/** Returns the gap that should be left at the top of the region. */
-	int getBottom() const throw()			   { return bottom; }
+	ValueType getLeft() const throw()		   { return left; }
 
 	/** Returns the gap that should be left at the top of the region. */
-	int getRight() const throw()			{ return right; }
+	ValueType getBottom() const throw()		 { return bottom; }
+
+	/** Returns the gap that should be left at the top of the region. */
+	ValueType getRight() const throw()		  { return right; }
 
 	/** Returns the sum of the top and bottom gaps. */
-	int getTopAndBottom() const throw()		 { return top + bottom; }
+	ValueType getTopAndBottom() const throw()	   { return top + bottom; }
 
 	/** Returns the sum of the left and right gaps. */
-	int getLeftAndRight() const throw()		 { return left + right; }
+	ValueType getLeftAndRight() const throw()	   { return left + right; }
 
 	/** Returns true if this border has no thickness along any edge. */
-	bool isEmpty() const throw()			{ return left + right + top + bottom == 0; }
+	bool isEmpty() const throw()			{ return left + right + top + bottom == ValueType(); }
 
 	/** Changes the top gap. */
-	void setTop (int newTopGap) throw();
+	void setTop (ValueType newTopGap) throw()	   { top = newTopGap; }
 
 	/** Changes the left gap. */
-	void setLeft (int newLeftGap) throw();
+	void setLeft (ValueType newLeftGap) throw()	 { left = newLeftGap; }
 
 	/** Changes the bottom gap. */
-	void setBottom (int newBottomGap) throw();
+	void setBottom (ValueType newBottomGap) throw()	 { bottom = newBottomGap; }
 
 	/** Changes the right gap. */
-	void setRight (int newRightGap) throw();
+	void setRight (ValueType newRightGap) throw()	{ right = newRightGap; }
 
 	/** Returns a rectangle with these borders removed from it. */
-	const Rectangle<int> subtractedFrom (const Rectangle<int>& original) const throw();
+	const Rectangle<ValueType> subtractedFrom (const Rectangle<ValueType>& original) const throw()
+	{
+		return Rectangle<ValueType> (original.getX() + left,
+									 original.getY() + top,
+									 original.getWidth() - (left + right),
+									 original.getHeight() - (top + bottom));
+	}
 
 	/** Removes this border from a given rectangle. */
-	void subtractFrom (Rectangle<int>& rectangle) const throw();
+	void subtractFrom (Rectangle<ValueType>& rectangle) const throw()
+	{
+		rectangle = subtractedFrom (rectangle);
+	}
 
 	/** Returns a rectangle with these borders added around it. */
-	const Rectangle<int> addedTo (const Rectangle<int>& original) const throw();
+	const Rectangle<ValueType> addedTo (const Rectangle<ValueType>& original) const throw()
+	{
+		return Rectangle<ValueType> (original.getX() - left,
+									 original.getY() - top,
+									 original.getWidth() + (left + right),
+									 original.getHeight() + (top + bottom));
+	}
 
 	/** Adds this border around a given rectangle. */
-	void addTo (Rectangle<int>& original) const throw();
+	void addTo (Rectangle<ValueType>& rectangle) const throw()
+	{
+		rectangle = addedTo (rectangle);
+	}
 
-	bool operator== (const BorderSize& other) const throw();
-	bool operator!= (const BorderSize& other) const throw();
+	bool operator== (const BorderSize& other) const throw()
+	{
+		return top == other.top && left == other.left && bottom == other.bottom && right == other.right;
+	}
+
+	bool operator!= (const BorderSize& other) const throw()
+	{
+		return ! operator== (other);
+	}
 
 private:
 
-	int top, left, bottom, right;
+	ValueType top, left, bottom, right;
 
 	JUCE_LEAK_DETECTOR (BorderSize);
 };
@@ -26433,6 +29199,9 @@ public:
 
 		You can register a callback using Component::enterModalState() or
 		ModalComponentManager::attachCallback().
+
+		For some quick ways of creating callback objects, see the ModalCallbackFunction class.
+		@see ModalCallbackFunction
 	*/
 	class Callback
 	{
@@ -26490,10 +29259,12 @@ public:
 	/** Brings any modal components to the front. */
 	void bringModalComponentsToFront();
 
+   #if JUCE_MODAL_LOOPS_PERMITTED
 	/** Runs the event loop until the currently topmost modal component is dismissed, and
 		returns the exit code for that component.
 	*/
 	int runEventLoopForCurrentComponent();
+   #endif
 
 	juce_DeclareSingleton_SingleThreaded_Minimal (ModalComponentManager);
 
@@ -26510,6 +29281,7 @@ protected:
 	void handleAsyncUpdate();
 
 private:
+
 	class ModalItem;
 	class ReturnValueRetriever;
 
@@ -26517,11 +29289,222 @@ private:
 	friend class OwnedArray <ModalItem>;
 	OwnedArray <ModalItem> stack;
 
-	void startModal (Component* component, Callback* callback);
+	void startModal (Component* component);
 	void endModal (Component* component, int returnValue);
 	void endModal (Component* component);
 
 	JUCE_DECLARE_NON_COPYABLE (ModalComponentManager);
+};
+
+/**
+	This class provides some handy utility methods for creating ModalComponentManager::Callback
+	objects that will invoke a static function with some parameters when a modal component is dismissed.
+*/
+class ModalCallbackFunction
+{
+public:
+
+	/** This is a utility function to create a ModalComponentManager::Callback that will
+		call a static function with a parameter.
+
+		The function that you supply must take two parameters - the first being an int, which is
+		the result code that was used when the modal component was dismissed, and the second
+		can be a custom type. Note that this custom value will be copied and stored, so it must
+		be a primitive type or a class that provides copy-by-value semantics.
+
+		E.g. @code
+		static void myCallbackFunction (int modalResult, double customValue)
+		{
+			if (modalResult == 1)
+				doSomethingWith (customValue);
+		}
+
+		Component* someKindOfComp;
+		...
+		someKindOfComp->enterModalState (ModalCallbackFunction::create (myCallbackFunction, 3.0));
+		@endcode
+		@see ModalComponentManager::Callback
+	*/
+	template <typename ParamType>
+	static ModalComponentManager::Callback* create (void (*functionToCall) (int, ParamType),
+													ParamType parameterValue)
+	{
+		return new FunctionCaller1 <ParamType> (functionToCall, parameterValue);
+	}
+
+	/** This is a utility function to create a ModalComponentManager::Callback that will
+		call a static function with two custom parameters.
+
+		The function that you supply must take three parameters - the first being an int, which is
+		the result code that was used when the modal component was dismissed, and the next two are
+		your custom types. Note that these custom values will be copied and stored, so they must
+		be primitive types or classes that provide copy-by-value semantics.
+
+		E.g. @code
+		static void myCallbackFunction (int modalResult, double customValue1, String customValue2)
+		{
+			if (modalResult == 1)
+				doSomethingWith (customValue1, customValue2);
+		}
+
+		Component* someKindOfComp;
+		...
+		someKindOfComp->enterModalState (ModalCallbackFunction::create (myCallbackFunction, 3.0, String ("xyz")));
+		@endcode
+		@see ModalComponentManager::Callback
+	*/
+	template <typename ParamType1, typename ParamType2>
+	static ModalComponentManager::Callback* withParam (void (*functionToCall) (int, ParamType1, ParamType2),
+													   ParamType1 parameterValue1,
+													   ParamType2 parameterValue2)
+	{
+		return new FunctionCaller2 <ParamType1, ParamType2> (functionToCall, parameterValue1, parameterValue2);
+	}
+
+	/** This is a utility function to create a ModalComponentManager::Callback that will
+		call a static function with a component.
+
+		The function that you supply must take two parameters - the first being an int, which is
+		the result code that was used when the modal component was dismissed, and the second
+		can be a Component class. The component will be stored as a WeakReference, so that if it gets
+		deleted before this callback is invoked, the pointer that is passed to the function will be null.
+
+		E.g. @code
+		static void myCallbackFunction (int modalResult, Slider* mySlider)
+		{
+			if (modalResult == 1 && mySlider != 0) // (must check that mySlider isn't null in case it was deleted..)
+				mySlider->setValue (0.0);
+		}
+
+		Component* someKindOfComp;
+		Slider* mySlider;
+		...
+		someKindOfComp->enterModalState (ModalCallbackFunction::forComponent (myCallbackFunction, mySlider));
+		@endcode
+		@see ModalComponentManager::Callback
+	*/
+	template <class ComponentType>
+	static ModalComponentManager::Callback* forComponent (void (*functionToCall) (int, ComponentType*),
+														  ComponentType* component)
+	{
+		return new ComponentCaller1 <ComponentType> (functionToCall, component);
+	}
+
+	/** Creates a ModalComponentManager::Callback that will call a static function with a component.
+
+		The function that you supply must take three parameters - the first being an int, which is
+		the result code that was used when the modal component was dismissed, the second being a Component
+		class, and the third being a custom type (which must be a primitive type or have copy-by-value semantics).
+		The component will be stored as a WeakReference, so that if it gets deleted before this callback is
+		invoked, the pointer that is passed into the function will be null.
+
+		E.g. @code
+		static void myCallbackFunction (int modalResult, Slider* mySlider, String customParam)
+		{
+			if (modalResult == 1 && mySlider != 0) // (must check that mySlider isn't null in case it was deleted..)
+				mySlider->setName (customParam);
+		}
+
+		Component* someKindOfComp;
+		Slider* mySlider;
+		...
+		someKindOfComp->enterModalState (ModalCallbackFunction::forComponent (myCallbackFunction, mySlider, String ("hello")));
+		@endcode
+		@see ModalComponentManager::Callback
+	*/
+	template <class ComponentType, typename ParamType>
+	static ModalComponentManager::Callback* forComponent (void (*functionToCall) (int, ComponentType*, ParamType),
+														  ComponentType* component,
+														  ParamType param)
+	{
+		return new ComponentCaller2 <ComponentType, ParamType> (functionToCall, component, param);
+	}
+
+private:
+
+	template <typename ParamType>
+	class FunctionCaller1  : public ModalComponentManager::Callback
+	{
+	public:
+		typedef void (*FunctionType) (int, ParamType);
+
+		FunctionCaller1 (FunctionType& function_, ParamType& param_)
+			: function (function_), param (param_) {}
+
+		void modalStateFinished (int returnValue)  { function (returnValue, param); }
+
+	private:
+		const FunctionType function;
+		ParamType param;
+
+		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FunctionCaller1);
+	};
+
+	template <typename ParamType1, typename ParamType2>
+	class FunctionCaller2  : public ModalComponentManager::Callback
+	{
+	public:
+		typedef void (*FunctionType) (int, ParamType1, ParamType2);
+
+		FunctionCaller2 (FunctionType& function_, ParamType1& param1_, ParamType2& param2_)
+			: function (function_), param1 (param1_), param2 (param2_) {}
+
+		void modalStateFinished (int returnValue)   { function (returnValue, param1, param2); }
+
+	private:
+		const FunctionType function;
+		ParamType1 param1;
+		ParamType2 param2;
+
+		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FunctionCaller2);
+	};
+
+	template <typename ComponentType>
+	class ComponentCaller1  : public ModalComponentManager::Callback
+	{
+	public:
+		typedef void (*FunctionType) (int, ComponentType*);
+
+		ComponentCaller1 (FunctionType& function_, ComponentType* comp_)
+			: function (function_), comp (comp_) {}
+
+		void modalStateFinished (int returnValue)
+		{
+			function (returnValue, static_cast <ComponentType*> (comp.get()));
+		}
+
+	private:
+		const FunctionType function;
+		WeakReference<Component> comp;
+
+		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ComponentCaller1);
+	};
+
+	template <typename ComponentType, typename ParamType1>
+	class ComponentCaller2  : public ModalComponentManager::Callback
+	{
+	public:
+		typedef void (*FunctionType) (int, ComponentType*, ParamType1);
+
+		ComponentCaller2 (FunctionType& function_, ComponentType* comp_, ParamType1 param1_)
+			: function (function_), comp (comp_), param1 (param1_) {}
+
+		void modalStateFinished (int returnValue)
+		{
+			function (returnValue, static_cast <ComponentType*> (comp.get()), param1);
+		}
+
+	private:
+		const FunctionType function;
+		WeakReference<Component> comp;
+		ParamType1 param1;
+
+		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ComponentCaller2);
+	};
+
+	ModalCallbackFunction();
+	~ModalCallbackFunction();
+	JUCE_DECLARE_NON_COPYABLE (ModalCallbackFunction);
 };
 
 #endif   // __JUCE_MODALCOMPONENTMANAGER_JUCEHEADER__
@@ -26531,6 +29514,8 @@ class LookAndFeel;
 class MouseInputSource;
 class MouseInputSourceInternal;
 class ComponentPeer;
+class MarkerList;
+class RelativeRectangle;
 
 /**
 	The base class for all JUCE user-interface objects.
@@ -26578,7 +29563,7 @@ public:
 
 		@see setName
 	*/
-	const String& getName() const throw()		   { return componentName_; }
+	const String& getName() const throw()		   { return componentName; }
 
 	/** Sets the name of this component.
 
@@ -26588,6 +29573,17 @@ public:
 		@see getName
 	*/
 	virtual void setName (const String& newName);
+
+	/** Returns the ID string that was set by setComponentID().
+		@see setComponentID
+	*/
+	const String& getComponentID() const throw()		{ return componentID; }
+
+	/** Sets the component's ID string.
+		You can retrieve the ID using getComponentID().
+		@see getComponentID
+	*/
+	void setComponentID (const String& newID);
 
 	/** Makes the component visible or invisible.
 
@@ -26743,7 +29739,7 @@ public:
 		bounds will no longer be a direct reflection of the position at which it appears within
 		its parent, as the transform will be applied to its bounding box.
 	*/
-	inline int getX() const throw()			 { return bounds_.getX(); }
+	inline int getX() const throw()			 { return bounds.getX(); }
 
 	/** Returns the y coordinate of the top of this component.
 		This is a distance in pixels from the top edge of the component's parent.
@@ -26752,13 +29748,13 @@ public:
 		bounds will no longer be a direct reflection of the position at which it appears within
 		its parent, as the transform will be applied to its bounding box.
 	*/
-	inline int getY() const throw()			 { return bounds_.getY(); }
+	inline int getY() const throw()			 { return bounds.getY(); }
 
 	/** Returns the component's width in pixels. */
-	inline int getWidth() const throw()			 { return bounds_.getWidth(); }
+	inline int getWidth() const throw()			 { return bounds.getWidth(); }
 
 	/** Returns the component's height in pixels. */
-	inline int getHeight() const throw()			{ return bounds_.getHeight(); }
+	inline int getHeight() const throw()			{ return bounds.getHeight(); }
 
 	/** Returns the x coordinate of the component's right-hand edge.
 		This is a distance in pixels from the left edge of the component's parent.
@@ -26767,10 +29763,10 @@ public:
 		bounds will no longer be a direct reflection of the position at which it appears within
 		its parent, as the transform will be applied to its bounding box.
 	*/
-	int getRight() const throw()				{ return bounds_.getRight(); }
+	int getRight() const throw()				{ return bounds.getRight(); }
 
 	/** Returns the component's top-left position as a Point. */
-	const Point<int> getPosition() const throw()		{ return bounds_.getPosition(); }
+	const Point<int> getPosition() const throw()		{ return bounds.getPosition(); }
 
 	/** Returns the y coordinate of the bottom edge of this component.
 		This is a distance in pixels from the top edge of the component's parent.
@@ -26779,7 +29775,7 @@ public:
 		bounds will no longer be a direct reflection of the position at which it appears within
 		its parent, as the transform will be applied to its bounding box.
 	*/
-	int getBottom() const throw()			   { return bounds_.getBottom(); }
+	int getBottom() const throw()			   { return bounds.getBottom(); }
 
 	/** Returns this component's bounding box.
 		The rectangle returned is relative to the top-left of the component's parent.
@@ -26788,7 +29784,7 @@ public:
 		bounds will no longer be a direct reflection of the position at which it appears within
 		its parent, as the transform will be applied to its bounding box.
 	*/
-	const Rectangle<int>& getBounds() const throw()	 { return bounds_; }
+	const Rectangle<int>& getBounds() const throw()	 { return bounds; }
 
 	/** Returns the component's bounds, relative to its own origin.
 		This is like getBounds(), but returns the rectangle in local coordinates, In practice, it'll
@@ -26942,6 +29938,53 @@ public:
 	*/
 	void setBounds (const Rectangle<int>& newBounds);
 
+	/** Changes the component's position and size.
+
+		This is similar to the other setBounds() methods, but uses RelativeRectangle::applyToComponent()
+		to set the position, This uses a Component::Positioner to make sure that any dynamic
+		expressions are used in the RelativeRectangle will be automatically re-applied to the
+		component's bounds when the source values change. See RelativeRectangle::applyToComponent()
+		for more details.
+
+		When using relative expressions, the following symbols are available:
+		 - "left", "right", "top", "bottom" refer to the position of those edges in this component, so
+		   e.g. for a component whose width is always 100, you might set the right edge to the "left + 100".
+		 - "[id].left", "[id].right", "[id].top", "[id].bottom", "[id].width", "[id].height", where [id] is
+		   the identifier of one of this component's siblings. A component's identifier is set with
+		   Component::setComponentID(). So for example if you want your component to always be 50 pixels to the
+		   right of the one called "xyz", you could set your left edge to be "xyz.right + 50".
+		 - Instead of an [id], you can use the name "parent" to refer to this component's parent. Like
+		   any other component, these values are relative to their component's parent, so "parent.right" won't be
+		   very useful for positioning a component because it refers to a position with the parent's parent.. but
+		   "parent.width" can be used for setting positions relative to the parent's size. E.g. to make a 10x10
+		   component which remains 1 pixel away from its parent's bottom-right, you could use
+		   "right - 10, bottom - 10, parent.width - 1, parent.height - 1".
+		 - The name of one of the parent component's markers can also be used as a symbol. For markers to be
+		   used, the parent component must implement its Component::getMarkers() method, and return at least one
+		   valid MarkerList. So if you want your component's top edge to be 10 pixels below the
+		   marker called "foobar", you'd set it to "foobar + 10".
+
+		See the Expression class for details about the operators that are supported, but for example
+		if you wanted to make your component remain centred within its parent with a size of 100, 100,
+		you could express it as:
+		@code myComp.setBounds (RelativeBounds ("parent.width / 2 - 50, parent.height / 2 - 50, left + 100, top + 100"));
+		@endcode
+		..or an alternative way to achieve the same thing:
+		@code myComp.setBounds (RelativeBounds ("right - 100, bottom - 100, parent.width / 2 + 50, parent.height / 2 + 50"));
+		@endcode
+
+		Or if you wanted a 100x100 component whose top edge is lined up to a marker called "topMarker" and
+		which is positioned 50 pixels to the right of another component called "otherComp", you could write:
+		@code myComp.setBounds (RelativeBounds ("otherComp.right + 50, topMarker, left + 100, top + 100"));
+		@endcode
+
+		Be careful not to make your coordinate expressions recursive, though, or exceptions and assertions will
+		be thrown!
+
+		@see setBounds, RelativeRectangle::applyToComponent(), Expression
+	*/
+	void setBounds (const RelativeRectangle& newBounds);
+
 	/** Changes the component's position and size in terms of fractions of its parent's size.
 
 		The values are factors of the parent's size, so for example
@@ -26961,7 +30004,7 @@ public:
 
 		@see setBounds
 	*/
-	void setBoundsInset (const BorderSize& borders);
+	void setBoundsInset (const BorderSize<int>& borders);
 
 	/** Positions the component within a given rectangle, keeping its proportions
 		unchanged.
@@ -27167,7 +30210,7 @@ public:
 		If this is the highest-level component or hasn't yet been added to
 		a parent, this will return null.
 	*/
-	Component* getParentComponent() const throw()		   { return parentComponent_; }
+	Component* getParentComponent() const throw()		   { return parentComponent; }
 
 	/** Searches the parent components for a component of a specified class.
 
@@ -27181,14 +30224,14 @@ public:
 	TargetClass* findParentComponentOfClass (TargetClass* const dummyParameter = 0) const
 	{
 		(void) dummyParameter;
-		Component* p = parentComponent_;
+		Component* p = parentComponent;
 		while (p != 0)
 		{
 			TargetClass* target = dynamic_cast <TargetClass*> (p);
 			if (target != 0)
 				return target;
 
-			p = p->parentComponent_;
+			p = p->parentComponent;
 		}
 
 		return 0;
@@ -27454,7 +30497,8 @@ public:
 		the graphics context that gets passed to the component's paint() callback.
 		If you enable this mode, you'll need to make sure your paint method doesn't call anything like
 		Graphics::fillAll(), and doesn't draw beyond the component's bounds, because that'll produce
-		artifacts.
+		artifacts. Your component also can't have any child components that may be placed beyond its
+		bounds.
 	*/
 	void setPaintingIsUnclipped (bool shouldPaintWithoutClipping) throw();
 
@@ -27477,7 +30521,7 @@ public:
 
 		@see setComponentEffect
 	*/
-	ImageEffectFilter* getComponentEffect() const throw()		   { return effect_; }
+	ImageEffectFilter* getComponentEffect() const throw()		   { return effect; }
 
 	/** Finds the appropriate look-and-feel to use for this component.
 
@@ -28293,7 +31337,9 @@ public:
 		@see enterModalState, exitModalState, isCurrentlyModal, getCurrentlyModalComponent,
 			 isCurrentlyBlockedByAnotherModalComponent, ModalComponentManager
 	*/
+   #if JUCE_MODAL_LOOPS_PERMITTED
 	int runModalLoop();
+   #endif
 
 	/** Puts the component into a modal state.
 
@@ -28310,10 +31356,15 @@ public:
 		is called. If you pass an object in here, the system will take care of deleting it
 		later, after making the callback
 
+		If deleteWhenDismissed is true, then when it is dismissed, the component will be
+		deleted and then the callback will be called. (This will safely handle the situation
+		where the component is deleted before its exitModalState() method is called).
+
 		@see exitModalState, runModalLoop, ModalComponentManager::attachCallback
 	*/
 	void enterModalState (bool takeKeyboardFocus = true,
-						  ModalComponentManager::Callback* callback = 0);
+						  ModalComponentManager::Callback* callback = 0,
+						  bool deleteWhenDismissed = false);
 
 	/** Ends a component's modal state.
 
@@ -28449,6 +31500,13 @@ public:
 	*/
 	virtual void colourChanged();
 
+	/** Components can implement this method to provide a MarkerList.
+		The default implementation of this method returns 0, but you can override it to
+		return a pointer to the component's marker list. If xAxis is true, it should
+		return the X marker list; if false, it should return the Y markers.
+	*/
+	virtual MarkerList* getMarkers (bool xAxis);
+
 	/** Returns the underlying native window handle for this component.
 
 		This is platform-dependent and strictly for power-users only!
@@ -28508,67 +31566,97 @@ public:
 		WeakReference<Component> weakRef;
 	};
 
-	/** A class to keep an eye on one or two components and check for them being deleted.
+	/** A class to keep an eye on a component and check for it being deleted.
 
 		This is designed for use with the ListenerList::callChecked() methods, to allow
 		the list iterator to stop cleanly if the component is deleted by a listener callback
 		while the list is still being iterated.
 	*/
-	class BailOutChecker
+	class JUCE_API  BailOutChecker
 	{
 	public:
 		/** Creates a checker that watches one component. */
-		BailOutChecker (Component* component1);
-
-		/** Creates a checker that watches two components. */
-		BailOutChecker (Component* component1, Component* component2);
+		BailOutChecker (Component* component);
 
 		/** Returns true if either of the two components have been deleted since this object was created. */
 		bool shouldBailOut() const throw();
 
 	private:
-		const WeakReference<Component> safePointer1, safePointer2;
+		const WeakReference<Component> safePointer;
 
 		JUCE_DECLARE_NON_COPYABLE (BailOutChecker);
 	};
 
+	/**
+		Base class for objects that can be used to automatically position a component according to
+		some kind of algorithm.
+
+		The component class simply holds onto a reference to a Positioner, but doesn't actually do
+		anything with it - all the functionality must be implemented by the positioner itself (e.g.
+		it might choose to watch some kind of value and move the component when the value changes).
+	*/
+	class JUCE_API  Positioner
+	{
+	public:
+		/** Creates a Positioner which can control the specified component. */
+		explicit Positioner (Component& component) throw();
+		/** Destructor. */
+		virtual ~Positioner() {}
+
+		/** Returns the component that this positioner controls. */
+		Component& getComponent() const throw()	 { return component; }
+
+	private:
+		Component& component;
+
+		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Positioner);
+	};
+
+	/** Returns the Positioner object that has been set for this component.
+		@see setPositioner()
+	*/
+	Positioner* getPositioner() const throw();
+
+	/** Sets a new Positioner object for this component.
+		If there's currently another positioner set, it will be deleted. The object that is passed in
+		will be deleted automatically by this component when it's no longer required. Pass a null pointer
+		to clear the current positioner.
+		@see getPositioner()
+	*/
+	void setPositioner (Positioner* newPositioner);
+
    #ifndef DOXYGEN
-	/** This method is deprecated - use localPointToGlobal instead. */
-	const Point<int> relativePositionToGlobal (const Point<int>& relativePosition) const;
-
-	/** This method is deprecated - use getLocalPoint instead. */
-	const Point<int> globalPositionToRelative (const Point<int>& screenPosition) const;
-
-	/** This method is deprecated - use getLocalPoint instead. */
-	const Point<int> relativePositionToOtherComponent (const Component* targetComponent,
-													   const Point<int>& positionRelativeToThis) const;
+	// These methods are deprecated - use localPointToGlobal, getLocalPoint, getLocalPoint, etc instead.
+	JUCE_DEPRECATED (const Point<int> relativePositionToGlobal (const Point<int>&) const);
+	JUCE_DEPRECATED (const Point<int> globalPositionToRelative (const Point<int>&) const);
+	JUCE_DEPRECATED (const Point<int> relativePositionToOtherComponent (const Component*, const Point<int>&) const);
    #endif
 
 private:
 
 	friend class ComponentPeer;
-	friend class InternalDragRepeater;
 	friend class MouseInputSource;
 	friend class MouseInputSourceInternal;
 
    #ifndef DOXYGEN
 	static Component* currentlyFocusedComponent;
 
-	String componentName_;
-	Component* parentComponent_;
-	Rectangle<int> bounds_;
-	ScopedPointer <AffineTransform> affineTransform_;
-	Array <Component*> childComponentList_;
-	LookAndFeel* lookAndFeel_;
-	MouseCursor cursor_;
-	ImageEffectFilter* effect_;
-	Image bufferedImage_;
+	String componentName, componentID;
+	Component* parentComponent;
+	Rectangle<int> bounds;
+	ScopedPointer <Positioner> positioner;
+	ScopedPointer <AffineTransform> affineTransform;
+	Array <Component*> childComponentList;
+	LookAndFeel* lookAndFeel;
+	MouseCursor cursor;
+	ImageEffectFilter* effect;
+	Image bufferedImage;
 
 	class MouseListenerList;
 	friend class MouseListenerList;
 	friend class ScopedPointer <MouseListenerList>;
-	ScopedPointer <MouseListenerList> mouseListeners_;
-	ScopedPointer <Array <KeyListener*> > keyListeners_;
+	ScopedPointer <MouseListenerList> mouseListeners;
+	ScopedPointer <Array <KeyListener*> > keyListeners;
 	ListenerList <ComponentListener> componentListeners;
 	NamedValueSet properties;
 
@@ -28604,7 +31692,7 @@ private:
 
 	union
 	{
-		uint32 componentFlags_;
+		uint32 componentFlags;
 		ComponentFlags flags;
 	};
 
@@ -28618,14 +31706,16 @@ private:
 	void internalMouseMove  (MouseInputSource& source, const Point<int>& relativePos, const Time& time);
 	void internalMouseWheel (MouseInputSource& source, const Point<int>& relativePos, const Time& time, float amountX, float amountY);
 	void internalBroughtToFront();
+	void internalFocusGain (const FocusChangeType cause, const WeakReference<Component>&);
 	void internalFocusGain (const FocusChangeType cause);
 	void internalFocusLoss (const FocusChangeType cause);
-	void internalChildFocusChange (FocusChangeType cause);
+	void internalChildFocusChange (FocusChangeType cause, const WeakReference<Component>&);
 	void internalModalInputAttempt();
 	void internalModifierKeysChanged();
 	void internalChildrenChanged();
 	void internalHierarchyChanged();
-	Component* removeChildComponent (const int index, bool sendParentEvents, bool sendChildEvents);
+	Component* removeChildComponent (int index, bool sendParentEvents, bool sendChildEvents);
+	void moveChildInternal (int sourceIndex, int destIndex);
 	void paintComponentAndChildren (Graphics& g);
 	void paintComponent (Graphics& g);
 	void paintWithinParentContext (Graphics& g);
@@ -31585,6 +34675,27 @@ public:
 					   int numChannels,
 					   int numSamples) throw();
 
+	/** Creates a buffer using a pre-allocated block of memory.
+
+		Note that if the buffer is resized or its number of channels is changed, it
+		will re-allocate memory internally and copy the existing data to this new area,
+		so it will then stop directly addressing this memory.
+
+		@param dataToReferTo	a pre-allocated array containing pointers to the data
+								for each channel that should be used by this buffer. The
+								buffer will only refer to this memory, it won't try to delete
+								it when the buffer is deleted or resized.
+		@param numChannels	  the number of channels to use - this must correspond to the
+								number of elements in the array passed in
+		@param startSample	  the offset within the arrays at which the data begins
+		@param numSamples	   the number of samples to use - this must correspond to the
+								size of the arrays passed in
+	*/
+	AudioSampleBuffer (float** dataToReferTo,
+					   int numChannels,
+					   int startSample,
+					   int numSamples) throw();
+
 	/** Copies another buffer.
 
 		This buffer will make its own copy of the other's data, unless the buffer was created
@@ -31914,7 +35025,7 @@ public:
 	void readFromAudioReader (AudioFormatReader* reader,
 							  int startSample,
 							  int numSamples,
-							  int readerStartSample,
+							  int64 readerStartSample,
 							  bool useReaderLeftChan,
 							  bool useReaderRightChan);
 
@@ -31938,7 +35049,7 @@ private:
 	float* preallocatedChannelSpace [32];
 
 	void allocateData();
-	void allocateChannels (float** dataToReferTo);
+	void allocateChannels (float** dataToReferTo, int offset);
 
 	JUCE_LEAK_DETECTOR (AudioSampleBuffer);
 };
@@ -32257,7 +35368,8 @@ protected:
 		typedef AudioData::Pointer <DestSampleType, DestEndianness, AudioData::Interleaved, AudioData::NonConst>		DestType;
 		typedef AudioData::Pointer <SourceSampleType, AudioData::NativeEndian, AudioData::NonInterleaved, AudioData::Const>	 SourceType;
 
-		static void write (void* destData, int numDestChannels, const int** source, int numSamples) throw()
+		static void write (void* destData, int numDestChannels, const int** source,
+						   int numSamples, const int sourceOffset = 0) throw()
 		{
 			for (int i = 0; i < numDestChannels; ++i)
 			{
@@ -32265,7 +35377,7 @@ protected:
 
 				if (*source != 0)
 				{
-					dest.convertSamples (SourceType (*source), numSamples);
+					dest.convertSamples (SourceType (*source + sourceOffset), numSamples);
 					++source;
 				}
 				else
@@ -33107,6 +36219,9 @@ public:
 	/** Returns true if the low res preview is fully generated. */
 	bool isFullyLoaded() const throw();
 
+	/** Returns the number of samples that have been set in the thumbnail. */
+	int64 getNumSamplesFinished() const throw();
+
 	/** Returns the highest level in the thumbnail.
 		Note that because the thumb only stores low-resolution data, this isn't
 		an accurate representation of the highest value, it's only a rough approximation.
@@ -33116,8 +36231,10 @@ public:
 	/** Returns the hash code that was set by setSource() or setReader(). */
 	int64 getHashCode() const;
 
+   #ifndef DOXYGEN
 	// (this is only public to avoid a VC6 bug)
 	class LevelDataSource;
+   #endif
 
 private:
 
@@ -33547,16 +36664,16 @@ public:
 		Note that this may be called on a different thread to getNextAudioBlock(),
 		so the subclass should make sure it's synchronised.
 	*/
-	virtual void setNextReadPosition (int newPosition) = 0;
+	virtual void setNextReadPosition (int64 newPosition) = 0;
 
 	/** Returns the position from which the next block will be returned.
 
 		@see setNextReadPosition
 	*/
-	virtual int getNextReadPosition() const = 0;
+	virtual int64 getNextReadPosition() const = 0;
 
 	/** Returns the total length of the stream (in samples). */
-	virtual int getTotalLength() const = 0;
+	virtual int64 getTotalLength() const = 0;
 
 	/** Returns true if this source is actually playing in a loop. */
 	virtual bool isLooping() const = 0;
@@ -33615,20 +36732,20 @@ public:
 	void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill);
 
 	/** Implements the PositionableAudioSource method. */
-	void setNextReadPosition (int newPosition);
+	void setNextReadPosition (int64 newPosition);
 
 	/** Implements the PositionableAudioSource method. */
-	int getNextReadPosition() const;
+	int64 getNextReadPosition() const;
 
 	/** Implements the PositionableAudioSource method. */
-	int getTotalLength() const;
+	int64 getTotalLength() const;
 
 private:
 
 	AudioFormatReader* reader;
 	bool deleteReader;
 
-	int volatile nextPlayPos;
+	int64 volatile nextPlayPos;
 	bool volatile looping;
 
 	void readBufferSection (int start, int length, AudioSampleBuffer& buffer, int startSample);
@@ -34080,13 +37197,13 @@ public:
 	void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill);
 
 	/** Implements the PositionableAudioSource method. */
-	void setNextReadPosition (int newPosition);
+	void setNextReadPosition (int64 newPosition);
 
 	/** Implements the PositionableAudioSource method. */
-	int getNextReadPosition() const;
+	int64 getNextReadPosition() const;
 
 	/** Implements the PositionableAudioSource method. */
-	int getTotalLength() const		  { return source->getTotalLength(); }
+	int64 getTotalLength() const		{ return source->getTotalLength(); }
 
 	/** Implements the PositionableAudioSource method. */
 	bool isLooping() const			  { return source->isLooping(); }
@@ -34098,13 +37215,13 @@ private:
 	int numberOfSamplesToBuffer;
 	AudioSampleBuffer buffer;
 	CriticalSection bufferStartPosLock;
-	int volatile bufferValidStart, bufferValidEnd, nextPlayPos;
+	int64 volatile bufferValidStart, bufferValidEnd, nextPlayPos;
 	bool wasSourceLooping;
 	double volatile sampleRate;
 
 	friend class SharedBufferingAudioSourceThread;
 	bool readNextBufferChunk();
-	void readBufferSection (int start, int length, int bufferOffset);
+	void readBufferSection (int64 start, int length, int bufferOffset);
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BufferingAudioSource);
 };
@@ -34234,10 +37351,12 @@ public:
 												rate of the source, and playback will be sample-rate
 												adjusted to maintain playback at the correct pitch. If
 												this is 0, no sample-rate adjustment will be performed
+		@param maxNumChannels		   the maximum number of channels that may need to be played
 	*/
 	void setSource (PositionableAudioSource* newSource,
 					int readAheadBufferSize = 0,
-					double sourceSampleRateToCorrectFor = 0.0);
+					double sourceSampleRateToCorrectFor = 0.0,
+					int maxNumChannels = 2);
 
 	/** Changes the current playback position in the source stream.
 
@@ -34301,13 +37420,13 @@ public:
 	void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill);
 
 	/** Implements the PositionableAudioSource method. */
-	void setNextReadPosition (int newPosition);
+	void setNextReadPosition (int64 newPosition);
 
 	/** Implements the PositionableAudioSource method. */
-	int getNextReadPosition() const;
+	int64 getNextReadPosition() const;
 
 	/** Implements the PositionableAudioSource method. */
-	int getTotalLength() const;
+	int64 getTotalLength() const;
 
 	/** Implements the PositionableAudioSource method. */
 	bool isLooping() const;
@@ -34885,6 +38004,21 @@ public:
 	/** Destructor. */
 	virtual ~AudioIODeviceType();
 
+	/** Creates a CoreAudio device type if it's available on this platform, or returns null. */
+	static AudioIODeviceType* createAudioIODeviceType_CoreAudio();
+	/** Creates an iOS device type if it's available on this platform, or returns null. */
+	static AudioIODeviceType* createAudioIODeviceType_iOSAudio();
+	/** Creates a WASAPI device type if it's available on this platform, or returns null. */
+	static AudioIODeviceType* createAudioIODeviceType_WASAPI();
+	/** Creates a DirectSound device type if it's available on this platform, or returns null. */
+	static AudioIODeviceType* createAudioIODeviceType_DirectSound();
+	/** Creates an ASIO device type if it's available on this platform, or returns null. */
+	static AudioIODeviceType* createAudioIODeviceType_ASIO();
+	/** Creates an ALSA device type if it's available on this platform, or returns null. */
+	static AudioIODeviceType* createAudioIODeviceType_ALSA();
+	/** Creates a JACK device type if it's available on this platform, or returns null. */
+	static AudioIODeviceType* createAudioIODeviceType_JACK();
+
 protected:
 	explicit AudioIODeviceType (const String& typeName);
 
@@ -34966,6 +38100,12 @@ public:
 	MidiMessage (const void* data, int maxBytesToUse,
 				 int& numBytesUsed, uint8 lastStatusByte,
 				 double timeStamp = 0);
+
+	/** Creates an active-sense message.
+		Since the MidiMessage has to contain a valid message, this default constructor
+		just initialises it with an empty sysex message.
+	*/
+	MidiMessage() throw();
 
 	/** Creates a copy of another midi message. */
 	MidiMessage (const MidiMessage& other);
@@ -35111,7 +38251,7 @@ public:
 		@param noteNumber   the key number, 0 to 127
 		@see isNoteOff
 	*/
-	static const MidiMessage noteOff (int channel, int noteNumber) throw();
+	static const MidiMessage noteOff (int channel, int noteNumber, uint8 velocity = 0) throw();
 
 	/** Returns true if this message is a 'key-down' or 'key-up' event.
 
@@ -36057,7 +39197,7 @@ public:
 
 		@see MidiBuffer
 	*/
-	class Iterator
+	class JUCE_API  Iterator
 	{
 	public:
 
@@ -37343,8 +40483,7 @@ public:
 		This will be called when the visible area is moved either be scrolling or
 		by calls to setViewPosition(), etc.
 	*/
-	virtual void visibleAreaChanged (int visibleX, int visibleY,
-									 int visibleW, int visibleH);
+	virtual void visibleAreaChanged (const Rectangle<int>& newVisibleArea);
 
 	/** Turns scrollbars on or off.
 
@@ -37426,6 +40565,11 @@ private:
 	void updateVisibleArea();
 	void deleteContentComp();
 
+   #if JUCE_CATCH_DEPRECATED_CODE_MISUSE
+	// If you get an error here, it's because this method's parameters have changed! See the new definition above..
+	virtual int visibleAreaChanged (int, int, int, int) { return 0; }
+   #endif
+
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Viewport);
 };
 
@@ -37436,8 +40580,6 @@ private:
 /*** Start of inlined file: juce_PopupMenu.h ***/
 #ifndef __JUCE_POPUPMENU_JUCEHEADER__
 #define __JUCE_POPUPMENU_JUCEHEADER__
-
-class PopupMenuCustomComponent;
 
 /** Creates and displays a popup-menu.
 
@@ -37553,19 +40695,10 @@ public:
 						  bool isTicked = false,
 						  const Image& iconToUse = Image::null);
 
-	/** Appends a custom menu item.
-
-		This will add a user-defined component to use as a menu item. The component
-		passed in will be deleted by this menu when it's no longer needed.
-
-		@see PopupMenuCustomComponent
-	*/
-	void addCustomItem (int itemResultId, PopupMenuCustomComponent* customComponent);
-
 	/** Appends a custom menu item that can't be used to trigger a result.
 
 		This will add a user-defined component to use as a menu item. Unlike the
-		addCustomItem() method that takes a PopupMenuCustomComponent, this version
+		addCustomItem() method that takes a PopupMenu::CustomComponent, this version
 		can't trigger a result from it, so doesn't take a menu ID. It also doesn't
 		delete the component when it's finished, so it's the caller's responsibility
 		to manage the component that is passed-in.
@@ -37575,7 +40708,7 @@ public:
 		menu ID specified in itemResultId. If this is false, the menu item can't
 		be triggered, so itemResultId is not used.
 
-		@see PopupMenuCustomComponent
+		@see CustomComponent
 	*/
 	void addCustomItem (int itemResultId,
 						Component* customComponent,
@@ -37620,6 +40753,37 @@ public:
 	/** Returns true if the menu contains any items that can be used. */
 	bool containsAnyActiveItems() const throw();
 
+	/** Class used to create a set of options to pass to the show() method.
+		You can chain together a series of calls to this class's methods to create
+		a set of whatever options you want to specify.
+		E.g. @code
+		PopupMenu menu;
+		...
+		menu.showMenu (PopupMenu::Options().withMaximumWidth (100),
+										   .withMaximumNumColumns (3)
+										   .withTargetComponent (myComp));
+		@endcode
+	*/
+	class JUCE_API  Options
+	{
+	public:
+		Options();
+
+		const Options withTargetComponent (Component* targetComponent) const;
+		const Options withTargetScreenArea (const Rectangle<int>& targetArea) const;
+		const Options withMinimumWidth (int minWidth) const;
+		const Options withMaximumNumColumns (int maxNumColumns) const;
+		const Options withStandardItemHeight (int standardHeight) const;
+		const Options withItemThatMustBeVisible (int idOfItemToBeVisible) const;
+
+	private:
+		friend class PopupMenu;
+		Rectangle<int> targetArea;
+		Component* targetComponent;
+		int visibleItemID, minWidth, maxColumns, standardHeight;
+	};
+
+   #if JUCE_MODAL_LOOPS_PERMITTED
 	/** Displays the menu and waits for the user to pick something.
 
 		This will display the menu modally, and return the ID of the item that the
@@ -37691,6 +40855,15 @@ public:
 				int maximumNumColumns = 0,
 				int standardItemHeight = 0,
 				ModalComponentManager::Callback* callback = 0);
+
+	/** Displays and runs the menu modally, with a set of options.
+	*/
+	int showMenu (const Options& options);
+   #endif
+
+	/** Runs the menu asynchronously, with a user-provided callback that will receive the result. */
+	void showMenuAsync (const Options& options,
+						ModalComponentManager::Callback* callback);
 
 	/** Closes any menus that are currently open.
 
@@ -37776,6 +40949,64 @@ public:
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MenuItemIterator);
 	};
 
+	/** A user-defined copmonent that can be used as an item in a popup menu.
+		@see PopupMenu::addCustomItem
+	*/
+	class JUCE_API  CustomComponent  : public Component,
+									   public ReferenceCountedObject
+	{
+	public:
+		/** Creates a custom item.
+			If isTriggeredAutomatically is true, then the menu will automatically detect
+			a mouse-click on this component and use that to invoke the menu item. If it's
+			false, then it's up to your class to manually trigger the item when it wants to.
+		*/
+		CustomComponent (bool isTriggeredAutomatically = true);
+
+		/** Destructor. */
+		~CustomComponent();
+
+		/** Returns a rectangle with the size that this component would like to have.
+
+			Note that the size which this method returns isn't necessarily the one that
+			the menu will give it, as the items will be stretched to have a uniform width.
+		*/
+		virtual void getIdealSize (int& idealWidth, int& idealHeight) = 0;
+
+		/** Dismisses the menu, indicating that this item has been chosen.
+
+			This will cause the menu to exit from its modal state, returning
+			this item's id as the result.
+		*/
+		void triggerMenuItem();
+
+		/** Returns true if this item should be highlighted because the mouse is over it.
+			You can call this method in your paint() method to find out whether
+			to draw a highlight.
+		*/
+		bool isItemHighlighted() const throw()		  { return isHighlighted; }
+
+		/** @internal. */
+		bool isTriggeredAutomatically() const throw()	   { return triggeredAutomatically; }
+		/** @internal. */
+		void setHighlighted (bool shouldBeHighlighted);
+
+	private:
+
+		bool isHighlighted, triggeredAutomatically;
+
+		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CustomComponent);
+	};
+
+	/** Appends a custom menu item.
+
+		This will add a user-defined component to use as a menu item. The component
+		passed in will be deleted by this menu when it's no longer needed.
+
+		@see CustomComponent
+	*/
+	void addCustomItem (int itemResultId, CustomComponent* customComponent);
+
 private:
 
 	class Item;
@@ -37785,7 +41016,7 @@ private:
 	friend class MenuItemIterator;
 	friend class ItemComponent;
 	friend class Window;
-	friend class PopupMenuCustomComponent;
+	friend class CustomComponent;
 	friend class MenuBarComponent;
 	friend class OwnedArray <Item>;
 	friend class OwnedArray <ItemComponent>;
@@ -37796,10 +41027,8 @@ private:
 	bool separatorPending;
 
 	void addSeparatorIfPending();
-
-	int showMenu (const Rectangle<int>& target, int itemIdThatMustBeVisible,
-				  int minimumWidth, int maximumNumColumns, int standardItemHeight,
-				  Component* componentAttachedTo, ModalComponentManager::Callback* callback);
+	Component* createWindow (const Options&, ApplicationCommandManager**) const;
+	int showWithOptionalCallback (const Options&, ModalComponentManager::Callback*, bool);
 
 	JUCE_LEAK_DETECTOR (PopupMenu);
 };
@@ -38116,16 +41345,16 @@ public:
 		virtual ~Listener()  {}
 
 		/** Called when the user changes the text in some way. */
-		virtual void textEditorTextChanged (TextEditor& editor) = 0;
+		virtual void textEditorTextChanged (TextEditor& editor);
 
 		/** Called when the user presses the return key. */
-		virtual void textEditorReturnKeyPressed (TextEditor& editor) = 0;
+		virtual void textEditorReturnKeyPressed (TextEditor& editor);
 
 		/** Called when the user presses the escape key. */
-		virtual void textEditorEscapeKeyPressed (TextEditor& editor) = 0;
+		virtual void textEditorEscapeKeyPressed (TextEditor& editor);
 
 		/** Called when the text editor loses focus. */
-		virtual void textEditorFocusLost (TextEditor& editor) = 0;
+		virtual void textEditorFocusLost (TextEditor& editor);
 	};
 
 	/** Registers a listener to be told when things happen to the text.
@@ -38289,13 +41518,13 @@ public:
 
 		@see getBorder
 	*/
-	void setBorder (const BorderSize& border);
+	void setBorder (const BorderSize<int>& border);
 
 	/** Returns the size of border around the edge of the component.
 
 		@see setBorder
 	*/
-	const BorderSize getBorder() const;
+	const BorderSize<int> getBorder() const;
 
 	/** Used to disable the auto-scrolling which keeps the cursor visible.
 
@@ -38414,7 +41643,7 @@ private:
 
 	ScopedPointer <Viewport> viewport;
 	TextHolderComponent* textHolder;
-	BorderSize borderSize;
+	BorderSize<int> borderSize;
 
 	bool readOnly		   : 1;
 	bool multiline		  : 1;
@@ -38780,7 +42009,7 @@ private:
 	bool lossOfFocusDiscardsChanges : 1;
 	bool leftOfOwnerComp : 1;
 
-	bool updateFromTextEditorContents();
+	bool updateFromTextEditorContents (TextEditor&);
 	void callChangeListeners();
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Label);
@@ -38895,6 +42124,9 @@ public:
 		current selection - it just stops the user choosing that item from the list.
 	*/
 	void setItemEnabled (int itemId, bool shouldBeEnabled);
+
+	/** Returns true if the given item is enabled. */
+	bool isItemEnabled (int itemId) const throw();
 
 	/** Changes the text for an existing item.
 	*/
@@ -39137,9 +42369,6 @@ private:
 		bool isEnabled : 1, isHeading : 1;
 	};
 
-	class Callback;
-	friend class Callback;
-
 	OwnedArray <ItemInfo> items;
 	Value currentId;
 	int lastCurrentId;
@@ -39150,6 +42379,8 @@ private:
 
 	ItemInfo* getItemForId (int itemId) const throw();
 	ItemInfo* getItemForIndex (int index) const throw();
+	bool selectIfEnabled (int index);
+	static void popupMenuFinishedCallback (int, ComboBox*);
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ComboBox);
 };
@@ -39581,7 +42812,7 @@ private:
 	StringArray midiInsFromXml;
 	OwnedArray <MidiInput> enabledMidiInputs;
 	Array <MidiInputCallback*> midiCallbacks;
-	Array <MidiInput*> midiCallbackDevices;
+	StringArray midiCallbackDevices;
 	String defaultMidiOutputName;
 	ScopedPointer <MidiOutput> defaultMidiOutput;
 	CriticalSection audioCallbackLock, midiCallbackLock;
@@ -41191,7 +44422,7 @@ protected:
 
 private:
 	Array <AudioProcessorListener*> listeners;
-	AudioProcessorEditor* activeEditor;
+	Component::SafePointer<AudioProcessorEditor> activeEditor;
 	double sampleRate;
 	int blockSize, numInputChannels, numOutputChannels, latencySamples;
 	bool suspended, nonRealtime;
@@ -42376,7 +45607,8 @@ public:
 		@see selectRow
 	*/
 	void selectRowsBasedOnModifierKeys (int rowThatWasClickedOn,
-										const ModifierKeys& modifiers);
+										const ModifierKeys& modifiers,
+										bool isMouseUpEvent);
 
 	/** Scrolls the list to a particular position.
 
@@ -42804,7 +46036,6 @@ public:
 	AudioProcessorGraph();
 
 	/** Destructor.
-
 		Any processor objects that have been added to the graph will also be deleted.
 	*/
 	~AudioProcessorGraph();
@@ -42816,9 +46047,6 @@ public:
 	class JUCE_API  Node   : public ReferenceCountedObject
 	{
 	public:
-		/** Destructor.
-		*/
-		~Node();
 
 		/** The ID number assigned to this node.
 
@@ -44462,12 +47690,14 @@ public:
 	*/
 	bool hasStopMessageBeenSent() const throw()	 { return quitMessagePosted; }
 
+   #if JUCE_MODAL_LOOPS_PERMITTED
 	/** Synchronously dispatches messages until a given time has elapsed.
 
 		Returns false if a quit message has been posted by a call to stopDispatchLoop(),
 		otherwise returns true.
 	*/
 	bool runDispatchLoopUntil (int millisecondsToRunFor);
+   #endif
 
 	/** Calls a function using the message-thread.
 
@@ -44966,18 +48196,18 @@ public:
 
 	/** Calculates the absolute position of this coordinate.
 
-		You'll need to provide a suitable Expression::EvaluationContext for looking up any coordinates that may
+		You'll need to provide a suitable Expression::Scope for looking up any coordinates that may
 		be needed to calculate the result.
 	*/
-	double resolve (const Expression::EvaluationContext* evaluationContext) const;
+	double resolve (const Expression::Scope* evaluationScope) const;
 
 	/** Returns true if this coordinate uses the specified coord name at any level in its evaluation.
 		This will recursively check any coordinates upon which this one depends.
 	*/
-	bool references (const String& coordName, const Expression::EvaluationContext* evaluationContext) const;
+	bool references (const String& coordName, const Expression::Scope* evaluationScope) const;
 
 	/** Returns true if there's a recursive loop when trying to resolve this coordinate's position. */
-	bool isRecursive (const Expression::EvaluationContext* evaluationContext) const;
+	bool isRecursive (const Expression::Scope* evaluationScope) const;
 
 	/** Returns true if this coordinate depends on any other coordinates for its position. */
 	bool isDynamic() const;
@@ -44988,10 +48218,7 @@ public:
 		or relative position to whatever value is necessary to make its resultant position
 		match the position that is provided.
 	*/
-	void moveToAbsolute (double absoluteTargetPosition, const Expression::EvaluationContext* evaluationContext);
-
-	/** Changes the name of a symbol if it is used as part of the coordinate's expression. */
-	void renameSymbolIfUsed (const String& oldName, const String& newName);
+	void moveToAbsolute (double absoluteTargetPosition, const Expression::Scope* evaluationScope);
 
 	/** Returns the expression that defines this coordinate. */
 	const Expression& getExpression() const	 { return term; }
@@ -45015,16 +48242,42 @@ public:
 		static const String right;          /**< "right" */
 		static const String top;            /**< "top" */
 		static const String bottom;         /**< "bottom" */
-		static const String parentLeft;     /**< "parent.left" */
-		static const String parentTop;      /**< "parent.top" */
-		static const String parentRight;    /**< "parent.right" */
-		static const String parentBottom;   /**< "parent.bottom" */
+		static const String x;              /**< "x" */
+		static const String y;              /**< "y" */
+		static const String width;          /**< "width" */
+		static const String height;         /**< "height" */
+	};
+
+	struct StandardStrings
+	{
+		enum Type
+		{
+			left, right, top, bottom,
+			x, y, width, height,
+			parent,
+			unknown
+		};
+
+		static Type getTypeOf (const String& s) throw();
 	};
 
 private:
 
 	Expression term;
 };
+
+#endif   // __JUCE_RELATIVECOORDINATE_JUCEHEADER__
+/*** End of inlined file: juce_RelativeCoordinate.h ***/
+
+
+/*** Start of inlined file: juce_RelativeCoordinatePositioner.h ***/
+#ifndef __JUCE_RELATIVECOORDINATEPOSITIONER_JUCEHEADER__
+#define __JUCE_RELATIVECOORDINATEPOSITIONER_JUCEHEADER__
+
+
+/*** Start of inlined file: juce_RelativePoint.h ***/
+#ifndef __JUCE_RELATIVEPOINT_JUCEHEADER__
+#define __JUCE_RELATIVEPOINT_JUCEHEADER__
 
 /**
 	An X-Y position stored as a pair of RelativeCoordinate values.
@@ -45058,10 +48311,10 @@ public:
 
 	/** Calculates the absolute position of this point.
 
-		You'll need to provide a suitable Expression::EvaluationContext for looking up any coordinates that may
+		You'll need to provide a suitable Expression::Scope for looking up any coordinates that may
 		be needed to calculate the result.
 	*/
-	const Point<float> resolve (const Expression::EvaluationContext* evaluationContext) const;
+	const Point<float> resolve (const Expression::Scope* evaluationContext) const;
 
 	/** Changes the values of this point's coordinates to make it resolve to the specified position.
 
@@ -45069,7 +48322,7 @@ public:
 		or relative positions to whatever values are necessary to make the resultant position
 		match the position that is provided.
 	*/
-	void moveToAbsolute (const Point<float>& newPos, const Expression::EvaluationContext* evaluationContext);
+	void moveToAbsolute (const Point<float>& newPos, const Expression::Scope* evaluationContext);
 
 	/** Returns a string which represents this point.
 		This returns a comma-separated pair of coordinates. For details of the string syntax used by the
@@ -45078,11 +48331,6 @@ public:
 	*/
 	const String toString() const;
 
-	/** Renames a symbol if it is used by any of the coordinates.
-		This calls RelativeCoordinate::renameAnchorIfUsed() on its X and Y coordinates.
-	*/
-	void renameSymbolIfUsed (const String& oldName, const String& newName);
-
 	/** Returns true if this point depends on any other coordinates for its position. */
 	bool isDynamic() const;
 
@@ -45090,245 +48338,449 @@ public:
 	RelativeCoordinate x, y;
 };
 
+#endif   // __JUCE_RELATIVEPOINT_JUCEHEADER__
+/*** End of inlined file: juce_RelativePoint.h ***/
+
+
+/*** Start of inlined file: juce_MarkerList.h ***/
+#ifndef __JUCE_MARKERLIST_JUCEHEADER__
+#define __JUCE_MARKERLIST_JUCEHEADER__
+
+class Component;
+
 /**
-	An rectangle stored as a set of RelativeCoordinate values.
+	Holds a set of named marker points along a one-dimensional axis.
 
-	The rectangle's top, left, bottom and right edge positions are each stored as a RelativeCoordinate.
-
-	@see RelativeCoordinate, RelativePoint
+	This class is used to store sets of X and Y marker points in components.
+	@see Component::getMarkers().
 */
-class JUCE_API  RelativeRectangle
+class JUCE_API  MarkerList
 {
 public:
 
-	/** Creates a zero-size rectangle at the origin. */
-	RelativeRectangle();
+	/** Creates an empty marker list. */
+	MarkerList();
+	/** Creates a copy of another marker list. */
+	MarkerList (const MarkerList& other);
+	/** Copies another marker list to this one. */
+	MarkerList& operator= (const MarkerList& other);
+	/** Destructor. */
+	~MarkerList();
 
-	/** Creates an absolute rectangle, relative to the origin. */
-	explicit RelativeRectangle (const Rectangle<float>& rect, const String& componentName);
-
-	/** Creates a rectangle from four coordinates. */
-	RelativeRectangle (const RelativeCoordinate& left, const RelativeCoordinate& right,
-					   const RelativeCoordinate& top, const RelativeCoordinate& bottom);
-
-	/** Creates a rectangle from a stringified representation.
-		The string must contain a sequence of 4 coordinates, separated by commas, in the order
-		left, top, right, bottom. The syntax for the coordinate strings is explained in the
-		RelativeCoordinate class.
-		@see toString
-	*/
-	explicit RelativeRectangle (const String& stringVersion);
-
-	bool operator== (const RelativeRectangle& other) const throw();
-	bool operator!= (const RelativeRectangle& other) const throw();
-
-	/** Calculates the absolute position of this rectangle.
-
-		You'll need to provide a suitable Expression::EvaluationContext for looking up any coordinates that may
-		be needed to calculate the result.
-	*/
-	const Rectangle<float> resolve (const Expression::EvaluationContext* evaluationContext) const;
-
-	/** Changes the values of this rectangle's coordinates to make it resolve to the specified position.
-
-		Calling this will leave any anchor points unchanged, but will set any absolute
-		or relative positions to whatever values are necessary to make the resultant position
-		match the position that is provided.
-	*/
-	void moveToAbsolute (const Rectangle<float>& newPos, const Expression::EvaluationContext* evaluationContext);
-
-	/** Returns a string which represents this point.
-		This returns a comma-separated list of coordinates, in the order left, top, right, bottom. For details of
-		the string syntax used by the coordinates, see the RelativeCoordinate constructor notes.
-		The string that is returned can be passed to the RelativeRectangle constructor to recreate the rectangle.
-	*/
-	const String toString() const;
-
-	/** Renames a symbol if it is used by any of the coordinates.
-		This calls RelativeCoordinate::renameSymbolIfUsed() on the rectangle's coordinates.
-	*/
-	void renameSymbolIfUsed (const String& oldName, const String& newName);
-
-	// The actual rectangle coords...
-	RelativeCoordinate left, right, top, bottom;
-};
-
-/**
-	A path object that consists of RelativePoint coordinates rather than the normal fixed ones.
-
-	One of these paths can be converted into a Path object for drawing and manipulation, but
-	unlike a Path, its points can be dynamic instead of just fixed.
-
-	@see RelativePoint, RelativeCoordinate
-*/
-class JUCE_API  RelativePointPath
-{
-public:
-
-	RelativePointPath();
-	RelativePointPath (const RelativePointPath& other);
-	RelativePointPath (const ValueTree& drawable);
-	RelativePointPath (const Path& path);
-	~RelativePointPath();
-
-	/** Resolves this points in this path and adds them to a normal Path object. */
-	void createPath (Path& path, Expression::EvaluationContext* coordFinder);
-
-	/** Returns true if the path contains any non-fixed points. */
-	bool containsAnyDynamicPoints() const;
-
-	/** Writes the path to this drawable encoding. */
-	void writeTo (ValueTree state, UndoManager* undoManager) const;
-
-	/** Quickly swaps the contents of this path with another. */
-	void swapWith (RelativePointPath& other) throw();
-
-	/** The types of element that may be contained in this path.
-		@see RelativePointPath::ElementBase
-	*/
-	enum ElementType
-	{
-		nullElement,
-		startSubPathElement,
-		closeSubPathElement,
-		lineToElement,
-		quadraticToElement,
-		cubicToElement
-	};
-
-	/** Base class for the elements that make up a RelativePointPath.
-	*/
-	class JUCE_API  ElementBase
+	/** Represents a marker in a MarkerList. */
+	class JUCE_API  Marker
 	{
 	public:
-		ElementBase (ElementType type);
-		virtual ~ElementBase() {}
-		virtual const ValueTree createTree() const = 0;
-		virtual void addToPath (Path& path, Expression::EvaluationContext* coordFinder) const = 0;
-		virtual RelativePoint* getControlPoints (int& numPoints) = 0;
+		/** Creates a copy of another Marker. */
+		Marker (const Marker& other);
+		/** Creates a Marker with a given name and position. */
+		Marker (const String& name, const RelativeCoordinate& position);
 
-		const ElementType type;
+		/** The marker's name. */
+		String name;
 
-	private:
-		JUCE_DECLARE_NON_COPYABLE (ElementBase);
+		/** The marker's position.
+
+			The expression used to define the coordinate may use the names of other
+			markers, so that markers can be linked in arbitrary ways, but be careful
+			not to create recursive loops of markers whose positions are based on each
+			other! It can also refer to "parent.right" and "parent.bottom" so that you
+			can set markers which are relative to the size of the component that contains
+			them.
+
+			To resolve the coordinate, you can use the MarkerList::getMarkerPosition() method.
+		*/
+		RelativeCoordinate position;
+
+		/** Returns true if both the names and positions of these two markers match. */
+		bool operator== (const Marker&) const throw();
+		/** Returns true if either the name or position of these two markers differ. */
+		bool operator!= (const Marker&) const throw();
 	};
 
-	class JUCE_API  StartSubPath  : public ElementBase
+	/** Returns the number of markers in the list. */
+	int getNumMarkers() const throw();
+
+	/** Returns one of the markers in the list, by its index. */
+	const Marker* getMarker (int index) const throw();
+
+	/** Returns a named marker, or 0 if no such name is found.
+		Note that name comparisons are case-sensitive.
+	*/
+	const Marker* getMarker (const String& name) const throw();
+
+	/** Evaluates the given marker and returns its absolute position.
+		The parent component must be supplied in case the marker's expression refers to
+		the size of its parent component.
+	*/
+	double getMarkerPosition (const Marker& marker, Component* parentComponent) const;
+
+	/** Sets the position of a marker.
+
+		If the name already exists, then the existing marker is moved; if it doesn't exist, then a
+		new marker is added.
+	*/
+	void setMarker (const String& name, const RelativeCoordinate& position);
+
+	/** Deletes the marker at the given list index. */
+	void removeMarker (int index);
+
+	/** Deletes the marker with the given name. */
+	void removeMarker (const String& name);
+
+	/** Returns true if all the markers in these two lists match exactly. */
+	bool operator== (const MarkerList& other) const throw();
+	/** Returns true if not all the markers in these two lists match exactly. */
+	bool operator!= (const MarkerList& other) const throw();
+
+	/**
+		A class for receiving events when changes are made to a MarkerList.
+
+		You can register a MarkerList::Listener with a MarkerList using the MarkerList::addListener()
+		method, and it will be called when markers are moved, added, or deleted.
+
+		@see MarkerList::addListener, MarkerList::removeListener
+	*/
+	class JUCE_API  Listener
 	{
 	public:
-		StartSubPath (const RelativePoint& pos);
-		~StartSubPath() {}
-		const ValueTree createTree() const;
-		void addToPath (Path& path, Expression::EvaluationContext* coordFinder) const;
-		RelativePoint* getControlPoints (int& numPoints);
+		/** Destructor. */
+		virtual ~Listener() {}
 
-		RelativePoint startPos;
+		/** Called when something in the given marker list changes. */
+		virtual void markersChanged (MarkerList* markerList) = 0;
 
-	private:
-		JUCE_DECLARE_NON_COPYABLE (StartSubPath);
+		/** Called when the given marker list is being deleted. */
+		virtual void markerListBeingDeleted (MarkerList* markerList);
 	};
 
-	class JUCE_API  CloseSubPath  : public ElementBase
+	/** Registers a listener that will be called when the markers are changed. */
+	void addListener (Listener* listener);
+
+	/** Deregisters a previously-registered listener. */
+	void removeListener (Listener* listener);
+
+	/** Synchronously calls markersChanged() on all the registered listeners. */
+	void markersHaveChanged();
+
+	/** Forms a wrapper around a ValueTree that can be used for storing a MarkerList. */
+	class ValueTreeWrapper
 	{
 	public:
-		CloseSubPath();
-		~CloseSubPath() {}
-		const ValueTree createTree() const;
-		void addToPath (Path& path, Expression::EvaluationContext* coordFinder) const;
-		RelativePoint* getControlPoints (int& numPoints);
+		ValueTreeWrapper (const ValueTree& state);
+
+		ValueTree& getState() throw()	   { return state; }
+		int getNumMarkers() const;
+		const ValueTree getMarkerState (int index) const;
+		const ValueTree getMarkerState (const String& name) const;
+		bool containsMarker (const ValueTree& state) const;
+		const MarkerList::Marker getMarker (const ValueTree& state) const;
+		void setMarker (const MarkerList::Marker& marker, UndoManager* undoManager);
+		void removeMarker (const ValueTree& state, UndoManager* undoManager);
+
+		void applyTo (MarkerList& markerList);
+		void readFrom (const MarkerList& markerList, UndoManager* undoManager);
+
+		static const Identifier markerTag, nameProperty, posProperty;
 
 	private:
-		JUCE_DECLARE_NON_COPYABLE (CloseSubPath);
+		ValueTree state;
 	};
-
-	class JUCE_API  LineTo  : public ElementBase
-	{
-	public:
-		LineTo (const RelativePoint& endPoint);
-		~LineTo() {}
-		const ValueTree createTree() const;
-		void addToPath (Path& path, Expression::EvaluationContext* coordFinder) const;
-		RelativePoint* getControlPoints (int& numPoints);
-
-		RelativePoint endPoint;
-
-	private:
-		JUCE_DECLARE_NON_COPYABLE (LineTo);
-	};
-
-	class JUCE_API  QuadraticTo  : public ElementBase
-	{
-	public:
-		QuadraticTo (const RelativePoint& controlPoint, const RelativePoint& endPoint);
-		~QuadraticTo() {}
-		const ValueTree createTree() const;
-		void addToPath (Path& path, Expression::EvaluationContext* coordFinder) const;
-		RelativePoint* getControlPoints (int& numPoints);
-
-		RelativePoint controlPoints[2];
-
-	private:
-		JUCE_DECLARE_NON_COPYABLE (QuadraticTo);
-	};
-
-	class JUCE_API  CubicTo  : public ElementBase
-	{
-	public:
-		CubicTo (const RelativePoint& controlPoint1, const RelativePoint& controlPoint2, const RelativePoint& endPoint);
-		~CubicTo() {}
-		const ValueTree createTree() const;
-		void addToPath (Path& path, Expression::EvaluationContext* coordFinder) const;
-		RelativePoint* getControlPoints (int& numPoints);
-
-		RelativePoint controlPoints[3];
-
-	private:
-		JUCE_DECLARE_NON_COPYABLE (CubicTo);
-	};
-
-	OwnedArray <ElementBase> elements;
-	bool usesNonZeroWinding;
 
 private:
-	bool containsDynamicPoints;
 
-	void parse (const ValueTree& state);
+	OwnedArray<Marker> markers;
+	ListenerList<Listener> listeners;
 
-	RelativePointPath& operator= (const RelativePointPath&);
+	JUCE_LEAK_DETECTOR (MarkerList);
 };
+
+#endif   // __JUCE_MARKERLIST_JUCEHEADER__
+/*** End of inlined file: juce_MarkerList.h ***/
 
 /**
-	A parallelogram defined by three RelativePoint positions.
-
-	@see RelativePoint, RelativeCoordinate
+	Base class for Component::Positioners that are based upon relative coordinates.
 */
-class JUCE_API  RelativeParallelogram
+class JUCE_API  RelativeCoordinatePositionerBase  : public Component::Positioner,
+													public ComponentListener,
+													public MarkerList::Listener
 {
 public:
+	RelativeCoordinatePositionerBase (Component& component_);
+	~RelativeCoordinatePositionerBase();
 
-	RelativeParallelogram();
-	RelativeParallelogram (const Rectangle<float>& simpleRectangle);
-	RelativeParallelogram (const RelativePoint& topLeft, const RelativePoint& topRight, const RelativePoint& bottomLeft);
-	RelativeParallelogram (const String& topLeft, const String& topRight, const String& bottomLeft);
-	~RelativeParallelogram();
+	void componentMovedOrResized (Component&, bool, bool);
+	void componentParentHierarchyChanged (Component&);
+	void componentChildrenChanged (Component& component);
+	void componentBeingDeleted (Component& component);
+	void markersChanged (MarkerList*);
+	void markerListBeingDeleted (MarkerList* markerList);
 
-	void resolveThreePoints (Point<float>* points, Expression::EvaluationContext* coordFinder) const;
-	void resolveFourCorners (Point<float>* points, Expression::EvaluationContext* coordFinder) const;
-	const Rectangle<float> getBounds (Expression::EvaluationContext* coordFinder) const;
-	void getPath (Path& path, Expression::EvaluationContext* coordFinder) const;
-	const AffineTransform resetToPerpendicular (Expression::EvaluationContext* coordFinder);
+	void apply();
 
-	bool operator== (const RelativeParallelogram& other) const throw();
-	bool operator!= (const RelativeParallelogram& other) const throw();
+	bool addCoordinate (const RelativeCoordinate& coord);
+	bool addPoint (const RelativePoint& point);
 
-	static const Point<float> getInternalCoordForPoint (const Point<float>* parallelogramCorners, Point<float> point) throw();
-	static const Point<float> getPointForInternalCoord (const Point<float>* parallelogramCorners, const Point<float>& internalPoint) throw();
+	/** Used for resolving a RelativeCoordinate expression in the context of a component. */
+	class ComponentScope  : public Expression::Scope
+	{
+	public:
+		ComponentScope (Component& component_);
 
-	RelativePoint topLeft, topRight, bottomLeft;
+		const Expression getSymbolValue (const String& symbol) const;
+		void visitRelativeScope (const String& scopeName, Visitor& visitor) const;
+		const String getScopeUID() const;
+
+	protected:
+		Component& component;
+
+		Component* findSiblingComponent (const String& componentID) const;
+		const MarkerList::Marker* findMarker (const String& name, MarkerList*& list) const;
+
+	private:
+		JUCE_DECLARE_NON_COPYABLE (ComponentScope);
+	};
+
+protected:
+	virtual bool registerCoordinates() = 0;
+	virtual void applyToComponentBounds() = 0;
+
+private:
+	class DependencyFinderScope;
+	friend class DependencyFinderScope;
+	Array <Component*> sourceComponents;
+	Array <MarkerList*> sourceMarkerLists;
+	bool registeredOk;
+
+	void registerComponentListener (Component& comp);
+	void registerMarkerListListener (MarkerList* const list);
+	void unregisterListeners();
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RelativeCoordinatePositionerBase);
 };
 
-#endif   // __JUCE_RELATIVECOORDINATE_JUCEHEADER__
-/*** End of inlined file: juce_RelativeCoordinate.h ***/
+#endif   // __JUCE_RELATIVECOORDINATEPOSITIONER_JUCEHEADER__
+/*** End of inlined file: juce_RelativeCoordinatePositioner.h ***/
+
+
+/*** Start of inlined file: juce_ComponentBuilder.h ***/
+#ifndef __JUCE_COMPONENTBUILDER_JUCEHEADER__
+#define __JUCE_COMPONENTBUILDER_JUCEHEADER__
+
+/**
+	Loads and maintains a tree of Components from a ValueTree that represents them.
+
+	To allow the state of a tree of components to be saved as a ValueTree and re-loaded,
+	this class lets you register a set of type-handlers for the different components that
+	are involved, and then uses these types to re-create a set of components from its
+	stored state.
+
+	Essentially, to use this, you need to create a ComponentBuilder with your ValueTree,
+	then use registerTypeHandler() to give it a set of type handlers that can cope with
+	all the items in your tree. Then you can call getComponent() to build the component.
+	Once you've got the component you can either take it and delete the ComponentBuilder
+	object, or if you keep the ComponentBuilder around, it'll monitor any changes in the
+	ValueTree and automatically update the component to reflect these changes.
+*/
+class JUCE_API  ComponentBuilder  : public ValueTree::Listener
+{
+public:
+	/** Creates a ComponentBuilder that will use the given state.
+		Once you've created your builder, you should use registerTypeHandler() to register some
+		type handlers for it, and then you can call createComponent() or getManagedComponent()
+		to get the actual component.
+	*/
+	explicit ComponentBuilder (const ValueTree& state);
+
+	/** Destructor. */
+	~ComponentBuilder();
+
+	/** Returns the ValueTree that this builder is working with. */
+	ValueTree& getState() throw()		   { return state; }
+
+	/** Returns the ValueTree that this builder is working with. */
+	const ValueTree& getState() const throw()   { return state; }
+
+	/** Returns the builder's component (creating it if necessary).
+
+		The first time that this method is called, the builder will attempt to create a component
+		from the ValueTree, so you must have registered some suitable type handlers before calling
+		this. If there's a problem and the component can't be created, this method returns 0.
+
+		The component that is returned is owned by this ComponentBuilder, so you can put it inside
+		your own parent components, but don't delete it! The ComponentBuilder will delete it automatically
+		when the builder is destroyed. If you want to get a component that you can delete yourself,
+		call createComponent() instead.
+
+		The ComponentBuilder will update this component if any changes are made to the ValueTree, so if
+		there's a chance that the tree might change, be careful not to keep any pointers to sub-components,
+		as they may be changed or removed.
+	*/
+	Component* getManagedComponent();
+
+	/** Creates and returns a new instance of the component that the ValueTree represents.
+		The caller is responsible for using and deleting the object that is returned. Unlike
+		getManagedComponent(), the component that is returned will not be updated by the builder.
+	*/
+	Component* createComponent();
+
+	/**
+		The class is a base class for objects that manage the loading of a type of component
+		from a ValueTree.
+
+		To store and re-load a tree of components as a ValueTree, each component type must have
+		a TypeHandler to represent it.
+
+		@see ComponentBuilder::registerTypeHandler(), Drawable::registerDrawableTypeHandlers()
+	*/
+	class JUCE_API  TypeHandler
+	{
+	public:
+
+		/** Creates a TypeHandler.
+			The valueTreeType must be the type name of the ValueTrees that this handler can parse.
+		*/
+		explicit TypeHandler (const Identifier& valueTreeType);
+
+		/** Destructor. */
+		virtual ~TypeHandler();
+
+		/** Returns the type of the ValueTrees that this handler can parse. */
+		const Identifier& getType() const throw()	   { return valueTreeType; }
+
+		/** Returns the builder that this type is registered with. */
+		ComponentBuilder* getBuilder() const throw();
+
+		/** This method must create a new component from the given state, add it to the specified
+			parent component (which may be null), and return it.
+
+			The ValueTree will have been pre-checked to make sure that its type matches the type
+			that this handler supports.
+
+			There's no need to set the new Component's ID to match that of the state - the builder
+			will take care of that itself.
+		*/
+		virtual Component* addNewComponentFromState (const ValueTree& state, Component* parent) = 0;
+
+		/** This method must update an existing component from a new ValueTree state.
+
+			A component that has been created with addNewComponentFromState() may need to be updated
+			if the ValueTree changes, so this method is used to do that. Your implementation must do
+			whatever's necessary to update the component from the new state provided.
+
+			The ValueTree will have been pre-checked to make sure that its type matches the type
+			that this handler supports, and the component will have been created by this type's
+			addNewComponentFromState() method.
+		*/
+		virtual void updateComponentFromState (Component* component, const ValueTree& state) = 0;
+
+	private:
+
+		friend class ComponentBuilder;
+		ComponentBuilder* builder;
+		const Identifier valueTreeType;
+
+		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TypeHandler);
+	};
+
+	/** Adds a type handler that the builder can use when trying to load components.
+		@see Drawable::registerDrawableTypeHandlers()
+	*/
+	void registerTypeHandler (TypeHandler* type);
+
+	/** Tries to find a registered type handler that can load a component from the given ValueTree. */
+	TypeHandler* getHandlerForState (const ValueTree& state) const;
+
+	/** Returns the number of registered type handlers.
+		@see getHandler, registerTypeHandler
+	*/
+	int getNumHandlers() const throw();
+
+	/** Returns one of the registered type handlers.
+		@see getNumHandlers, registerTypeHandler
+	*/
+	TypeHandler* getHandler (int index) const throw();
+
+	/** This class is used when references to images need to be stored in ValueTrees.
+
+		An instance of an ImageProvider provides a mechanism for converting an Image to/from
+		a reference, which may be a file, URL, ID string, or whatever system is appropriate in
+		your app.
+
+		When you're loading components from a ValueTree that may need a way of loading images, you
+		should call ComponentBuilder::setImageProvider() to supply a suitable provider before
+		trying to load the component.
+
+		@see ComponentBuilder::setImageProvider()
+	*/
+	class JUCE_API  ImageProvider
+	{
+	public:
+		ImageProvider() {}
+		virtual ~ImageProvider() {}
+
+		/** Retrieves the image associated with this identifier, which could be any
+			kind of string, number, filename, etc.
+
+			The image that is returned will be owned by the caller, but it may come
+			from the ImageCache.
+		*/
+		virtual const Image getImageForIdentifier (const var& imageIdentifier) = 0;
+
+		/** Returns an identifier to be used to refer to a given image.
+			This is used when a reference to an image is stored in a ValueTree.
+		*/
+		virtual const var getIdentifierForImage (const Image& image) = 0;
+	};
+
+	/** Gives the builder an ImageProvider object that the type handlers can use when
+		loading images from stored references.
+
+		The object that is passed in is not owned by the builder, so the caller must delete
+		it when it is no longer needed, but not while the builder may still be using it. To
+		clear the image provider, just call setImageProvider (0).
+	*/
+	void setImageProvider (ImageProvider* newImageProvider) throw();
+
+	/** Returns the current image provider that this builder is using, or 0 if none has been set. */
+	ImageProvider* getImageProvider() const throw();
+
+	/** Updates the children of a parent component by updating them from the children of
+		a given ValueTree.
+	*/
+	void updateChildComponents (Component& parent, const ValueTree& children);
+
+	/** An identifier for the property of the ValueTrees that is used to store a unique ID
+		for that component.
+	*/
+	static const Identifier idProperty;
+
+	/** @internal */
+	void valueTreePropertyChanged (ValueTree& treeWhosePropertyHasChanged, const Identifier& property);
+	/** @internal */
+	void valueTreeChildAdded (ValueTree& parentTree, ValueTree& childWhichHasBeenAdded);
+	/** @internal */
+	void valueTreeChildRemoved (ValueTree& parentTree, ValueTree& childWhichHasBeenRemoved);
+	/** @internal */
+	void valueTreeChildOrderChanged (ValueTree& parentTree);
+	/** @internal */
+	void valueTreeParentChanged (ValueTree& treeWhoseParentHasChanged);
+
+private:
+
+	ValueTree state;
+	OwnedArray <TypeHandler> types;
+	ScopedPointer<Component> component;
+	ImageProvider* imageProvider;
+   #if JUCE_DEBUG
+	WeakReference<Component> componentRef;
+   #endif
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ComponentBuilder);
+};
+
+#endif   // __JUCE_COMPONENTBUILDER_JUCEHEADER__
+/*** End of inlined file: juce_ComponentBuilder.h ***/
 
 class DrawableComposite;
 
@@ -45449,54 +48901,21 @@ public:
 	*/
 	static Drawable* createFromSVG (const XmlElement& svgDocument);
 
-	/** This class is used when loading Drawables that contain images, and retrieves
-		the image for a stored identifier.
-		@see Drawable::createFromValueTree
-	*/
-	class JUCE_API  ImageProvider
-	{
-	public:
-		ImageProvider() {}
-		virtual ~ImageProvider() {}
-
-		/** Retrieves the image associated with this identifier, which could be any
-			kind of string, number, filename, etc.
-
-			The image that is returned will be owned by the caller, but it may come
-			from the ImageCache.
-		*/
-		virtual const Image getImageForIdentifier (const var& imageIdentifier) = 0;
-
-		/** Returns an identifier to be used to refer to a given image.
-			This is used when converting a drawable into a ValueTree, so if you're
-			only loading drawables, you can just return a var::null here.
-		*/
-		virtual const var getIdentifierForImage (const Image& image) = 0;
-	};
-
 	/** Tries to create a Drawable from a previously-saved ValueTree.
 		The ValueTree must have been created by the createValueTree() method.
 		If there are any images used within the drawable, you'll need to provide a valid
 		ImageProvider object that can be used to retrieve these images from whatever type
 		of identifier is used to represent them.
+		Internally, this uses a ComponentBuilder, and registerDrawableTypeHandlers().
 	*/
-	static Drawable* createFromValueTree (const ValueTree& tree, ImageProvider* imageProvider);
-
-	/** Tries to refresh a Drawable from the same ValueTree that was used to create it.
-		@returns the damage rectangle that will need repainting due to any changes that were made.
-	*/
-	virtual void refreshFromValueTree (const ValueTree& tree, ImageProvider* imageProvider) = 0;
+	static Drawable* createFromValueTree (const ValueTree& tree, ComponentBuilder::ImageProvider* imageProvider);
 
 	/** Creates a ValueTree to represent this Drawable.
-		The VarTree that is returned can be turned back into a Drawable with
-		createFromValueTree().
-		If there are any images used in this drawable, you'll need to provide a valid
-		ImageProvider object that can be used to create storable representations of them.
+		The ValueTree that is returned can be turned back into a Drawable with createFromValueTree().
+		If there are any images used in this drawable, you'll need to provide a valid ImageProvider
+		object that can be used to create storable representations of them.
 	*/
-	virtual const ValueTree createValueTree (ImageProvider* imageProvider) const = 0;
-
-	/** Returns the tag ID that is used for a ValueTree that stores this type of drawable.  */
-	virtual const Identifier getValueTreeType() const = 0;
+	virtual const ValueTree createValueTree (ComponentBuilder::ImageProvider* imageProvider) const = 0;
 
 	/** Returns the area that this drawble covers.
 		The result is expressed in this drawable's own coordinate space, and does not take
@@ -45509,16 +48928,20 @@ public:
 	{
 	public:
 		ValueTreeWrapperBase (const ValueTree& state);
-		~ValueTreeWrapperBase();
 
 		ValueTree& getState() throw()	   { return state; }
 
 		const String getID() const;
-		void setID (const String& newID, UndoManager* undoManager);
-		static const Identifier idProperty;
+		void setID (const String& newID);
 
 		ValueTree state;
 	};
+
+	/** Registers a set of ComponentBuilder::TypeHandler objects that can be used to
+		load all the different Drawable types from a saved state.
+		@see ComponentBuilder::registerTypeHandler()
+	*/
+	static void registerDrawableTypeHandlers (ComponentBuilder& componentBuilder);
 
 protected:
 
@@ -45526,17 +48949,38 @@ protected:
 	friend class DrawableShape;
 
 	/** @internal */
-	static Drawable* createChildFromValueTree (DrawableComposite* parent, const ValueTree& tree, ImageProvider* imageProvider);
-	/** @internal */
 	void transformContextToCorrectOrigin (Graphics& g);
-	/** @internal */
-	void markerHasMoved();
 	/** @internal */
 	void parentHierarchyChanged();
 	/** @internal */
 	void setBoundsToEnclose (const Rectangle<float>& area);
 
 	Point<int> originRelativeToComponent;
+
+  #ifndef DOXYGEN
+	/** Internal utility class used by Drawables. */
+	template <class DrawableType>
+	class Positioner  : public RelativeCoordinatePositionerBase
+	{
+	public:
+		Positioner (DrawableType& component_)
+			: RelativeCoordinatePositionerBase (component_),
+			  owner (component_)
+		{}
+
+		bool registerCoordinates()	  { return owner.registerCoordinates (*this); }
+		void applyToComponentBounds()
+		{
+			ComponentScope scope (getComponent());
+			owner.recalculateCoordinates (&scope);
+		}
+
+	private:
+		DrawableType& owner;
+
+		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Positioner);
+	};
+  #endif
 
 private:
 	void nonConstDraw (Graphics& g, float opacity, const AffineTransform& transform);
@@ -47173,7 +50617,7 @@ public:
 
 		@see CodeDocument, SyntaxAnalyser
 	*/
-	class Iterator
+	class JUCE_API  Iterator
 	{
 	public:
 		Iterator (CodeDocument* document);
@@ -48162,6 +51606,26 @@ public:
 					  bool sendMessageSynchronously = false,
 					  bool allowNudgingOfOtherValues = false);
 
+	/** For a slider with two or three thumbs, this sets the minimum and maximum thumb positions.
+
+		This will trigger a callback to Slider::Listener::sliderValueChanged() for any listeners
+		that are registered, and will synchronously call the valueChanged() method in case subclasses
+		want to handle it.
+
+		@param newMinValue		  the new minimum value to set - this will be snapped to the
+										nearest interval if one has been set.
+		@param newMaxValue		  the new minimum value to set - this will be snapped to the
+										nearest interval if one has been set.
+		@param sendUpdateMessage	if false, a change to the value will not trigger a call to
+										any Slider::Listeners or the valueChanged() method
+		@param sendMessageSynchronously if true, then a call to the Slider::Listeners will be made
+										synchronously; if false, it will be asynchronous
+		@see setMaxValue, setMinValue, setValue
+	*/
+	void setMinAndMaxValues (double newMinValue, double newMaxValue,
+							 bool sendUpdateMessage = true,
+							 bool sendMessageSynchronously = false);
+
 	/** A class for receiving callbacks from a Slider.
 
 		To be told when a slider's value changes, you can register a Slider::Listener
@@ -49114,6 +52578,12 @@ public:
 	/** Returns the header component being used in this table. */
 	TableHeaderComponent& getHeader() const			 { return *header; }
 
+	/** Sets the header component to use for the table.
+		The table will take ownership of the component that you pass in, and will delete it
+		when it's no longer needed.
+	*/
+	void setHeader (TableHeaderComponent* newHeader);
+
 	/** Changes the height of the table header component.
 		@see getHeaderHeight
 	*/
@@ -49870,6 +53340,40 @@ public:
 	*/
 	const String getItemIdentifierString() const;
 
+	/**
+		This handy class takes a copy of a TreeViewItem's openness when you create it,
+		and restores that openness state when its destructor is called.
+
+		This can very handy when you're refreshing sub-items - e.g.
+		@code
+		void MyTreeViewItem::updateChildItems()
+		{
+			OpennessRestorer openness (*this);  //  saves the openness state here..
+
+			clearSubItems();
+
+			// add a bunch of sub-items here which may or may not be the same as the ones that
+			// were previously there
+			addSubItem (...
+
+			// ..and at this point, the old openness is restored, so any items that haven't
+			// changed will have their old openness retained.
+		}
+		@endcode
+	*/
+	class OpennessRestorer
+	{
+	public:
+		OpennessRestorer (TreeViewItem& treeViewItem);
+		~OpennessRestorer();
+
+	private:
+		TreeViewItem& treeViewItem;
+		ScopedPointer <XmlElement> oldOpenness;
+
+		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OpennessRestorer);
+	};
+
 private:
 
 	TreeView* ownerView;
@@ -50394,7 +53898,7 @@ public:
 	const FileFilter* getFilter() const			 { return fileFilter; }
 
 	/** @internal */
-	bool useTimeSlice();
+	int useTimeSlice();
 	/** @internal */
 	TimeSliceThread& getTimeSliceThread()		   { return thread; }
 	/** @internal */
@@ -50691,6 +54195,9 @@ public:
 	/** Refreshes the directory that's currently being listed. */
 	void refresh();
 
+	/** Changes the filter that's being used to sift the files. */
+	void setFileFilter (const FileFilter* newFileFilter);
+
 	/** Returns a verb to describe what should happen when the file is accepted.
 
 		E.g. if browsing in "load file" mode, this will be "Open", if in "save file"
@@ -50745,7 +54252,10 @@ public:
 	FilePreviewComponent* getPreviewComponent() const throw();
 
 protected:
-	virtual const BigInteger getRoots (StringArray& rootNames, StringArray& rootPaths);
+	/** Returns a list of names and paths for the default places the user might want to look.
+		Use an empty string to indicate a section break.
+	*/
+	virtual void getRoots (StringArray& rootNames, StringArray& rootPaths);
 
 private:
 
@@ -51140,11 +54650,11 @@ protected:
 	/** @internal */
 	void parentHierarchyChanged();
 	/** @internal */
-	void visibilityChanged();
-	/** @internal */
 	virtual int getDesktopWindowStyleFlags() const;
 	/** @internal */
 	void recreateDesktopWindow();
+	/** @internal */
+	void visibilityChanged();
 
 private:
 	friend class TopLevelWindowManager;
@@ -51248,6 +54758,15 @@ public:
 									int minimumWhenOffTheLeft,
 									int minimumWhenOffTheBottom,
 									int minimumWhenOffTheRight) throw();
+
+	/** Returns the minimum distance the bounds can be off-screen. @see setMinimumOnscreenAmounts */
+	int getMinimumWhenOffTheTop() const throw()	 { return minOffTop; }
+	/** Returns the minimum distance the bounds can be off-screen. @see setMinimumOnscreenAmounts */
+	int getMinimumWhenOffTheLeft() const throw()	{ return minOffLeft; }
+	/** Returns the minimum distance the bounds can be off-screen. @see setMinimumOnscreenAmounts */
+	int getMinimumWhenOffTheBottom() const throw()	  { return minOffBottom; }
+	/** Returns the minimum distance the bounds can be off-screen. @see setMinimumOnscreenAmounts */
+	int getMinimumWhenOffTheRight() const throw()	   { return minOffRight; }
 
 	/** Specifies a width-to-height ratio that the resizer should always maintain.
 
@@ -51447,13 +54966,13 @@ public:
 
 		@see getBorderThickness
 	*/
-	void setBorderThickness (const BorderSize& newBorderSize);
+	void setBorderThickness (const BorderSize<int>& newBorderSize);
 
 	/** Returns the number of pixels wide that the draggable edges of this component are.
 
 		@see setBorderThickness
 	*/
-	const BorderSize getBorderThickness() const;
+	const BorderSize<int> getBorderThickness() const;
 
 	/** Represents the different sections of a resizable border, which allow it to
 		resized in different ways.
@@ -51483,7 +55002,7 @@ public:
 			zone that the point lies within.
 		*/
 		static const Zone fromPositionOnBorder (const Rectangle<int>& totalSize,
-												const BorderSize& border,
+												const BorderSize<int>& border,
 												const Point<int>& position);
 
 		/** Returns an appropriate mouse-cursor for this resize zone. */
@@ -51553,7 +55072,7 @@ protected:
 private:
 	WeakReference<Component> component;
 	ComponentBoundsConstrainer* constrainer;
-	BorderSize borderSize;
+	BorderSize<int> borderSize;
 	Rectangle<int> originalBounds;
 	Zone mouseZone;
 
@@ -51860,6 +55379,16 @@ public:
 	*/
 	void setContentComponentSize (int width, int height);
 
+	/** Returns the width of the frame to use around the window.
+		@see getContentComponentBorder
+	*/
+	virtual const BorderSize<int> getBorderThickness();
+
+	/** Returns the insets to use when positioning the content component.
+		@see getBorderThickness
+	*/
+	virtual const BorderSize<int> getContentComponentBorder();
+
 	/** A set of colour IDs to use to change the colour of various aspects of the window.
 
 		These constants can be used either via the Component::setColour(), or LookAndFeel::setColour()
@@ -51896,18 +55425,6 @@ protected:
 	void activeWindowStatusChanged();
 	/** @internal */
 	int getDesktopWindowStyleFlags() const;
-
-	/** Returns the width of the border to use around the window.
-
-		@see getContentComponentBorder
-	*/
-	virtual const BorderSize getBorderThickness();
-
-	/** Returns the insets to use when positioning the content component.
-
-		@see getBorderThickness
-	*/
-	virtual const BorderSize getContentComponentBorder();
 
 #if JUCE_DEBUG
 	/** Overridden to warn people about adding components directly to this component
@@ -52224,6 +55741,543 @@ private:
 #endif   // __JUCE_GLYPHARRANGEMENT_JUCEHEADER__
 /*** End of inlined file: juce_GlyphArrangement.h ***/
 
+
+/*** Start of inlined file: juce_AlertWindow.h ***/
+#ifndef __JUCE_ALERTWINDOW_JUCEHEADER__
+#define __JUCE_ALERTWINDOW_JUCEHEADER__
+
+
+/*** Start of inlined file: juce_TextLayout.h ***/
+#ifndef __JUCE_TEXTLAYOUT_JUCEHEADER__
+#define __JUCE_TEXTLAYOUT_JUCEHEADER__
+
+class Graphics;
+
+/**
+	A laid-out arrangement of text.
+
+	You can add text in different fonts to a TextLayout object, then call its
+	layout() method to word-wrap it into lines. The layout can then be drawn
+	using a graphics context.
+
+	It's handy if you've got a message to display, because you can format it,
+	measure the extent of the layout, and then create a suitably-sized window
+	to show it in.
+
+	@see Font, Graphics::drawFittedText, GlyphArrangement
+*/
+class JUCE_API  TextLayout
+{
+public:
+
+	/** Creates an empty text layout.
+
+		Text can then be appended using the appendText() method.
+	*/
+	TextLayout();
+
+	/** Creates a copy of another layout object. */
+	TextLayout (const TextLayout& other);
+
+	/** Creates a text layout from an initial string and font. */
+	TextLayout (const String& text, const Font& font);
+
+	/** Destructor. */
+	~TextLayout();
+
+	/** Copies another layout onto this one. */
+	TextLayout& operator= (const TextLayout& layoutToCopy);
+
+	/** Clears the layout, removing all its text. */
+	void clear();
+
+	/** Adds a string to the end of the arrangement.
+
+		The string will be broken onto new lines wherever it contains
+		carriage-returns or linefeeds. After adding it, you can call layout()
+		to wrap long lines into a paragraph and justify it.
+	*/
+	void appendText (const String& textToAppend,
+					 const Font& fontToUse);
+
+	/** Replaces all the text with a new string.
+
+		This is equivalent to calling clear() followed by appendText().
+	*/
+	void setText (const String& newText,
+				  const Font& fontToUse);
+
+	/** Returns true if the layout has not had any text added yet. */
+	bool isEmpty() const;
+
+	/** Breaks the text up to form a paragraph with the given width.
+
+		@param maximumWidth		 any text wider than this will be split
+											across multiple lines
+		@param justification		how the lines are to be laid-out horizontally
+		@param attemptToBalanceLineLengths  if true, it will try to split the lines at a
+											width that keeps all the lines of text at a
+											similar length - this is good when you're displaying
+											a short message and don't want it to get split
+											onto two lines with only a couple of words on
+											the second line, which looks untidy.
+	*/
+	void layout (int maximumWidth,
+				 const Justification& justification,
+				 bool attemptToBalanceLineLengths);
+
+	/** Returns the overall width of the entire text layout. */
+	int getWidth() const;
+
+	/** Returns the overall height of the entire text layout. */
+	int getHeight() const;
+
+	/** Returns the total number of lines of text. */
+	int getNumLines() const			 { return totalLines; }
+
+	/** Returns the width of a particular line of text.
+
+		@param lineNumber   the line, from 0 to (getNumLines() - 1)
+	*/
+	int getLineWidth (int lineNumber) const;
+
+	/** Renders the text at a specified position using a graphics context.
+	*/
+	void draw (Graphics& g, int topLeftX, int topLeftY) const;
+
+	/** Renders the text within a specified rectangle using a graphics context.
+
+		The justification flags dictate how the block of text should be positioned
+		within the rectangle.
+	*/
+	void drawWithin (Graphics& g,
+					 int x, int y, int w, int h,
+					 const Justification& layoutFlags) const;
+
+private:
+
+	class Token;
+	friend class OwnedArray <Token>;
+	OwnedArray <Token> tokens;
+	int totalLines;
+
+	JUCE_LEAK_DETECTOR (TextLayout);
+};
+
+#endif   // __JUCE_TEXTLAYOUT_JUCEHEADER__
+/*** End of inlined file: juce_TextLayout.h ***/
+
+/** A window that displays a message and has buttons for the user to react to it.
+
+	For simple dialog boxes with just a couple of buttons on them, there are
+	some static methods for running these.
+
+	For more complex dialogs, an AlertWindow can be created, then it can have some
+	buttons and components added to it, and its runModalLoop() method is then used to
+	show it. The value returned by runModalLoop() shows which button the
+	user pressed to dismiss the box.
+
+	@see ThreadWithProgressWindow
+*/
+class JUCE_API  AlertWindow  : public TopLevelWindow,
+							   private ButtonListener  // (can't use Button::Listener due to idiotic VC2005 bug)
+{
+public:
+
+	/** The type of icon to show in the dialog box. */
+	enum AlertIconType
+	{
+		NoIcon,	 /**< No icon will be shown on the dialog box. */
+		QuestionIcon,   /**< A question-mark icon, for dialog boxes that need the
+							 user to answer a question. */
+		WarningIcon,	/**< An exclamation mark to indicate that the dialog is a
+							 warning about something and shouldn't be ignored. */
+		InfoIcon	/**< An icon that indicates that the dialog box is just
+							 giving the user some information, which doesn't require
+							 a response from them. */
+	};
+
+	/** Creates an AlertWindow.
+
+		@param title	the headline to show at the top of the dialog box
+		@param message  a longer, more descriptive message to show underneath the
+						headline
+		@param iconType the type of icon to display
+		@param associatedComponent   if this is non-null, it specifies the component that the
+						alert window should be associated with. Depending on the look
+						and feel, this might be used for positioning of the alert window.
+	*/
+	AlertWindow (const String& title,
+				 const String& message,
+				 AlertIconType iconType,
+				 Component* associatedComponent = 0);
+
+	/** Destroys the AlertWindow */
+	~AlertWindow();
+
+	/** Returns the type of alert icon that was specified when the window
+		was created. */
+	AlertIconType getAlertType() const throw()		  { return alertIconType; }
+
+	/** Changes the dialog box's message.
+
+		This will also resize the window to fit the new message if required.
+	*/
+	void setMessage (const String& message);
+
+	/** Adds a button to the window.
+
+		@param name	 the text to show on the button
+		@param returnValue  the value that should be returned from runModalLoop()
+							if this is the button that the user presses.
+		@param shortcutKey1 an optional key that can be pressed to trigger this button
+		@param shortcutKey2 a second optional key that can be pressed to trigger this button
+	*/
+	void addButton (const String& name,
+					int returnValue,
+					const KeyPress& shortcutKey1 = KeyPress(),
+					const KeyPress& shortcutKey2 = KeyPress());
+
+	/** Returns the number of buttons that the window currently has. */
+	int getNumButtons() const;
+
+	/** Invokes a click of one of the buttons. */
+	void triggerButtonClick (const String& buttonName);
+
+	/** Adds a textbox to the window for entering strings.
+
+		@param name		 an internal name for the text-box. This is the name to pass to
+								the getTextEditorContents() method to find out what the
+								user typed-in.
+		@param initialContents  a string to show in the text box when it's first shown
+		@param onScreenLabel	if this is non-empty, it will be displayed next to the
+								text-box to label it.
+		@param isPasswordBox	if true, the text editor will display asterisks instead of
+								the actual text
+		@see getTextEditorContents
+	*/
+	void addTextEditor (const String& name,
+						const String& initialContents,
+						const String& onScreenLabel = String::empty,
+						bool isPasswordBox = false);
+
+	/** Returns the contents of a named textbox.
+
+		After showing an AlertWindow that contains a text editor, this can be
+		used to find out what the user has typed into it.
+
+		@param nameOfTextEditor	 the name of the text box that you're interested in
+		@see addTextEditor
+	*/
+	const String getTextEditorContents (const String& nameOfTextEditor) const;
+
+	/** Returns a pointer to a textbox that was added with addTextEditor(). */
+	TextEditor* getTextEditor (const String& nameOfTextEditor) const;
+
+	/** Adds a drop-down list of choices to the box.
+
+		After the box has been shown, the getComboBoxComponent() method can
+		be used to find out which item the user picked.
+
+		@param name	 the label to use for the drop-down list
+		@param items	the list of items to show in it
+		@param onScreenLabel	if this is non-empty, it will be displayed next to the
+								combo-box to label it.
+		@see getComboBoxComponent
+	*/
+	void addComboBox (const String& name,
+					  const StringArray& items,
+					  const String& onScreenLabel = String::empty);
+
+	/** Returns a drop-down list that was added to the AlertWindow.
+
+		@param nameOfList   the name that was passed into the addComboBox() method
+							when creating the drop-down
+		@returns the ComboBox component, or 0 if none was found for the given name.
+	*/
+	ComboBox* getComboBoxComponent (const String& nameOfList) const;
+
+	/** Adds a block of text.
+
+		This is handy for adding a multi-line note next to a textbox or combo-box,
+		to provide more details about what's going on.
+	*/
+	void addTextBlock (const String& text);
+
+	/** Adds a progress-bar to the window.
+
+		@param progressValue	a variable that will be repeatedly checked while the
+								dialog box is visible, to see how far the process has
+								got. The value should be in the range 0 to 1.0
+	*/
+	void addProgressBarComponent (double& progressValue);
+
+	/** Adds a user-defined component to the dialog box.
+
+		@param component	the component to add - its size should be set up correctly
+							before it is passed in. The caller is responsible for deleting
+							the component later on - the AlertWindow won't delete it.
+	*/
+	void addCustomComponent (Component* component);
+
+	/** Returns the number of custom components in the dialog box.
+
+		@see getCustomComponent, addCustomComponent
+	*/
+	int getNumCustomComponents() const;
+
+	/** Returns one of the custom components in the dialog box.
+
+		@param index	a value 0 to (getNumCustomComponents() - 1). Out-of-range indexes
+						will return 0
+		@see getNumCustomComponents, addCustomComponent
+	*/
+	Component* getCustomComponent (int index) const;
+
+	/** Removes one of the custom components in the dialog box.
+
+		Note that this won't delete it, it just removes the component from the window
+
+		@param index	a value 0 to (getNumCustomComponents() - 1). Out-of-range indexes
+						will return 0
+		@returns	the component that was removed (or null)
+		@see getNumCustomComponents, addCustomComponent
+	*/
+	Component* removeCustomComponent (int index);
+
+	/** Returns true if the window contains any components other than just buttons.*/
+	bool containsAnyExtraComponents() const;
+
+	// easy-to-use message box functions:
+
+	/** Shows a dialog box that just has a message and a single button to get rid of it.
+
+		If the callback parameter is null, the box is shown modally, and the method will
+		block until the user has clicked the button (or pressed the escape or return keys).
+		If the callback parameter is non-null, the box will be displayed and placed into a
+		modal state, but this method will return immediately, and the callback will be invoked
+		later when the user dismisses the box.
+
+		@param iconType	 the type of icon to show
+		@param title	the headline to show at the top of the box
+		@param message	  a longer, more descriptive message to show underneath the
+							headline
+		@param buttonText   the text to show in the button - if this string is empty, the
+							default string "ok" (or a localised version) will be used.
+		@param associatedComponent   if this is non-null, it specifies the component that the
+							alert window should be associated with. Depending on the look
+							and feel, this might be used for positioning of the alert window.
+	*/
+   #if JUCE_MODAL_LOOPS_PERMITTED
+	static void JUCE_CALLTYPE showMessageBox (AlertIconType iconType,
+											  const String& title,
+											  const String& message,
+											  const String& buttonText = String::empty,
+											  Component* associatedComponent = 0);
+   #endif
+
+	/** Shows a dialog box that just has a message and a single button to get rid of it.
+
+		If the callback parameter is null, the box is shown modally, and the method will
+		block until the user has clicked the button (or pressed the escape or return keys).
+		If the callback parameter is non-null, the box will be displayed and placed into a
+		modal state, but this method will return immediately, and the callback will be invoked
+		later when the user dismisses the box.
+
+		@param iconType	 the type of icon to show
+		@param title	the headline to show at the top of the box
+		@param message	  a longer, more descriptive message to show underneath the
+							headline
+		@param buttonText   the text to show in the button - if this string is empty, the
+							default string "ok" (or a localised version) will be used.
+		@param associatedComponent   if this is non-null, it specifies the component that the
+							alert window should be associated with. Depending on the look
+							and feel, this might be used for positioning of the alert window.
+	*/
+	static void JUCE_CALLTYPE showMessageBoxAsync (AlertIconType iconType,
+												   const String& title,
+												   const String& message,
+												   const String& buttonText = String::empty,
+												   Component* associatedComponent = 0);
+
+	/** Shows a dialog box with two buttons.
+
+		Ideal for ok/cancel or yes/no choices. The return key can also be used
+		to trigger the first button, and the escape key for the second button.
+
+		If the callback parameter is null, the box is shown modally, and the method will
+		block until the user has clicked the button (or pressed the escape or return keys).
+		If the callback parameter is non-null, the box will be displayed and placed into a
+		modal state, but this method will return immediately, and the callback will be invoked
+		later when the user dismisses the box.
+
+		@param iconType	 the type of icon to show
+		@param title	the headline to show at the top of the box
+		@param message	  a longer, more descriptive message to show underneath the
+							headline
+		@param button1Text  the text to show in the first button - if this string is
+							empty, the default string "ok" (or a localised version of it)
+							will be used.
+		@param button2Text  the text to show in the second button - if this string is
+							empty, the default string "cancel" (or a localised version of it)
+							will be used.
+		@param associatedComponent   if this is non-null, it specifies the component that the
+							alert window should be associated with. Depending on the look
+							and feel, this might be used for positioning of the alert window.
+		@param callback	 if this is non-null, the menu will be launched asynchronously,
+							returning immediately, and the callback will receive a call to its
+							modalStateFinished() when the box is dismissed, with its parameter
+							being 1 if the ok button was pressed, or 0 for cancel, The callback object
+							will be owned and deleted by the system, so make sure that it works
+							safely and doesn't keep any references to objects that might be deleted
+							before it gets called.
+		@returns true if button 1 was clicked, false if it was button 2. If the callback parameter
+				 is not null, the method always returns false, and the user's choice is delivered
+				 later by the callback.
+	*/
+	static bool JUCE_CALLTYPE showOkCancelBox (AlertIconType iconType,
+											   const String& title,
+											   const String& message,
+											#if JUCE_MODAL_LOOPS_PERMITTED
+											   const String& button1Text = String::empty,
+											   const String& button2Text = String::empty,
+											   Component* associatedComponent = 0,
+											   ModalComponentManager::Callback* callback = 0);
+											#else
+											   const String& button1Text,
+											   const String& button2Text,
+											   Component* associatedComponent,
+											   ModalComponentManager::Callback* callback);
+											#endif
+
+	/** Shows a dialog box with three buttons.
+
+		Ideal for yes/no/cancel boxes.
+
+		The escape key can be used to trigger the third button.
+
+		If the callback parameter is null, the box is shown modally, and the method will
+		block until the user has clicked the button (or pressed the escape or return keys).
+		If the callback parameter is non-null, the box will be displayed and placed into a
+		modal state, but this method will return immediately, and the callback will be invoked
+		later when the user dismisses the box.
+
+		@param iconType	 the type of icon to show
+		@param title	the headline to show at the top of the box
+		@param message	  a longer, more descriptive message to show underneath the
+							headline
+		@param button1Text  the text to show in the first button - if an empty string, then
+							"yes" will be used (or a localised version of it)
+		@param button2Text  the text to show in the first button - if an empty string, then
+							"no" will be used (or a localised version of it)
+		@param button3Text  the text to show in the first button - if an empty string, then
+							"cancel" will be used (or a localised version of it)
+		@param associatedComponent   if this is non-null, it specifies the component that the
+							alert window should be associated with. Depending on the look
+							and feel, this might be used for positioning of the alert window.
+		@param callback	 if this is non-null, the menu will be launched asynchronously,
+							returning immediately, and the callback will receive a call to its
+							modalStateFinished() when the box is dismissed, with its parameter
+							being 1 if the "yes" button was pressed, 2 for the "no" button, or 0
+							if it was cancelled, The callback object will be owned and deleted by the
+							system, so make sure that it works safely and doesn't keep any references
+							to objects that might be deleted before it gets called.
+
+		@returns If the callback parameter has been set, this returns 0. Otherwise, it
+				 returns one of the following values:
+				 - 0 if the third button was pressed (normally used for 'cancel')
+				 - 1 if the first button was pressed (normally used for 'yes')
+				 - 2 if the middle button was pressed (normally used for 'no')
+	*/
+	static int JUCE_CALLTYPE showYesNoCancelBox (AlertIconType iconType,
+												 const String& title,
+												 const String& message,
+											   #if JUCE_MODAL_LOOPS_PERMITTED
+												 const String& button1Text = String::empty,
+												 const String& button2Text = String::empty,
+												 const String& button3Text = String::empty,
+												 Component* associatedComponent = 0,
+												 ModalComponentManager::Callback* callback = 0);
+											   #else
+												 const String& button1Text,
+												 const String& button2Text,
+												 const String& button3Text,
+												 Component* associatedComponent,
+												 ModalComponentManager::Callback* callback);
+											   #endif
+
+	/** Shows an operating-system native dialog box.
+
+		@param title	the title to use at the top
+		@param bodyText	 the longer message to show
+		@param isOkCancel   if true, this will show an ok/cancel box, if false,
+							it'll show a box with just an ok button
+		@returns true if the ok button was pressed, false if they pressed cancel.
+	*/
+	static bool JUCE_CALLTYPE showNativeDialogBox (const String& title,
+												   const String& bodyText,
+												   bool isOkCancel);
+
+	/** A set of colour IDs to use to change the colour of various aspects of the alert box.
+
+		These constants can be used either via the Component::setColour(), or LookAndFeel::setColour()
+		methods.
+
+		@see Component::setColour, Component::findColour, LookAndFeel::setColour, LookAndFeel::findColour
+	*/
+	enum ColourIds
+	{
+		backgroundColourId	  = 0x1001800,  /**< The background colour for the window. */
+		textColourId		= 0x1001810,  /**< The colour for the text. */
+		outlineColourId		 = 0x1001820   /**< An optional colour to use to draw a border around the window. */
+	};
+
+protected:
+
+	/** @internal */
+	void paint (Graphics& g);
+	/** @internal */
+	void mouseDown (const MouseEvent& e);
+	/** @internal */
+	void mouseDrag (const MouseEvent& e);
+	/** @internal */
+	bool keyPressed (const KeyPress& key);
+	/** @internal */
+	void buttonClicked (Button* button);
+	/** @internal */
+	void lookAndFeelChanged();
+	/** @internal */
+	void userTriedToCloseWindow();
+	/** @internal */
+	int getDesktopWindowStyleFlags() const;
+
+private:
+
+	String text;
+	TextLayout textLayout;
+	AlertIconType alertIconType;
+	ComponentBoundsConstrainer constrainer;
+	ComponentDragger dragger;
+	Rectangle<int> textArea;
+	OwnedArray<TextButton> buttons;
+	OwnedArray<TextEditor> textBoxes;
+	OwnedArray<ComboBox> comboBoxes;
+	OwnedArray<ProgressBar> progressBars;
+	Array<Component*> customComps;
+	OwnedArray<Component> textBlocks;
+	Array<Component*> allComps;
+	StringArray textboxNames, comboBoxNames;
+	Font font;
+	Component* associatedComponent;
+
+	void updateLayout (bool onlyIncreaseSize);
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AlertWindow);
+};
+
+#endif   // __JUCE_ALERTWINDOW_JUCEHEADER__
+/*** End of inlined file: juce_AlertWindow.h ***/
+
 /**
 	A file open/save dialog box.
 
@@ -52304,6 +56358,11 @@ public:
 	*/
 	bool showAt (int x, int y, int width, int height);
 
+	/** Sets the size of this dialog box to its default and positions it either in the
+		centre of the screen, or centred around a component that is provided.
+	*/
+	void centreWithDefaultSize (Component* componentToCentreAround = 0);
+
 	/** A set of colour IDs to use to change the colour of various aspects of the box.
 
 		These constants can be used either via the Component::setColour(), or LookAndFeel::setColour()
@@ -52328,26 +56387,16 @@ public:
 	void fileDoubleClicked (const File& file);
 
 private:
-	class ContentComponent  : public Component
-	{
-	public:
-		ContentComponent (const String& name, const String& instructions, FileBrowserComponent& chooserComponent);
-
-		void paint (Graphics& g);
-		void resized();
-
-		String instructions;
-		GlyphArrangement text;
-
-		FileBrowserComponent& chooserComponent;
-		TextButton okButton, cancelButton, newFolderButton;
-	};
-
+	class ContentComponent;
 	ContentComponent* content;
 	const bool warnAboutOverwritingExistingFiles;
 
 	void okButtonPressed();
 	void createNewFolder();
+	void createNewFolderConfirmed (const String& name);
+
+	static void okToOverwriteFileCallback (int result, FileChooserDialogBox*);
+	static void createNewFolderCallback (int result, FileChooserDialogBox*, Component::SafePointer<AlertWindow>);
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FileChooserDialogBox);
 };
@@ -53261,6 +57310,9 @@ private:
 #ifndef __JUCE_COMPONENTBOUNDSCONSTRAINER_JUCEHEADER__
 
 #endif
+#ifndef __JUCE_COMPONENTBUILDER_JUCEHEADER__
+
+#endif
 #ifndef __JUCE_COMPONENTMOVEMENTWATCHER_JUCEHEADER__
 
 /*** Start of inlined file: juce_ComponentMovementWatcher.h ***/
@@ -53298,17 +57350,26 @@ public:
 	/** This callback happens when the component's top-level peer is changed. */
 	virtual void componentPeerChanged() = 0;
 
+	/** This callback happens when the component's visibility state changes, possibly due to
+		one of its parents being made visible or invisible.
+	*/
+	virtual void componentVisibilityChanged() = 0;
+
 	/** @internal */
 	void componentParentHierarchyChanged (Component& component);
 	/** @internal */
 	void componentMovedOrResized (Component& component, bool wasMoved, bool wasResized);
+	/** @internal */
+	void componentBeingDeleted (Component& component);
+	/** @internal */
+	void componentVisibilityChanged (Component& component);
 
 private:
 
 	WeakReference<Component> component;
 	ComponentPeer* lastPeer;
 	Array <Component*> registeredParentComps;
-	bool reentrant;
+	bool reentrant, wasShowing;
 	Rectangle<int> lastBounds;
 
 	void unregister();
@@ -53675,6 +57736,7 @@ private:
 	ScopedPointer<Button> extraTabsButton;
 
 	void showExtraItemsMenu();
+	static void extraItemsMenuCallback (int, TabbedButtonBar*);
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TabbedButtonBar);
 };
@@ -53860,8 +57922,6 @@ public:
 
 protected:
 
-	ScopedPointer<TabbedButtonBar> tabs;
-
 	/** This creates one of the tab buttons.
 
 		If you need to use custom tab components, you can override this method and
@@ -53869,15 +57929,18 @@ protected:
 	*/
 	virtual TabBarButton* createTabButton (const String& tabName, int tabIndex);
 
+	/** @internal */
+	ScopedPointer<TabbedButtonBar> tabs;
+
 private:
 
-	OwnedArray <WeakReference<Component> > contentComponents;
+	Array <WeakReference<Component> > contentComponents;
 	WeakReference<Component> panelComponent;
 	int tabDepth;
 	int outlineThickness, edgeIndent;
-	static const Identifier deleteComponentId;
 
-	friend class TabCompButtonBar;
+	class ButtonBar;
+	friend class ButtonBar;
 	void changeCallback (int newCurrentTabIndex, const String& newTabName);
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TabbedComponent);
@@ -53890,11 +57953,6 @@ private:
 /*** Start of inlined file: juce_DocumentWindow.h ***/
 #ifndef __JUCE_DOCUMENTWINDOW_JUCEHEADER__
 #define __JUCE_DOCUMENTWINDOW_JUCEHEADER__
-
-
-/*** Start of inlined file: juce_MenuBarComponent.h ***/
-#ifndef __JUCE_MENUBARCOMPONENT_JUCEHEADER__
-#define __JUCE_MENUBARCOMPONENT_JUCEHEADER__
 
 
 /*** Start of inlined file: juce_MenuBarModel.h ***/
@@ -54044,97 +58102,6 @@ typedef MenuBarModel::Listener MenuBarModelListener;
 /*** End of inlined file: juce_MenuBarModel.h ***/
 
 /**
-	A menu bar component.
-
-	@see MenuBarModel
-*/
-class JUCE_API  MenuBarComponent  : public Component,
-									private MenuBarModel::Listener,
-									private Timer
-{
-public:
-
-	/** Creates a menu bar.
-
-		@param model	the model object to use to control this bar. You can
-							pass 0 into this if you like, and set the model later
-							using the setModel() method
-	*/
-	MenuBarComponent (MenuBarModel* model);
-
-	/** Destructor. */
-	~MenuBarComponent();
-
-	/** Changes the model object to use to control the bar.
-
-		This can be 0, in which case the bar will be empty. Don't delete the object
-		that is passed-in while it's still being used by this MenuBar.
-	*/
-	void setModel (MenuBarModel* newModel);
-
-	/** Returns the current menu bar model being used.
-	*/
-	MenuBarModel* getModel() const throw();
-
-	/** Pops up one of the menu items.
-
-		This lets you manually open one of the menus - it could be triggered by a
-		key shortcut, for example.
-	*/
-	void showMenu (int menuIndex);
-
-	/** @internal */
-	void paint (Graphics& g);
-	/** @internal */
-	void resized();
-	/** @internal */
-	void mouseEnter (const MouseEvent& e);
-	/** @internal */
-	void mouseExit (const MouseEvent& e);
-	/** @internal */
-	void mouseDown (const MouseEvent& e);
-	/** @internal */
-	void mouseDrag (const MouseEvent& e);
-	/** @internal */
-	void mouseUp (const MouseEvent& e);
-	/** @internal */
-	void mouseMove (const MouseEvent& e);
-	/** @internal */
-	void handleCommandMessage (int commandId);
-	/** @internal */
-	bool keyPressed (const KeyPress& key);
-	/** @internal */
-	void menuBarItemsChanged (MenuBarModel* menuBarModel);
-	/** @internal */
-	void menuCommandInvoked (MenuBarModel* menuBarModel,
-							 const ApplicationCommandTarget::InvocationInfo& info);
-
-private:
-
-	class AsyncCallback;
-	friend class AsyncCallback;
-	MenuBarModel* model;
-
-	StringArray menuNames;
-	Array <int> xPositions;
-	int itemUnderMouse, currentPopupIndex, topLevelIndexClicked;
-	int lastMouseX, lastMouseY;
-
-	int getItemAt (int x, int y);
-	void setItemUnderMouse (int index);
-	void setOpenItem (int index);
-	void updateItemUnderMouse (int x, int y);
-	void timerCallback();
-	void repaintMenuItem (int index);
-	void menuDismissed (int topLevelIndex, int itemId);
-
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MenuBarComponent);
-};
-
-#endif   // __JUCE_MENUBARCOMPONENT_JUCEHEADER__
-/*** End of inlined file: juce_MenuBarComponent.h ***/
-
-/**
 	A resizable window with a title bar and maximise, minimise and close buttons.
 
 	This subclass of ResizableWindow creates a fairly standard type of window with
@@ -54256,6 +58223,17 @@ public:
 	void setMenuBar (MenuBarModel* menuBarModel,
 					 int menuBarHeight = 0);
 
+	/** Returns the current menu bar component, or null if there isn't one.
+		This is probably a MenuBarComponent, unless a custom one has been set using
+		setMenuBarComponent().
+	*/
+	Component* getMenuBarComponent() const throw();
+
+	/** Replaces the current menu bar with a custom component.
+		The component will be owned and deleted by the document window.
+	*/
+	void setMenuBarComponent (Component* newMenuBarComponent);
+
 	/** This method is called when the user tries to close the window.
 
 		This is triggered by the user clicking the close button, or using some other
@@ -54322,9 +58300,9 @@ public:
 	/** @internal */
 	void lookAndFeelChanged();
 	/** @internal */
-	const BorderSize getBorderThickness();
+	const BorderSize<int> getBorderThickness();
 	/** @internal */
-	const BorderSize getContentComponentBorder();
+	const BorderSize<int> getContentComponentBorder();
 	/** @internal */
 	void mouseDoubleClick (const MouseEvent& e);
 	/** @internal */
@@ -54344,7 +58322,7 @@ private:
 	bool positionTitleBarButtonsOnLeft, drawTitleTextCentred;
 	ScopedPointer <Button> titleBarButtons [3];
 	Image titleBarIcon;
-	ScopedPointer <MenuBarComponent> menuBar;
+	ScopedPointer <Component> menuBar;
 	MenuBarModel* menuBarModel;
 
 	class ButtonListenerProxy;
@@ -55036,468 +59014,6 @@ private:
 #ifndef __JUCE_LOOKANDFEEL_JUCEHEADER__
 #define __JUCE_LOOKANDFEEL_JUCEHEADER__
 
-
-/*** Start of inlined file: juce_AlertWindow.h ***/
-#ifndef __JUCE_ALERTWINDOW_JUCEHEADER__
-#define __JUCE_ALERTWINDOW_JUCEHEADER__
-
-
-/*** Start of inlined file: juce_TextLayout.h ***/
-#ifndef __JUCE_TEXTLAYOUT_JUCEHEADER__
-#define __JUCE_TEXTLAYOUT_JUCEHEADER__
-
-class Graphics;
-
-/**
-	A laid-out arrangement of text.
-
-	You can add text in different fonts to a TextLayout object, then call its
-	layout() method to word-wrap it into lines. The layout can then be drawn
-	using a graphics context.
-
-	It's handy if you've got a message to display, because you can format it,
-	measure the extent of the layout, and then create a suitably-sized window
-	to show it in.
-
-	@see Font, Graphics::drawFittedText, GlyphArrangement
-*/
-class JUCE_API  TextLayout
-{
-public:
-
-	/** Creates an empty text layout.
-
-		Text can then be appended using the appendText() method.
-	*/
-	TextLayout();
-
-	/** Creates a copy of another layout object. */
-	TextLayout (const TextLayout& other);
-
-	/** Creates a text layout from an initial string and font. */
-	TextLayout (const String& text, const Font& font);
-
-	/** Destructor. */
-	~TextLayout();
-
-	/** Copies another layout onto this one. */
-	TextLayout& operator= (const TextLayout& layoutToCopy);
-
-	/** Clears the layout, removing all its text. */
-	void clear();
-
-	/** Adds a string to the end of the arrangement.
-
-		The string will be broken onto new lines wherever it contains
-		carriage-returns or linefeeds. After adding it, you can call layout()
-		to wrap long lines into a paragraph and justify it.
-	*/
-	void appendText (const String& textToAppend,
-					 const Font& fontToUse);
-
-	/** Replaces all the text with a new string.
-
-		This is equivalent to calling clear() followed by appendText().
-	*/
-	void setText (const String& newText,
-				  const Font& fontToUse);
-
-	/** Returns true if the layout has not had any text added yet. */
-	bool isEmpty() const;
-
-	/** Breaks the text up to form a paragraph with the given width.
-
-		@param maximumWidth		 any text wider than this will be split
-											across multiple lines
-		@param justification		how the lines are to be laid-out horizontally
-		@param attemptToBalanceLineLengths  if true, it will try to split the lines at a
-											width that keeps all the lines of text at a
-											similar length - this is good when you're displaying
-											a short message and don't want it to get split
-											onto two lines with only a couple of words on
-											the second line, which looks untidy.
-	*/
-	void layout (int maximumWidth,
-				 const Justification& justification,
-				 bool attemptToBalanceLineLengths);
-
-	/** Returns the overall width of the entire text layout. */
-	int getWidth() const;
-
-	/** Returns the overall height of the entire text layout. */
-	int getHeight() const;
-
-	/** Returns the total number of lines of text. */
-	int getNumLines() const			 { return totalLines; }
-
-	/** Returns the width of a particular line of text.
-
-		@param lineNumber   the line, from 0 to (getNumLines() - 1)
-	*/
-	int getLineWidth (int lineNumber) const;
-
-	/** Renders the text at a specified position using a graphics context.
-	*/
-	void draw (Graphics& g, int topLeftX, int topLeftY) const;
-
-	/** Renders the text within a specified rectangle using a graphics context.
-
-		The justification flags dictate how the block of text should be positioned
-		within the rectangle.
-	*/
-	void drawWithin (Graphics& g,
-					 int x, int y, int w, int h,
-					 const Justification& layoutFlags) const;
-
-private:
-
-	class Token;
-	friend class OwnedArray <Token>;
-	OwnedArray <Token> tokens;
-	int totalLines;
-
-	JUCE_LEAK_DETECTOR (TextLayout);
-};
-
-#endif   // __JUCE_TEXTLAYOUT_JUCEHEADER__
-/*** End of inlined file: juce_TextLayout.h ***/
-
-/** A window that displays a message and has buttons for the user to react to it.
-
-	For simple dialog boxes with just a couple of buttons on them, there are
-	some static methods for running these.
-
-	For more complex dialogs, an AlertWindow can be created, then it can have some
-	buttons and components added to it, and its runModalLoop() method is then used to
-	show it. The value returned by runModalLoop() shows which button the
-	user pressed to dismiss the box.
-
-	@see ThreadWithProgressWindow
-*/
-class JUCE_API  AlertWindow  : public TopLevelWindow,
-							   private ButtonListener  // (can't use Button::Listener due to idiotic VC2005 bug)
-{
-public:
-
-	/** The type of icon to show in the dialog box. */
-	enum AlertIconType
-	{
-		NoIcon,	 /**< No icon will be shown on the dialog box. */
-		QuestionIcon,   /**< A question-mark icon, for dialog boxes that need the
-							 user to answer a question. */
-		WarningIcon,	/**< An exclamation mark to indicate that the dialog is a
-							 warning about something and shouldn't be ignored. */
-		InfoIcon	/**< An icon that indicates that the dialog box is just
-							 giving the user some information, which doesn't require
-							 a response from them. */
-	};
-
-	/** Creates an AlertWindow.
-
-		@param title	the headline to show at the top of the dialog box
-		@param message  a longer, more descriptive message to show underneath the
-						headline
-		@param iconType the type of icon to display
-		@param associatedComponent   if this is non-zero, it specifies the component that the
-						alert window should be associated with. Depending on the look
-						and feel, this might be used for positioning of the alert window.
-	*/
-	AlertWindow (const String& title,
-				 const String& message,
-				 AlertIconType iconType,
-				 Component* associatedComponent = 0);
-
-	/** Destroys the AlertWindow */
-	~AlertWindow();
-
-	/** Returns the type of alert icon that was specified when the window
-		was created. */
-	AlertIconType getAlertType() const throw()		  { return alertIconType; }
-
-	/** Changes the dialog box's message.
-
-		This will also resize the window to fit the new message if required.
-	*/
-	void setMessage (const String& message);
-
-	/** Adds a button to the window.
-
-		@param name	 the text to show on the button
-		@param returnValue  the value that should be returned from runModalLoop()
-							if this is the button that the user presses.
-		@param shortcutKey1 an optional key that can be pressed to trigger this button
-		@param shortcutKey2 a second optional key that can be pressed to trigger this button
-	*/
-	void addButton (const String& name,
-					int returnValue,
-					const KeyPress& shortcutKey1 = KeyPress(),
-					const KeyPress& shortcutKey2 = KeyPress());
-
-	/** Returns the number of buttons that the window currently has. */
-	int getNumButtons() const;
-
-	/** Invokes a click of one of the buttons. */
-	void triggerButtonClick (const String& buttonName);
-
-	/** Adds a textbox to the window for entering strings.
-
-		@param name		 an internal name for the text-box. This is the name to pass to
-								the getTextEditorContents() method to find out what the
-								user typed-in.
-		@param initialContents  a string to show in the text box when it's first shown
-		@param onScreenLabel	if this is non-empty, it will be displayed next to the
-								text-box to label it.
-		@param isPasswordBox	if true, the text editor will display asterisks instead of
-								the actual text
-		@see getTextEditorContents
-	*/
-	void addTextEditor (const String& name,
-						const String& initialContents,
-						const String& onScreenLabel = String::empty,
-						bool isPasswordBox = false);
-
-	/** Returns the contents of a named textbox.
-
-		After showing an AlertWindow that contains a text editor, this can be
-		used to find out what the user has typed into it.
-
-		@param nameOfTextEditor	 the name of the text box that you're interested in
-		@see addTextEditor
-	*/
-	const String getTextEditorContents (const String& nameOfTextEditor) const;
-
-	/** Returns a pointer to a textbox that was added with addTextEditor(). */
-	TextEditor* getTextEditor (const String& nameOfTextEditor) const;
-
-	/** Adds a drop-down list of choices to the box.
-
-		After the box has been shown, the getComboBoxComponent() method can
-		be used to find out which item the user picked.
-
-		@param name	 the label to use for the drop-down list
-		@param items	the list of items to show in it
-		@param onScreenLabel	if this is non-empty, it will be displayed next to the
-								combo-box to label it.
-		@see getComboBoxComponent
-	*/
-	void addComboBox (const String& name,
-					  const StringArray& items,
-					  const String& onScreenLabel = String::empty);
-
-	/** Returns a drop-down list that was added to the AlertWindow.
-
-		@param nameOfList   the name that was passed into the addComboBox() method
-							when creating the drop-down
-		@returns the ComboBox component, or 0 if none was found for the given name.
-	*/
-	ComboBox* getComboBoxComponent (const String& nameOfList) const;
-
-	/** Adds a block of text.
-
-		This is handy for adding a multi-line note next to a textbox or combo-box,
-		to provide more details about what's going on.
-	*/
-	void addTextBlock (const String& text);
-
-	/** Adds a progress-bar to the window.
-
-		@param progressValue	a variable that will be repeatedly checked while the
-								dialog box is visible, to see how far the process has
-								got. The value should be in the range 0 to 1.0
-	*/
-	void addProgressBarComponent (double& progressValue);
-
-	/** Adds a user-defined component to the dialog box.
-
-		@param component	the component to add - its size should be set up correctly
-							before it is passed in. The caller is responsible for deleting
-							the component later on - the AlertWindow won't delete it.
-	*/
-	void addCustomComponent (Component* component);
-
-	/** Returns the number of custom components in the dialog box.
-
-		@see getCustomComponent, addCustomComponent
-	*/
-	int getNumCustomComponents() const;
-
-	/** Returns one of the custom components in the dialog box.
-
-		@param index	a value 0 to (getNumCustomComponents() - 1). Out-of-range indexes
-						will return 0
-		@see getNumCustomComponents, addCustomComponent
-	*/
-	Component* getCustomComponent (int index) const;
-
-	/** Removes one of the custom components in the dialog box.
-
-		Note that this won't delete it, it just removes the component from the window
-
-		@param index	a value 0 to (getNumCustomComponents() - 1). Out-of-range indexes
-						will return 0
-		@returns	the component that was removed (or zero)
-		@see getNumCustomComponents, addCustomComponent
-	*/
-	Component* removeCustomComponent (int index);
-
-	/** Returns true if the window contains any components other than just buttons.*/
-	bool containsAnyExtraComponents() const;
-
-	// easy-to-use message box functions:
-
-	/** Shows a dialog box that just has a message and a single button to get rid of it.
-
-		The box is shown modally, and the method returns after the user
-		has clicked the button (or pressed the escape or return keys).
-
-		@param iconType	 the type of icon to show
-		@param title	the headline to show at the top of the box
-		@param message	  a longer, more descriptive message to show underneath the
-							headline
-		@param buttonText   the text to show in the button - if this string is empty, the
-							default string "ok" (or a localised version) will be used.
-		@param associatedComponent   if this is non-zero, it specifies the component that the
-							alert window should be associated with. Depending on the look
-							and feel, this might be used for positioning of the alert window.
-	*/
-	static void JUCE_CALLTYPE showMessageBox (AlertIconType iconType,
-											  const String& title,
-											  const String& message,
-											  const String& buttonText = String::empty,
-											  Component* associatedComponent = 0);
-
-	/** Shows a dialog box with two buttons.
-
-		Ideal for ok/cancel or yes/no choices. The return key can also be used
-		to trigger the first button, and the escape key for the second button.
-
-		@param iconType	 the type of icon to show
-		@param title	the headline to show at the top of the box
-		@param message	  a longer, more descriptive message to show underneath the
-							headline
-		@param button1Text  the text to show in the first button - if this string is
-							empty, the default string "ok" (or a localised version of it)
-							will be used.
-		@param button2Text  the text to show in the second button - if this string is
-							empty, the default string "cancel" (or a localised version of it)
-							will be used.
-	 @param associatedComponent   if this is non-zero, it specifies the component that the
-							 alert window should be associated with. Depending on the look
-							 and feel, this might be used for positioning of the alert window.
-	 @returns true if button 1 was clicked, false if it was button 2
-	*/
-	static bool JUCE_CALLTYPE showOkCancelBox (AlertIconType iconType,
-											   const String& title,
-											   const String& message,
-											   const String& button1Text = String::empty,
-											   const String& button2Text = String::empty,
-											   Component* associatedComponent = 0);
-
-	/** Shows a dialog box with three buttons.
-
-		Ideal for yes/no/cancel boxes.
-
-		The escape key can be used to trigger the third button.
-
-		@param iconType	 the type of icon to show
-		@param title	the headline to show at the top of the box
-		@param message	  a longer, more descriptive message to show underneath the
-							headline
-		@param button1Text  the text to show in the first button - if an empty string, then
-							"yes" will be used (or a localised version of it)
-		@param button2Text  the text to show in the first button - if an empty string, then
-							"no" will be used (or a localised version of it)
-		@param button3Text  the text to show in the first button - if an empty string, then
-							"cancel" will be used (or a localised version of it)
-		@param associatedComponent   if this is non-zero, it specifies the component that the
-							alert window should be associated with. Depending on the look
-							and feel, this might be used for positioning of the alert window.
-
-		@returns one of the following values:
-				 - 0 if the third button was pressed (normally used for 'cancel')
-				 - 1 if the first button was pressed (normally used for 'yes')
-				 - 2 if the middle button was pressed (normally used for 'no')
-	*/
-	static int JUCE_CALLTYPE showYesNoCancelBox (AlertIconType iconType,
-												 const String& title,
-												 const String& message,
-												 const String& button1Text = String::empty,
-												 const String& button2Text = String::empty,
-												 const String& button3Text = String::empty,
-												 Component* associatedComponent = 0);
-
-	/** Shows an operating-system native dialog box.
-
-		@param title	the title to use at the top
-		@param bodyText	 the longer message to show
-		@param isOkCancel   if true, this will show an ok/cancel box, if false,
-							it'll show a box with just an ok button
-		@returns true if the ok button was pressed, false if they pressed cancel.
-	*/
-	static bool JUCE_CALLTYPE showNativeDialogBox (const String& title,
-												   const String& bodyText,
-												   bool isOkCancel);
-
-	/** A set of colour IDs to use to change the colour of various aspects of the alert box.
-
-		These constants can be used either via the Component::setColour(), or LookAndFeel::setColour()
-		methods.
-
-		@see Component::setColour, Component::findColour, LookAndFeel::setColour, LookAndFeel::findColour
-	*/
-	enum ColourIds
-	{
-		backgroundColourId	  = 0x1001800,  /**< The background colour for the window. */
-		textColourId		= 0x1001810,  /**< The colour for the text. */
-		outlineColourId		 = 0x1001820   /**< An optional colour to use to draw a border around the window. */
-	};
-
-protected:
-
-	/** @internal */
-	void paint (Graphics& g);
-	/** @internal */
-	void mouseDown (const MouseEvent& e);
-	/** @internal */
-	void mouseDrag (const MouseEvent& e);
-	/** @internal */
-	bool keyPressed (const KeyPress& key);
-	/** @internal */
-	void buttonClicked (Button* button);
-	/** @internal */
-	void lookAndFeelChanged();
-	/** @internal */
-	void userTriedToCloseWindow();
-	/** @internal */
-	int getDesktopWindowStyleFlags() const;
-
-private:
-
-	String text;
-	TextLayout textLayout;
-	AlertIconType alertIconType;
-	ComponentBoundsConstrainer constrainer;
-	ComponentDragger dragger;
-	Rectangle<int> textArea;
-	OwnedArray<TextButton> buttons;
-	OwnedArray<TextEditor> textBoxes;
-	OwnedArray<ComboBox> comboBoxes;
-	OwnedArray<ProgressBar> progressBars;
-	Array<Component*> customComps;
-	OwnedArray<Component> textBlocks;
-	Array<Component*> allComps;
-	StringArray textboxNames, comboBoxNames;
-	Font font;
-	Component* associatedComponent;
-
-	void updateLayout (bool onlyIncreaseSize);
-
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AlertWindow);
-};
-
-#endif   // __JUCE_ALERTWINDOW_JUCEHEADER__
-/*** End of inlined file: juce_AlertWindow.h ***/
-
 class ToggleButton;
 class TextButton;
 class AlertWindow;
@@ -55656,6 +59172,7 @@ public:
 
 	virtual int getAlertWindowButtonHeight();
 
+	virtual const Font getAlertWindowMessageFont();
 	virtual const Font getAlertWindowFont();
 
 	/** Draws a progress bar.
@@ -55898,15 +59415,15 @@ public:
 
 	virtual void drawResizableFrame (Graphics& g,
 									int w, int h,
-									const BorderSize& borders);
+									const BorderSize<int>& borders);
 
 	virtual void fillResizableWindowBackground (Graphics& g, int w, int h,
-												const BorderSize& border,
+												const BorderSize<int>& border,
 												ResizableWindow& window);
 
 	virtual void drawResizableWindowBorder (Graphics& g,
 											int w, int h,
-											const BorderSize& border,
+											const BorderSize<int>& border,
 											ResizableWindow& window);
 
 	virtual void drawDocumentWindowTitleBar (DocumentWindow& window,
@@ -56229,75 +59746,106 @@ private:
 #endif
 #ifndef __JUCE_MENUBARCOMPONENT_JUCEHEADER__
 
+/*** Start of inlined file: juce_MenuBarComponent.h ***/
+#ifndef __JUCE_MENUBARCOMPONENT_JUCEHEADER__
+#define __JUCE_MENUBARCOMPONENT_JUCEHEADER__
+
+/**
+	A menu bar component.
+
+	@see MenuBarModel
+*/
+class JUCE_API  MenuBarComponent  : public Component,
+									private MenuBarModel::Listener,
+									private Timer
+{
+public:
+
+	/** Creates a menu bar.
+
+		@param model	the model object to use to control this bar. You can
+							pass 0 into this if you like, and set the model later
+							using the setModel() method
+	*/
+	MenuBarComponent (MenuBarModel* model);
+
+	/** Destructor. */
+	~MenuBarComponent();
+
+	/** Changes the model object to use to control the bar.
+
+		This can be 0, in which case the bar will be empty. Don't delete the object
+		that is passed-in while it's still being used by this MenuBar.
+	*/
+	void setModel (MenuBarModel* newModel);
+
+	/** Returns the current menu bar model being used.
+	*/
+	MenuBarModel* getModel() const throw();
+
+	/** Pops up one of the menu items.
+
+		This lets you manually open one of the menus - it could be triggered by a
+		key shortcut, for example.
+	*/
+	void showMenu (int menuIndex);
+
+	/** @internal */
+	void paint (Graphics& g);
+	/** @internal */
+	void resized();
+	/** @internal */
+	void mouseEnter (const MouseEvent& e);
+	/** @internal */
+	void mouseExit (const MouseEvent& e);
+	/** @internal */
+	void mouseDown (const MouseEvent& e);
+	/** @internal */
+	void mouseDrag (const MouseEvent& e);
+	/** @internal */
+	void mouseUp (const MouseEvent& e);
+	/** @internal */
+	void mouseMove (const MouseEvent& e);
+	/** @internal */
+	void handleCommandMessage (int commandId);
+	/** @internal */
+	bool keyPressed (const KeyPress& key);
+	/** @internal */
+	void menuBarItemsChanged (MenuBarModel* menuBarModel);
+	/** @internal */
+	void menuCommandInvoked (MenuBarModel* menuBarModel,
+							 const ApplicationCommandTarget::InvocationInfo& info);
+
+private:
+
+	MenuBarModel* model;
+
+	StringArray menuNames;
+	Array <int> xPositions;
+	int itemUnderMouse, currentPopupIndex, topLevelIndexClicked;
+	int lastMouseX, lastMouseY;
+
+	int getItemAt (int x, int y);
+	void setItemUnderMouse (int index);
+	void setOpenItem (int index);
+	void updateItemUnderMouse (int x, int y);
+	void timerCallback();
+	void repaintMenuItem (int index);
+	void menuDismissed (int topLevelIndex, int itemId);
+	static void menuBarMenuDismissedCallback (int, MenuBarComponent*, int);
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MenuBarComponent);
+};
+
+#endif   // __JUCE_MENUBARCOMPONENT_JUCEHEADER__
+/*** End of inlined file: juce_MenuBarComponent.h ***/
+
+
 #endif
 #ifndef __JUCE_MENUBARMODEL_JUCEHEADER__
 
 #endif
 #ifndef __JUCE_POPUPMENU_JUCEHEADER__
-
-#endif
-#ifndef __JUCE_POPUPMENUCUSTOMCOMPONENT_JUCEHEADER__
-
-/*** Start of inlined file: juce_PopupMenuCustomComponent.h ***/
-#ifndef __JUCE_POPUPMENUCUSTOMCOMPONENT_JUCEHEADER__
-#define __JUCE_POPUPMENUCUSTOMCOMPONENT_JUCEHEADER__
-
-/** A user-defined copmonent that can appear inside one of the rows of a popup menu.
-
-	@see PopupMenu::addCustomItem
-*/
-class JUCE_API  PopupMenuCustomComponent  : public Component,
-											public ReferenceCountedObject
-{
-public:
-	/** Destructor. */
-	~PopupMenuCustomComponent();
-
-	/** Chooses the size that this component would like to have.
-
-		Note that the size which this method returns isn't necessarily the one that
-		the menu will give it, as it will be stretched to fit the other items in
-		the menu.
-	*/
-	virtual void getIdealSize (int& idealWidth,
-							   int& idealHeight) = 0;
-
-	/** Dismisses the menu indicating that this item has been chosen.
-
-		This will cause the menu to exit from its modal state, returning
-		this item's id as the result.
-	*/
-	void triggerMenuItem();
-
-	/** Returns true if this item should be highlighted because the mouse is
-		over it.
-
-		You can call this method in your paint() method to find out whether
-		to draw a highlight.
-	*/
-	bool isItemHighlighted() const throw()		   { return isHighlighted; }
-
-protected:
-	/** Constructor.
-
-		If isTriggeredAutomatically is true, then the menu will automatically detect
-		a click on this component and use that to trigger it. If it's false, then it's
-		up to your class to manually trigger the item if it wants to.
-	*/
-	PopupMenuCustomComponent (bool isTriggeredAutomatically = true);
-
-private:
-	friend class PopupMenu;
-	friend class PopupMenu::ItemComponent;
-	friend class PopupMenu::Window;
-	bool isHighlighted, isTriggeredAutomatically;
-
-	JUCE_DECLARE_NON_COPYABLE (PopupMenuCustomComponent);
-};
-
-#endif   // __JUCE_POPUPMENUCUSTOMCOMPONENT_JUCEHEADER__
-/*** End of inlined file: juce_PopupMenuCustomComponent.h ***/
-
 
 #endif
 #ifndef __JUCE_COMPONENTDRAGGER_JUCEHEADER__
@@ -56372,11 +59920,6 @@ public:
 		}
 
 		return *this;
-	}
-
-	/** Destructor. */
-	~SelectedItemSet()
-	{
 	}
 
 	/** Clears any other currently selected items, and selects this item.
@@ -56825,117 +60368,12 @@ private:
 #ifndef __JUCE_MOUSEEVENT_JUCEHEADER__
 
 #endif
-#ifndef __JUCE_MOUSEHOVERDETECTOR_JUCEHEADER__
-
-/*** Start of inlined file: juce_MouseHoverDetector.h ***/
-#ifndef __JUCE_MOUSEHOVERDETECTOR_JUCEHEADER__
-#define __JUCE_MOUSEHOVERDETECTOR_JUCEHEADER__
-
-/**
-	Monitors a component for mouse activity, and triggers a callback
-	when the mouse hovers in one place for a specified length of time.
-
-	To use a hover-detector, just create one and call its setHoverComponent()
-	method to start it watching a component. You can call setHoverComponent (0)
-	to make it inactive.
-
-	(Be careful not to delete a component that's being monitored without first
-	stopping or deleting the hover detector).
-*/
-class JUCE_API  MouseHoverDetector
-{
-public:
-
-	/** Creates a hover detector.
-
-		Initially the object is inactive, and you need to tell it which component
-		to monitor, using the setHoverComponent() method.
-
-		@param hoverTimeMillisecs   the number of milliseconds for which the mouse
-									needs to stay still before the mouseHovered() method
-									is invoked. You can change this setting later with
-									the setHoverTimeMillisecs() method
-	*/
-	MouseHoverDetector (int hoverTimeMillisecs = 400);
-
-	/** Destructor. */
-	virtual ~MouseHoverDetector();
-
-	/** Changes the time for which the mouse has to stay still before it's considered
-		to be hovering.
-	*/
-	void setHoverTimeMillisecs (int newTimeInMillisecs);
-
-	/** Changes the component that's being monitored for hovering.
-
-		Be careful not to delete a component that's being monitored without first
-		stopping or deleting the hover detector.
-	*/
-	void setHoverComponent (Component* newSourceComponent);
-
-protected:
-
-	/** Called back when the mouse hovers.
-
-		After the mouse has stayed still over the component for the length of time
-		specified by setHoverTimeMillisecs(), this method will be invoked.
-
-		When the mouse is first moved after this callback has occurred, the
-		mouseMovedAfterHover() method will be called.
-
-		@param mouseX   the mouse's X position relative to the component being monitored
-		@param mouseY   the mouse's Y position relative to the component being monitored
-	*/
-	virtual void mouseHovered (int mouseX,
-							   int mouseY) = 0;
-
-	/** Called when the mouse is moved away after just having hovered. */
-	virtual void mouseMovedAfterHover() = 0;
-
-private:
-
-	class JUCE_API  HoverDetectorInternal  : public MouseListener,
-											 public Timer
-	{
-	public:
-		MouseHoverDetector* owner;
-		int lastX, lastY;
-
-		void timerCallback();
-		void mouseEnter (const MouseEvent&);
-		void mouseExit (const MouseEvent&);
-		void mouseDown (const MouseEvent&);
-		void mouseUp (const MouseEvent&);
-		void mouseMove (const MouseEvent&);
-		void mouseWheelMove (const MouseEvent&, float, float);
-
-	} internalTimer;
-
-	friend class HoverDetectorInternal;
-
-	Component* source;
-	int hoverTimeMillisecs;
-	bool hasJustHovered;
-
-	void hoverTimerCallback();
-	void checkJustHoveredCallback();
-
-	JUCE_DECLARE_NON_COPYABLE (MouseHoverDetector);
-};
-
-#endif   // __JUCE_MOUSEHOVERDETECTOR_JUCEHEADER__
-/*** End of inlined file: juce_MouseHoverDetector.h ***/
-
-
-#endif
 #ifndef __JUCE_MOUSEINPUTSOURCE_JUCEHEADER__
 
 /*** Start of inlined file: juce_MouseInputSource.h ***/
 #ifndef __JUCE_MOUSEINPUTSOURCE_JUCEHEADER__
 #define __JUCE_MOUSEINPUTSOURCE_JUCEHEADER__
 
-class Component;
-class ComponentPeer;
 class MouseInputSourceInternal;
 
 /**
@@ -57032,12 +60470,22 @@ public:
 	*/
 	bool hasMouseMovedSignificantlySincePressed() const throw();
 
+	/** Returns true if this input source uses a visible mouse cursor. */
 	bool hasMouseCursor() const throw();
+
+	/** Changes the mouse cursor, (if there is one). */
 	void showMouseCursor (const MouseCursor& cursor);
+
+	/** Hides the mouse cursor (if there is one). */
 	void hideCursor();
+
+	/** Un-hides the mouse cursor if it was hidden by hideCursor(). */
 	void revealCursor();
+
+	/** Forces an update of the mouse cursor for whatever component it's currently over. */
 	void forceMouseCursorUpdate();
 
+	/** Returns true if this mouse can be moved indefinitely in any direction without running out of space. */
 	bool canDoUnboundedMovement() const throw();
 
 	/** Allows the mouse to move beyond the edges of the screen.
@@ -57085,6 +60533,310 @@ private:
 
 #endif
 #ifndef __JUCE_TOOLTIPCLIENT_JUCEHEADER__
+
+#endif
+#ifndef __JUCE_MARKERLIST_JUCEHEADER__
+
+#endif
+#ifndef __JUCE_RELATIVECOORDINATE_JUCEHEADER__
+
+#endif
+#ifndef __JUCE_RELATIVECOORDINATEPOSITIONER_JUCEHEADER__
+
+#endif
+#ifndef __JUCE_RELATIVEPARALLELOGRAM_JUCEHEADER__
+
+/*** Start of inlined file: juce_RelativeParallelogram.h ***/
+#ifndef __JUCE_RELATIVEPARALLELOGRAM_JUCEHEADER__
+#define __JUCE_RELATIVEPARALLELOGRAM_JUCEHEADER__
+
+/**
+	A parallelogram defined by three RelativePoint positions.
+
+	@see RelativePoint, RelativeCoordinate
+*/
+class JUCE_API  RelativeParallelogram
+{
+public:
+
+	RelativeParallelogram();
+	RelativeParallelogram (const Rectangle<float>& simpleRectangle);
+	RelativeParallelogram (const RelativePoint& topLeft, const RelativePoint& topRight, const RelativePoint& bottomLeft);
+	RelativeParallelogram (const String& topLeft, const String& topRight, const String& bottomLeft);
+	~RelativeParallelogram();
+
+	void resolveThreePoints (Point<float>* points, Expression::Scope* scope) const;
+	void resolveFourCorners (Point<float>* points, Expression::Scope* scope) const;
+	const Rectangle<float> getBounds (Expression::Scope* scope) const;
+	void getPath (Path& path, Expression::Scope* scope) const;
+	const AffineTransform resetToPerpendicular (Expression::Scope* scope);
+	bool isDynamic() const;
+
+	bool operator== (const RelativeParallelogram& other) const throw();
+	bool operator!= (const RelativeParallelogram& other) const throw();
+
+	static const Point<float> getInternalCoordForPoint (const Point<float>* parallelogramCorners, Point<float> point) throw();
+	static const Point<float> getPointForInternalCoord (const Point<float>* parallelogramCorners, const Point<float>& internalPoint) throw();
+	static const Rectangle<float> getBoundingBox (const Point<float>* parallelogramCorners) throw();
+
+	RelativePoint topLeft, topRight, bottomLeft;
+};
+
+#endif   // __JUCE_RELATIVEPARALLELOGRAM_JUCEHEADER__
+/*** End of inlined file: juce_RelativeParallelogram.h ***/
+
+
+#endif
+#ifndef __JUCE_RELATIVEPOINT_JUCEHEADER__
+
+#endif
+#ifndef __JUCE_RELATIVEPOINTPATH_JUCEHEADER__
+
+/*** Start of inlined file: juce_RelativePointPath.h ***/
+#ifndef __JUCE_RELATIVEPOINTPATH_JUCEHEADER__
+#define __JUCE_RELATIVEPOINTPATH_JUCEHEADER__
+
+class DrawablePath;
+
+/**
+	A path object that consists of RelativePoint coordinates rather than the normal fixed ones.
+
+	One of these paths can be converted into a Path object for drawing and manipulation, but
+	unlike a Path, its points can be dynamic instead of just fixed.
+
+	@see RelativePoint, RelativeCoordinate
+*/
+class JUCE_API  RelativePointPath
+{
+public:
+
+	RelativePointPath();
+	RelativePointPath (const RelativePointPath& other);
+	explicit RelativePointPath (const Path& path);
+	~RelativePointPath();
+
+	bool operator== (const RelativePointPath& other) const throw();
+	bool operator!= (const RelativePointPath& other) const throw();
+
+	/** Resolves this points in this path and adds them to a normal Path object. */
+	void createPath (Path& path, Expression::Scope* scope) const;
+
+	/** Returns true if the path contains any non-fixed points. */
+	bool containsAnyDynamicPoints() const;
+
+	/** Quickly swaps the contents of this path with another. */
+	void swapWith (RelativePointPath& other) throw();
+
+	/** The types of element that may be contained in this path.
+		@see RelativePointPath::ElementBase
+	*/
+	enum ElementType
+	{
+		nullElement,
+		startSubPathElement,
+		closeSubPathElement,
+		lineToElement,
+		quadraticToElement,
+		cubicToElement
+	};
+
+	/** Base class for the elements that make up a RelativePointPath.
+	*/
+	class JUCE_API  ElementBase
+	{
+	public:
+		ElementBase (ElementType type);
+		virtual ~ElementBase() {}
+		virtual const ValueTree createTree() const = 0;
+		virtual void addToPath (Path& path, Expression::Scope*) const = 0;
+		virtual RelativePoint* getControlPoints (int& numPoints) = 0;
+		virtual ElementBase* clone() const = 0;
+		bool isDynamic();
+
+		const ElementType type;
+
+	private:
+		JUCE_DECLARE_NON_COPYABLE (ElementBase);
+	};
+
+	class JUCE_API  StartSubPath  : public ElementBase
+	{
+	public:
+		StartSubPath (const RelativePoint& pos);
+		const ValueTree createTree() const;
+		void addToPath (Path& path, Expression::Scope*) const;
+		RelativePoint* getControlPoints (int& numPoints);
+		ElementBase* clone() const;
+
+		RelativePoint startPos;
+
+	private:
+		JUCE_DECLARE_NON_COPYABLE (StartSubPath);
+	};
+
+	class JUCE_API  CloseSubPath  : public ElementBase
+	{
+	public:
+		CloseSubPath();
+		const ValueTree createTree() const;
+		void addToPath (Path& path, Expression::Scope*) const;
+		RelativePoint* getControlPoints (int& numPoints);
+		ElementBase* clone() const;
+
+	private:
+		JUCE_DECLARE_NON_COPYABLE (CloseSubPath);
+	};
+
+	class JUCE_API  LineTo  : public ElementBase
+	{
+	public:
+		LineTo (const RelativePoint& endPoint);
+		const ValueTree createTree() const;
+		void addToPath (Path& path, Expression::Scope*) const;
+		RelativePoint* getControlPoints (int& numPoints);
+		ElementBase* clone() const;
+
+		RelativePoint endPoint;
+
+	private:
+		JUCE_DECLARE_NON_COPYABLE (LineTo);
+	};
+
+	class JUCE_API  QuadraticTo  : public ElementBase
+	{
+	public:
+		QuadraticTo (const RelativePoint& controlPoint, const RelativePoint& endPoint);
+		const ValueTree createTree() const;
+		void addToPath (Path& path, Expression::Scope*) const;
+		RelativePoint* getControlPoints (int& numPoints);
+		ElementBase* clone() const;
+
+		RelativePoint controlPoints[2];
+
+	private:
+		JUCE_DECLARE_NON_COPYABLE (QuadraticTo);
+	};
+
+	class JUCE_API  CubicTo  : public ElementBase
+	{
+	public:
+		CubicTo (const RelativePoint& controlPoint1, const RelativePoint& controlPoint2, const RelativePoint& endPoint);
+		const ValueTree createTree() const;
+		void addToPath (Path& path, Expression::Scope*) const;
+		RelativePoint* getControlPoints (int& numPoints);
+		ElementBase* clone() const;
+
+		RelativePoint controlPoints[3];
+
+	private:
+		JUCE_DECLARE_NON_COPYABLE (CubicTo);
+	};
+
+	void addElement (ElementBase* newElement);
+
+	OwnedArray <ElementBase> elements;
+	bool usesNonZeroWinding;
+
+private:
+	class Positioner;
+	friend class Positioner;
+	bool containsDynamicPoints;
+
+	void applyTo (DrawablePath& path) const;
+
+	RelativePointPath& operator= (const RelativePointPath&);
+	JUCE_LEAK_DETECTOR (RelativePointPath);
+};
+
+#endif   // __JUCE_RELATIVEPOINTPATH_JUCEHEADER__
+/*** End of inlined file: juce_RelativePointPath.h ***/
+
+
+#endif
+#ifndef __JUCE_RELATIVERECTANGLE_JUCEHEADER__
+
+/*** Start of inlined file: juce_RelativeRectangle.h ***/
+#ifndef __JUCE_RELATIVERECTANGLE_JUCEHEADER__
+#define __JUCE_RELATIVERECTANGLE_JUCEHEADER__
+
+class Component;
+
+/**
+	An rectangle stored as a set of RelativeCoordinate values.
+
+	The rectangle's top, left, bottom and right edge positions are each stored as a RelativeCoordinate.
+
+	@see RelativeCoordinate, RelativePoint
+*/
+class JUCE_API  RelativeRectangle
+{
+public:
+
+	/** Creates a zero-size rectangle at the origin. */
+	RelativeRectangle();
+
+	/** Creates an absolute rectangle, relative to the origin. */
+	explicit RelativeRectangle (const Rectangle<float>& rect);
+
+	/** Creates a rectangle from four coordinates. */
+	RelativeRectangle (const RelativeCoordinate& left, const RelativeCoordinate& right,
+					   const RelativeCoordinate& top, const RelativeCoordinate& bottom);
+
+	/** Creates a rectangle from a stringified representation.
+		The string must contain a sequence of 4 coordinates, separated by commas, in the order
+		left, top, right, bottom. The syntax for the coordinate strings is explained in the
+		RelativeCoordinate class.
+		@see toString
+	*/
+	explicit RelativeRectangle (const String& stringVersion);
+
+	bool operator== (const RelativeRectangle& other) const throw();
+	bool operator!= (const RelativeRectangle& other) const throw();
+
+	/** Calculates the absolute position of this rectangle.
+
+		You'll need to provide a suitable Expression::Scope for looking up any coordinates that may
+		be needed to calculate the result.
+	*/
+	const Rectangle<float> resolve (const Expression::Scope* scope) const;
+
+	/** Changes the values of this rectangle's coordinates to make it resolve to the specified position.
+
+		Calling this will leave any anchor points unchanged, but will set any absolute
+		or relative positions to whatever values are necessary to make the resultant position
+		match the position that is provided.
+	*/
+	void moveToAbsolute (const Rectangle<float>& newPos, const Expression::Scope* scope);
+
+	/** Returns true if this rectangle depends on any external symbols for its position.
+		Coordinates that refer to symbols based on "this" are assumed not to be dynamic.
+	*/
+	bool isDynamic() const;
+
+	/** Returns a string which represents this point.
+		This returns a comma-separated list of coordinates, in the order left, top, right, bottom. For details of
+		the string syntax used by the coordinates, see the RelativeCoordinate constructor notes.
+		The string that is returned can be passed to the RelativeRectangle constructor to recreate the rectangle.
+	*/
+	const String toString() const;
+
+	/** Renames a symbol if it is used by any of the coordinates.
+		This calls Expression::withRenamedSymbol() on the rectangle's coordinates.
+	*/
+	void renameSymbol (const Expression::Symbol& oldSymbol, const String& newName, const Expression::Scope& scope);
+
+	/** Creates and sets an appropriate Component::Positioner object for the given component, which will
+		keep it positioned with this rectangle.
+	*/
+	void applyToComponent (Component& component) const;
+
+	// The actual rectangle coords...
+	RelativeCoordinate left, right, top, bottom;
+};
+
+#endif   // __JUCE_RELATIVERECTANGLE_JUCEHEADER__
+/*** End of inlined file: juce_RelativeRectangle.h ***/
+
 
 #endif
 #ifndef __JUCE_BOOLEANPROPERTYCOMPONENT_JUCEHEADER__
@@ -58052,99 +61804,6 @@ private:
 
 #endif
 #ifndef __JUCE_DROPSHADOWER_JUCEHEADER__
-
-#endif
-#ifndef __JUCE_MAGNIFIERCOMPONENT_JUCEHEADER__
-
-/*** Start of inlined file: juce_MagnifierComponent.h ***/
-#ifndef __JUCE_MAGNIFIERCOMPONENT_JUCEHEADER__
-#define __JUCE_MAGNIFIERCOMPONENT_JUCEHEADER__
-
-/**
-	A component that contains another component, and can magnify or shrink it.
-
-	This component will continually update its size so that it fits the zoomed
-	version of the content component that you put inside it, so don't try to
-	change the size of this component directly - instead change that of the
-	content component.
-
-	To make it all work, the magnifier uses extremely cunning ComponentPeer tricks
-	to remap mouse events correctly. This means that the content component won't
-	appear to be a direct child of this component, and instead will think its
-	on the desktop.
-*/
-class JUCE_API  MagnifierComponent	: public Component
-{
-public:
-
-	/** Creates a MagnifierComponent.
-
-		This component will continually update its size so that it fits the zoomed
-		version of the content component that you put inside it, so don't try to
-		change the size of this component directly - instead change that of the
-		content component.
-
-		@param contentComponent	 the component to add as the magnified one
-		@param deleteContentCompWhenNoLongerNeeded  if true, the content component will
-									be deleted when this component is deleted. If false,
-									it's the caller's responsibility to delete it later.
-	*/
-	MagnifierComponent (Component* contentComponent,
-						bool deleteContentCompWhenNoLongerNeeded);
-
-	/** Destructor. */
-	~MagnifierComponent();
-
-	/** Returns the current content component. */
-	Component* getContentComponent() const		  { return content; }
-
-	/** Changes the zoom level.
-
-		The scale factor must be greater than zero. Values less than 1 will shrink the
-		image; values greater than 1 will multiply its size by this amount.
-
-		When this is called, this component will change its size to fit the full extent
-		of the newly zoomed content.
-	*/
-	void setScaleFactor (double newScaleFactor);
-
-	/** Returns the current zoom factor. */
-	double getScaleFactor() const			   { return scaleFactor; }
-
-	/** Changes the quality setting used to rescale the graphics.
-	*/
-	void setResamplingQuality (Graphics::ResamplingQuality newQuality);
-
-	/** @internal */
-	void childBoundsChanged (Component*);
-
-private:
-	Component* content;
-	Component* holderComp;
-	double scaleFactor;
-	ComponentPeer* peer;
-	bool deleteContent;
-	Graphics::ResamplingQuality quality;
-	MouseInputSource mouseSource;
-
-	void paint (Graphics& g);
-	void mouseDown (const MouseEvent& e);
-	void mouseUp (const MouseEvent& e);
-	void mouseDrag (const MouseEvent& e);
-	void mouseMove (const MouseEvent& e);
-	void mouseEnter (const MouseEvent& e);
-	void mouseExit (const MouseEvent& e);
-	void mouseWheelMove (const MouseEvent& e, float, float);
-
-	void passOnMouseEventToPeer (const MouseEvent& e);
-	int scaleInt (int n) const;
-
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MagnifierComponent);
-};
-
-#endif   // __JUCE_MAGNIFIERCOMPONENT_JUCEHEADER__
-/*** End of inlined file: juce_MagnifierComponent.h ***/
-
 
 #endif
 #ifndef __JUCE_MIDIKEYBOARDCOMPONENT_JUCEHEADER__
@@ -59698,7 +63357,7 @@ public:
 		Whether or not the window has a normal window frame depends on the flags
 		that were set when the window was created by Component::addToDesktop()
 	*/
-	virtual const BorderSize getFrameSize() const = 0;
+	virtual const BorderSize<int> getFrameSize() const = 0;
 
 	/** This is called when the window's bounds change.
 
@@ -59759,8 +63418,7 @@ public:
 		For keycode info, see the KeyPress class.
 		Returns true if the keystroke was used.
 	*/
-	bool handleKeyPress (int keyCode,
-						 juce_wchar textCharacter);
+	bool handleKeyPress (int keyCode, juce_wchar textCharacter);
 
 	/** Called whenever a key is pressed or released.
 		Returns true if the keystroke was used.
@@ -59922,6 +63580,49 @@ public:
 
 	/** Easy way of quickly showing a dialog box containing a given component.
 
+		This will open and display a DialogWindow containing a given component, making it
+		modal, but returning immediately to allow the dialog to finish in its own time. If
+		you want to block and run a modal loop until the dialog is dismissed, use showModalDialog()
+		instead.
+
+		To close the dialog programatically, you should call exitModalState (returnValue) on
+		the DialogWindow that is created. To find a pointer to this window from your
+		contentComponent, you can do something like this:
+		@code
+		Dialogwindow* dw = contentComponent->findParentComponentOfClass ((DialogWindow*) 0);
+
+		if (dw != 0)
+			dw->exitModalState (1234);
+		@endcode
+
+		@param dialogTitle	  the dialog box's title
+		@param contentComponent	 the content component for the dialog box. Make sure
+									that this has been set to the size you want it to
+									be before calling this method. The component won't
+									be deleted by this call, so you can re-use it or delete
+									it afterwards
+		@param componentToCentreAround  if this is non-zero, it indicates a component that
+									you'd like to show this dialog box in front of. See the
+									DocumentWindow::centreAroundComponent() method for more
+									info on this parameter
+		@param backgroundColour	 a colour to use for the dialog box's background colour
+		@param escapeKeyTriggersCloseButton if true, then pressing the escape key will cause the
+											close button to be triggered
+		@param shouldBeResizable	if true, the dialog window has either a resizable border, or
+									a corner resizer
+		@param useBottomRightCornerResizer	 if shouldBeResizable is true, this indicates whether
+									to use a border or corner resizer component. See ResizableWindow::setResizable()
+	*/
+	static void showDialog (const String& dialogTitle,
+							Component* contentComponent,
+							Component* componentToCentreAround,
+							const Colour& backgroundColour,
+							bool escapeKeyTriggersCloseButton,
+							bool shouldBeResizable = false,
+							bool useBottomRightCornerResizer = false);
+
+	/** Easy way of quickly showing a dialog box containing a given component.
+
 		This will open and display a DialogWindow containing a given component, returning
 		when the user clicks its close button.
 
@@ -59955,6 +63656,7 @@ public:
 		@param useBottomRightCornerResizer	 if shouldBeResizable is true, this indicates whether
 									to use a border or corner resizer component. See ResizableWindow::setResizable()
 	*/
+   #if JUCE_MODAL_LOOPS_PERMITTED
 	static int showModalDialog (const String& dialogTitle,
 								Component* contentComponent,
 								Component* componentToCentreAround,
@@ -59962,6 +63664,7 @@ public:
 								bool escapeKeyTriggersCloseButton,
 								bool shouldBeResizable = false,
 								bool useBottomRightCornerResizer = false);
+   #endif
 
 protected:
 	/** @internal */
@@ -60848,8 +64551,7 @@ protected:
 
 	@see Drawable
 */
-class JUCE_API  DrawableComposite  : public Drawable,
-									 public Expression::EvaluationContext
+class JUCE_API  DrawableComposite  : public Drawable
 {
 public:
 
@@ -60861,74 +64563,6 @@ public:
 
 	/** Destructor. */
 	~DrawableComposite();
-
-	/** Adds a new sub-drawable to this one.
-
-		This passes in a Drawable pointer for this object to look after. To add a copy
-		of a drawable, use the form of this method that takes a Drawable reference instead.
-
-		@param drawable	 the object to add - this will be deleted automatically
-								when no longer needed, so the caller mustn't keep any
-								pointers to it.
-		@param index		where to insert it in the list of drawables. 0 is the back,
-								-1 is the front, or any value from 0 and getNumDrawables()
-								can be used
-		@see removeDrawable
-	*/
-	void insertDrawable (Drawable* drawable, int index = -1);
-
-	/** Adds a new sub-drawable to this one.
-
-		This takes a copy of a Drawable and adds it to this object. To pass in a Drawable
-		for this object to look after, use the form of this method that takes a Drawable
-		pointer instead.
-
-		@param drawable	 the object to add - an internal copy will be made of this object
-		@param index		where to insert it in the list of drawables. 0 is the back,
-								-1 is the front, or any value from 0 and getNumDrawables()
-								can be used
-		@see removeDrawable
-	*/
-	void insertDrawable (const Drawable& drawable, int index = -1);
-
-	/** Deletes one of the Drawable objects.
-
-		@param index	the index of the drawable to delete, between 0
-						and (getNumDrawables() - 1).
-		@param deleteDrawable   if this is true, the drawable that is removed will also
-						be deleted. If false, it'll just be removed.
-		@see insertDrawable, getNumDrawables
-	*/
-	void removeDrawable (int index, bool deleteDrawable = true);
-
-	/** Returns the number of drawables contained inside this one.
-
-		@see getDrawable
-	*/
-	int getNumDrawables() const throw();
-
-	/** Returns one of the drawables that are contained in this one.
-
-		Each drawable also has a transform associated with it - you can use getDrawableTransform()
-		to find it.
-
-		The pointer returned is managed by this object and will be deleted when no longer
-		needed, so be careful what you do with it.
-
-		@see getNumDrawables
-	*/
-	Drawable* getDrawable (int index) const;
-
-	/** Looks for a child drawable with the specified name. */
-	Drawable* getDrawableWithName (const String& name) const throw();
-
-	/** Brings one of the Drawables to the front.
-
-		@param index	the index of the drawable to move, between 0
-						and (getNumDrawables() - 1).
-		@see insertDrawable, getNumDrawables
-	*/
-	void bringToFront (int index);
 
 	/** Sets the parallelogram that defines the target position of the content rectangle when the drawable is rendered.
 		@see setContentArea
@@ -60964,24 +64598,6 @@ public:
 	*/
 	void resetContentAreaAndBoundingBoxToFitChildren();
 
-	/** Represents a named marker position.
-		@see DrawableComposite::getMarker
-	*/
-	struct Marker
-	{
-		Marker (const Marker&);
-		Marker (const String& name, const RelativeCoordinate& position);
-		bool operator!= (const Marker&) const throw();
-
-		String name;
-		RelativeCoordinate position;
-	};
-
-	int getNumMarkers (bool xAxis) const throw();
-	const Marker* getMarker (bool xAxis, int index) const throw();
-	void setMarker (const String& name, bool xAxis, const RelativeCoordinate& position);
-	void removeMarker (bool xAxis, int index);
-
 	/** The name of the marker that defines the left edge of the content area. */
 	static const char* const contentLeftMarkerName;
 	/** The name of the marker that defines the right edge of the content area. */
@@ -60994,25 +64610,21 @@ public:
 	/** @internal */
 	Drawable* createCopy() const;
 	/** @internal */
-	void refreshFromValueTree (const ValueTree& tree, ImageProvider* imageProvider);
+	void refreshFromValueTree (const ValueTree& tree, ComponentBuilder& builder);
 	/** @internal */
-	const ValueTree createValueTree (ImageProvider* imageProvider) const;
+	const ValueTree createValueTree (ComponentBuilder::ImageProvider* imageProvider) const;
 	/** @internal */
 	static const Identifier valueTreeType;
 	/** @internal */
-	const Identifier getValueTreeType() const	{ return valueTreeType; }
-	/** @internal */
-	const Expression getSymbolValue (const String& symbol, const String& member) const;
-	/** @internal */
 	const Rectangle<float> getDrawableBounds() const;
-	/** @internal */
-	void markerHasMoved();
 	/** @internal */
 	void childBoundsChanged (Component*);
 	/** @internal */
 	void childrenChanged();
 	/** @internal */
 	void parentHierarchyChanged();
+	/** @internal */
+	MarkerList* getMarkers (bool xAxis);
 
 	/** Internally-used class for wrapping a DrawableComposite's state into a ValueTree. */
 	class ValueTreeWrapper   : public Drawable::ValueTreeWrapperBase
@@ -61020,13 +64632,8 @@ public:
 	public:
 		ValueTreeWrapper (const ValueTree& state);
 
-		int getNumDrawables() const;
-		ValueTree getDrawableState (int index) const;
-		ValueTree getDrawableWithId (const String& objectId, bool recursive) const;
-		int indexOfDrawable (const ValueTree& item) const;
-		void addDrawable (const ValueTree& newDrawableState, int index, UndoManager* undoManager);
-		void moveDrawableOrder (int currentIndex, int newIndex, UndoManager* undoManager);
-		void removeDrawable (const ValueTree& child, UndoManager* undoManager);
+		ValueTree getChildList() const;
+		ValueTree getChildListCreating (UndoManager* undoManager);
 
 		const RelativeParallelogram getBoundingBox() const;
 		void setBoundingBox (const RelativeParallelogram& newBounds, UndoManager* undoManager);
@@ -61035,32 +64642,25 @@ public:
 		const RelativeRectangle getContentArea() const;
 		void setContentArea (const RelativeRectangle& newArea, UndoManager* undoManager);
 
-		int getNumMarkers (bool xAxis) const;
-		const ValueTree getMarkerState (bool xAxis, int index) const;
-		const ValueTree getMarkerState (bool xAxis, const String& name) const;
-		bool containsMarker (bool xAxis, const ValueTree& state) const;
-		const Marker getMarker (bool xAxis, const ValueTree& state) const;
-		void setMarker (bool xAxis, const Marker& marker, UndoManager* undoManager);
-		void removeMarker (bool xAxis, const ValueTree& state, UndoManager* undoManager);
+		MarkerList::ValueTreeWrapper getMarkerList (bool xAxis) const;
+		MarkerList::ValueTreeWrapper getMarkerListCreating (bool xAxis, UndoManager* undoManager);
 
-		static const Identifier nameProperty, posProperty, topLeft, topRight, bottomLeft;
+		static const Identifier topLeft, topRight, bottomLeft;
 
 	private:
-		static const Identifier childGroupTag, markerGroupTagX, markerGroupTagY, markerTag;
-
-		ValueTree getChildList() const;
-		ValueTree getChildListCreating (UndoManager* undoManager);
-		ValueTree getMarkerList (bool xAxis) const;
-		ValueTree getMarkerListCreating (bool xAxis, UndoManager* undoManager);
+		static const Identifier childGroupTag, markerGroupTagX, markerGroupTagY;
 	};
 
 private:
 
 	RelativeParallelogram bounds;
-	OwnedArray <Marker> markersX, markersY;
+	MarkerList markersX, markersY;
 	bool updateBoundsReentrant;
 
-	void refreshTransformFromBounds();
+	friend class Drawable::Positioner<DrawableComposite>;
+	bool registerCoordinates (RelativeCoordinatePositionerBase&);
+	void recalculateCoordinates (Expression::Scope*);
+
 	void updateBoundsToFitChildren();
 
 	DrawableComposite& operator= (const DrawableComposite&);
@@ -61137,13 +64737,11 @@ public:
 	/** @internal */
 	const Rectangle<float> getDrawableBounds() const;
 	/** @internal */
-	void refreshFromValueTree (const ValueTree& tree, ImageProvider* imageProvider);
+	void refreshFromValueTree (const ValueTree& tree, ComponentBuilder& builder);
 	/** @internal */
-	const ValueTree createValueTree (ImageProvider* imageProvider) const;
+	const ValueTree createValueTree (ComponentBuilder::ImageProvider* imageProvider) const;
 	/** @internal */
 	static const Identifier valueTreeType;
-	/** @internal */
-	const Identifier getValueTreeType() const	{ return valueTreeType; }
 
 	/** Internally-used class for wrapping a DrawableImage's state into a ValueTree. */
 	class ValueTreeWrapper   : public Drawable::ValueTreeWrapperBase
@@ -61176,7 +64774,9 @@ private:
 	Colour overlayColour;
 	RelativeParallelogram bounds;
 
-	void refreshTransformFromBounds();
+	friend class Drawable::Positioner<DrawableImage>;
+	bool registerCoordinates (RelativeCoordinatePositionerBase&);
+	void recalculateCoordinates (Expression::Scope*);
 
 	DrawableImage& operator= (const DrawableImage&);
 	JUCE_LEAK_DETECTOR (DrawableImage);
@@ -61215,6 +64815,29 @@ public:
 	/** Destructor. */
 	~DrawableShape();
 
+	/** A FillType wrapper that allows the gradient coordinates to be implemented using RelativePoint.
+	*/
+	class RelativeFillType
+	{
+	public:
+		RelativeFillType();
+		RelativeFillType (const FillType& fill);
+		RelativeFillType (const RelativeFillType&);
+		RelativeFillType& operator= (const RelativeFillType&);
+
+		bool operator== (const RelativeFillType&) const;
+		bool operator!= (const RelativeFillType&) const;
+
+		bool isDynamic() const;
+		bool recalculateCoords (Expression::Scope* scope);
+
+		void writeTo (ValueTree& v, ComponentBuilder::ImageProvider*, UndoManager*) const;
+		bool readFrom (const ValueTree& v, ComponentBuilder::ImageProvider*);
+
+		FillType fill;
+		RelativePoint gradientPoint1, gradientPoint2, gradientPoint3;
+	};
+
 	/** Sets a fill type for the path.
 		This colour is used to fill the path - if you don't want the path to be
 		filled (e.g. if you're just drawing an outline), set this to a transparent
@@ -61224,20 +64847,34 @@ public:
 	*/
 	void setFill (const FillType& newFill);
 
+	/** Sets a fill type for the path.
+		This colour is used to fill the path - if you don't want the path to be
+		filled (e.g. if you're just drawing an outline), set this to a transparent
+		colour.
+
+		@see setPath, setStrokeFill
+	*/
+	void setFill (const RelativeFillType& newFill);
+
 	/** Returns the current fill type.
 		@see setFill
 	*/
-	const FillType& getFill() const throw()			 { return mainFill; }
+	const RelativeFillType& getFill() const throw()		 { return mainFill; }
 
 	/** Sets the fill type with which the outline will be drawn.
 		@see setFill
 	*/
 	void setStrokeFill (const FillType& newStrokeFill);
 
+	/** Sets the fill type with which the outline will be drawn.
+		@see setFill
+	*/
+	void setStrokeFill (const RelativeFillType& newStrokeFill);
+
 	/** Returns the current stroke fill.
 		@see setStrokeFill
 	*/
-	const FillType& getStrokeFill() const throw()		   { return strokeFill; }
+	const RelativeFillType& getStrokeFill() const throw()	   { return strokeFill; }
 
 	/** Changes the properties of the outline that will be drawn around the path.
 		If the stroke has 0 thickness, no stroke will be drawn.
@@ -61251,7 +64888,7 @@ public:
 	void setStrokeThickness (float newThickness);
 
 	/** Returns the current outline style. */
-	const PathStrokeType& getStrokeType() const throw()	 { return strokeType; }
+	const PathStrokeType& getStrokeType() const throw()		 { return strokeType; }
 
 	/** @internal */
 	class FillAndStrokeState  : public  Drawable::ValueTreeWrapperBase
@@ -61259,32 +64896,13 @@ public:
 	public:
 		FillAndStrokeState (const ValueTree& state);
 
-		const FillType getMainFill (Expression::EvaluationContext* nameFinder,
-									ImageProvider* imageProvider) const;
-		ValueTree getMainFillState();
-		void setMainFill (const FillType& newFill, const RelativePoint* gradientPoint1,
-						  const RelativePoint* gradientPoint2, const RelativePoint* gradientPoint3,
-						  ImageProvider* imageProvider, UndoManager* undoManager);
-
-		const FillType getStrokeFill (Expression::EvaluationContext* nameFinder,
-									  ImageProvider* imageProvider) const;
-		ValueTree getStrokeFillState();
-		void setStrokeFill (const FillType& newFill, const RelativePoint* gradientPoint1,
-							const RelativePoint* gradientPoint2, const RelativePoint* gradientPoint3,
-							ImageProvider* imageProvider, UndoManager* undoManager);
+		ValueTree getFillState (const Identifier& fillOrStrokeType);
+		const RelativeFillType getFill (const Identifier& fillOrStrokeType, ComponentBuilder::ImageProvider*) const;
+		void setFill (const Identifier& fillOrStrokeType, const RelativeFillType& newFill,
+					  ComponentBuilder::ImageProvider*, UndoManager*);
 
 		const PathStrokeType getStrokeType() const;
-		void setStrokeType (const PathStrokeType& newStrokeType, UndoManager* undoManager);
-
-		static const FillType readFillType (const ValueTree& v, RelativePoint* gradientPoint1,
-											RelativePoint* gradientPoint2, RelativePoint* gradientPoint3,
-											Expression::EvaluationContext* nameFinder,
-											ImageProvider* imageProvider);
-
-		static void writeFillType (ValueTree& v, const FillType& fillType,
-								   const RelativePoint* gradientPoint1, const RelativePoint* gradientPoint2,
-								   const RelativePoint* gradientPoint3, ImageProvider* imageProvider,
-								   UndoManager* undoManager);
+		void setStrokeType (const PathStrokeType& newStrokeType, UndoManager*);
 
 		static const Identifier type, colour, colours, fill, stroke, path, jointStyle, capStyle, strokeWidth,
 								gradientPoint1, gradientPoint2, gradientPoint3, radial, imageId, imageOpacity;
@@ -61295,7 +64913,7 @@ public:
 	/** @internal */
 	void paint (Graphics& g);
 	/** @internal */
-	bool hitTest (int x, int y) const;
+	bool hitTest (int x, int y);
 
 protected:
 
@@ -61303,26 +64921,23 @@ protected:
 	void pathChanged();
 	/** Called when the cached stroke should be updated. */
 	void strokeChanged();
-
-	/** Implemented by subclasses to regenerate the path. */
-	virtual bool rebuildPath (Path& path) const = 0;
-
 	/** True if there's a stroke with a non-zero thickness and non-transparent colour. */
 	bool isStrokeVisible() const throw();
-
 	/** Updates the details from a FillAndStrokeState object, returning true if something changed. */
-	bool refreshFillTypes (const FillAndStrokeState& newState,
-						   Expression::EvaluationContext* nameFinder,
-						   ImageProvider* imageProvider);
-
+	void refreshFillTypes (const FillAndStrokeState& newState, ComponentBuilder::ImageProvider*);
 	/** Writes the stroke and fill details to a FillAndStrokeState object. */
-	void writeTo (FillAndStrokeState& state, ImageProvider* imageProvider, UndoManager* undoManager) const;
+	void writeTo (FillAndStrokeState& state, ComponentBuilder::ImageProvider*, UndoManager*) const;
 
 	PathStrokeType strokeType;
 	Path path, strokePath;
 
 private:
-	FillType mainFill, strokeFill;
+	class RelativePositioner;
+	RelativeFillType mainFill, strokeFill;
+	ScopedPointer<RelativeCoordinatePositionerBase> mainFillPositioner, strokeFillPositioner;
+
+	void setFillInternal (RelativeFillType& fill, const RelativeFillType& newFill,
+						  ScopedPointer<RelativeCoordinatePositionerBase>& positioner);
 
 	DrawableShape& operator= (const DrawableShape&);
 };
@@ -61353,6 +64968,12 @@ public:
 	*/
 	void setPath (const Path& newPath);
 
+	/** Sets the path using a RelativePointPath.
+		Calling this will set up a Component::Positioner to automatically update the path
+		if any of the points in the source path are dynamic.
+	*/
+	void setPath (const RelativePointPath& newPath);
+
 	/** Returns the current path. */
 	const Path& getPath() const;
 
@@ -61362,13 +64983,11 @@ public:
 	/** @internal */
 	Drawable* createCopy() const;
 	/** @internal */
-	void refreshFromValueTree (const ValueTree& tree, ImageProvider* imageProvider);
+	void refreshFromValueTree (const ValueTree& tree, ComponentBuilder& builder);
 	/** @internal */
-	const ValueTree createValueTree (ImageProvider* imageProvider) const;
+	const ValueTree createValueTree (ComponentBuilder::ImageProvider* imageProvider) const;
 	/** @internal */
 	static const Identifier valueTreeType;
-	/** @internal */
-	const Identifier getValueTreeType() const	   { return valueTreeType; }
 
 	/** Internally-used class for wrapping a DrawablePath's state into a ValueTree. */
 	class ValueTreeWrapper   : public DrawableShape::FillAndStrokeState
@@ -61389,24 +65008,24 @@ public:
 			int getNumControlPoints() const throw();
 
 			const RelativePoint getControlPoint (int index) const;
-			Value getControlPointValue (int index, UndoManager* undoManager) const;
+			Value getControlPointValue (int index, UndoManager*) const;
 			const RelativePoint getStartPoint() const;
 			const RelativePoint getEndPoint() const;
-			void setControlPoint (int index, const RelativePoint& point, UndoManager* undoManager);
-			float getLength (Expression::EvaluationContext* nameFinder) const;
+			void setControlPoint (int index, const RelativePoint& point, UndoManager*);
+			float getLength (Expression::Scope*) const;
 
 			ValueTreeWrapper getParent() const;
 			Element getPreviousElement() const;
 
 			const String getModeOfEndPoint() const;
-			void setModeOfEndPoint (const String& newMode, UndoManager* undoManager);
+			void setModeOfEndPoint (const String& newMode, UndoManager*);
 
-			void convertToLine (UndoManager* undoManager);
-			void convertToCubic (Expression::EvaluationContext* nameFinder, UndoManager* undoManager);
+			void convertToLine (UndoManager*);
+			void convertToCubic (Expression::Scope*, UndoManager*);
 			void convertToPathBreak (UndoManager* undoManager);
-			ValueTree insertPoint (const Point<float>& targetPoint, Expression::EvaluationContext* nameFinder, UndoManager* undoManager);
+			ValueTree insertPoint (const Point<float>& targetPoint, Expression::Scope*, UndoManager*);
 			void removePoint (UndoManager* undoManager);
-			float findProportionAlongLine (const Point<float>& targetPoint, Expression::EvaluationContext* nameFinder) const;
+			float findProportionAlongLine (const Point<float>& targetPoint, Expression::Scope*) const;
 
 			static const Identifier mode, startSubPathElement, closeSubPathElement,
 									lineToElement, quadraticToElement, cubicToElement;
@@ -61419,15 +65038,19 @@ public:
 
 		ValueTree getPathState();
 
+		void readFrom (const RelativePointPath& path, UndoManager* undoManager);
+		void writeTo (RelativePointPath& path) const;
+
 		static const Identifier nonZeroWinding, point1, point2, point3;
 	};
-
-protected:
-	bool rebuildPath (Path& path) const;
 
 private:
 
 	ScopedPointer<RelativePointPath> relativePath;
+
+	class RelativePositioner;
+	friend class RelativePositioner;
+	void applyRelativePath (const RelativePointPath&, Expression::Scope*);
 
 	DrawablePath& operator= (const DrawablePath&);
 	JUCE_LEAK_DETECTOR (DrawablePath);
@@ -61476,13 +65099,11 @@ public:
 	/** @internal */
 	Drawable* createCopy() const;
 	/** @internal */
-	void refreshFromValueTree (const ValueTree& tree, ImageProvider* imageProvider);
+	void refreshFromValueTree (const ValueTree& tree, ComponentBuilder& builder);
 	/** @internal */
-	const ValueTree createValueTree (ImageProvider* imageProvider) const;
+	const ValueTree createValueTree (ComponentBuilder::ImageProvider* imageProvider) const;
 	/** @internal */
 	static const Identifier valueTreeType;
-	/** @internal */
-	const Identifier getValueTreeType() const	{ return valueTreeType; }
 
 	/** Internally-used class for wrapping a DrawableRectangle's state into a ValueTree. */
 	class ValueTreeWrapper   : public DrawableShape::FillAndStrokeState
@@ -61491,24 +65112,24 @@ public:
 		ValueTreeWrapper (const ValueTree& state);
 
 		const RelativeParallelogram getRectangle() const;
-		void setRectangle (const RelativeParallelogram& newBounds, UndoManager* undoManager);
+		void setRectangle (const RelativeParallelogram& newBounds, UndoManager*);
 
-		void setCornerSize (const RelativePoint& cornerSize, UndoManager* undoManager);
+		void setCornerSize (const RelativePoint& cornerSize, UndoManager*);
 		const RelativePoint getCornerSize() const;
-		Value getCornerSizeValue (UndoManager* undoManager) const;
+		Value getCornerSizeValue (UndoManager*) const;
 
 		static const Identifier topLeft, topRight, bottomLeft, cornerSize;
 	};
 
-protected:
-	/** @internal */
-	bool rebuildPath (Path& path) const;
-
 private:
+	friend class Drawable::Positioner<DrawableRectangle>;
+
 	RelativeParallelogram bounds;
 	RelativePoint cornerSize;
 
-	const AffineTransform calculateTransform() const;
+	void rebuildPath();
+	bool registerCoordinates (RelativeCoordinatePositionerBase&);
+	void recalculateCoordinates (Expression::Scope*);
 
 	DrawableRectangle& operator= (const DrawableRectangle&);
 	JUCE_LEAK_DETECTOR (DrawableRectangle);
@@ -61585,13 +65206,11 @@ public:
 	/** @internal */
 	Drawable* createCopy() const;
 	/** @internal */
-	void refreshFromValueTree (const ValueTree& tree, ImageProvider* imageProvider);
+	void refreshFromValueTree (const ValueTree& tree, ComponentBuilder& builder);
 	/** @internal */
-	const ValueTree createValueTree (ImageProvider* imageProvider) const;
+	const ValueTree createValueTree (ComponentBuilder::ImageProvider* imageProvider) const;
 	/** @internal */
 	static const Identifier valueTreeType;
-	/** @internal */
-	const Identifier getValueTreeType() const	{ return valueTreeType; }
 	/** @internal */
 	const Rectangle<float> getDrawableBounds() const;
 
@@ -61628,12 +65247,17 @@ private:
 
 	RelativeParallelogram bounds;
 	RelativePoint fontSizeControlPoint;
-	Font font;
+	Point<float> resolvedPoints[3];
+	Font font, scaledFont;
 	String text;
 	Colour colour;
 	Justification justification;
 
+	friend class Drawable::Positioner<DrawableText>;
+	bool registerCoordinates (RelativeCoordinatePositionerBase&);
+	void recalculateCoordinates (Expression::Scope*);
 	void refreshBounds();
+	const AffineTransform getArrangementAndTransform (GlyphArrangement& glyphs) const;
 
 	DrawableText& operator= (const DrawableText&);
 	JUCE_LEAK_DETECTOR (DrawableText);
@@ -61824,328 +65448,10 @@ private:
 #ifndef __JUCE_POINT_JUCEHEADER__
 
 #endif
-#ifndef __JUCE_POSITIONEDRECTANGLE_JUCEHEADER__
-
-/*** Start of inlined file: juce_PositionedRectangle.h ***/
-#ifndef __JUCE_POSITIONEDRECTANGLE_JUCEHEADER__
-#define __JUCE_POSITIONEDRECTANGLE_JUCEHEADER__
-
-/**
-	A rectangle whose co-ordinates can be defined in terms of absolute or
-	proportional distances.
-
-	Designed mainly for storing component positions, this gives you a lot of
-	control over how each co-ordinate is stored, either as an absolute position,
-	or as a proportion of the size of a parent rectangle.
-
-	It also allows you to define the anchor points by which the rectangle is
-	positioned, so for example you could specify that the top right of the
-	rectangle should be an absolute distance from its parent's bottom-right corner.
-
-	This object can be stored as a string, which takes the form "x y w h", including
-	symbols like '%' and letters to indicate the anchor point. See its toString()
-	method for more info.
-
-	Example usage:
-	@code
-	class MyComponent
-	{
-		void resized()
-		{
-			// this will set the child component's x to be 20% of our width, its y
-			// to be 30, its width to be 150, and its height to be 50% of our
-			// height..
-			const PositionedRectangle pos1 ("20% 30 150 50%");
-			pos1.applyToComponent (*myChildComponent1);
-
-			// this will inset the child component with a gap of 10 pixels
-			// around each of its edges..
-			const PositionedRectangle pos2 ("10 10 20M 20M");
-			pos2.applyToComponent (*myChildComponent2);
-		}
-	};
-	@endcode
-*/
-class JUCE_API  PositionedRectangle
-{
-public:
-
-	/** Creates an empty rectangle with all co-ordinates set to zero.
-
-		The default anchor point is top-left; the default
-	*/
-	PositionedRectangle() throw();
-
-	/** Initialises a PositionedRectangle from a saved string version.
-
-		The string must be in the format generated by toString().
-	*/
-	PositionedRectangle (const String& stringVersion) throw();
-
-	/** Creates a copy of another PositionedRectangle. */
-	PositionedRectangle (const PositionedRectangle& other) throw();
-
-	/** Copies another PositionedRectangle. */
-	PositionedRectangle& operator= (const PositionedRectangle& other) throw();
-
-	/** Destructor. */
-	~PositionedRectangle() throw();
-
-	/** Returns a string version of this position, from which it can later be
-		re-generated.
-
-		The format is four co-ordinates, "x y w h".
-
-		- If a co-ordinate is absolute, it is stored as an integer, e.g. "100".
-		- If a co-ordinate is proportional to its parent's width or height, it is stored
-		  as a percentage, e.g. "80%".
-		- If the X or Y co-ordinate is relative to the parent's right or bottom edge, the
-		  number has "R" appended to it, e.g. "100R" means a distance of 100 pixels from
-		  the parent's right-hand edge.
-		- If the X or Y co-ordinate is relative to the parent's centre, the number has "C"
-		  appended to it, e.g. "-50C" would be 50 pixels left of the parent's centre.
-		- If the X or Y co-ordinate should be anchored at the component's right or bottom
-		  edge, then it has "r" appended to it. So "-50Rr" would mean that this component's
-		  right-hand edge should be 50 pixels left of the parent's right-hand edge.
-		- If the X or Y co-ordinate should be anchored at the component's centre, then it
-		  has "c" appended to it. So "-50Rc" would mean that this component's
-		  centre should be 50 pixels left of the parent's right-hand edge. "40%c" means that
-		  this component's centre should be placed 40% across the parent's width.
-		- If it's a width or height that should use the parentSizeMinusAbsolute mode, then
-		  the number has "M" appended to it.
-
-		To reload a stored string, use the constructor that takes a string parameter.
-	*/
-	const String toString() const throw();
-
-	/** Calculates the absolute position, given the size of the space that
-		it should go in.
-
-		This will work out any proportional distances and sizes relative to the
-		target rectangle, and will return the absolute position.
-
-		@see applyToComponent
-	*/
-	const Rectangle<int> getRectangle (const Rectangle<int>& targetSpaceToBeRelativeTo) const throw();
-
-	/** Same as getRectangle(), but returning the values as doubles rather than ints.
-	*/
-	void getRectangleDouble (const Rectangle<int>& targetSpaceToBeRelativeTo,
-							 double& x,
-							 double& y,
-							 double& width,
-							 double& height) const throw();
-
-	/** This sets the bounds of the given component to this position.
-
-		This is equivalent to writing:
-		@code
-		comp.setBounds (getRectangle (Rectangle<int> (0, 0, comp.getParentWidth(), comp.getParentHeight())));
-		@endcode
-
-		@see getRectangle, updateFromComponent
-	*/
-	void applyToComponent (Component& comp) const throw();
-
-	/** Updates this object's co-ordinates to match the given rectangle.
-
-		This will set all co-ordinates based on the given rectangle, re-calculating
-		any proportional distances, and using the current anchor points.
-
-		So for example if the x co-ordinate mode is currently proportional, this will
-		re-calculate x based on the rectangle's relative position within the target
-		rectangle's width.
-
-		If the target rectangle's width or height are zero then it may not be possible
-		to re-calculate some proportional co-ordinates. In this case, those co-ordinates
-		will not be changed.
-	*/
-	void updateFrom (const Rectangle<int>& newPosition,
-					 const Rectangle<int>& targetSpaceToBeRelativeTo) throw();
-
-	/** Same functionality as updateFrom(), but taking doubles instead of ints.
-	*/
-	void updateFromDouble (double x, double y, double width, double height,
-						   const Rectangle<int>& targetSpaceToBeRelativeTo) throw();
-
-	/** Updates this object's co-ordinates to match the bounds of this component.
-
-		This is equivalent to calling updateFrom() with the component's bounds and
-		it parent size.
-
-		If the component doesn't currently have a parent, then proportional co-ordinates
-		might not be updated because it would need to know the parent's size to do the
-		maths for this.
-	*/
-	void updateFromComponent (const Component& comp) throw();
-
-	/** Specifies the point within the rectangle, relative to which it should be positioned. */
-	enum AnchorPoint
-	{
-		anchorAtLeftOrTop		  = 1 << 0,	/**< The x or y co-ordinate specifies where the left or top edge of the rectangle should be. */
-		anchorAtRightOrBottom	  = 1 << 1,	/**< The x or y co-ordinate specifies where the right or bottom edge of the rectangle should be. */
-		anchorAtCentre		 = 1 << 2	 /**< The x or y co-ordinate specifies where the centre of the rectangle should be. */
-	};
-
-	/** Specifies how an x or y co-ordinate should be interpreted. */
-	enum PositionMode
-	{
-		absoluteFromParentTopLeft	   = 1 << 3,   /**< The x or y co-ordinate specifies an absolute distance from the parent's top or left edge. */
-		absoluteFromParentBottomRight   = 1 << 4,   /**< The x or y co-ordinate specifies an absolute distance from the parent's bottom or right edge. */
-		absoluteFromParentCentre	= 1 << 5,   /**< The x or y co-ordinate specifies an absolute distance from the parent's centre. */
-		proportionOfParentSize	  = 1 << 6	/**< The x or y co-ordinate specifies a proportion of the parent's width or height, measured from the parent's top or left. */
-	};
-
-	/** Specifies how the width or height should be interpreted. */
-	enum SizeMode
-	{
-		absoluteSize			= 1 << 0,   /**< The width or height specifies an absolute size. */
-		parentSizeMinusAbsolute	 = 1 << 1,   /**< The width or height is an amount that should be subtracted from the parent's width or height. */
-		proportionalSize		= 1 << 2,   /**< The width or height specifies a proportion of the parent's width or height. */
-	};
-
-	/** Sets all options for all co-ordinates.
-
-		This requires a reference rectangle to be specified, because if you're changing any
-		of the modes from proportional to absolute or vice-versa, then it'll need to convert
-		the co-ordinates, and will need to know the parent size so it can calculate this.
-	*/
-	void setModes (const AnchorPoint xAnchorMode,
-				   const PositionMode xPositionMode,
-				   const AnchorPoint yAnchorMode,
-				   const PositionMode yPositionMode,
-				   const SizeMode widthMode,
-				   const SizeMode heightMode,
-				   const Rectangle<int>& targetSpaceToBeRelativeTo) throw();
-
-	/** Returns the anchoring mode for the x co-ordinate.
-		To change any of the modes, use setModes().
-	*/
-	AnchorPoint getAnchorPointX() const throw();
-
-	/** Returns the positioning mode for the x co-ordinate.
-		To change any of the modes, use setModes().
-	*/
-	PositionMode getPositionModeX() const throw();
-
-	/** Returns the raw x co-ordinate.
-
-		If the x position mode is absolute, then this will be the absolute value. If it's
-		proportional, then this will be a fractional proportion, where 1.0 means the full
-		width of the parent space.
-	*/
-	double getX() const throw()				 { return x; }
-
-	/** Sets the raw value of the x co-ordinate.
-
-		See getX() for the meaning of this value.
-	*/
-	void setX (const double newX) throw()		   { x = newX; }
-
-	/** Returns the anchoring mode for the y co-ordinate.
-		To change any of the modes, use setModes().
-	*/
-	AnchorPoint getAnchorPointY() const throw();
-
-	/** Returns the positioning mode for the y co-ordinate.
-		To change any of the modes, use setModes().
-	*/
-	PositionMode getPositionModeY() const throw();
-
-	/** Returns the raw y co-ordinate.
-
-		If the y position mode is absolute, then this will be the absolute value. If it's
-		proportional, then this will be a fractional proportion, where 1.0 means the full
-		height of the parent space.
-	*/
-	double getY() const throw()				 { return y; }
-
-	/** Sets the raw value of the y co-ordinate.
-
-		See getY() for the meaning of this value.
-	*/
-	void setY (const double newY) throw()		   { y = newY; }
-
-	/** Returns the mode used to calculate the width.
-		To change any of the modes, use setModes().
-	*/
-	SizeMode getWidthMode() const throw();
-
-	/** Returns the raw width value.
-
-		If the width mode is absolute, then this will be the absolute value. If the mode is
-		proportional, then this will be a fractional proportion, where 1.0 means the full
-		width of the parent space.
-	*/
-	double getWidth() const throw()			 { return w; }
-
-	/** Sets the raw width value.
-
-		See getWidth() for the details about what this value means.
-	*/
-	void setWidth (const double newWidth) throw()	   { w = newWidth; }
-
-	/** Returns the mode used to calculate the height.
-		To change any of the modes, use setModes().
-	*/
-	SizeMode getHeightMode() const throw();
-
-	/** Returns the raw height value.
-
-		If the height mode is absolute, then this will be the absolute value. If the mode is
-		proportional, then this will be a fractional proportion, where 1.0 means the full
-		height of the parent space.
-	*/
-	double getHeight() const throw()			{ return h; }
-
-	/** Sets the raw height value.
-
-		See getHeight() for the details about what this value means.
-	*/
-	void setHeight (const double newHeight) throw()	 { h = newHeight; }
-
-	/** If the size and position are constance, and wouldn't be affected by changes
-		in the parent's size, then this will return true.
-	*/
-	bool isPositionAbsolute() const throw();
-
-	/** Compares two objects. */
-	bool operator== (const PositionedRectangle& other) const throw();
-
-	/** Compares two objects. */
-	bool operator!= (const PositionedRectangle& other) const throw();
-
-private:
-
-	double x, y, w, h;
-	uint8 xMode, yMode, wMode, hMode;
-
-	void addPosDescription (String& result, uint8 mode, double value) const throw();
-	void addSizeDescription (String& result, uint8 mode, double value) const throw();
-	void decodePosString (const String& s, uint8& mode, double& value) throw();
-	void decodeSizeString (const String& s, uint8& mode, double& value) throw();
-	void applyPosAndSize (double& xOut, double& wOut, double x, double w,
-						  uint8 xMode, uint8 wMode,
-						  int parentPos, int parentSize) const throw();
-	void updatePosAndSize (double& xOut, double& wOut, double x, double w,
-						   uint8 xMode, uint8 wMode,
-						   int parentPos, int parentSize) const throw();
-
-	JUCE_LEAK_DETECTOR (PositionedRectangle);
-};
-
-#endif   // __JUCE_POSITIONEDRECTANGLE_JUCEHEADER__
-/*** End of inlined file: juce_PositionedRectangle.h ***/
-
-
-#endif
 #ifndef __JUCE_RECTANGLE_JUCEHEADER__
 
 #endif
 #ifndef __JUCE_RECTANGLELIST_JUCEHEADER__
-
-#endif
-#ifndef __JUCE_RELATIVECOORDINATE_JUCEHEADER__
 
 #endif
 #ifndef __JUCE_CAMERADEVICE_JUCEHEADER__
@@ -63336,11 +66642,6 @@ private:
   #pragma pack (pop)
 #endif
 
-#ifdef JUCE_DLL
-  #undef JUCE_LEAK_DETECTOR(OwnerClass)
-  #define JUCE_LEAK_DETECTOR(OwnerClass)
-#endif
-
 END_JUCE_NAMESPACE
 
 #ifndef DONT_SET_USING_JUCE_NAMESPACE
@@ -63437,6 +66738,7 @@ END_JUCE_NAMESPACE
 #pragma comment(lib, "advapi32.lib")
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "version.lib")
+#pragma comment(lib, "shlwapi.lib")
 
 #ifdef _NATIVE_WCHAR_T_DEFINED
  #ifdef _DEBUG

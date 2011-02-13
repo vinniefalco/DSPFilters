@@ -295,7 +295,7 @@ public:
     szName = "Passband Ripple";
     szUnits= "dB";
     minValue = 0.00001;
-    maxValue = 3;
+    maxValue = 12;
     defaultValue = 0.01;
   }
 

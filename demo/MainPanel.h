@@ -19,14 +19,11 @@ public:
   ~MainPanel();
 
   void createCharts (const Rectangle<int>& r);
-  bool isEnabled (int familyId);
-  bool isEnabled (int familyId, int typeId);
   void buildFamilyMenu (ComboBox* comboBox);
   void buildTypeMenu (ComboBox* comboBox);
 
   void paint (Graphics& g);
 
-  void setFilter (int familyId, int typeId);
   void setAudio (int audioId);
 
   void buttonClicked (Button *ctrl);
@@ -41,13 +38,16 @@ public:
 
 private:
   template <class DesignType>
-  void createSmoothedFilter (Dsp::Filter** pFilter, Dsp::Filter** pAudioFilter);
+  void createFilter (Dsp::Filter** pFilter, Dsp::Filter** pAudioFilter);
+
+  void createFilter ();
 
 private:
   ListenerList<FilterListener> m_listeners;
   ComboBox* m_menuFamily;
   ComboBox* m_menuType;
   ComboBox* m_menuAudio;
+  ComboBox* m_menuSmoothing;
   Button* m_resetButton;
   Slider* m_volumeSlider;
   Slider* m_tempoSlider;

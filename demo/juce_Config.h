@@ -93,7 +93,7 @@
 
 /** JUCE_JACK: Enables JACK audio devices (Linux only). */
 #ifndef JUCE_JACK
-  #define JUCE_JACK 1
+  #define JUCE_JACK 0
 #endif
 
 //=============================================================================
@@ -101,7 +101,7 @@
     If you're building on Windows, you'll need to have the Apple QuickTime SDK
     installed, and its header files will need to be on your include path.
 */
-#if ! (defined (JUCE_QUICKTIME) || JUCE_LINUX || JUCE_IOS || (JUCE_WINDOWS && ! JUCE_MSVC))
+#if ! (defined (JUCE_QUICKTIME) || JUCE_LINUX || JUCE_IOS || JUCE_ANDROID || (JUCE_WINDOWS && ! JUCE_MSVC))
   #define JUCE_QUICKTIME 0
 #endif
 
@@ -113,7 +113,7 @@
 /** JUCE_OPENGL: Enables the OpenGLComponent class (available on all platforms).
     If you're not using OpenGL, you might want to turn this off to reduce your binary's size.
 */
-#ifndef JUCE_OPENGL
+#if ! (defined (JUCE_OPENGL) || JUCE_ANDROID)
   #define JUCE_OPENGL 1
 #endif
 

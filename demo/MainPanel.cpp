@@ -86,7 +86,7 @@ MainPanel::MainPanel()
 
   {
     Slider* c = new Slider;
-    c->setBounds (x - 20, y, 20, hfc);
+    c->setBounds (x - 20, y, 20, hfc + gap + 24);
     c->setSliderStyle (Slider::LinearVertical);
     c->setTextBoxStyle (Slider::NoTextBox, true, 0, 0);
     c->setRange (-40, 12);
@@ -102,7 +102,7 @@ MainPanel::MainPanel()
  
   {
     Slider* c = new Slider;
-    c->setBounds (x - 20, y, 20, hfc);
+    c->setBounds (x - 20, y, 20, hfc + gap + 24);
     c->setSliderStyle (Slider::LinearVertical);
     c->setTextBoxStyle (Slider::NoTextBox, true, 0, 0);
     c->setRange (-2, 2);
@@ -125,6 +125,21 @@ MainPanel::MainPanel()
 
   y = this->getChildComponent (this->getNumChildComponents()-1)->getBounds().getBottom() + gap;
   x = x0;
+
+  {
+    ComboBox* c = new ComboBox;
+    c->setBounds (x, y, 200, 24);
+    c->addItem ("Parameter Smoothing", 1);
+    c->addItem ("Pole/Zero Interpolation", 2); c->setItemEnabled (2, false);
+    c->addItem ("Coefficient Interpolation", 3); c->setItemEnabled (3, false);
+    c->addItem ("No Smoothing", 4);
+    addToLayout (c, anchorTopLeft);
+    addAndMakeVisible (c);
+    m_menuSmoothing = c;    
+    c->addListener (this);
+  }
+
+  x = this->getChildComponent (this->getNumChildComponents() - 1)->getBounds().getRight() + gap;
 
   {
     m_resetButton = new TextButton ("Reset");
@@ -216,45 +231,16 @@ void MainPanel::createCharts (const Rectangle<int>& r)
   }
 }
 
-bool MainPanel::isEnabled (int familyId)
-{
-  bool enabled = true;
-
-  switch (familyId)
-  {
-  case 5:
-  case 6:
-    enabled = false;
-    break;
-  };
-  
-  return enabled;
-}
-
-bool MainPanel::isEnabled (int familyId, int typeId)
-{
-  bool enabled = isEnabled (familyId);
-
-  if (enabled)
-  {
-    switch (familyId)
-    {
-    };
-  }
-
-  return enabled;
-}
-
 void MainPanel::buildFamilyMenu (ComboBox* ctrl)
 {
   ctrl->clear();
 
-  ctrl->addItem ("RBJ Biquad",   1); ctrl->setItemEnabled (1, isEnabled (1));
-  ctrl->addItem ("Butterworth",  2); ctrl->setItemEnabled (2, isEnabled (2));
-  ctrl->addItem ("Chebyshev I",  3); ctrl->setItemEnabled (3, isEnabled (3));
-  ctrl->addItem ("Chebyshev II", 4); ctrl->setItemEnabled (4, isEnabled (4));
-  ctrl->addItem ("Elliptic",     5); ctrl->setItemEnabled (5, isEnabled (5));
-  ctrl->addItem ("Bessel",       6); ctrl->setItemEnabled (6, isEnabled (6));
+  ctrl->addItem ("RBJ Biquad",   1);
+  ctrl->addItem ("Butterworth",  2);
+  ctrl->addItem ("Chebyshev I",  3);
+  ctrl->addItem ("Chebyshev II", 4);
+  ctrl->addItem ("Elliptic",     5); ctrl->setItemEnabled (5, false);
+  ctrl->addItem ("Bessel",       6); ctrl->setItemEnabled (6, false);
 }
 
 void MainPanel::buildTypeMenu (ComboBox* ctrl)
@@ -269,48 +255,48 @@ void MainPanel::buildTypeMenu (ComboBox* ctrl)
   switch (m_menuFamily->getSelectedId())
   {
   case 1: // RBJ
-    ctrl->addItem ("Low Pass",    1); ctrl->setItemEnabled (1, isEnabled (1, 1));
-	  ctrl->addItem ("High Pass",   2); ctrl->setItemEnabled (2, isEnabled (1, 2));
-	  ctrl->addItem ("Band Pass 1", 3); ctrl->setItemEnabled (3, isEnabled (1, 3));
-	  ctrl->addItem ("Band Pass 2", 4); ctrl->setItemEnabled (4, isEnabled (1, 4));
-	  ctrl->addItem ("Band Stop",   5); ctrl->setItemEnabled (5, isEnabled (1, 5));
-	  ctrl->addItem ("Low Shelf",   6); ctrl->setItemEnabled (6, isEnabled (1, 6));
-	  ctrl->addItem ("High Shelf",  7); ctrl->setItemEnabled (7, isEnabled (1, 7));
-	  ctrl->addItem ("Band Shelf",  8); ctrl->setItemEnabled (8, isEnabled (1, 8));
-	  ctrl->addItem ("All Pass",    9); ctrl->setItemEnabled (8, isEnabled (1, 9));
+    ctrl->addItem ("Low Pass",    1);
+	  ctrl->addItem ("High Pass",   2);
+	  ctrl->addItem ("Band Pass 1", 3);
+	  ctrl->addItem ("Band Pass 2", 4);
+	  ctrl->addItem ("Band Stop",   5);
+	  ctrl->addItem ("Low Shelf",   6);
+	  ctrl->addItem ("High Shelf",  7);
+	  ctrl->addItem ("Band Shelf",  8);
+	  ctrl->addItem ("All Pass",    9);
     break;
 
   case 2: // Butterworth
-    ctrl->addItem ("Low Pass",    1); ctrl->setItemEnabled (1, isEnabled (2, 1));
-	  ctrl->addItem ("High Pass",   2); ctrl->setItemEnabled (2, isEnabled (2, 2));
+    ctrl->addItem ("Low Pass",    1);
+	  ctrl->addItem ("High Pass",   2);
     // 3
-	  ctrl->addItem ("Band Pass",   4); ctrl->setItemEnabled (4, isEnabled (2, 4));
-	  ctrl->addItem ("Band Stop",   5); ctrl->setItemEnabled (5, isEnabled (2, 5));
-	  ctrl->addItem ("Low Shelf",   6); ctrl->setItemEnabled (6, isEnabled (2, 6));
-	  ctrl->addItem ("High Shelf",  7); ctrl->setItemEnabled (7, isEnabled (2, 7));
-	  ctrl->addItem ("Band Shelf",  8); ctrl->setItemEnabled (8, isEnabled (2, 8));
+	  ctrl->addItem ("Band Pass",   4);
+	  ctrl->addItem ("Band Stop",   5);
+	  ctrl->addItem ("Low Shelf",   6);
+	  ctrl->addItem ("High Shelf",  7);
+	  ctrl->addItem ("Band Shelf",  8);
 	  break;
 
   case 3: // Chebyshev I
-    ctrl->addItem ("Low Pass",    1); ctrl->setItemEnabled (1, isEnabled (3, 1));
-	  ctrl->addItem ("High Pass",   2); ctrl->setItemEnabled (2, isEnabled (3, 2));
+    ctrl->addItem ("Low Pass",    1);
+	  ctrl->addItem ("High Pass",   2);
     // 3
-	  ctrl->addItem ("Band Pass",   4); ctrl->setItemEnabled (4, isEnabled (3, 4));
-	  ctrl->addItem ("Band Stop",   5); ctrl->setItemEnabled (5, isEnabled (3, 5));
-	  ctrl->addItem ("Low Shelf",   6); ctrl->setItemEnabled (6, isEnabled (3, 6));
-	  ctrl->addItem ("High Shelf",  7); ctrl->setItemEnabled (7, isEnabled (3, 7));
-	  ctrl->addItem ("Band Shelf",  8); ctrl->setItemEnabled (8, isEnabled (3, 8));
+	  ctrl->addItem ("Band Pass",   4);
+	  ctrl->addItem ("Band Stop",   5);
+	  ctrl->addItem ("Low Shelf",   6);
+	  ctrl->addItem ("High Shelf",  7);
+	  ctrl->addItem ("Band Shelf",  8);
 	  break;
 
   case 4: // Chebyshev II
-    ctrl->addItem ("Low Pass",    1); ctrl->setItemEnabled (1, isEnabled (4, 1));
-	  ctrl->addItem ("High Pass",   2); ctrl->setItemEnabled (2, isEnabled (4, 2));
+    ctrl->addItem ("Low Pass",    1);
+	  ctrl->addItem ("High Pass",   2);
     // 3
-	  ctrl->addItem ("Band Pass",   4); ctrl->setItemEnabled (4, isEnabled (4, 4));
-	  ctrl->addItem ("Band Stop",   5); ctrl->setItemEnabled (5, isEnabled (4, 5));
-	  ctrl->addItem ("Low Shelf",   6); ctrl->setItemEnabled (6, isEnabled (4, 6));
-	  ctrl->addItem ("High Shelf",  7); ctrl->setItemEnabled (7, isEnabled (4, 7));
-	  ctrl->addItem ("Band Shelf",  8); ctrl->setItemEnabled (8, isEnabled (4, 8));
+	  ctrl->addItem ("Band Pass",   4);
+	  ctrl->addItem ("Band Stop",   5);
+	  ctrl->addItem ("Low Shelf",   6);
+	  ctrl->addItem ("High Shelf",  7);
+	  ctrl->addItem ("Band Shelf",  8);
 	  break;
   };
 }
@@ -323,16 +309,28 @@ void MainPanel::paint (Graphics& g)
 //------------------------------------------------------------------------------
 
 template <class DesignType>
-void MainPanel::createSmoothedFilter (Dsp::Filter** pFilter, Dsp::Filter** pAudioFilter)
+void MainPanel::createFilter (Dsp::Filter** pFilter, Dsp::Filter** pAudioFilter)
 {
   *pFilter = new Dsp::FilterType <DesignType>;
-  *pAudioFilter = new Dsp::SmoothedFilter <DesignType, 2> (1024);
+  switch (m_menuSmoothing->getSelectedId())
+  {
+  case 1:
+    *pAudioFilter = new Dsp::SmoothedFilter <DesignType, 2> (1024);
+    break;
+
+  default:
+    *pAudioFilter = new Dsp::FilterType <DesignType, 2>;
+    break;
+  };
 }
 
-void MainPanel::setFilter (int familyId, int typeId)
+void MainPanel::createFilter ()
 {
   Dsp::Filter* f = 0;
   Dsp::Filter* fo = 0;
+
+  const int familyId = m_menuFamily->getSelectedId();
+  const int typeId = m_menuType->getSelectedId();
 
   //
   // RBJ
@@ -341,15 +339,15 @@ void MainPanel::setFilter (int familyId, int typeId)
   {
     switch (typeId)
     {
-    case 1: createSmoothedFilter <Dsp::RBJ::Design::LowPass> (&f, &fo); break;
-    case 2: createSmoothedFilter <Dsp::RBJ::Design::HighPass> (&f, &fo); break;
-    case 3: createSmoothedFilter <Dsp::RBJ::Design::BandPass1> (&f, &fo); break;
-    case 4: createSmoothedFilter <Dsp::RBJ::Design::BandPass2> (&f, &fo); break;
-    case 5: createSmoothedFilter <Dsp::RBJ::Design::BandStop> (&f, &fo); break;
-    case 6: createSmoothedFilter <Dsp::RBJ::Design::LowShelf> (&f, &fo); break;
-    case 7: createSmoothedFilter <Dsp::RBJ::Design::HighShelf> (&f, &fo); break;
-    case 8: createSmoothedFilter <Dsp::RBJ::Design::BandShelf> (&f, &fo); break;
-    case 9: createSmoothedFilter <Dsp::RBJ::Design::AllPass> (&f, &fo); break;
+    case 1: createFilter <Dsp::RBJ::Design::LowPass> (&f, &fo); break;
+    case 2: createFilter <Dsp::RBJ::Design::HighPass> (&f, &fo); break;
+    case 3: createFilter <Dsp::RBJ::Design::BandPass1> (&f, &fo); break;
+    case 4: createFilter <Dsp::RBJ::Design::BandPass2> (&f, &fo); break;
+    case 5: createFilter <Dsp::RBJ::Design::BandStop> (&f, &fo); break;
+    case 6: createFilter <Dsp::RBJ::Design::LowShelf> (&f, &fo); break;
+    case 7: createFilter <Dsp::RBJ::Design::HighShelf> (&f, &fo); break;
+    case 8: createFilter <Dsp::RBJ::Design::BandShelf> (&f, &fo); break;
+    case 9: createFilter <Dsp::RBJ::Design::AllPass> (&f, &fo); break;
     };
   }
   //
@@ -359,13 +357,13 @@ void MainPanel::setFilter (int familyId, int typeId)
   {
     switch (typeId)
     {
-    case 1: createSmoothedFilter <Dsp::Butterworth::Design::LowPass <50> > (&f, &fo); break;
-    case 2: createSmoothedFilter <Dsp::Butterworth::Design::HighPass <50> > (&f, &fo); break;
-    case 4: createSmoothedFilter <Dsp::Butterworth::Design::BandPass <50> > (&f, &fo); break;
-    case 5: createSmoothedFilter <Dsp::Butterworth::Design::BandStop <50> > (&f, &fo); break;
-    case 6: createSmoothedFilter <Dsp::Butterworth::Design::LowShelf <50> > (&f, &fo); break;
-    case 7: createSmoothedFilter <Dsp::Butterworth::Design::HighShelf <50> > (&f, &fo); break;
-    case 8: createSmoothedFilter <Dsp::Butterworth::Design::BandShelf <50> > (&f, &fo); break;
+    case 1: createFilter <Dsp::Butterworth::Design::LowPass <50> > (&f, &fo); break;
+    case 2: createFilter <Dsp::Butterworth::Design::HighPass <50> > (&f, &fo); break;
+    case 4: createFilter <Dsp::Butterworth::Design::BandPass <50> > (&f, &fo); break;
+    case 5: createFilter <Dsp::Butterworth::Design::BandStop <50> > (&f, &fo); break;
+    case 6: createFilter <Dsp::Butterworth::Design::LowShelf <50> > (&f, &fo); break;
+    case 7: createFilter <Dsp::Butterworth::Design::HighShelf <50> > (&f, &fo); break;
+    case 8: createFilter <Dsp::Butterworth::Design::BandShelf <50> > (&f, &fo); break;
     };
   }
   //
@@ -375,13 +373,13 @@ void MainPanel::setFilter (int familyId, int typeId)
   {
     switch (typeId)
     {
-    case 1: createSmoothedFilter <Dsp::ChebyshevI::Design::LowPass <50> > (&f, &fo); break;
-    case 2: createSmoothedFilter <Dsp::ChebyshevI::Design::HighPass <50> > (&f, &fo); break;
-    case 4: createSmoothedFilter <Dsp::ChebyshevI::Design::BandPass <50> > (&f, &fo); break;
-    case 5: createSmoothedFilter <Dsp::ChebyshevI::Design::BandStop <50> > (&f, &fo); break;
-    case 6: createSmoothedFilter <Dsp::ChebyshevI::Design::LowShelf <50> > (&f, &fo); break;
-    case 7: createSmoothedFilter <Dsp::ChebyshevI::Design::HighShelf <50> > (&f, &fo); break;
-    case 8: createSmoothedFilter <Dsp::ChebyshevI::Design::BandShelf <50> > (&f, &fo); break;
+    case 1: createFilter <Dsp::ChebyshevI::Design::LowPass <50> > (&f, &fo); break;
+    case 2: createFilter <Dsp::ChebyshevI::Design::HighPass <50> > (&f, &fo); break;
+    case 4: createFilter <Dsp::ChebyshevI::Design::BandPass <50> > (&f, &fo); break;
+    case 5: createFilter <Dsp::ChebyshevI::Design::BandStop <50> > (&f, &fo); break;
+    case 6: createFilter <Dsp::ChebyshevI::Design::LowShelf <50> > (&f, &fo); break;
+    case 7: createFilter <Dsp::ChebyshevI::Design::HighShelf <50> > (&f, &fo); break;
+    case 8: createFilter <Dsp::ChebyshevI::Design::BandShelf <50> > (&f, &fo); break;
     };
   }
 
@@ -392,13 +390,13 @@ void MainPanel::setFilter (int familyId, int typeId)
   {
     switch (typeId)
     {
-    case 1: createSmoothedFilter <Dsp::ChebyshevII::Design::LowPass <50> > (&f, &fo); break;
-    case 2: createSmoothedFilter <Dsp::ChebyshevII::Design::HighPass <50> > (&f, &fo); break;
-    case 4: createSmoothedFilter <Dsp::ChebyshevII::Design::BandPass <50> > (&f, &fo); break;
-    case 5: createSmoothedFilter <Dsp::ChebyshevII::Design::BandStop <50> > (&f, &fo); break;
-    case 6: createSmoothedFilter <Dsp::ChebyshevII::Design::LowShelf <50> > (&f, &fo); break;
-    case 7: createSmoothedFilter <Dsp::ChebyshevII::Design::HighShelf <50> > (&f, &fo); break;
-    case 8: createSmoothedFilter <Dsp::ChebyshevII::Design::BandShelf <50> > (&f, &fo); break;
+    case 1: createFilter <Dsp::ChebyshevII::Design::LowPass <50> > (&f, &fo); break;
+    case 2: createFilter <Dsp::ChebyshevII::Design::HighPass <50> > (&f, &fo); break;
+    case 4: createFilter <Dsp::ChebyshevII::Design::BandPass <50> > (&f, &fo); break;
+    case 5: createFilter <Dsp::ChebyshevII::Design::BandStop <50> > (&f, &fo); break;
+    case 6: createFilter <Dsp::ChebyshevII::Design::LowShelf <50> > (&f, &fo); break;
+    case 7: createFilter <Dsp::ChebyshevII::Design::HighShelf <50> > (&f, &fo); break;
+    case 8: createFilter <Dsp::ChebyshevII::Design::BandShelf <50> > (&f, &fo); break;
     };
   }
 
@@ -485,8 +483,7 @@ void MainPanel::comboBoxChanged (ComboBox* ctrl)
     if (m_lastTypeId != 0)
     {
       // does a corresponding type exist enabled in the new menu?
-      if (m_menuType->indexOfItemId (m_lastTypeId) != -1 &&
-          isEnabled (m_menuFamily->getSelectedId(), m_lastTypeId))
+      if (m_menuType->indexOfItemId (m_lastTypeId) != -1 )
       {
         id = m_lastTypeId;
       }
@@ -497,7 +494,11 @@ void MainPanel::comboBoxChanged (ComboBox* ctrl)
   {
     m_lastTypeId = m_menuType->getSelectedId();
 
-    setFilter (m_menuFamily->getSelectedId(), m_lastTypeId);
+    createFilter ();
+  }
+  else if (ctrl == m_menuSmoothing)
+  {
+    createFilter ();
   }
   else if (ctrl == m_menuAudio)
   {
@@ -545,25 +546,3 @@ const PopupMenu MainPanel::getMenuForIndex (int topLevelMenuIndex, const String&
 void MainPanel::menuItemSelected (int menuItemID, int topLevelMenuIndex)
 {
 }
-
-
-
-template<int Channels>
-class foo
-{
-public:
-  void process()
-  {
-    // do it
-  }
-};
-
-template<>
-class foo<0>
-{
-public:
-  void process()
-  {
-    assert (0);
-  }
-};
