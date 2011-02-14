@@ -200,8 +200,8 @@ private:
 };
 
 // Empty state, can't process anything
-template <>
-class ChannelsState <0>
+template <class StateType>
+class ChannelsState <0, StateType>
 {
 public:
   const int getNumChannels() const
