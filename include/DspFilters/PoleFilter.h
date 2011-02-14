@@ -65,29 +65,29 @@ public:
   // of pole/zeros for parameter modulation, since a pole
   // filter already has them calculated
 
-#if 0
+#if 1
   // Commenting this out will pass the call to the Cascade,
   // which tries to compute the poles and zeros from the biquad
   // coefficients.
-  const PoleZeros getPoleZeros () const
+  std::vector<PoleZeroPair> getPoleZeros () const
   {
-    const LayoutBase& proto = m_digitalProto;
-    const int numPoles = proto.getNumPoles ();
-    PoleZeros pz;
+    std::vector<PoleZeroPair> vpz;
+    const int numPoles = m_digitalProto.getNumPoles ();
     const int pairs = numPoles / 2;
-    for (int i = 0; i < pairs; ++i)
+    int i;
+    for (i = 0; i < pairs; ++i)
     {
-      pz.poles.push_back (m_digitalProto.pole(2*i));
-      pz.poles.push_back (m_digitalProto.pole(2*i+1));
-      pz.zeros.push_back (m_digitalProto.zero(2*i));
-      pz.zeros.push_back (m_digitalProto.zero(2*i+1));
+      vpz.push_back (PoleZeroPair (m_digitalProto.pole (2*i),
+                                   m_digitalProto.zero (2*i),
+                                   m_digitalProto.pole (2*i+1),
+                                   m_digitalProto.zero (2*i+1)));
     }
     if (numPoles & 1)
     {
-      pz.poles.push_back (m_digitalProto.pole (numPoles-1));
-      pz.zeros.push_back (m_digitalProto.zero (numPoles-1));
+      vpz.push_back (PoleZeroPair (m_digitalProto.pole (2*i),
+                                   m_digitalProto.zero (2*i)));
     }
-    return pz;
+    return vpz;
   }
 #endif
 
@@ -158,6 +158,8 @@ struct LowPassTransform
                          LayoutBase const& analog);
 };
 
+//------------------------------------------------------------------------------
+
 // low pass to high pass
 struct HighPassTransform
 {
@@ -169,15 +171,11 @@ struct HighPassTransform
                          LayoutBase const& analog);
 };
 
+//------------------------------------------------------------------------------
+
 // low pass to band pass transform
 class BandPassTransform
 {
-private:
-  // pre-calcs
-  double wc;
-  double wc2;
-  double m_a;
-  double m_b;
 
 public:
   BandPassTransform (double fc,
@@ -185,10 +183,17 @@ public:
                      LayoutBase& digital,
                      LayoutBase const& analog);
 
-  complex_t transform_bp (int i, complex_t c);
+private:
+  complex_pair_t transform (complex_t c);
 
-  std::pair<complex_t, complex_t> transform1 (int i, complex_t c);
+  // pre-calcs
+  double wc;
+  double wc2;
+  double a;
+  double b;
 };
+
+//------------------------------------------------------------------------------
 
 // low pass to band stop transform
 struct BandStopTransform

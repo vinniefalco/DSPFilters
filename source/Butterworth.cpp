@@ -154,9 +154,9 @@ void BandStopBase::setup (int order,
   m_analogProto.design (order);
 
   BandStopTransform::transform (centerFrequency / sampleRate,
-                                widthFrequency / sampleRate,
-                                m_digitalProto,
-                                m_analogProto);
+                     widthFrequency / sampleRate,
+                     m_digitalProto,
+                     m_analogProto);
 
   Cascade::setLayout (m_digitalProto);
 }

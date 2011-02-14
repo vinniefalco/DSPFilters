@@ -46,6 +46,7 @@ const double doubleLn2  =0.69314718055994530941723212145818;//?????
 const double doubleLn10	=2.3025850929940456840179914546844;//??????
 
 typedef std::complex<double> complex_t;
+typedef std::pair<complex_t, complex_t> complex_pair_t;
 
 template<typename Real>
 inline std::complex<Real> solve_quadratic_1 (Real a, Real b, Real c)

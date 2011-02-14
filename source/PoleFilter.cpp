@@ -126,96 +126,81 @@ BandPassTransform::BandPassTransform (double fc,
   else
 #endif
 
+  digital.reset ();
+
+  const double ww = 2 * doublePi * fw;
+
+  // pre-calcs
+  wc2 = 2 * doublePi * fc - (ww / 2);
+  wc  = wc2 + ww;
+
+  // what is this crap?
+  if (wc2 < 1e-8)
+      wc2 = 1e-8;
+  if (wc  > doublePi-1e-8)
+      wc  = doublePi-1e-8;
+
+  a =     cos ((wc + wc2) * 0.5) /
+          cos ((wc - wc2) * 0.5);
+  b = 1 / tan ((wc - wc2) * 0.5);
+
+
+  const int numPoles = analog.getNumPoles ();
+  const int pairs = numPoles / 2;
+  int i;
+  for (i = 0; i < pairs; ++i)
   {
-    digital.reset ();
+    complex_pair_t p1 = transform (analog.pole (2*i));
+    complex_pair_t z1 = transform (analog.zero (2*i));
+    complex_pair_t p2 = transform (analog.pole (2*i+1));
+    complex_pair_t z2 = transform (analog.zero (2*i+1));
 
-    const double ww = 2 * doublePi * fw;
-
-    wc2 = 2 * doublePi * fc - (ww / 2);
-    wc  = wc2 + ww;
-
-    if (wc2 < 1e-8)
-        wc2 = 1e-8;
-    if (wc  > doublePi-1e-8)
-        wc  = doublePi-1e-8;
-
-    const int numPoles = analog.getNumPoles ();
-    const int pairs = numPoles / 2;
-    int i;
-    for (i = 0; i < pairs; ++i)
-    {
-      std::pair<complex_t, complex_t> p1 = transform1 (digital.getNumPoles(),
-                                                       analog.pole (2*i));
-
-      std::pair<complex_t, complex_t> z1 = transform1 (digital.getNumPoles(),
-                                                       analog.zero (2*i));
-
-      std::pair<complex_t, complex_t> p2 = transform1 (digital.getNumPoles(),
-                                                       analog.pole (2*i+1));
-
-      std::pair<complex_t, complex_t> z2 = transform1 (digital.getNumPoles(),
-                                                       analog.zero (2*i+1));
-
-      digital.addPoleZero (p1.first, z1.first);
-      digital.addPoleZero (p2.first, z2.first);
-      digital.addPoleZero (p1.second, z1.second);
-      digital.addPoleZero (p2.second, z2.second);
-    }
-
-    if (numPoles & 1)
-    {
-      std::pair<complex_t, complex_t> p = transform1 (digital.getNumPoles(),
-                                                      analog.pole (2*i));
-
-      std::pair<complex_t, complex_t> z = transform1 (digital.getNumPoles(),
-                                                      analog.zero (2*i));
-
-      digital.addPoleZero (p.first,  z.first);
-      digital.addPoleZero (p.second, z.second);
-    }
-
-    double wn = analog.getNormalW();
-    digital.setNormal (2 * atan (sqrt (tan ((wc + wn)* 0.5) * tan((wc2 + wn)* 0.5))),
-                       analog.getNormalGain());
+    digital.addPoleZero (p1.first, z1.first);
+    digital.addPoleZero (p2.first, z2.first);
+    digital.addPoleZero (p1.second, z1.second);
+    digital.addPoleZero (p2.second, z2.second);
   }
+
+  if (numPoles & 1)
+  {
+    complex_pair_t p = transform (analog.pole (2*i));
+    complex_pair_t z = transform (analog.zero (2*i));
+
+    digital.addPoleZero (p.first,  z.first);
+    digital.addPoleZero (p.second, z.second);
+  }
+
+  double wn = analog.getNormalW();
+  digital.setNormal (2 * atan (sqrt (tan ((wc + wn)* 0.5) * tan((wc2 + wn)* 0.5))),
+                     analog.getNormalGain());
 }
 
-complex_t BandPassTransform::transform_bp (int i, complex_t c)
-{
-  double a =   cos((wc+wc2)*0.5)/
-               cos((wc-wc2)*0.5);
-  double b = 1/tan((wc-wc2)*0.5);
-  
-  complex_t c2 = 0;
-  c2 = addmul (c2, 4 * (b * b * (a * a - 1) + 1), c);
-  c2 += 8 * (b * b * (a * a - 1) - 1);
-  c2 *= c;
-  c2 += 4 * (b * b * (a * a - 1) + 1);
-  c2 = std::sqrt (c2);
-
-  if ((i & 1) == 0)
-    c2 = -c2;
-
-  c2 = addmul (c2, 2 * a * b, c);
-  c2 += 2 * a * b;
-
-  complex_t c3 = 0;
-  
-  c3 = addmul (c3, 2 * (b - 1), c) + 2 * (1 + b);
-
-  return c2/c3;
-}
-
-std::pair<complex_t, complex_t> BandPassTransform::transform1 (int i, complex_t c)
+complex_pair_t BandPassTransform::transform (complex_t c)
 {
   if (c == infinity())
-    return std::pair<complex_t, complex_t> (-1, 1);
+    return complex_pair_t (-1, 1);
 
   // bilinear transform
   c = (1. + c) / (1. - c);
 
-  return std::pair<complex_t, complex_t> (
-    transform_bp (i, c), transform_bp (i + 1, c));
+  complex_t v = 0;
+  v = addmul (v, 4 * (b * b * (a * a - 1) + 1), c);
+  v += 8 * (b * b * (a * a - 1) - 1);
+  v *= c;
+  v += 4 * (b * b * (a * a - 1) + 1);
+  v = std::sqrt (v);
+
+  complex_t u = -v;
+  u = addmul (u, 2 * a * b, c);
+  u += 2 * a * b;
+
+  v = addmul (v, 2 * a * b, c);
+  v += 2 * a * b;
+
+  complex_t d = 0;
+  d = addmul (d, 2 * (b - 1), c) + 2 * (1 + b);
+
+  return complex_pair_t (u/d, v/d);
 }
 
 //------------------------------------------------------------------------------
@@ -239,7 +224,7 @@ complex_t BandStopTransform::transform_bs (int i, double wc, double wc2, complex
   return c2/c3;
 }
 
-std::pair<complex_t, complex_t>  BandStopTransform::transform1 (
+complex_pair_t  BandStopTransform::transform1 (
   int i,
   double wc,
   double wc2,
@@ -255,7 +240,7 @@ std::pair<complex_t, complex_t>  BandStopTransform::transform1 (
     c = (1. + c) / (1. - c);
   }
 
-  return std::pair<complex_t, complex_t> (
+  return complex_pair_t (
     transform_bs (i, wc, wc2, c), transform_bs (i + 1, wc, wc2, c));
 }
 
@@ -281,22 +266,22 @@ void BandStopTransform::transform (double fc,
   int i;
   for (i = 0; i < pairs; ++i)
   {
-    std::pair<complex_t, complex_t> p1 = transform1 (digital.getNumPoles(),
+    complex_pair_t p1 = transform1 (digital.getNumPoles(),
                                                      wc,
                                                      wc2,
                                                      analog.pole (2*i));
 
-    std::pair<complex_t, complex_t> z1 = transform1 (digital.getNumPoles(),
+    complex_pair_t z1 = transform1 (digital.getNumPoles(),
                                                      wc,
                                                      wc2,
                                                      analog.zero (2*i));
 
-    std::pair<complex_t, complex_t> p2 = transform1 (digital.getNumPoles(),
+    complex_pair_t p2 = transform1 (digital.getNumPoles(),
                                                      wc,
                                                      wc2,
                                                      analog.pole (2*i+1));
 
-    std::pair<complex_t, complex_t> z2 = transform1 (digital.getNumPoles(),
+    complex_pair_t z2 = transform1 (digital.getNumPoles(),
                                                      wc,
                                                      wc2,
                                                      analog.zero (2*i+1));
@@ -313,12 +298,12 @@ void BandStopTransform::transform (double fc,
 
   if (numPoles & 1)
   {
-    std::pair<complex_t, complex_t> p = transform1 (digital.getNumPoles(),
+    complex_pair_t p = transform1 (digital.getNumPoles(),
                                                     wc,
                                                     wc2,
                                                     analog.pole (2*i));
 
-    std::pair<complex_t, complex_t> z = transform1 (digital.getNumPoles(),
+    complex_pair_t z = transform1 (digital.getNumPoles(),
                                                     wc,
                                                     wc2,
                                                     analog.zero (2*i));

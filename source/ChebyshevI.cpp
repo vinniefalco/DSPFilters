@@ -190,9 +190,9 @@ void BandStopBase::setup (int order,
   AnalogLowPass::design (order, rippleDb, m_analogProto);
 
   BandStopTransform::transform (centerFrequency / sampleRate,
-                                widthFrequency / sampleRate,
-                                m_digitalProto,
-                                m_analogProto);
+                     widthFrequency / sampleRate,
+                     m_digitalProto,
+                     m_analogProto);
 
   Cascade::setLayout (m_digitalProto);
 }
