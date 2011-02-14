@@ -166,7 +166,7 @@ struct HighShelf : PoleFilter <detail::HighShelfBase, MaxOrder>
 };
 
 template <int MaxOrder>
-struct BandShelf : PoleFilter <detail::BandShelfBase, MaxOrder>
+struct BandShelf : PoleFilter <detail::BandShelfBase, MaxOrder, MaxOrder*2>
 {
 };
 
