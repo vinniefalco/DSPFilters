@@ -94,10 +94,10 @@ protected:
   void setPoleZeroPair (const PoleZeroPair& pair)
   {
     if (pair.isSinglePole ())
-      setOnePole (pair.pole.first, pair.zero.first);
+      setOnePole (pair.poles.first, pair.zeros.first);
     else
-      setTwoPole (pair.pole.first, pair.zero.first,
-                  pair.pole.second, pair.zero.second);
+      setTwoPole (pair.poles.first, pair.zeros.first,
+                  pair.poles.second, pair.zeros.second);
   }
 
   void setPoleZeroForm (const BiquadPoleState& bps);

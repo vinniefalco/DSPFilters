@@ -174,29 +174,36 @@ public:
 private:
   ComplexPair transform (complex_t c);
 
-  // pre-calcs
   double wc;
   double wc2;
   double a;
   double b;
+  double a2;
+  double b2;
+  double ab;
+  double ab_2;
 };
 
 //------------------------------------------------------------------------------
 
 // low pass to band stop transform
-struct BandStopTransform
+class BandStopTransform
 {
-  static complex_t transform_bs (int i, double wc, double wc2, complex_t c);
+public:
+  BandStopTransform (double fc,
+                     double fw,
+                     LayoutBase& digital,
+                     LayoutBase const& analog);
 
-  static std::pair<complex_t, complex_t> transform1 (int i,
-                                                     double wc,
-                                                     double wc2,
-                                                     complex_t c);
+private:
+  ComplexPair transform (complex_t c);
 
-  static void transform (double fc,
-                         double fw,
-                         LayoutBase& digital,
-                         LayoutBase const& analog);
+  double wc;
+  double wc2;
+  double a;
+  double b;
+  double a2;
+  double b2;
 };
 
 }

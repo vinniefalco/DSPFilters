@@ -152,7 +152,7 @@ void BandStopBase::setup (int order,
 {
   m_analogProto.design (order);
 
-  BandStopTransform::transform (centerFrequency / sampleRate,
+  BandStopTransform (centerFrequency / sampleRate,
                      widthFrequency / sampleRate,
                      m_digitalProto,
                      m_analogProto);

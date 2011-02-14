@@ -64,11 +64,11 @@ void LowPassTransform::transform (double fc,
   const int numPoles = analog.getNumPoles ();
   const int pairs = numPoles / 2;
   for (int i = 0; i < pairs; ++i)
-    digital.addPoleZeroConjugatePairs (transform (f, analog[i].pole.first),
-                                       transform (f, analog[i].zero.first));
+    digital.addPoleZeroConjugatePairs (transform (f, analog[i].poles.first),
+                                       transform (f, analog[i].zeros.first));
   if (numPoles & 1)
-    digital.add (transform (f, analog[pairs].pole.first),
-                         transform (f, analog[pairs].zero.first));
+    digital.add (transform (f, analog[pairs].poles.first),
+                         transform (f, analog[pairs].zeros.first));
 
   digital.setNormal (analog.getNormalW(),
                      analog.getNormalGain());
@@ -101,11 +101,11 @@ void HighPassTransform::transform (double fc,
   const int numPoles = analog.getNumPoles ();
   const int pairs = numPoles / 2;
   for (int i = 0; i < pairs; ++i)
-    digital.addPoleZeroConjugatePairs (transform (f, analog[i].pole.first),
-                                       transform (f, analog[i].zero.first));
+    digital.addPoleZeroConjugatePairs (transform (f, analog[i].poles.first),
+                                       transform (f, analog[i].zeros.first));
   if (numPoles & 1)
-    digital.add (transform (f, analog[pairs].pole.first),
-                         transform (f, analog[pairs].zero.first));
+    digital.add (transform (f, analog[pairs].poles.first),
+                         transform (f, analog[pairs].zeros.first));
 
   digital.setNormal (doublePi - analog.getNormalW(),
                      analog.getNormalGain());
@@ -151,19 +151,22 @@ BandPassTransform::BandPassTransform (double fc,
   a =     cos ((wc + wc2) * 0.5) /
           cos ((wc - wc2) * 0.5);
   b = 1 / tan ((wc - wc2) * 0.5);
-
+  a2 = a * a;
+  b2 = b * b;
+  ab = a * b;
+  ab_2 = 2 * ab;
 
   const int numPoles = analog.getNumPoles ();
   const int pairs = numPoles / 2;
   for (int i = 0; i < pairs; ++i)
   {
     const PoleZeroPair& pair = analog[i];
-    ComplexPair p1 = transform (pair.pole.first);
-    ComplexPair z1 = transform (pair.zero.first);
+    ComplexPair p1 = transform (pair.poles.first);
+    ComplexPair z1 = transform (pair.zeros.first);
 
     // these two aren't even needed
-    ComplexPair p2 = transform (pair.pole.second);
-    ComplexPair z2 = transform (pair.zero.second);
+    ComplexPair p2 = transform (pair.poles.second);
+    ComplexPair z2 = transform (pair.zeros.second);
 
     assert (p2.first == std::conj (p1.first));
     assert (p2.second == std::conj (p1.second));
@@ -174,8 +177,8 @@ BandPassTransform::BandPassTransform (double fc,
 
   if (numPoles & 1)
   {
-    ComplexPair poles = transform (analog[pairs].pole.first);
-    ComplexPair zeros = transform (analog[pairs].zero.first);
+    ComplexPair poles = transform (analog[pairs].poles.first);
+    ComplexPair zeros = transform (analog[pairs].zeros.first);
 
     digital.add (poles, zeros);
   }
@@ -194,18 +197,18 @@ ComplexPair BandPassTransform::transform (complex_t c)
   c = (1. + c) / (1. - c);
 
   complex_t v = 0;
-  v = addmul (v, 4 * (b * b * (a * a - 1) + 1), c);
-  v += 8 * (b * b * (a * a - 1) - 1);
+  v = addmul (v, 4 * (b2 * (a2 - 1) + 1), c);
+  v += 8 * (b2 * (a2 - 1) - 1);
   v *= c;
-  v += 4 * (b * b * (a * a - 1) + 1);
+  v += 4 * (b2 * (a2 - 1) + 1);
   v = std::sqrt (v);
 
   complex_t u = -v;
-  u = addmul (u, 2 * a * b, c);
-  u += 2 * a * b;
+  u = addmul (u, ab_2, c);
+  u += ab_2;
 
-  v = addmul (v, 2 * a * b, c);
-  v += 2 * a * b;
+  v = addmul (v, ab_2, c);
+  v += ab_2;
 
   complex_t d = 0;
   d = addmul (d, 2 * (b - 1), c) + 2 * (1 + b);
@@ -215,104 +218,93 @@ ComplexPair BandPassTransform::transform (complex_t c)
 
 //------------------------------------------------------------------------------
 
-complex_t BandStopTransform::transform_bs (int i, double wc, double wc2, complex_t c)
-{
-  double a=cos((wc+wc2)*.5) /
-           cos((wc-wc2)*.5);
-  double b=tan((wc-wc2)*.5);
-  complex_t c2(0);
-  c2=addmul( c2, 4*(b*b+a*a-1), c );
-  c2+=8*(b*b-a*a+1);
-  c2*=c;
-  c2+=4*(a*a+b*b-1);
-  c2=std::sqrt( c2 );
-  c2*=((i&1)==0)?.5:-.5;
-  c2+=a;
-  c2=addmul( c2, -a, c );
-  complex_t c3( b+1 );
-  c3=addmul( c3, b-1, c );
-  return c2/c3;
-}
-
-complex_pair_t  BandStopTransform::transform1 (
-  int i,
-  double wc,
-  double wc2,
-  complex_t c)
-{
-  if (c == infinity())
-  {
-    c = -1;
-  }
-  else
-  {
-    // bilinear transform
-    c = (1. + c) / (1. - c);
-  }
-
-  return complex_pair_t (
-    transform_bs (i, wc, wc2, c), transform_bs (i + 1, wc, wc2, c));
-}
-
-void BandStopTransform::transform (double fc,
-                                   double fw,
-                                   LayoutBase& digital,
-                                   LayoutBase const& analog)
+BandStopTransform::BandStopTransform (double fc,
+                                      double fw,
+                                      LayoutBase& digital,
+                                      LayoutBase const& analog)
 {
   digital.reset ();
 
   const double ww = 2 * doublePi * fw;
 
-  double wc2 = 2 * doublePi * fc - (ww / 2);
-  double wc  = wc2 + ww;
+  wc2 = 2 * doublePi * fc - (ww / 2);
+  wc  = wc2 + ww;
 
+  // this is crap
   if (wc2 < 1e-8)
       wc2 = 1e-8;
   if (wc  > doublePi-1e-8)
       wc  = doublePi-1e-8;
 
+  a = cos ((wc + wc2) * .5) /
+      cos ((wc - wc2) * .5);
+  b = tan ((wc - wc2) * .5);
+  a2 = a * a;
+  b2 = b * b;
+
   const int numPoles = analog.getNumPoles ();
   const int pairs = numPoles / 2;
   for (int i = 0; i < pairs; ++i)
   {
-    complex_pair_t p1 = transform1 (digital.getNumPoles(), wc, wc2, analog[i].pole.first);
-    complex_pair_t z1 = transform1 (digital.getNumPoles(), wc, wc2, analog[i].zero.first);
-    complex_pair_t p2 = transform1 (digital.getNumPoles(), wc, wc2, analog[i].pole.second);
-    complex_pair_t z2 = transform1 (digital.getNumPoles(), wc, wc2, analog[i].zero.second);
+    ComplexPair p  = transform (analog[i].poles.first);
+    ComplexPair z  = transform (analog[i].zeros.first);
+    ComplexPair pc = transform (analog[i].poles.second);
+    ComplexPair zc = transform (analog[i].zeros.second);
 
-    // p1.first & p2.first are conjugate pairs, but
-    // z1.first & z1.second are conjugate pairs due to
-    // how the bandstop transform works
+    // get the conjugates into pc and zc
+    if (zc.first == z.first)
+      std::swap (zc.first, zc.second);
 
-    assert (p2.first == std::conj (p1.first));
-    assert (z1.second == std::conj (z1.first));
-    assert (p2.second == std::conj (p1.second));
-    assert (z2.second == std::conj (z2.first));
+    assert (pc.first  == std::conj (p.first));
+    assert (pc.second == std::conj (p.second));
+    assert (zc.first  == std::conj (z.first));
+    assert (zc.second == std::conj (z.second));
 
-    digital.addPoleZeroConjugatePairs (p1.first, z1.first);
-    digital.addPoleZeroConjugatePairs (p1.second, z2.first);
-
-    /*
-    digital.addPoleZero (p1.first, z1.first);
-    digital.addPoleZero (p2.first, z1.second);
-    digital.addPoleZero (p1.second, z2.first);
-    digital.addPoleZero (p2.second, z2.second);
-    */
+    digital.addPoleZeroConjugatePairs (p.first, z.first);
+    digital.addPoleZeroConjugatePairs (p.second, z.second);
   }
 
   if (numPoles & 1)
   {
-    complex_pair_t p = transform1 (digital.getNumPoles(), wc, wc2, analog[pairs].pole.first);
-    complex_pair_t z = transform1 (digital.getNumPoles(), wc, wc2, analog[pairs].zero.first);
+    ComplexPair poles = transform (analog[pairs].poles.first);
+    ComplexPair zeros = transform (analog[pairs].zeros.first);
 
-    digital.add (p.first,  z.first);
-    digital.add (p.second, z.second);
+    digital.add (poles, zeros);
   }
 
   if (fc < 0.25)
     digital.setNormal (doublePi, analog.getNormalGain());
   else
     digital.setNormal (0, analog.getNormalGain());
+}
+
+ComplexPair BandStopTransform::transform (complex_t c)
+{
+  if (c == infinity())
+    c = -1;
+  else
+    // bilinear transform
+    c = (1. + c) / (1. - c);
+
+  complex_t u (0);
+  u = addmul (u, 4 * (b2 + a2 - 1), c);
+  u += 8 * (b2 - a2 + 1);
+  u *= c;
+  u += 4 * (a2 + b2 - 1);
+  u = std::sqrt (u);
+
+  complex_t v = u * -.5;
+  v += a;
+  v = addmul (v, -a, c);
+
+  u *= .5;
+  u += a;
+  u = addmul (u, -a, c);
+  
+  complex_t d (b + 1);
+  d = addmul (d, b-1, c);
+
+  return ComplexPair (u/d, v/d);
 }
 
 }
