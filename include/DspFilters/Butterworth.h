@@ -184,7 +184,7 @@ struct TypeI : DesignBase, FilterClass
     addBuiltinParamInfo (idFrequency);
   }
 
-  void setParameters (const Parameters& params)
+  void setParams (const Params& params)
   {
     FilterClass::setup (int(params[1]),
                         params[0],
@@ -203,7 +203,7 @@ struct TypeII : DesignBase, FilterClass
     addBuiltinParamInfo (idGain);
   }
 
-  void setParameters (const Parameters& params)
+  void setParams (const Params& params)
   {
     FilterClass::setup (int(params[1]),
                         params[0],
@@ -223,7 +223,7 @@ struct TypeIII : DesignBase, FilterClass
     addBuiltinParamInfo (idBandwidthHz);
   }
 
-  void setParameters (const Parameters& params)
+  void setParams (const Params& params)
   {
     FilterClass::setup (int(params[1]),
                         params[0],
@@ -244,7 +244,7 @@ struct TypeIV : DesignBase, FilterClass
     addBuiltinParamInfo (idGain);
   }
 
-  void setParameters (const Parameters& params)
+  void setParams (const Params& params)
   {
     FilterClass::setup (int(params[1]),
                         params[0],

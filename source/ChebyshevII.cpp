@@ -71,11 +71,12 @@ void AnalogLowPass::design (int numPoles,
   if (numPoles & 1)
   {
     proto.addPoleZero (1 / sinh_v0, infinity());
-    //proto.addPoleZero (complex_t (sinh_v0, 0), infinity());
   }
 
   proto.setNormal (0, 1);
 }
+
+//------------------------------------------------------------------------------
 
 //
 // Chebyshev Type I low pass shelf prototype

@@ -104,8 +104,8 @@ public:
   {
     szName = "Frequency";
     szUnits= "Hz";
-    minValue = 20;
-    maxValue = 20000;
+    minValue = 10;
+    maxValue = 22040;
     defaultValue = 10000;
   }
 

@@ -98,7 +98,7 @@ struct OnePole : DesignBase, Custom::OnePole
     return "Custom One-Pole";
   }
 
-  void setParameters (const Parameters& params)
+  void setParams (const Params& params)
   {
     setup (pow (10., params[1]/20),
            params[2],
@@ -127,7 +127,7 @@ struct TwoPole : DesignBase, Custom::TwoPole
     return "Custom Two-Pole";
   }
 
-  void setParameters (const Parameters& params)
+  void setParams (const Params& params)
   {
     setup (pow (10., params[1]/20),
            params[2],

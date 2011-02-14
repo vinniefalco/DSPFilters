@@ -77,6 +77,8 @@ void AnalogLowPass::design (int numPoles,
   }
 }
 
+//------------------------------------------------------------------------------
+
 //
 // Chebyshev Type I low pass shelf prototype
 // From "High-Order Digital Parametric Equalizer Design"

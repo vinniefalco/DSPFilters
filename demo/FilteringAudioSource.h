@@ -54,7 +54,7 @@ public:
   
   void setFilter (Dsp::Filter* filter);
   
-  void setFilterParameters (Dsp::Parameters parameters);
+  void setFilterParameters (Dsp::Params parameters);
 
   void reset ();
 

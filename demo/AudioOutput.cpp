@@ -102,7 +102,7 @@ void AudioOutput::setFilter (Dsp::Filter* filter)
   m_queue.call (bond (&AudioOutput::doSetFilter, this, filter));
 }
 
-void AudioOutput::setFilterParameters (Dsp::Parameters parameters)
+void AudioOutput::setFilterParameters (Dsp::Params parameters)
 {
   m_queue.call (bond (&AudioOutput::doSetFilterParameters, this, parameters));
 }
@@ -150,7 +150,7 @@ void AudioOutput::doSetFilter (Dsp::Filter* filter)
   m_filteringAudioSource->setFilter (filter);
 }
 
-void AudioOutput::doSetFilterParameters (Dsp::Parameters parameters)
+void AudioOutput::doSetFilterParameters (Dsp::Params parameters)
 {
   m_filteringAudioSource->setFilterParameters (parameters);
 }

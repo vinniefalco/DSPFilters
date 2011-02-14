@@ -63,52 +63,42 @@ public:
 
   virtual int getNumParams () const = 0;  
 
-  Parameters getDefaultParameters() const;
-
-  // This makes a best-effort to pick up the values
-  // of matching parameters from another set. It uses
-  // the ParamID information to make the match.
-  void copyParamsFrom (Dsp::Filter const* other);
-
   virtual const ParamInfo& getParamInfo (int index) const = 0;
 
-  const Parameters& getParameters() const
+  Params getDefaultParams() const;
+
+  const Params& getParams() const
   {
-    return m_parameters;
+    return m_params;
   }
 
   double getParam (int paramIndex) const
   {
     assert (paramIndex >= 0 && paramIndex <= getNumParams());
-    return m_parameters[paramIndex];
+    return m_params[paramIndex];
   }
 
   void setParam (int paramIndex, double nativeValue)
   {
     assert (paramIndex >= 0 && paramIndex <= getNumParams());
-    m_parameters[paramIndex] = nativeValue;
-    doSetParameters (m_parameters);
+    m_params[paramIndex] = nativeValue;
+    doSetParams (m_params);
   }
 
-  void setParamById (int paramId, double nativeValue)
+  int findParamId (int paramId);
+
+  void setParamById (int paramId, double nativeValue);
+
+  void setParams (const Params& parameters)
   {
-    for (int i = getNumParams(); --i >= 0;)
-    {
-      if (getParamInfo (i).getId () == paramId)
-      {
-        setParam (i, nativeValue);
-        return;
-      }
-    }
-    
-    assert (0);
+    m_params = parameters;
+    doSetParams (parameters);
   }
 
-  void setParameters (const Parameters& parameters)
-  {
-    m_parameters = parameters;
-    doSetParameters (parameters);
-  }
+  // This makes a best-effort to pick up the values
+  // of matching parameters from another set. It uses
+  // the ParamID information to make the match.
+  void copyParamsFrom (Dsp::Filter const* other);
 
   virtual std::vector<PoleZeroPair> getPoleZeros() const = 0;
  
@@ -120,10 +110,10 @@ public:
   virtual void process (int numSamples, double* const* arrayOfChannels) = 0;
 
 protected:
-  virtual void doSetParameters (const Parameters& parameters) = 0;
+  virtual void doSetParams (const Params& parameters) = 0;
 
 private:
-  Parameters m_parameters;
+  Params m_params;
 };
 
 //------------------------------------------------------------------------------
@@ -157,9 +147,9 @@ public:
     return m_design.getNumParams();
   }
 
-  Parameters getDefaultParameters() const
+  Params getDefaultParams() const
   {
-    return m_design.getDefaultParameters();
+    return m_design.getDefaultParams();
   }
 
   const ParamInfo& getParamInfo (int index) const
@@ -178,9 +168,9 @@ public:
   }
 
 protected:
-  void doSetParameters (const Parameters& parameters)
+  void doSetParams (const Params& parameters)
   {
-    m_design.setParameters (parameters);
+    m_design.setParams (parameters);
   }
 
 protected:

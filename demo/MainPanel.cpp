@@ -489,12 +489,12 @@ void MainPanel::createFilter ()
     // TODO: Copy the parameters over in an intelligent way
     f->copyParamsFrom (m_filter);
     m_filter = f;
-    //m_filter->setParameters (m_filter->getDefaultParameters());
+    //m_filter->setParams (m_filter->getDefaultParams());
    
     m_listeners.call (&FilterListener::onFilterChanged, m_filter);
 
     if (fo)
-      fo->setParameters (m_filter->getParameters ());
+      fo->setParams (m_filter->getParams ());
     MainApp::getInstance().getAudioOutput().setFilter (fo);
   }
 }
@@ -597,7 +597,7 @@ void MainPanel::comboBoxChanged (ComboBox* ctrl)
 void MainPanel::onFilterParameters ()
 {
   MainApp::getInstance().getAudioOutput().setFilterParameters (
-    m_filter->getParameters());
+    m_filter->getParams());
 }
 
 //------------------------------------------------------------------------------

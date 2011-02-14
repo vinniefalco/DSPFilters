@@ -82,12 +82,6 @@ public:
     return m_maxPoles;
   }
 
-  void setNumPoles (int numPoles)
-  {
-    assert (numPoles >= 1 && numPoles <= m_maxPoles);
-    m_numPoles = numPoles;
-  }
-
   void addPoleZero (const complex_t& p, const complex_t& z)
   {
     assert (m_numPoles < m_maxPoles);
@@ -123,27 +117,11 @@ public:
     m_zeroArray[m_numPoles++] = std::conj (z);
   }
 
-  /*
-  complex_t& pole (int index)
-  {
-    assert (index >= 0 && index < m_numPoles);
-    return m_poleArray[index];
-  }
-  */
-
   const complex_t& pole (int index) const
   {
     assert (index >= 0 && index < m_numPoles);
     return m_poleArray[index];
   }
-
-  /*
-  complex_t& zero (int index)
-  {
-    assert (index >= 0 && index < m_numPoles);
-    return m_zeroArray[index];
-  }
-  */
 
   const complex_t& zero (int index) const
   {

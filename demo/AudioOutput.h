@@ -59,7 +59,7 @@ public:
   void setTempo (float tempo);
   void setSource (AudioSource* source);
   void setFilter (Dsp::Filter* filter);
-  void setFilterParameters (Dsp::Parameters parameters);
+  void setFilterParameters (Dsp::Params parameters);
   void resetFilter ();
 
 protected:
@@ -67,7 +67,7 @@ protected:
   void doSetTempo (float tempo);
   void doSetSource (ResamplingAudioSource* source);
   void doSetFilter (Dsp::Filter* filter);
-  void doSetFilterParameters (Dsp::Parameters parameters);
+  void doSetFilterParameters (Dsp::Params parameters);
   void doResetFilter ();
 
   void audioDeviceAboutToStart (AudioIODevice* device);
