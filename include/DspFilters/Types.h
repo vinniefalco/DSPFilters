@@ -48,14 +48,16 @@ struct ComplexPair : complex_pair_t
   {
   }
 
-  explicit ComplexPair (complex_t c1) : complex_pair_t (c1, 0.)
+  explicit ComplexPair (const complex_t& c1)
+    : complex_pair_t (c1, 0.)
   {
     assert (isReal());
   }
 
-  ComplexPair (complex_t c1, complex_t c2) : complex_pair_t (c1, c2)
+  ComplexPair (const complex_t& c1,
+               const complex_t& c2)
+    : complex_pair_t (c1, c2)
   {
-    //assert (isReal() || isConjugate());
   }
 
   bool isConjugate () const
@@ -89,29 +91,33 @@ struct ComplexPair : complex_pair_t
 // A pair of pole/zeros. This fits in a biquad (but is missing the gain)
 struct PoleZeroPair
 {
-  ComplexPair pole;
-  ComplexPair zero;
+  ComplexPair poles;
+  ComplexPair zeros;
 
   PoleZeroPair () { }
 
   // single pole/zero
-  PoleZeroPair (complex_t p, complex_t z) : pole (p), zero (z) { }
+  PoleZeroPair (const complex_t& p, const complex_t& z)
+    : poles (p), zeros (z)
+  {
+  }
 
   // pole/zero pair
-  PoleZeroPair (complex_t p1, complex_t z1,
-                complex_t p2, complex_t z2)
-                : pole (p1, p2) , zero (z1, z2)
+  PoleZeroPair (const complex_t& p1, const complex_t& z1,
+                const complex_t& p2, const complex_t& z2)
+    : poles (p1, p2)
+    , zeros (z1, z2)
   {
   }
 
   bool isSinglePole () const
   {
-    return pole.second == 0. && zero.second == 0.;
+    return poles.second == 0. && zeros.second == 0.;
   }
 
   bool is_nan () const
   {
-    return pole.is_nan() || zero.is_nan();
+    return poles.is_nan() || zeros.is_nan();
   }
 };
 

@@ -51,28 +51,28 @@ BiquadPoleState::BiquadPoleState (const BiquadBase& s)
   if (a2 == 0 && b2 == 0)
   {
     // single pole
-    pole.first = -a1;
-    zero.first = -b0 / b1;
-    pole.second = 0;
-    zero.second = 0;
+    poles.first = -a1;
+    zeros.first = -b0 / b1;
+    poles.second = 0;
+    zeros.second = 0;
   }
   else
   {
     {
       const complex_t c = sqrt (complex_t (a1 * a1 - 4 * a0 * a2, 0));
       double d = 2. * a0;
-      pole.first = -(a1 + c) / d;
-      pole.second =  (c - a1) / d;
-      assert (!pole.is_nan());
+      poles.first = -(a1 + c) / d;
+      poles.second =  (c - a1) / d;
+      assert (!poles.is_nan());
     }
 
     {
       const complex_t c = sqrt (complex_t (
         b1 * b1 - 4 * b0 * b2, 0));
       double d = 2. * b0;
-      zero.first = -(b1 + c) / d;
-      zero.second =  (c - b1) / d;
-      assert (!zero.is_nan());
+      zeros.first = -(b1 + c) / d;
+      zeros.second =  (c - b1) / d;
+      assert (!zeros.is_nan());
     }
   }
 
