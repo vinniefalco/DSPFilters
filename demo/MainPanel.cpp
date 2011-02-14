@@ -355,7 +355,8 @@ void MainPanel::buildTypeMenu (ComboBox* ctrl)
 	  break;
 
   case 7: // Custom
-    ctrl->addItem ("User Defined", 1);
+    ctrl->addItem ("Two-Pole", 1);
+    ctrl->addItem ("One-Pole", 2);
   };
 }
 
@@ -478,7 +479,8 @@ void MainPanel::createFilter ()
   {
     switch (typeId)
     {
-    case 1: createFilterState <Dsp::Custom::Design::UserDefined> (&f, &fo); break;
+    case 1: createFilterState <Dsp::Custom::Design::TwoPole> (&f, &fo); break;
+    case 2: createFilterState <Dsp::Custom::Design::OnePole> (&f, &fo); break;
     };
   }
 

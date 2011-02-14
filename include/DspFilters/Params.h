@@ -67,7 +67,10 @@ enum ParamID
   idPoleRho,
   idPoleTheta,
   idZeroRho,
-  idZeroTheta
+  idZeroTheta,
+
+  idPoleReal,
+  idZeroReal
 };
 
 enum

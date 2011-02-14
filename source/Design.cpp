@@ -440,6 +440,32 @@ public:
   }
 };
 
+class PoleRealInfo : public ParamInfo
+{
+public:
+  PoleRealInfo () : ParamInfo (idPoleReal, "Pole")
+  {
+    szName = "Real Pole";
+    szUnits= "";
+    minValue = -1;
+    maxValue = 1;
+    defaultValue = 0.25;
+  }
+};
+
+class ZeroRealInfo : public ParamInfo
+{
+public:
+  ZeroRealInfo () : ParamInfo (idZeroReal, "Zero")
+  {
+    szName = "Real Zero";
+    szUnits= "";
+    minValue = -1;
+    maxValue = 1;
+    defaultValue = -0.25;
+  }
+};
+
 }
 
 //------------------------------------------------------------------------------
@@ -459,6 +485,9 @@ static detail::PoleRhoInfo   builtinPoleRho;
 static detail::PoleThetaInfo builtinPoleTheta;
 static detail::ZeroRhoInfo   builtinZeroRho;
 static detail::ZeroThetaInfo builtinZeroTheta;
+
+static detail::PoleRealInfo builtinPoleReal;
+static detail::ZeroRealInfo builtinZeroReal;
 
 DesignBase::DesignBase ()
   : m_numParams (0)
@@ -502,6 +531,9 @@ ParamInfo* DesignBase::getBuiltinParamInfo (int paramId)
   case idPoleTheta:         p = &builtinPoleTheta; break;
   case idZeroRho:           p = &builtinZeroRho; break;
   case idZeroTheta:         p = &builtinZeroTheta; break;
+
+  case idPoleReal:          p = &builtinPoleReal; break;
+  case idZeroReal:          p = &builtinZeroReal; break;
   };
 
   assert (p);

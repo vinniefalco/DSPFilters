@@ -92,6 +92,23 @@ public:
   {
     assert (m_numPoles < m_maxPoles);
     assert (!Dsp::isnan (p));
+    if (m_numPoles & 1)
+    {
+      if (p.imag() == 0)
+        assert (m_poleArray[m_numPoles-1].imag() == 0);
+      else
+        assert (m_poleArray[m_numPoles-1] == std::conj (p));
+      if (z.imag() == 0)
+        assert (m_zeroArray[m_numPoles-1].imag() == 0);
+      else
+        assert (m_zeroArray[m_numPoles-1] == std::conj (z));
+    }
+    else if (m_numPoles==m_maxPoles)
+    {
+      // odd pole/zero
+      assert (p.imag() == 0 && z.imag() == 0);
+    }
+
     m_poleArray[m_numPoles] = p;
     m_zeroArray[m_numPoles++] = z;
   }

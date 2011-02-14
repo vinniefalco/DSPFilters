@@ -113,7 +113,7 @@ protected:
 
   void setCascadeStorage (const Storage& storage);
 
-  void scale (double factor);
+  void applyScale (double scale);
   void setPoleZeros (int numPoles, const PoleZeroPair* pzArray);
   void setup (const LayoutBase& proto);
 

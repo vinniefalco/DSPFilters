@@ -96,7 +96,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -118,6 +118,7 @@
 				AdditionalOptions="/MP"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="..\..\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				MinimalRebuild="false"
@@ -463,7 +464,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\DspFilters\CustomBiquad.h"
+					RelativePath="..\..\include\DspFilters\Custom.h"
 					>
 				</File>
 				<File
@@ -551,7 +552,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\source\CustomBiquad.cpp"
+					RelativePath="..\..\source\Custom.cpp"
 					>
 				</File>
 				<File

@@ -33,8 +33,8 @@ THE SOFTWARE.
 
 *******************************************************************************/
 
-#ifndef DSPFILTERS_CUSTOM_BIQUAD_H
-#define DSPFILTERS_CUSTOM_BIQUAD_H
+#ifndef DSPFILTERS_CUSTOM_H
+#define DSPFILTERS_CUSTOM_H
 
 #include "DspFilters/Common.h"
 #include "DspFilters/Biquad.h"
@@ -44,19 +44,28 @@ THE SOFTWARE.
 namespace Dsp {
 
 /*
- * Biquad with parameters allowing for directly setting the poles and zeros
+ * Single pole and Biquad with parameters allowing
+ * for directly setting the poles and zeros
  *
  */
 
 namespace Custom {
 
 //
-// Raw filter
+// Raw filters
 //
 
-struct UserDefined : Biquad
+struct OnePole : Biquad
 {
-  void setup (double poleRho,
+  void setup (double scale,
+              double pole,
+              double zero);
+};
+
+struct TwoPole : Biquad
+{
+  void setup (double scale,
+              double poleRho,
               double poleTheta,
               double zeroRho,
               double zeroTheta);
@@ -70,10 +79,38 @@ struct UserDefined : Biquad
 
 namespace Design {
 
-struct UserDefined : DesignBase, Custom::UserDefined
+struct OnePole : DesignBase, Custom::OnePole
 {
-  UserDefined ()
+  OnePole ()
   {
+    addBuiltinParamInfo (idGain);
+    addBuiltinParamInfo (idPoleReal);
+    addBuiltinParamInfo (idZeroReal);
+  }
+
+  Kind getKind () const
+  {
+    return kindOther;
+  }
+
+  const char* getName() const
+  {
+    return "Custom One-Pole";
+  }
+
+  void setParameters (const Parameters& params)
+  {
+    setup (pow (10., params[1]/20),
+           params[2],
+           params[3]);
+  }
+};
+
+struct TwoPole : DesignBase, Custom::TwoPole
+{
+  TwoPole ()
+  {
+    addBuiltinParamInfo (idGain);
     addBuiltinParamInfo (idPoleRho);
     addBuiltinParamInfo (idPoleTheta);
     addBuiltinParamInfo (idZeroRho);
@@ -87,15 +124,16 @@ struct UserDefined : DesignBase, Custom::UserDefined
 
   const char* getName() const
   {
-    return "Custom Biquad";
+    return "Custom Two-Pole";
   }
 
   void setParameters (const Parameters& params)
   {
-    setup (params[1],
+    setup (pow (10., params[1]/20),
            params[2],
            params[3],
-           params[4]);
+           params[4],
+           params[5]);
   }
 };
 

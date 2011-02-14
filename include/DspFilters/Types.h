@@ -45,6 +45,11 @@ typedef std::complex<double> complex_t;
 // A pair of pole/zeros. This fits in a biquad / second order section.
 struct PoleZeroPair
 {
+  bool isSinglePole () const
+  {
+    return pole[1] == 0. && zero[1] == 0.;
+  }
+
   complex_t pole[2];
   complex_t zero[2];
 };

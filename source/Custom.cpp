@@ -34,22 +34,31 @@ THE SOFTWARE.
 *******************************************************************************/
 
 #include "DspFilters/Common.h"
-#include "DspFilters/CustomBiquad.h"
+#include "DspFilters/Custom.h"
 
 namespace Dsp {
 
 namespace Custom {
 
-void UserDefined::setup (double poleRho,
-                         double poleTheta,
-                         double zeroRho,
-                         double zeroTheta)
+void OnePole::setup (double scale,
+                     double pole,
+                     double zero)
+{
+  setupOnePole (pole, zero);
+  applyScale (scale);
+}
+
+void TwoPole::setup (double scale,
+                     double poleRho,
+                     double poleTheta,
+                     double zeroRho,
+                     double zeroTheta)
 {
   complex_t pole = std::polar (poleRho, poleTheta);
   complex_t zero = std::polar (zeroRho, zeroTheta);
 
-  setPoles (pole, std::conj (pole));
-  setZeros (zero, std::conj (zero));
+  setupTwoPole (pole, zero, std::conj(pole), std::conj(zero));
+  applyScale (scale);
 }
 
 }
