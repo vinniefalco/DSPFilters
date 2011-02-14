@@ -316,9 +316,13 @@ void BandStopTransform::transform (double fc,
                                                      wc2,
                                                      analog.zero (2*i+1));
 
+    // p1.first & p2.first are conjugate pairs, but
+    // z1.first & z1.second are conjugate pairs due to
+    // how the bandstop transform works
+
     digital.addPoleZero (p1.first, z1.first);
-    digital.addPoleZero (p2.first, z2.first);
-    digital.addPoleZero (p1.second, z1.second);
+    digital.addPoleZero (p2.first, z1.second);
+    digital.addPoleZero (p1.second, z2.first);
     digital.addPoleZero (p2.second, z2.second);
   }
 

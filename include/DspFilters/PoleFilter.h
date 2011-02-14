@@ -59,6 +59,10 @@ public:
   // This gets the poles/zeros directly from the digital
   // prototype since apparently the code to get them from
   // the cascade coefficients is not working.
+#if 0
+  // Commenting this out will pass the call to the Cascade,
+  // which tries to compute the poles and zeros from the biquad
+  // coefficients
   const PoleZeros getPoleZeros () const
   {
     const LayoutBase& proto = m_digitalProto;
@@ -79,6 +83,7 @@ public:
     }
     return pz;
   }
+#endif
 
 protected:
   void setPrototypeStorage (const LayoutBase& analogStorage,

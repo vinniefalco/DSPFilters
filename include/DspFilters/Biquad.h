@@ -88,8 +88,31 @@ public:
   }
 
 protected:
+  //
+  // These are protected so you can't mess with RBJ biquads
+  //
+
   void setCoefficients (double a0, double a1, double a2,
                         double b0, double b1, double b2);
+
+  void setupOnePole (complex_t pole, complex_t zero);
+
+  void setupTwoPole (complex_t pole1, complex_t zero1,
+                     complex_t pole2, complex_t zero2);
+
+  void setupPoleZeroForm (const PoleZeroForm& pzf);
+
+  void setIdentity ();
+
+  void applyScale (double scale);
+
+private:
+#if 0
+  void setPoleZeros (complex_t const* poles, complex_t const* zeros);
+  void setPoleZero (complex_t pole, complex_t zero);
+  void setPoles (complex_t pole1, complex_t pole2);
+  void setZeros (complex_t zero1, complex_t zero2);
+#endif
 
 protected:
   double m_a0;
@@ -171,24 +194,23 @@ public:
 #endif
 
 public:
-  // Set the poles and zeros from two-element arrays.
-  void setPoleZeros (complex_t const* poles, complex_t const* zeros);
+  // Export these as public
 
-  // Set the stage to reflect a single pole/zero.
-  void setPoleZero (complex_t pole, complex_t zero);
+  void setupOnePole (complex_t pole, complex_t zero)
+  {
+    BiquadBase::setupOnePole (pole, zero);
+  }
 
-  // Independently set the 'a' coefficients from a pair of poles
-  void setPoles (complex_t pole1, complex_t pole2);
+  void setupTwoPole (complex_t pole1, complex_t zero1,
+                     complex_t pole2, complex_t zero2)
+  {
+    BiquadBase::setupTwoPole (pole1, zero1, pole2, zero2);
+  }
 
-  // Independently set the 'b' coefficients from a pair of zeros
-  void setZeros (complex_t zero1, complex_t zero2);
-
-  // Scale the overall output by multiplying the coefficients
-  // of the numerator polynomial 'b' by a constant
-  void scale (double factor);
-
-  // Set up the identity filter (i.e. pass input to output unaffected)
-  void setupIdentity ();
+  void applyScale (double scale)
+  {
+    BiquadBase::applyScale (scale);
+  }
 };
 
 }

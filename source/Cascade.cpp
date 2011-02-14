@@ -83,9 +83,10 @@ const PoleZeros Cascade::getPoleZeros () const
   for (int i = 0; i < m_numStages - 1; ++i)
   {
     Biquad::PoleZeroForm pzf (*stage++);
+    assert (!pzf.isSinglePole());
     pz.poles.push_back (pzf.pole[0]);
-    pz.poles.push_back (pzf.pole[1]);
     pz.zeros.push_back (pzf.zero[0]);
+    pz.poles.push_back (pzf.pole[1]);
     pz.zeros.push_back (pzf.zero[1]);
   }
 
@@ -93,7 +94,7 @@ const PoleZeros Cascade::getPoleZeros () const
     Biquad::PoleZeroForm pzf (*stage);
     pz.poles.push_back (pzf.pole[0]);
     pz.zeros.push_back (pzf.zero[0]);
-    if (pzf.pole[1] != pzf.pole[0] || pzf.zero[1] != pzf.zero[0])
+    if (!pzf.isSinglePole())
     {
       pz.poles.push_back (pzf.pole[1]);
       pz.zeros.push_back (pzf.zero[1]);
@@ -103,12 +104,12 @@ const PoleZeros Cascade::getPoleZeros () const
   return pz;
 }
 
-void Cascade::scale (double factor)
+void Cascade::applyScale (double scale)
 {
   // For higher order filters it might be helpful
   // to spread this factor between all the stages.
   assert (m_numStages > 0);
-  m_stageArray->scale (factor);
+  m_stageArray->applyScale (scale);
 }
 
 void Cascade::setPoleZeros (int numPoles, const PoleZeroPair* pzArray)
@@ -117,9 +118,10 @@ void Cascade::setPoleZeros (int numPoles, const PoleZeroPair* pzArray)
   assert (pairs <= m_maxStages);
   Biquad* stage = m_stageArray;
   for (int i = pairs; --i >= 0; ++pzArray,  ++stage)
-    stage->setPoleZeros (pzArray->pole, pzArray->zero);
+    stage->setupTwoPole (pzArray->pole[0], pzArray->zero[0],
+                         pzArray->pole[1], pzArray->zero[1]);
   if (numPoles & 1)
-    stage->setPoleZero (pzArray->pole[0], pzArray->zero[0]);
+    stage->setupOnePole (pzArray->pole[0], pzArray->zero[0]);
   m_numStages = pairs + (numPoles & 1);
 }
 
@@ -128,29 +130,20 @@ void Cascade::setup (const LayoutBase& proto)
   const int numPoles = proto.getNumPoles();
   assert ((numPoles+1)/2 <= m_maxStages);
 
-  const int pairs = numPoles / 2;
-
-  // THIS IS CRAP ON A STICK
-  Biquad* stage = m_stageArray;
   int i;
-  for (i = 0; i < pairs; ++i, ++stage)
-  {
-    complex_t pole[2], zero[2];
-    pole[0]   = proto.pole (2*i);
-    pole[1] = proto.pole (2*i+1);
-    zero[0]   = proto.zero (2*i);
-    zero[1] = proto.zero (2*i+1);
-
-    stage->setPoleZeros (pole, zero);
-  }
+  int pairs = numPoles / 2;
+  Biquad* stage = m_stageArray;
+  for (i = 0; --pairs >= 0; i+=2, ++stage)
+    stage->setupTwoPole (proto.pole(i), proto.zero(i),
+                         proto.pole(i+1), proto.zero(i+1));
   
   if (numPoles & 1)
-    stage->setPoleZero (proto.pole (2*i), proto.zero (2*i));
+    stage->setupOnePole (proto.pole(i), proto.zero(i));
   
   m_numStages = (numPoles+1)/2;
 
-  scale (proto.getNormalGain() /
-         std::abs (response (proto.getNormalW() / (2 * doublePi))));
+  applyScale (proto.getNormalGain() /
+              std::abs (response (proto.getNormalW() / (2 * doublePi))));
 }
 
 }
