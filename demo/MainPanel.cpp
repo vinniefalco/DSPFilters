@@ -293,7 +293,7 @@ void MainPanel::buildFamilyMenu (ComboBox* ctrl)
   ctrl->addItem ("Butterworth",  2);
   ctrl->addItem ("Chebyshev I",  3);
   ctrl->addItem ("Chebyshev II", 4);
-  ctrl->addItem ("Elliptic",     5); ctrl->setItemEnabled (5, false);
+  ctrl->addItem ("Elliptic",     5);
   ctrl->addItem ("Bessel",       6); ctrl->setItemEnabled (6, false);
   ctrl->addItem ("Custom",       7);
 }
@@ -352,6 +352,14 @@ void MainPanel::buildTypeMenu (ComboBox* ctrl)
 	  ctrl->addItem ("Low Shelf",   6);
 	  ctrl->addItem ("High Shelf",  7);
 	  ctrl->addItem ("Band Shelf",  8);
+	  break;
+
+  case 5: // Elliptic
+    ctrl->addItem ("Low Pass",    1);
+	  ctrl->addItem ("High Pass",   2);
+    // 3
+	  ctrl->addItem ("Band Pass",   4);
+	  ctrl->addItem ("Band Stop",   5);
 	  break;
 
   case 7: // Custom
@@ -469,6 +477,20 @@ void MainPanel::createFilter ()
     case 6: createFilterState <Dsp::ChebyshevII::Design::LowShelf <50> > (&f, &fo); break;
     case 7: createFilterState <Dsp::ChebyshevII::Design::HighShelf <50> > (&f, &fo); break;
     case 8: createFilterState <Dsp::ChebyshevII::Design::BandShelf <50> > (&f, &fo); break;
+    };
+  }
+
+  //
+  // Elliptic
+  //
+  else if (familyId == 5)
+  {
+    switch (typeId)
+    {
+    case 1: createFilterState <Dsp::Elliptic::Design::LowPass <50> > (&f, &fo); break;
+    case 2: createFilterState <Dsp::Elliptic::Design::HighPass <50> > (&f, &fo); break;
+    case 4: createFilterState <Dsp::Elliptic::Design::BandPass <50> > (&f, &fo); break;
+    case 5: createFilterState <Dsp::Elliptic::Design::BandStop <50> > (&f, &fo); break;
     };
   }
 

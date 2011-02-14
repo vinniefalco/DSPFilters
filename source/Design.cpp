@@ -356,8 +356,7 @@ public:
 class StopAttenuationDbInfo : public ParamInfo
 {
 public:
-  StopAttenuationDbInfo ()
-    : ParamInfo (idStopAttenuationDb, "Stop")
+  StopAttenuationDbInfo () : ParamInfo (idStopAttenuationDb, "Stop")
   {
     szName = "Stopband Attenuation";
     szUnits= "dB";
@@ -379,6 +378,21 @@ public:
     std::ostringstream os;
     os << std::fixed << std::setprecision (prec) << nativeValue << " " << szUnits;
     return os.str();
+  }
+};
+
+//------------------------------------------------------------------------------
+
+class RolloffInfo : public ParamInfo
+{
+public:
+  RolloffInfo () : ParamInfo (idRolloff, "Rolloff")
+  {
+    szName = "Rolloff";
+    szUnits= "";
+    minValue = 0.00001;
+    maxValue = 0.5;
+    defaultValue = .01;
   }
 };
 
@@ -480,6 +494,7 @@ static detail::SlopeParamInfo        builtinParamSlope;
 static detail::OrderParamInfo        builtinParamOrder;
 static detail::PassbandRippleDbInfo  builtinPassbandRippleDb;
 static detail::StopAttenuationDbInfo builtinStopAttenuationDb;
+static detail::RolloffInfo           builtinRolloff;
 
 static detail::PoleRhoInfo   builtinPoleRho;
 static detail::PoleThetaInfo builtinPoleTheta;
@@ -526,6 +541,7 @@ ParamInfo* DesignBase::getBuiltinParamInfo (int paramId)
   case idOrder:             p = &builtinParamOrder; break;
   case idPassbandRippleDb:  p = &builtinPassbandRippleDb; break;
   case idStopAttenuationDb: p = &builtinStopAttenuationDb; break;
+  case idRolloff:         p = &builtinRolloff; break;
   
   case idPoleRho:           p = &builtinPoleRho; break;
   case idPoleTheta:         p = &builtinPoleTheta; break;
