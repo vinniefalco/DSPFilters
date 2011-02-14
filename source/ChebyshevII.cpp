@@ -70,7 +70,7 @@ void AnalogLowPass::design (int numPoles,
 
   if (numPoles & 1)
   {
-    proto.addPoleZero (1 / sinh_v0, infinity());
+    proto.add (1 / sinh_v0, infinity());
   }
 
   proto.setNormal (0, 1);
@@ -129,7 +129,7 @@ void AnalogLowShelf::design (int numPoles,
   }
 
   if (numPoles & 1)
-    proto.addPoleZero (-sinh_u, -sinh_v);
+    proto.add (-sinh_u, -sinh_v);
 
   proto.setNormal (doublePi, 1);
 }

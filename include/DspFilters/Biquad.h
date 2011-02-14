@@ -91,6 +91,15 @@ protected:
   void setTwoPole (complex_t pole1, complex_t zero1,
                    complex_t pole2, complex_t zero2);
 
+  void setPoleZeroPair (const PoleZeroPair& pair)
+  {
+    if (pair.isSinglePole ())
+      setOnePole (pair.pole.first, pair.zero.first);
+    else
+      setTwoPole (pair.pole.first, pair.zero.first,
+                  pair.pole.second, pair.zero.second);
+  }
+
   void setPoleZeroForm (const BiquadPoleState& bps);
 
   void setIdentity ();
@@ -207,6 +216,11 @@ public:
                    complex_t pole2, complex_t zero2)
   {
     BiquadBase::setTwoPole (pole1, zero1, pole2, zero2);
+  }
+
+  void setPoleZeroPair (const PoleZeroPair& pair)
+  {
+    BiquadBase::setPoleZeroPair (pair);
   }
 
   void applyScale (double scale)

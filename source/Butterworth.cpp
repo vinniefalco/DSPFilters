@@ -59,12 +59,11 @@ void AnalogLowPass::design (int numPoles)
     for (int i = 0; i < pairs; ++i)
     {
       complex_t c = std::polar (1., doublePi_2 + (2 * i + 1) * doublePi / n2);
-      addPoleZero (c, infinity());
-      addPoleZero (std::conj (c), infinity());
+      addPoleZeroConjugatePairs (c, infinity());
     }
 
     if (numPoles & 1)
-      addPoleZero (-1, infinity());
+      add (-1, infinity());
   }
 }
 
@@ -99,7 +98,7 @@ void AnalogLowShelf::design (int numPoles, double gainDb)
     }
     
     if (numPoles & 1)
-      addPoleZero (gp, gz);
+      add (gp, gz);
   }
 }
 

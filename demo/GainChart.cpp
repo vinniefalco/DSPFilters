@@ -113,7 +113,7 @@ void GainChart::update ()
           y = 1e-5f;
       y = 20 * log10 (y);
 
-      if (!Dsp::isnan (y))
+      if (!Dsp::is_nan (y))
       {
         if (xi == 0)
           m_path.startNewSubPath (x, y);

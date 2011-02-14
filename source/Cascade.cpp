@@ -103,20 +103,13 @@ void Cascade::applyScale (double scale)
 void Cascade::setLayout (const LayoutBase& proto)
 {
   const int numPoles = proto.getNumPoles();
-  assert ((numPoles+1)/2 <= m_maxStages);
+  m_numStages = (numPoles + 1)/ 2;
+  assert (m_numStages <= m_maxStages);
 
-  int i;
-  int pairs = numPoles / 2;
   Biquad* stage = m_stageArray;
-  for (i = 0; --pairs >= 0; i+=2, ++stage)
-    stage->setTwoPole (proto.pole(i), proto.zero(i),
-                       proto.pole(i+1), proto.zero(i+1));
+  for (int i = 0; i < m_numStages; ++i, ++stage)
+    stage->setPoleZeroPair (proto[i]);
   
-  if (numPoles & 1)
-    stage->setOnePole (proto.pole(i), proto.zero(i));
-  
-  m_numStages = (numPoles+1)/2;
-
   applyScale (proto.getNormalGain() /
               std::abs (response (proto.getNormalW() / (2 * doublePi))));
 }

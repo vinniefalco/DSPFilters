@@ -95,7 +95,7 @@ void GroupDelayChart::update ()
       const float w = float (Dsp::doublePi * (x/2.));
       const float y = float (-std::abs(m_filter->response (w)) / w);
 
-      if (!Dsp::isnan (y))
+      if (!Dsp::is_nan (y))
       {
         if (xi == 1)
           m_path.startNewSubPath (x, y);

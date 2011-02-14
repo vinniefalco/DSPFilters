@@ -41,57 +41,78 @@ THE SOFTWARE.
 
 namespace Dsp {
 
-struct PoleZero
+// A conjugate or real pair
+struct ComplexPair : complex_pair_t
 {
-  PoleZero () { }
-  PoleZero (complex_t pole_, complex_t zero_) : pole (pole_), zero (zero_) { }
-
-  bool isnan () const
+  ComplexPair ()
   {
-    return Dsp::isnan (pole) || Dsp::isnan (zero);
   }
 
-  complex_t pole;
-  complex_t zero;
+  explicit ComplexPair (complex_t c1) : complex_pair_t (c1, 0.)
+  {
+    assert (isReal());
+  }
+
+  ComplexPair (complex_t c1, complex_t c2) : complex_pair_t (c1, c2)
+  {
+    //assert (isReal() || isConjugate());
+  }
+
+  bool isConjugate () const
+  {
+    return second == std::conj (first);
+  }
+
+  bool isReal () const
+  {
+    return first.imag() == 0 && second.imag() == 0;
+  }
+
+  // Returns true if this is either a conjugate pair,
+  // or a pair of reals where neither is zero.
+  bool isMatchedPair () const
+  {
+    if (first.imag() != 0)
+      return second == std::conj (first);
+    else
+      return second.imag () == 0 &&
+             second.real () != 0 &&
+             first.real () != 0;
+  }
+
+  bool is_nan () const
+  {
+    return Dsp::is_nan (first) || Dsp::is_nan (second);
+  }
 };
 
 // A pair of pole/zeros. This fits in a biquad (but is missing the gain)
-struct PoleZeroPair : std::pair<PoleZero, PoleZero>
+struct PoleZeroPair
 {
+  ComplexPair pole;
+  ComplexPair zero;
+
+  PoleZeroPair () { }
+
   // single pole/zero
-  PoleZeroPair (complex_t pole, complex_t zero)
-    : std::pair<PoleZero, PoleZero> (PoleZero (pole, zero),
-                                     PoleZero (0., 0.))
-  {
-    assert (first.pole.imag() == 0 && first.zero.imag() == 0);
-  }
+  PoleZeroPair (complex_t p, complex_t z) : pole (p), zero (z) { }
 
-  // conjugate or real pair
-  PoleZeroPair (complex_t pole1, complex_t zero1,
-                complex_t pole2, complex_t zero2)
-    : std::pair<PoleZero, PoleZero> (PoleZero (pole1, zero1),
-                                     PoleZero (pole2, zero2))
+  // pole/zero pair
+  PoleZeroPair (complex_t p1, complex_t z1,
+                complex_t p2, complex_t z2)
+                : pole (p1, p2) , zero (z1, z2)
   {
-    assert ((first.pole.imag() == 0 && second.pole.imag() == 0) ||
-            (first.pole == std::conj (second.pole)));
-
-    assert ((first.zero.imag() == 0 && second.zero.imag() == 0) ||
-            (first.zero == std::conj (second.zero)));
   }
 
   bool isSinglePole () const
   {
-    return second.pole == 0. && second.zero == 0.;
+    return pole.second == 0. && zero.second == 0.;
   }
 
-  bool isnan () const
+  bool is_nan () const
   {
-    return first.isnan() || second.isnan();
+    return pole.is_nan() || zero.is_nan();
   }
-
-protected:
-  // for BiquadPoleState
-  PoleZeroPair () { }
 };
 
 // Identifies the general class of filter

@@ -52,27 +52,23 @@ class LayoutBase
 {
 public:
   LayoutBase ()
-    : m_maxPoles (0)
-    , m_numPoles (0)
+    : m_numPoles (0)
+    , m_maxPoles (0)
   {
   }
 
-  LayoutBase (int maxPoles,
-              complex_t* poleArray,
-              complex_t* zeroArray)
-    : m_maxPoles (maxPoles)
-    , m_poleArray (poleArray)
-    , m_zeroArray (zeroArray)
-    , m_numPoles (0)
+  LayoutBase (int maxPoles, PoleZeroPair* pairs)
+    : m_numPoles (0)
+    , m_maxPoles (maxPoles)
+    , m_pair (pairs)
   {
   }
 
   void setStorage (const LayoutBase& other)
   {
-    m_maxPoles = other.m_maxPoles;
-    m_poleArray = other.m_poleArray;
-    m_zeroArray = other.m_zeroArray;
     m_numPoles = 0;
+    m_maxPoles = other.m_maxPoles;
+    m_pair = other.m_pair;
   }
 
   void reset ()
@@ -90,51 +86,43 @@ public:
     return m_maxPoles;
   }
 
-  void addPoleZero (const complex_t& p, const complex_t& z)
+  void add (const complex_t& pole, const complex_t& zero)
   {
-    assert (m_numPoles < m_maxPoles);
-    assert (!Dsp::isnan (p));
-    if (m_numPoles & 1)
-    {
-      if (p.imag() == 0)
-        assert (m_poleArray[m_numPoles-1].imag() == 0);
-      else
-        assert (m_poleArray[m_numPoles-1] == std::conj (p));
-      if (z.imag() == 0)
-        assert (m_zeroArray[m_numPoles-1].imag() == 0);
-      else
-        assert (m_zeroArray[m_numPoles-1] == std::conj (z));
-    }
-    else if (m_numPoles==m_maxPoles)
-    {
-      // odd pole/zero
-      assert (p.imag() == 0 && z.imag() == 0);
-    }
-
-    m_poleArray[m_numPoles] = p;
-    m_zeroArray[m_numPoles++] = z;
+    assert (!(m_numPoles&1)); // single comes last
+    assert (!Dsp::is_nan (pole));
+    m_pair[m_numPoles/2] = PoleZeroPair (pole, zero);
+    ++m_numPoles;
   }
 
-  void addPoleZeroConjugatePairs (const complex_t& p, const complex_t& z)
+  void addPoleZeroConjugatePairs (const complex_t pole,
+                                  const complex_t zero)
   {
-    assert (m_numPoles < m_maxPoles);
-    assert (!Dsp::isnan (p));
-    m_poleArray[m_numPoles] = p;
-    m_zeroArray[m_numPoles++] = z;
-    m_poleArray[m_numPoles] = std::conj (p);
-    m_zeroArray[m_numPoles++] = std::conj (z);
+    assert (!(m_numPoles&1)); // single comes last
+    assert (!Dsp::is_nan (pole));
+    m_pair[m_numPoles/2] = PoleZeroPair (
+      pole, zero, std::conj (pole), std::conj (zero));
+    m_numPoles += 2;
   }
 
-  const complex_t& pole (int index) const
+  void add (const ComplexPair& poles, const ComplexPair& zeros)
   {
-    assert (index >= 0 && index < m_numPoles);
-    return m_poleArray[index];
+    assert (!(m_numPoles&1)); // single comes last
+    assert (poles.isMatchedPair ());
+    assert (zeros.isMatchedPair ());
+    m_pair[m_numPoles/2] = PoleZeroPair (poles.first, zeros.first,
+                                         poles.second, zeros.second);
+    m_numPoles += 2;
   }
 
-  const complex_t& zero (int index) const
+  const PoleZeroPair& getPair (int pairIndex) const
   {
-    assert (index >= 0 && index < m_numPoles);
-    return m_zeroArray[index];
+    assert (pairIndex >= 0 && pairIndex < (m_numPoles+1)/2);
+    return m_pair[pairIndex];
+  }
+
+  const PoleZeroPair& operator[] (int pairIndex) const
+  {
+    return getPair (pairIndex);
   }
 
   double getNormalW () const
@@ -154,10 +142,9 @@ public:
   }
 
 private:
-  int m_maxPoles;
-  complex_t* m_poleArray;
-  complex_t* m_zeroArray;
   int m_numPoles;
+  int m_maxPoles;
+  PoleZeroPair* m_pair;
   double m_normalW;
   double m_normalGain;
 };
@@ -171,12 +158,11 @@ class Layout
 public:
   operator LayoutBase ()
   {
-    return LayoutBase (MaxPoles, m_poles, m_zeros);
+    return LayoutBase (MaxPoles, m_pairs);
   }
 
 private:
-  complex_t m_poles[MaxPoles];
-  complex_t m_zeros[MaxPoles];
+  PoleZeroPair m_pairs[(MaxPoles+1)/2];
 };
 
 }

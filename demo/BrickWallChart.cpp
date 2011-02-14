@@ -109,7 +109,7 @@ void BrickWallChart::update ()
       Dsp::complex_t c = m_filter->response (f/2.f);
       float y = float (std::abs(c));
 
-      if (!Dsp::isnan (y))
+      if (!Dsp::is_nan (y))
       {
         if (xi == 0)
           m_path.startNewSubPath (x, y);

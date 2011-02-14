@@ -94,7 +94,7 @@ void PhaseChart::update ()
       Dsp::complex_t c = m_filter->response (x/2);
       float y = float (90 * (std::arg(c) / Dsp::doublePi));
 
-      if (!Dsp::isnan (y))
+      if (!Dsp::is_nan (y))
       {
         if (xi == 0)
           m_path.startNewSubPath (x, y);

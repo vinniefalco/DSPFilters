@@ -72,21 +72,9 @@ public:
   std::vector<PoleZeroPair> getPoleZeros () const
   {
     std::vector<PoleZeroPair> vpz;
-    const int numPoles = m_digitalProto.getNumPoles ();
-    const int pairs = numPoles / 2;
-    int i;
-    for (i = 0; i < pairs; ++i)
-    {
-      vpz.push_back (PoleZeroPair (m_digitalProto.pole (2*i),
-                                   m_digitalProto.zero (2*i),
-                                   m_digitalProto.pole (2*i+1),
-                                   m_digitalProto.zero (2*i+1)));
-    }
-    if (numPoles & 1)
-    {
-      vpz.push_back (PoleZeroPair (m_digitalProto.pole (2*i),
-                                   m_digitalProto.zero (2*i)));
-    }
+    const int pairs = (m_digitalProto.getNumPoles () + 1) / 2;
+    for (int i = 0; i < pairs; ++i)
+      vpz.push_back (m_digitalProto[i]);
     return vpz;
   }
 #endif
@@ -184,7 +172,7 @@ public:
                      LayoutBase const& analog);
 
 private:
-  complex_pair_t transform (complex_t c);
+  ComplexPair transform (complex_t c);
 
   // pre-calcs
   double wc;

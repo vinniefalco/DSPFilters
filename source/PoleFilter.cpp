@@ -62,9 +62,13 @@ void LowPassTransform::transform (double fc,
   const double f = tan (doublePi * fc);
 
   const int numPoles = analog.getNumPoles ();
-  for (int i = 0; i < numPoles; ++i)
-    digital.addPoleZero (transform (f, analog.pole(i)),
-                         transform (f, analog.zero(i)));
+  const int pairs = numPoles / 2;
+  for (int i = 0; i < pairs; ++i)
+    digital.addPoleZeroConjugatePairs (transform (f, analog[i].pole.first),
+                                       transform (f, analog[i].zero.first));
+  if (numPoles & 1)
+    digital.add (transform (f, analog[pairs].pole.first),
+                         transform (f, analog[pairs].zero.first));
 
   digital.setNormal (analog.getNormalW(),
                      analog.getNormalGain());
@@ -95,9 +99,13 @@ void HighPassTransform::transform (double fc,
   const double f = 1. / tan (doublePi * fc);
 
   const int numPoles = analog.getNumPoles ();
-  for (int i = 0; i < numPoles; ++i)
-    digital.addPoleZero (transform (f, analog.pole(i)),
-                         transform (f, analog.zero(i)));
+  const int pairs = numPoles / 2;
+  for (int i = 0; i < pairs; ++i)
+    digital.addPoleZeroConjugatePairs (transform (f, analog[i].pole.first),
+                                       transform (f, analog[i].zero.first));
+  if (numPoles & 1)
+    digital.add (transform (f, analog[pairs].pole.first),
+                         transform (f, analog[pairs].zero.first));
 
   digital.setNormal (doublePi - analog.getNormalW(),
                      analog.getNormalGain());
@@ -147,27 +155,29 @@ BandPassTransform::BandPassTransform (double fc,
 
   const int numPoles = analog.getNumPoles ();
   const int pairs = numPoles / 2;
-  int i;
-  for (i = 0; i < pairs; ++i)
+  for (int i = 0; i < pairs; ++i)
   {
-    complex_pair_t p1 = transform (analog.pole (2*i));
-    complex_pair_t z1 = transform (analog.zero (2*i));
-    complex_pair_t p2 = transform (analog.pole (2*i+1));
-    complex_pair_t z2 = transform (analog.zero (2*i+1));
+    const PoleZeroPair& pair = analog[i];
+    ComplexPair p1 = transform (pair.pole.first);
+    ComplexPair z1 = transform (pair.zero.first);
 
-    digital.addPoleZero (p1.first, z1.first);
-    digital.addPoleZero (p2.first, z2.first);
-    digital.addPoleZero (p1.second, z1.second);
-    digital.addPoleZero (p2.second, z2.second);
+    // these two aren't even needed
+    ComplexPair p2 = transform (pair.pole.second);
+    ComplexPair z2 = transform (pair.zero.second);
+
+    assert (p2.first == std::conj (p1.first));
+    assert (p2.second == std::conj (p1.second));
+
+    digital.addPoleZeroConjugatePairs (p1.first, z1.first);
+    digital.addPoleZeroConjugatePairs (p1.second, z1.second);
   }
 
   if (numPoles & 1)
   {
-    complex_pair_t p = transform (analog.pole (2*i));
-    complex_pair_t z = transform (analog.zero (2*i));
+    ComplexPair poles = transform (analog[pairs].pole.first);
+    ComplexPair zeros = transform (analog[pairs].zero.first);
 
-    digital.addPoleZero (p.first,  z.first);
-    digital.addPoleZero (p.second, z.second);
+    digital.add (poles, zeros);
   }
 
   double wn = analog.getNormalW();
@@ -175,10 +185,10 @@ BandPassTransform::BandPassTransform (double fc,
                      analog.getNormalGain());
 }
 
-complex_pair_t BandPassTransform::transform (complex_t c)
+ComplexPair BandPassTransform::transform (complex_t c)
 {
   if (c == infinity())
-    return complex_pair_t (-1, 1);
+    return ComplexPair (-1, 1);
 
   // bilinear transform
   c = (1. + c) / (1. - c);
@@ -200,7 +210,7 @@ complex_pair_t BandPassTransform::transform (complex_t c)
   complex_t d = 0;
   d = addmul (d, 2 * (b - 1), c) + 2 * (1 + b);
 
-  return complex_pair_t (u/d, v/d);
+  return ComplexPair (u/d, v/d);
 }
 
 //------------------------------------------------------------------------------
@@ -263,53 +273,40 @@ void BandStopTransform::transform (double fc,
 
   const int numPoles = analog.getNumPoles ();
   const int pairs = numPoles / 2;
-  int i;
-  for (i = 0; i < pairs; ++i)
+  for (int i = 0; i < pairs; ++i)
   {
-    complex_pair_t p1 = transform1 (digital.getNumPoles(),
-                                                     wc,
-                                                     wc2,
-                                                     analog.pole (2*i));
-
-    complex_pair_t z1 = transform1 (digital.getNumPoles(),
-                                                     wc,
-                                                     wc2,
-                                                     analog.zero (2*i));
-
-    complex_pair_t p2 = transform1 (digital.getNumPoles(),
-                                                     wc,
-                                                     wc2,
-                                                     analog.pole (2*i+1));
-
-    complex_pair_t z2 = transform1 (digital.getNumPoles(),
-                                                     wc,
-                                                     wc2,
-                                                     analog.zero (2*i+1));
+    complex_pair_t p1 = transform1 (digital.getNumPoles(), wc, wc2, analog[i].pole.first);
+    complex_pair_t z1 = transform1 (digital.getNumPoles(), wc, wc2, analog[i].zero.first);
+    complex_pair_t p2 = transform1 (digital.getNumPoles(), wc, wc2, analog[i].pole.second);
+    complex_pair_t z2 = transform1 (digital.getNumPoles(), wc, wc2, analog[i].zero.second);
 
     // p1.first & p2.first are conjugate pairs, but
     // z1.first & z1.second are conjugate pairs due to
     // how the bandstop transform works
 
+    assert (p2.first == std::conj (p1.first));
+    assert (z1.second == std::conj (z1.first));
+    assert (p2.second == std::conj (p1.second));
+    assert (z2.second == std::conj (z2.first));
+
+    digital.addPoleZeroConjugatePairs (p1.first, z1.first);
+    digital.addPoleZeroConjugatePairs (p1.second, z2.first);
+
+    /*
     digital.addPoleZero (p1.first, z1.first);
     digital.addPoleZero (p2.first, z1.second);
     digital.addPoleZero (p1.second, z2.first);
     digital.addPoleZero (p2.second, z2.second);
+    */
   }
 
   if (numPoles & 1)
   {
-    complex_pair_t p = transform1 (digital.getNumPoles(),
-                                                    wc,
-                                                    wc2,
-                                                    analog.pole (2*i));
+    complex_pair_t p = transform1 (digital.getNumPoles(), wc, wc2, analog[pairs].pole.first);
+    complex_pair_t z = transform1 (digital.getNumPoles(), wc, wc2, analog[pairs].zero.first);
 
-    complex_pair_t z = transform1 (digital.getNumPoles(),
-                                                    wc,
-                                                    wc2,
-                                                    analog.zero (2*i));
-
-    digital.addPoleZero (p.first,  z.first);
-    digital.addPoleZero (p.second, z.second);
+    digital.add (p.first,  z.first);
+    digital.add (p.second, z.second);
   }
 
   if (fc < 0.25)

@@ -103,15 +103,15 @@ inline Ty acosh (Ty x)
 }
 
 template <typename Ty>
-inline bool isnan (Ty v)
+inline bool is_nan (Ty v)
 {
   return !(v == v);
 }
 
 template <>
-inline bool isnan<complex_t> (complex_t v)
+inline bool is_nan<complex_t> (complex_t v)
 {
-  return Dsp::isnan (v.real()) || Dsp::isnan (v.imag());
+  return Dsp::is_nan (v.real()) || Dsp::is_nan (v.imag());
 }
 
 }
