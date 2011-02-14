@@ -1690,11 +1690,11 @@ void ChebyIIShelf::Design( const Spec& spec )
 
 //******************************************************************************
 //
-// Elliptic
+// EllipticOld
 //
 //******************************************************************************
 
-void Elliptic::Design( const Spec& spec )
+void EllipticOld::Design( const Spec& spec )
 {
   int n=spec.order;
 
@@ -1772,7 +1772,7 @@ void Elliptic::Design( const Spec& spec )
 
 // generate the product of (z+s1[i]) for i = 1 .. sn and store it in b1[]
 // (i.e. f[z] = b1[0] + b1[1] z + b1[2] z^2 + ... b1[sn] z^sn)
-void Elliptic::prodpoly( int sn )
+void EllipticOld::prodpoly( int sn )
 {
   m_b1[0] = m_s1[1];
   m_b1[1] = 1;
@@ -1791,7 +1791,7 @@ void Elliptic::prodpoly( int sn )
 //------------------------------------------------------------------------------
 
 // determine f(z)^2
-void Elliptic::calcfz2( int i )
+void EllipticOld::calcfz2( int i )
 {
   int ji = 0;
   int jf = 0;
@@ -1814,7 +1814,7 @@ void Elliptic::calcfz2( int i )
 //------------------------------------------------------------------------------
 
 // calculate f(z)
-void Elliptic::calcfz( void )
+void EllipticOld::calcfz( void )
 {
   int i = 1;
   if( m_nin == 1 )
@@ -1831,7 +1831,7 @@ void Elliptic::calcfz( void )
 //------------------------------------------------------------------------------
 
 // determine q(z)
-void Elliptic::calcqz( void )
+void EllipticOld::calcqz( void )
 {
   int i;
   for (i = 1; i <= m_nin; i++)
@@ -1849,7 +1849,7 @@ void Elliptic::calcqz( void )
 //------------------------------------------------------------------------------
 
 // compute factors
-CalcT Elliptic::findfact(int t)
+CalcT EllipticOld::findfact(int t)
 {
   int i;
   CalcT a = 0;
@@ -1908,7 +1908,7 @@ CalcT Elliptic::findfact(int t)
 
 //------------------------------------------------------------------------------
 
-CalcT Elliptic::calcsn(CalcT u)
+CalcT EllipticOld::calcsn(CalcT u)
 {
   CalcT sn = 0;
   int j;
@@ -1927,7 +1927,7 @@ CalcT Elliptic::calcsn(CalcT u)
 
 //------------------------------------------------------------------------------
 
-CalcT Elliptic::ellipticK(CalcT k)
+CalcT EllipticOld::ellipticK(CalcT k)
 {
   CalcT a[50];
   CalcT theta[50];

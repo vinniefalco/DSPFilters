@@ -136,27 +136,33 @@ private:
  */
 
 // low pass to low pass 
-struct LowPassTransform
+class LowPassTransform
 {
-  static complex_t transform (double f,
-                              complex_t c);
+public:
+  LowPassTransform (double fc,
+                    LayoutBase& digital,
+                    LayoutBase const& analog);
 
-  static void transform (double fc,
-                         LayoutBase& digital,
-                         LayoutBase const& analog);
+private:
+  complex_t transform (complex_t c);
+
+  double f;
 };
 
 //------------------------------------------------------------------------------
 
 // low pass to high pass
-struct HighPassTransform
+class HighPassTransform
 {
-  static complex_t transform (double f,
-                              complex_t c);
+public:
+  HighPassTransform (double fc,
+                     LayoutBase& digital,
+                     LayoutBase const& analog);
 
-  static void transform (double fc,
-                         LayoutBase& digital,
-                         LayoutBase const& analog);
+private:
+  complex_t transform (complex_t c);
+
+  double f;
 };
 
 //------------------------------------------------------------------------------
