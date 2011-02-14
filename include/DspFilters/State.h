@@ -102,8 +102,8 @@ public:
                                - s.getA1()*m_y1 - s.getA2()*m_y2) / s.getA0()
                                + ac();
     m_x2 = m_x1;
-    m_x1 = in;
     m_y2 = m_y1;
+    m_x1 = in;
     m_y1 = out;
 
     return static_cast<Sample> (out);
