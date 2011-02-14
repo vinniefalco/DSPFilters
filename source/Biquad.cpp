@@ -123,11 +123,11 @@ void BiquadBase::setCoefficients (double a0, double a1, double a2,
           !Dsp::isnan (b0) && !Dsp::isnan (b1) && !Dsp::isnan (b2));
 
   m_a0 = a0;
-  m_a1 = a1;
-  m_a2 = a2;
-  m_b0 = b0;
-  m_b1 = b1;
-  m_b2 = b2;
+  m_a1 = a1/a0;
+  m_a2 = a2/a0;
+  m_b0 = b0/a0;
+  m_b1 = b1/a0;
+  m_b2 = b2/a0;
 }
 
 void BiquadBase::setOnePole (complex_t pole, complex_t zero)

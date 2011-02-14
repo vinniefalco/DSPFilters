@@ -67,6 +67,14 @@ public:
   {
   }
 
+  void setStorage (const LayoutBase& other)
+  {
+    m_maxPoles = other.m_maxPoles;
+    m_poleArray = other.m_poleArray;
+    m_zeroArray = other.m_zeroArray;
+    m_numPoles = 0;
+  }
+
   void reset ()
   {
     m_numPoles = 0;

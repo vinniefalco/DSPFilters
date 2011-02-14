@@ -98,9 +98,9 @@ public:
   template <typename Sample>
   inline Sample process (const Sample in, const BiquadBase& s)
   {
-    double out = (s.getB0()*in + s.getB1()*m_x1 + s.getB2()*m_x2
-                               - s.getA1()*m_y1 - s.getA2()*m_y2) / s.getA0()
-                               + ac();
+    double out = s.getB0()*in + s.getB1()*m_x1 + s.getB2()*m_x2
+                              - s.getA1()*m_y1 - s.getA2()*m_y2
+                              + ac();
     m_x2 = m_x1;
     m_y2 = m_y1;
     m_x1 = in;
@@ -147,7 +147,7 @@ public:
   {
     double d2 = m_v2 = m_v1;
     double d1 = m_v1 = m_v0;
-    double a0i = 1. / s.getA0();
+    const double a0i = 1.;//1. / s.getA0();
     double d0 = m_v0 = in - (s.getA1() * d1 + s.getA2() * d2) * a0i;
     double out = (s.getB0() * d0 + s.getB1() * d1 + s.getB2() * d2) * a0i + ac();
     return static_cast<Sample> (out);

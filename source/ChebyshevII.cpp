@@ -172,10 +172,10 @@ void BandPassBase::setup (int order,
 {
   AnalogLowPass::design (order, rippleDb, m_analogProto);
 
-  BandPassTransform::transform (centerFrequency / sampleRate,
-                                widthFrequency / sampleRate,
-                                m_digitalProto,
-                                m_analogProto);
+  BandPassTransform (centerFrequency / sampleRate,
+                     widthFrequency / sampleRate,
+                     m_digitalProto,
+                     m_analogProto);
 
   Cascade::setLayout (m_digitalProto);
 }
@@ -235,10 +235,10 @@ void BandShelfBase::setup (int order,
 {
   AnalogLowShelf::design (order, gainDb, rippleDb, m_analogProto);
 
-  BandPassTransform::transform (centerFrequency / sampleRate,
-                                widthFrequency / sampleRate,
-                                m_digitalProto,
-                                m_analogProto);
+  BandPassTransform (centerFrequency / sampleRate,
+                     widthFrequency / sampleRate,
+                     m_digitalProto,
+                     m_analogProto);
 
   m_digitalProto.setNormal (((centerFrequency/sampleRate) < 0.25) ? doublePi : 0, 1);
 
