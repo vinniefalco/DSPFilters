@@ -38,9 +38,9 @@ THE SOFTWARE.
 
 namespace Dsp {
 
-Parameters Filter::getDefaultParameters() const
+Params Filter::getDefaultParams() const
 {
-  Parameters parameters;
+  Params parameters;
 
   for (int i = 0; i < getNumParams(); ++i)
     parameters[i] = getParamInfo(i).defaultValue;
@@ -52,10 +52,40 @@ Filter::~Filter()
 {
 }
 
+int Filter::findParamId (int paramId)
+{
+  int index = -1;
+
+  for (int i = getNumParams(); --i >= 0;)
+  {
+    if (getParamInfo (i).getId () == paramId)
+    {
+      index = i;
+      break;
+    }
+  }
+
+  return index;
+}
+
+void Filter::setParamById (int paramId, double nativeValue)
+{
+  for (int i = getNumParams(); --i >= 0;)
+  {
+    if (getParamInfo (i).getId () == paramId)
+    {
+      setParam (i, nativeValue);
+      return;
+    }
+  }
+  
+  assert (0);
+}
+
 void Filter::copyParamsFrom (Dsp::Filter const* other)
 {
   // first, set reasonable defaults
-  m_parameters = getDefaultParameters ();
+  m_params = getDefaultParams ();
 
   if (other)
   {
@@ -77,14 +107,14 @@ void Filter::copyParamsFrom (Dsp::Filter const* other)
             v = paramInfo.maxValue;
           else if (v < paramInfo.minValue)
             v = paramInfo.minValue;
-          m_parameters [i] = v;
+          m_params [i] = v;
           break;
         }
       }
     }
   }
 
-  doSetParameters (m_parameters);
+  doSetParams (m_params);
 }
 
 }

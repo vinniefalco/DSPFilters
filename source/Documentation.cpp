@@ -141,11 +141,11 @@ static void UsageExamples ()
     // "1024" is the number of samples over which to fade parameter changes
     Dsp::Filter* f = new Dsp::SmoothedFilterDesign
       <Dsp::RBJ::Design::LowPass, 2> (1024);
-    Dsp::Parameters params;
+    Dsp::Params params;
     params[0] = 44100; // sample rate
     params[1] = 4000; // cutoff frequency
     params[2] = 1.25; // Q
-    f->setParameters (params);
+    f->setParams (params);
     f->process (numSamples, audioData);
   }
  
@@ -154,11 +154,11 @@ static void UsageExamples ()
   {
     // the difference here is that we don't go through a pointer.
     Dsp::SmoothedFilterDesign <Dsp::RBJ::Design::LowPass, 2> f (1024);
-    Dsp::Parameters params;
+    Dsp::Params params;
     params[0] = 44100; // sample rate
     params[1] = 4000; // cutoff frequency
     params[2] = 1.25; // Q
-    f.setParameters (params);
+    f.setParams (params);
     f.process (numSamples, audioData);
   }
 
@@ -168,12 +168,12 @@ static void UsageExamples ()
   {
     Dsp::Filter* f = new Dsp::SmoothedFilterDesign
       <Dsp::Butterworth::Design::BandPass <4>, 2, Dsp::DirectFormII> (1024);
-    Dsp::Parameters params;
+    Dsp::Params params;
     params[0] = 44100; // sample rate
     params[1] = 4; // order
     params[2] = 4000; // center frequency
     params[3] = 880; // band width
-    f->setParameters (params);
+    f->setParams (params);
     f->process (numSamples, audioData);
   }
  
@@ -182,13 +182,13 @@ static void UsageExamples ()
   {
     Dsp::Filter* f = new Dsp::FilterDesign
       <Dsp::ChebyshevII::Design::LowShelf <5>, 2>;
-    Dsp::Parameters params;
+    Dsp::Params params;
     params[0] = 44100; // sample rate
     params[1] = 5; // order
     params[2] = 4000; // corner frequency
     params[3] = 6; // shelf gain
     params[4] = 0.1; // passband ripple
-    f->setParameters (params);
+    f->setParams (params);
     f->process (numSamples, audioData);
   }
  
@@ -198,11 +198,11 @@ static void UsageExamples ()
   {
     Dsp::Filter* f = new Dsp::FilterDesign
       <Dsp::Butterworth::Design::HighPass <4> >;
-    Dsp::Parameters params;
+    Dsp::Params params;
     params[0] = 44100; // sample rate
     params[1] = 4; // order
     params[2] = 4000; // cutoff frequency
-    f->setParameters (params);
+    f->setParams (params);
     // this will cause a runtime assertion
     f->process (numSamples, audioData);
   }

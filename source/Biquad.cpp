@@ -119,6 +119,9 @@ std::vector<PoleZeroPair> BiquadBase::getPoleZeros () const
 void BiquadBase::setCoefficients (double a0, double a1, double a2,
                                   double b0, double b1, double b2)
 {
+  assert (!Dsp::isnan (a0) && !Dsp::isnan (a1) && !Dsp::isnan (a2) &&
+          !Dsp::isnan (b0) && !Dsp::isnan (b1) && !Dsp::isnan (b2));
+
   m_a0 = a0;
   m_a1 = a1;
   m_a2 = a2;

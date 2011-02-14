@@ -62,6 +62,8 @@ void AnalogLowPass::design (int numPoles,
   proto.setNormal (0, 1);
 }
 
+//------------------------------------------------------------------------------
+
 void AnalogLowShelf::design (int numPoles,
                              double gainDb,
                              LayoutBase& proto)

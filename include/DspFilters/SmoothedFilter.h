@@ -81,14 +81,14 @@ public:
       double t = 1. / m_remainingSamples;
       double dp[maxParameters];
       for (int i = 0; i < this->m_design.getNumParams(); ++i)
-        dp[i] = (this->getParameters()[i] - m_transitionParams[i]) * t;
+        dp[i] = (this->getParams()[i] - m_transitionParams[i]) * t;
 
       for (int n = 0; n < remainingSamples; ++n)
       {
         for (int i = this->m_design.getNumParams(); --i >=0;)
           m_transitionParams[i] += dp[i];
 
-        m_transitionFilter.setParameters (m_transitionParams);
+        m_transitionFilter.setParams (m_transitionParams);
         
         for (int i = numChannels; --i >= 0;)
         {
@@ -122,12 +122,12 @@ public:
   }
 
 protected:
-  void doSetParameters (const Parameters& parameters)
+  void doSetParams (const Params& parameters)
   {
     if (m_remainingSamples >= 0)
     {
       if (m_remainingSamples == 0)
-        m_transitionParams = this->getParameters();
+        m_transitionParams = this->getParams();
       m_remainingSamples = m_transitionSamples;
     }
     else
@@ -137,11 +137,11 @@ protected:
       m_transitionParams = parameters;
     }
 
-    filter_type_t::doSetParameters (parameters);
+    filter_type_t::doSetParams (parameters);
   }
 
 protected:
-  Parameters m_transitionParams;
+  Params m_transitionParams;
   DesignClass m_transitionFilter;
   int m_transitionSamples;
 

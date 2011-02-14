@@ -78,7 +78,7 @@ enum
   maxParameters = 8
 };
 
-struct Parameters
+struct Params
 {
   double& operator[] (int index)
   {

@@ -141,7 +141,7 @@ struct TypeI : DesignBase, FilterClass
     addBuiltinParamInfo (idQ);
   }
 
-  void setParameters (const Parameters& params)
+  void setParams (const Params& params)
   {
     FilterClass::setup (params[0], params[1], params[2]);
   }
@@ -156,7 +156,7 @@ struct TypeII : DesignBase, FilterClass
     addBuiltinParamInfo (idBandwidth);
   }
 
-  void setParameters (const Parameters& params)
+  void setParams (const Params& params)
   {
     FilterClass::setup (params[0], params[1], params[2]);
   }
@@ -173,7 +173,7 @@ public:
     addBuiltinParamInfo (idSlope);
   }
 
-  void setParameters (const Parameters& params)
+  void setParams (const Params& params)
   {
     FilterClass::setup (params[0], params[1], params[2], params[3]);
   }
@@ -190,7 +190,7 @@ public:
     addBuiltinParamInfo (idBandwidth);
   }
 
-  void setParameters (const Parameters& params)
+  void setParams (const Params& params)
   {
     FilterClass::setup (params[0], params[1], params[2], params[3]);
   }
