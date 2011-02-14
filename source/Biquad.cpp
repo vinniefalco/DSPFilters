@@ -39,105 +39,81 @@ THE SOFTWARE.
 
 namespace Dsp {
 
-BiquadBase::PoleZeroForm::PoleZeroForm ()
+BiquadPoleState::BiquadPoleState (const BiquadBase& s)
 {
-}
+  const double a0 = s.getA0 ();
+  const double a1 = s.getA1 ();
+  const double a2 = s.getA2 ();
+  const double b0 = s.getB0 ();
+  const double b1 = s.getB1 ();
+  const double b2 = s.getB2 ();
 
-BiquadBase::PoleZeroForm::PoleZeroForm (const BiquadBase& s)
-{
-  if (s.m_a2 == 0 && s.m_b2 == 0)
+  if (a2 == 0 && b2 == 0)
   {
     // single pole
-    pole[0] = -s.m_a1;
-    zero[0] = -s.m_b0 / s.m_b1;
-    pole[1] = 0;
-    zero[1] = 0;
+    first.pole = -a1;
+    first.zero = -b0 / b1;
+    second.pole = 0;
+    second.zero = 0;
   }
   else
   {
     {
-      const complex_t c = sqrt (complex_t (
-        s.m_a1 * s.m_a1 - 4 * s.m_a0 * s.m_a2, 0));
-      double d = 2. * s.m_a0;
-      pole[0] = -(s.m_a1 + c) / d;
-      pole[1] =  (c - s.m_a1) / d;
-      assert (!Dsp::isnan (pole[0]) && !Dsp::isnan (pole[1]));
+      const complex_t c = sqrt (complex_t (a1 * a1 - 4 * a0 * a2, 0));
+      double d = 2. * a0;
+      first.pole = -(a1 + c) / d;
+      second.pole =  (c - a1) / d;
+      assert (!Dsp::isnan (first.pole) && !Dsp::isnan (second.pole));
     }
 
-  #if 0
-    {
-      double d = s.m_b1 * s.m_b1 - 4 * s.m_b0 * s.m_b2;
-      if (d >= 0)
-      {
-        d = sqrt(d);
-        if (s.m_b0 != 0)
-        {
-          zero[0] = complex_t ((-s.m_b1 - d) / (2*s.m_b0), 0);
-          zero[1] = complex_t ((-s.m_b1 + d) / (2*s.m_b0), 0);
-        }
-        else
-        {
-          zero[0] = 0;
-          zero[1] = 0;
-        }
-      }
-      else
-      {
-        double im = sqrt (-d) / (2 * s.m_b0);
-        assert (im > 0 );
-        zero[0] = complex_t (-s.m_b1 / (2* s.m_b0), im);
-        zero[1] = std::conj (zero[0]);
-      }
-    }
-  #else
     {
       const complex_t c = sqrt (complex_t (
-        s.m_b1 * s.m_b1 - 4 * s.m_b0 * s.m_b2, 0));
-      double d = 2. * s.m_b0;
-      zero[0] = -(s.m_b1 + c) / d;
-      zero[1] =  (c - s.m_b1) / d;
-      assert (!Dsp::isnan (zero[0]) && !Dsp::isnan (zero[1]));
+        b1 * b1 - 4 * b0 * b2, 0));
+      double d = 2. * b0;
+      first.zero = -(b1 + c) / d;
+      second.zero =  (c - b1) / d;
+      assert (!Dsp::isnan (first.zero) && !Dsp::isnan (second.zero));
     }
-  #endif
   }
 
-  gain = s.m_b0 / s.m_a0;
+  gain = b0 / a0;
 }
 
 //------------------------------------------------------------------------------
 
 complex_t BiquadBase::response (double normalizedFrequency) const
 {
-  double w = 2 * doublePi * normalizedFrequency;
+  const double a0 = getA0 ();
+  const double a1 = getA1 ();
+  const double a2 = getA2 ();
+  const double b0 = getB0 ();
+  const double b1 = getB1 ();
+  const double b2 = getB2 ();
+
+  const double w = 2 * doublePi * normalizedFrequency;
   const complex_t czn1 = std::polar (1., -w);
   const complex_t czn2 = std::polar (1., -2 * w);
   complex_t ch (1);
   complex_t cbot (1);
 
-  complex_t ct (m_b0/m_a0);
+  complex_t ct (b0/a0);
   complex_t cb (1);
-  ct = addmul (ct, m_b1/m_a0, czn1);
-  ct = addmul (ct, m_b2/m_a0, czn2);
-  cb = addmul (cb, m_a1/m_a0, czn1);
-  cb = addmul (cb, m_a2/m_a0, czn2);
+  ct = addmul (ct, b1/a0, czn1);
+  ct = addmul (ct, b2/a0, czn2);
+  cb = addmul (cb, a1/a0, czn1);
+  cb = addmul (cb, a2/a0, czn2);
   ch   *= ct;
   cbot *= cb;
 
   return ch / cbot;
 }
 
-const PoleZeros BiquadBase::getPoleZeros () const
+std::vector<PoleZeroPair> BiquadBase::getPoleZeros () const
 {
-  PoleZeroForm pzf (*this);
-  PoleZeros pz;
-  pz.poles.push_back (pzf.pole[0]);
-  pz.zeros.push_back (pzf.zero[0]);
-  if (!pzf.isSinglePole())
-  {
-    pz.poles.push_back (pzf.pole[1]);
-    pz.zeros.push_back (pzf.zero[1]);
-  }
-  return pz;
+  std::vector<PoleZeroPair> vpz;
+  BiquadPoleState bps (*this);
+  vpz.push_back (bps);
+  return vpz;
 }
 
 void BiquadBase::setCoefficients (double a0, double a1, double a2,
@@ -151,7 +127,7 @@ void BiquadBase::setCoefficients (double a0, double a1, double a2,
   m_b2 = b2;
 }
 
-void BiquadBase::setupOnePole (complex_t pole, complex_t zero)
+void BiquadBase::setOnePole (complex_t pole, complex_t zero)
 {
 #if 0
   pole = adjust_imag (pole);
@@ -171,8 +147,8 @@ void BiquadBase::setupOnePole (complex_t pole, complex_t zero)
   setCoefficients (a0, a1, a2, b0, b1, b2);
 }
 
-void BiquadBase::setupTwoPole (complex_t pole1, complex_t zero1,
-                               complex_t pole2, complex_t zero2)
+void BiquadBase::setTwoPole (complex_t pole1, complex_t zero1,
+                             complex_t pole2, complex_t zero2)
 {
 #if 0
   pole1 = adjust_imag (pole1);
@@ -222,19 +198,19 @@ void BiquadBase::setupTwoPole (complex_t pole1, complex_t zero1,
   setCoefficients (a0, a1, a2, b0, b1, b2);
 }
 
-void BiquadBase::setupPoleZeroForm (const PoleZeroForm& pzf)
+void BiquadBase::setPoleZeroForm (const BiquadPoleState& bps)
 {
-  if (pzf.isSinglePole())
+  if (bps.isSinglePole())
   {
-    setupOnePole (pzf.pole[0], pzf.zero[0]);
+    setOnePole (bps.first.pole, bps.first.zero);
   }
   else
   {
-    setupTwoPole (pzf.pole[0], pzf.zero[0],
-                  pzf.pole[1], pzf.zero[1]);
+    setTwoPole (bps.first.pole, bps.first.zero,
+                bps.second.pole, bps.second.zero);
   }
 
-  applyScale (pzf.gain);
+  applyScale (bps.gain);
 }
 
 void BiquadBase::setIdentity ()
@@ -249,80 +225,6 @@ void BiquadBase::applyScale (double scale)
   m_b2 *= scale;
 }
 
-#if 0
-void BiquadBase::setPoleZeros (complex_t const* poles, complex_t const* zeros)
-{
-  setPoles (poles[0], poles[1]);
-  setZeros (zeros[0], zeros[1]);
-}
-
-void BiquadBase::setPoleZero (complex_t pole, complex_t zero)
-{
-  pole = adjust_imag (pole);
-  m_a0 = 1;
-  m_a1 = -pole.real();
-  m_a2 = 0;
-  assert (pole.imag() == 0); 
-
-  zero = adjust_imag (zero);
-  m_b0 = -zero.real();
-  m_b1 = 1;
-  m_b2 = 0;
-  assert (zero.imag() == 0); 
-}
-
-void BiquadBase::setPoles (complex_t pole1, complex_t pole2)
-{
-  pole1 = adjust_imag (pole1);
-  pole2 = adjust_imag (pole2);
-
-  if (pole1.imag() != 0)
-  {
-    assert (pole2 == std::conj (pole1));
-
-    m_a1 = -2 * pole1.real();
-    m_a2 = std::norm (pole1);
-  }
-  else
-  {
-    assert (pole2.imag() == 0);
-
-    m_a1 = -(pole1.real() + pole2.real());
-    m_a2 =   pole1.real() * pole2.real();
-  }
-
-  m_a0 = 1;
-}
-
-void BiquadBase::setZeros (complex_t zero1, complex_t zero2)
-{
-  zero1 = adjust_imag (zero1);
-  zero2 = adjust_imag (zero2);
-
-  if (zero1.imag() != 0)
-  {
-    assert (zero2 == std::conj (zero1));
-    m_b0 = 1;
-    m_b1 = -2 * zero1.real();
-    m_b2 = std::norm (zero1);
-  }
-  else
-  {
-    assert (zero2.imag() == 0);
-
-#if 0
-    m_b2 = 1;
-    m_b1 = -(zero1.real() + zero2.real());
-    m_b0 = zero1.real() * zero2.real();
-#else
-    m_b0 = 1;
-    m_b1 = -(zero1.real() + zero2.real());
-    m_b2 = zero1.real() * zero2.real();
-#endif
-  }
-}
-#endif
-
 //------------------------------------------------------------------------------
 
 Biquad::Biquad ()
@@ -330,9 +232,9 @@ Biquad::Biquad ()
 }
 
 // Construct a second order section from a pair of poles and zeroes
-Biquad::Biquad (const PoleZeroForm& pzf)
+Biquad::Biquad (const BiquadPoleState& bps)
 {
-  setupPoleZeroForm (pzf);
+  setPoleZeroForm (bps);
 }
 
 //------------------------------------------------------------------------------

@@ -98,7 +98,7 @@ void LowPassBase::setup (int order,
                                m_digitalProto,
                                m_analogProto);
 
-  Cascade::setup (m_digitalProto);
+  Cascade::setLayout (m_digitalProto);
 }
 
 void HighPassBase::setup (int order,
@@ -111,7 +111,7 @@ void HighPassBase::setup (int order,
                                 m_digitalProto,
                                 m_analogProto);
 
-  Cascade::setup (m_digitalProto);
+  Cascade::setLayout (m_digitalProto);
 }
 
 void BandPassBase::setup (int order,
@@ -126,7 +126,7 @@ void BandPassBase::setup (int order,
                                 m_digitalProto,
                                 m_analogProto);
 
-  Cascade::setup (m_digitalProto);
+  Cascade::setLayout (m_digitalProto);
 }
 
 void BandStopBase::setup (int order,
@@ -141,7 +141,7 @@ void BandStopBase::setup (int order,
                                 m_digitalProto,
                                 m_analogProto);
 
-  Cascade::setup (m_digitalProto);
+  Cascade::setLayout (m_digitalProto);
 }
 
 void LowShelfBase::setup (int order,
@@ -155,7 +155,7 @@ void LowShelfBase::setup (int order,
                                m_digitalProto,
                                m_analogProto);
 
-  Cascade::setup (m_digitalProto);
+  Cascade::setLayout (m_digitalProto);
 }
 
 void HighShelfBase::setup (int order,
@@ -169,7 +169,7 @@ void HighShelfBase::setup (int order,
                                 m_digitalProto,
                                 m_analogProto);
 
-  Cascade::setup (m_digitalProto);
+  Cascade::setLayout (m_digitalProto);
 }
 
 void BandShelfBase::setup (int order,
@@ -186,7 +186,7 @@ void BandShelfBase::setup (int order,
                                 m_analogProto);
 
   m_digitalProto.setNormal (((centerFrequency/sampleRate) < 0.25) ? doublePi : 0, 1);
-  Cascade::setup (m_digitalProto);
+  Cascade::setLayout (m_digitalProto);
 }
 
 }

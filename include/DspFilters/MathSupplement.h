@@ -37,7 +37,6 @@ THE SOFTWARE.
 #define DSPFILTERS_MATHSUPPLEMENT_H
 
 #include "DspFilters/Common.h"
-#include "DspFilters/Types.h"
 
 namespace Dsp {
 
@@ -45,6 +44,8 @@ const double doublePi		=3.1415926535897932384626433832795028841971;
 const double doublePi_2	=1.5707963267948966192313216916397514420986;
 const double doubleLn2  =0.69314718055994530941723212145818;//?????
 const double doubleLn10	=2.3025850929940456840179914546844;//??????
+
+typedef std::complex<double> complex_t;
 
 template<typename Real>
 inline std::complex<Real> solve_quadratic_1 (Real a, Real b, Real c)
@@ -104,6 +105,12 @@ template <typename Ty>
 inline bool isnan (Ty v)
 {
   return !(v == v);
+}
+
+template <>
+inline bool isnan<complex_t> (complex_t v)
+{
+  return Dsp::isnan (v.real()) || Dsp::isnan (v.imag());
 }
 
 }

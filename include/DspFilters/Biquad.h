@@ -42,6 +42,8 @@ THE SOFTWARE.
 
 namespace Dsp {
 
+struct BiquadPoleState;
+
 /*
  * Holds coefficients for a second order Infinite Impulse Response
  * digital filter. This is the building block for all IIR filters.
@@ -52,17 +54,6 @@ namespace Dsp {
 class BiquadBase
 {
 public:
-  // Expresses the biquad as a pair of pole/zeros, with gain
-  // values so that the coefficients can be reconstructed precisely.
-  struct PoleZeroForm : PoleZeroPair
-  {
-    PoleZeroForm ();
-
-    explicit PoleZeroForm (const BiquadBase& s);
-
-    double gain;
-  };
-
   template <class StateType>
   struct State : StateType { };
 
@@ -70,7 +61,7 @@ public:
   // Calculate filter response at the given normalized frequency.
   complex_t response (double normalizedFrequency) const;
 
-  const PoleZeros getPoleZeros () const;
+  std::vector<PoleZeroPair> getPoleZeros () const;
 
   double getA0 () const { return m_a0; }
   double getA1 () const { return m_a1; }
@@ -95,12 +86,12 @@ protected:
   void setCoefficients (double a0, double a1, double a2,
                         double b0, double b1, double b2);
 
-  void setupOnePole (complex_t pole, complex_t zero);
+  void setOnePole (complex_t pole, complex_t zero);
 
-  void setupTwoPole (complex_t pole1, complex_t zero1,
-                     complex_t pole2, complex_t zero2);
+  void setTwoPole (complex_t pole1, complex_t zero1,
+                   complex_t pole2, complex_t zero2);
 
-  void setupPoleZeroForm (const PoleZeroForm& pzf);
+  void setPoleZeroForm (const BiquadPoleState& bps);
 
   void setIdentity ();
 
@@ -125,13 +116,24 @@ protected:
 
 //------------------------------------------------------------------------------
 
+// Expresses a biquad as a pair of pole/zeros, with gain
+// values so that the coefficients can be reconstructed precisely.
+struct BiquadPoleState : PoleZeroPair
+{
+  BiquadPoleState () { }
+
+  explicit BiquadPoleState (const BiquadBase& s);
+
+  double gain;
+};
+
 // More permissive interface for fooling around
 class Biquad : public BiquadBase
 {
 public:
   Biquad ();
 
-  explicit Biquad (const PoleZeroForm& pzf);
+  explicit Biquad (const BiquadPoleState& bps);
 
 public:
   // Process a block of samples, interpolating from the old section's coefficients
@@ -170,9 +172,9 @@ public:
   void process (int numSamples,
                 Sample* dest,
                 StateType& state,
-                PoleZeroForm zPrev) const 
+                BiquadPoleState zPrev) const 
   {
-    PoleZeroForm z (*this);
+    BiquadPoleState z (*this);
     double t = 1. / numSamples;
     complex_t dp0 = (z.pole[0] - zPrev.pole[0]) * t;
     complex_t dp1 = (z.pole[1] - zPrev.pole[1]) * t;
@@ -196,15 +198,15 @@ public:
 public:
   // Export these as public
 
-  void setupOnePole (complex_t pole, complex_t zero)
+  void setOnePole (complex_t pole, complex_t zero)
   {
-    BiquadBase::setupOnePole (pole, zero);
+    BiquadBase::setOnePole (pole, zero);
   }
 
-  void setupTwoPole (complex_t pole1, complex_t zero1,
-                     complex_t pole2, complex_t zero2)
+  void setTwoPole (complex_t pole1, complex_t zero1,
+                   complex_t pole2, complex_t zero2)
   {
-    BiquadBase::setupTwoPole (pole1, zero1, pole2, zero2);
+    BiquadBase::setTwoPole (pole1, zero1, pole2, zero2);
   }
 
   void applyScale (double scale)

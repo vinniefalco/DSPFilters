@@ -37,28 +37,61 @@ THE SOFTWARE.
 #define DSPFILTERS_TYPES_H
 
 #include "DspFilters/Common.h"
+#include "DspFilters/MathSupplement.h"
 
 namespace Dsp {
 
-typedef std::complex<double> complex_t;
-
-// A pair of pole/zeros. This fits in a biquad / second order section.
-struct PoleZeroPair
+struct PoleZero
 {
-  bool isSinglePole () const
+  PoleZero () { }
+  PoleZero (complex_t pole_, complex_t zero_) : pole (pole_), zero (zero_) { }
+
+  bool isnan () const
   {
-    return pole[1] == 0. && zero[1] == 0.;
+    return Dsp::isnan (pole) || Dsp::isnan (zero);
   }
 
-  complex_t pole[2];
-  complex_t zero[2];
+  complex_t pole;
+  complex_t zero;
 };
 
-// A dynamically sized array of poles and zeros.
-struct PoleZeros
+// A pair of pole/zeros. This fits in a biquad (but is missing the gain)
+struct PoleZeroPair : std::pair<PoleZero, PoleZero>
 {
-  std::vector<complex_t> poles;
-  std::vector<complex_t> zeros;
+  // single pole/zero
+  PoleZeroPair (complex_t pole, complex_t zero)
+    : std::pair<PoleZero, PoleZero> (PoleZero (pole, zero),
+                                     PoleZero (0., 0.))
+  {
+    assert (first.pole.imag() == 0 && first.zero.imag() == 0);
+  }
+
+  // conjugate or real pair
+  PoleZeroPair (complex_t pole1, complex_t zero1,
+                complex_t pole2, complex_t zero2)
+    : std::pair<PoleZero, PoleZero> (PoleZero (pole1, zero1),
+                                     PoleZero (pole2, zero2))
+  {
+    assert ((first.pole.imag() == 0 && second.pole.imag() == 0) ||
+            (first.pole == std::conj (second.pole)));
+
+    assert ((first.zero.imag() == 0 && second.zero.imag() == 0) ||
+            (first.zero == std::conj (second.zero)));
+  }
+
+  bool isSinglePole () const
+  {
+    return second.pole == 0. && second.zero == 0.;
+  }
+
+  bool isnan () const
+  {
+    return first.isnan() || second.isnan();
+  }
+
+protected:
+  // for BiquadPoleState
+  PoleZeroPair () { }
 };
 
 // Identifies the general class of filter
