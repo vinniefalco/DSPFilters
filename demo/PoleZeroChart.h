@@ -54,11 +54,11 @@ public:
 private:
   void clear ();
   void update ();
-  void addPoleZeros (Dsp::PoleZeros pz);
+  void addPoleZeros (const std::vector<Dsp::PoleZeroPair>& vpz);
 
 private:
   double m_max;
-  Dsp::PoleZeros m_pz;
+  std::vector<Dsp::PoleZeroPair> m_vpz;
 };
 
 #endif

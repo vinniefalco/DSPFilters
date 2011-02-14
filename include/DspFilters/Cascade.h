@@ -98,7 +98,7 @@ public:
   // Calculate filter response at the given normalized frequency.
   complex_t response (double normalizedFrequency) const;
 
-  const PoleZeros getPoleZeros () const;
+  std::vector<PoleZeroPair> getPoleZeros () const;
 
   // Process a block of samples in the given form
   template <class StateType, typename Sample>
@@ -114,8 +114,7 @@ protected:
   void setCascadeStorage (const Storage& storage);
 
   void applyScale (double scale);
-  void setPoleZeros (int numPoles, const PoleZeroPair* pzArray);
-  void setup (const LayoutBase& proto);
+  void setLayout (const LayoutBase& proto);
 
 private:
   int m_numStages;

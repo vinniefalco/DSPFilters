@@ -44,7 +44,7 @@ void OnePole::setup (double scale,
                      double pole,
                      double zero)
 {
-  setupOnePole (pole, zero);
+  setOnePole (pole, zero);
   applyScale (scale);
 }
 
@@ -57,7 +57,7 @@ void TwoPole::setup (double scale,
   complex_t pole = std::polar (poleRho, poleTheta);
   complex_t zero = std::polar (zeroRho, zeroTheta);
 
-  setupTwoPole (pole, zero, std::conj(pole), std::conj(zero));
+  setTwoPole (pole, zero, std::conj(pole), std::conj(zero));
   applyScale (scale);
 }
 

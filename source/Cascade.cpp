@@ -76,32 +76,20 @@ complex_t Cascade::response (double normalizedFrequency) const
   return ch / cbot;
 }
 
-const PoleZeros Cascade::getPoleZeros () const
+std::vector<PoleZeroPair> Cascade::getPoleZeros () const
 {
-  PoleZeros pz;
+  std::vector<PoleZeroPair> vpz;
+  vpz.reserve (m_numStages);
+
   const Stage* stage = m_stageArray;
-  for (int i = 0; i < m_numStages - 1; ++i)
+  for (int i = m_numStages; --i >=0;)
   {
-    Biquad::PoleZeroForm pzf (*stage++);
-    assert (!pzf.isSinglePole());
-    pz.poles.push_back (pzf.pole[0]);
-    pz.zeros.push_back (pzf.zero[0]);
-    pz.poles.push_back (pzf.pole[1]);
-    pz.zeros.push_back (pzf.zero[1]);
+    BiquadPoleState bps (*stage++);
+    assert (!bps.isSinglePole() || i == 0);
+    vpz.push_back (bps);
   }
 
-  {
-    Biquad::PoleZeroForm pzf (*stage);
-    pz.poles.push_back (pzf.pole[0]);
-    pz.zeros.push_back (pzf.zero[0]);
-    if (!pzf.isSinglePole())
-    {
-      pz.poles.push_back (pzf.pole[1]);
-      pz.zeros.push_back (pzf.zero[1]);
-    }
-  }
-
-  return pz;
+  return vpz;
 }
 
 void Cascade::applyScale (double scale)
@@ -112,20 +100,7 @@ void Cascade::applyScale (double scale)
   m_stageArray->applyScale (scale);
 }
 
-void Cascade::setPoleZeros (int numPoles, const PoleZeroPair* pzArray)
-{
-  const int pairs = numPoles / 2;
-  assert (pairs <= m_maxStages);
-  Biquad* stage = m_stageArray;
-  for (int i = pairs; --i >= 0; ++pzArray,  ++stage)
-    stage->setupTwoPole (pzArray->pole[0], pzArray->zero[0],
-                         pzArray->pole[1], pzArray->zero[1]);
-  if (numPoles & 1)
-    stage->setupOnePole (pzArray->pole[0], pzArray->zero[0]);
-  m_numStages = pairs + (numPoles & 1);
-}
-
-void Cascade::setup (const LayoutBase& proto)
+void Cascade::setLayout (const LayoutBase& proto)
 {
   const int numPoles = proto.getNumPoles();
   assert ((numPoles+1)/2 <= m_maxStages);
@@ -134,11 +109,11 @@ void Cascade::setup (const LayoutBase& proto)
   int pairs = numPoles / 2;
   Biquad* stage = m_stageArray;
   for (i = 0; --pairs >= 0; i+=2, ++stage)
-    stage->setupTwoPole (proto.pole(i), proto.zero(i),
-                         proto.pole(i+1), proto.zero(i+1));
+    stage->setTwoPole (proto.pole(i), proto.zero(i),
+                       proto.pole(i+1), proto.zero(i+1));
   
   if (numPoles & 1)
-    stage->setupOnePole (proto.pole(i), proto.zero(i));
+    stage->setOnePole (proto.pole(i), proto.zero(i));
   
   m_numStages = (numPoles+1)/2;
 

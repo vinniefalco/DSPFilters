@@ -23,36 +23,37 @@ VPATH = ../../source ../../demo ../../include
 INCLUDEPATH = ../../include
 
 HEADERS = \
+  AudioOutput.h \
   binaries.h \
+  bond.h \
   BrickWallChart.h \
+  BrickWallGraph.h \
+  Common.h \
+  ContentComponentConstrainer.h \
+  CpuMeter.h \
+  Custom.h \
+  CustomSlider.h \
   FilterChart.h \
   GainChart.h \
   GroupDelayChart.h \
-  PhaseChart.h \
-  PoleZeroChart.h \
   StepResponseChart.h \
-  BrickWallGraph.h \
   DemoPanel.h \
   FilterChartOld.h \
   FilterGraph.h \
   Graph.h \
-  bond.h \
-  ContentComponentConstrainer.h \
-  CpuMeter.h \
-  CustomSlider.h \
   NoiseAudioSource.h \
   ResamplingReader.h \
   ResizableLayout.h \
   SliderGroup.h \
   ThreadQueue.h \
-  AudioOutput.h \
-  Common.h \
   FilterControls.h \
   FilteringAudioSource.h \
   FilterListener.h \
   MainApp.h \
   MainPanel.h \
   MainWindow.h \
+  PhaseChart.h \
+  PoleZeroChart.h \
   SettingsPanel.h \
   SettingsWindow.h \
   DspFilters/Bessel.h \
@@ -79,6 +80,7 @@ HEADERS = \
   juce_Config.h
 
 SOURCES = \
+  AudioOutput.cpp \
   binaries.cpp \
   BrickWallChart.cpp \
   FilterChart.cpp \
@@ -98,7 +100,6 @@ SOURCES = \
   ResizableLayout.cpp \
   SliderGroup.cpp \
   ThreadQueue.cpp \
-  AudioOutput.cpp \
   FilterControls.cpp \
   FilteringAudioSource.cpp \
   MainApp.cpp \
@@ -112,6 +113,7 @@ SOURCES = \
   Cascade.cpp \
   ChebyshevI.cpp \
   ChebyshevII.cpp \
+  Custom.cpp \
   Design.cpp \
   DspFilter.cpp \
   Elliptic.cpp \

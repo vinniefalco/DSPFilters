@@ -87,26 +87,48 @@ void PoleZeroChart::paintContents (Graphics& g)
 
   const float r = 3.5f;
 
-  g.setColour (cPole);
-  for (size_t i = 0; i < m_pz.poles.size(); ++i)
+  for (size_t i = 0; i < m_vpz.size(); ++i)
   {
-    Point<float> p (float(m_pz.poles[i].real()), float(m_pz.poles[i].imag()));
-    if (!Dsp::isnan (p.getX()) && !Dsp::isnan (p.getY()))
-    {
-      p = p.transformedBy (t);
-      g.drawLine (p.getX()-r, p.getY()-r, p.getX()+r, p.getY()+r);
-      g.drawLine (p.getX()+r, p.getY()-r, p.getX()-r, p.getY()+r);
-    }
-  }
+    const Dsp::PoleZeroPair& pzp = m_vpz[i];
 
-	g.setColour (cZero);
-  for (size_t i = 0; i < m_pz.zeros.size(); ++i)
-  {
-    Point<float> p (float(m_pz.zeros[i].real()), float(m_pz.zeros[i].imag()));
-    if (!Dsp::isnan (p.getX()) && !Dsp::isnan (p.getY()))
+    if (!pzp.isnan())
     {
-      p = p.transformedBy (t);
-  	  g.drawEllipse (p.getX()-r, p.getY()-r, 2*r, 2*r, 1);
+      {
+        Point<float> p (float(pzp.first.pole.real()),
+                        float(pzp.first.pole.imag()));
+        p = p.transformedBy (t);
+        g.setColour (cPole);
+        g.drawLine (p.getX()-r, p.getY()-r, p.getX()+r, p.getY()+r);
+        g.drawLine (p.getX()+r, p.getY()-r, p.getX()-r, p.getY()+r);
+      }
+
+      {
+        Point<float> p (float(pzp.first.zero.real()),
+                        float(pzp.first.zero.imag()));
+        p = p.transformedBy (t);
+        g.setColour (cZero);
+    	  g.drawEllipse (p.getX()-r, p.getY()-r, 2*r, 2*r, 1);
+      }
+
+      if (!pzp.isSinglePole())
+      {
+        {
+          Point<float> p (float(pzp.second.pole.real()),
+                          float(pzp.second.pole.imag()));
+          p = p.transformedBy (t);
+          g.setColour (cPole);
+          g.drawLine (p.getX()-r, p.getY()-r, p.getX()+r, p.getY()+r);
+          g.drawLine (p.getX()+r, p.getY()-r, p.getX()-r, p.getY()+r);
+        }
+
+        {
+          Point<float> p (float(pzp.second.zero.real()),
+                          float(pzp.second.zero.imag()));
+          p = p.transformedBy (t);
+          g.setColour (cZero);
+    	    g.drawEllipse (p.getX()-r, p.getY()-r, 2*r, 2*r, 1);
+        }
+      }
     }
   }
 }
@@ -114,8 +136,7 @@ void PoleZeroChart::paintContents (Graphics& g)
 void PoleZeroChart::clear ()
 {
   m_max = 0;
-  m_pz.poles.clear();
-  m_pz.zeros.clear();
+  m_vpz.clear();
 }
 
 void PoleZeroChart::update ()
@@ -128,19 +149,23 @@ void PoleZeroChart::update ()
   repaint ();
 }
 
-void PoleZeroChart::addPoleZeros (Dsp::PoleZeros pz)
+void PoleZeroChart::addPoleZeros (const std::vector<Dsp::PoleZeroPair>& vpz)
 {
-  for (size_t i = 0; i < pz.poles.size(); ++i)
+  for (size_t i = 0; i < vpz.size(); ++i)
   {
-    m_pz.poles.push_back (pz.poles[i]);
-    m_max = jmax (m_max, fabs(pz.poles[i].real()));
-    m_max = jmax (m_max, fabs(pz.poles[i].imag()));
-  }
+    const Dsp::PoleZeroPair& pzp = vpz[i];
+    m_vpz.push_back (pzp);
 
-  for (size_t i = 0; i < pz.zeros.size(); ++i)
-  {
-    m_pz.zeros.push_back (pz.zeros[i]);
-    m_max = jmax (m_max, fabs(pz.zeros[i].real()));
-    m_max = jmax (m_max, fabs(pz.zeros[i].imag()));
+    m_max = jmax (m_max, fabs(pzp.first.pole.real()));
+    m_max = jmax (m_max, fabs(pzp.first.pole.imag()));
+    m_max = jmax (m_max, fabs(pzp.first.zero.real()));
+    m_max = jmax (m_max, fabs(pzp.first.zero.imag()));
+    if (!pzp.isSinglePole())
+    {
+      m_max = jmax (m_max, fabs(pzp.second.pole.real()));
+      m_max = jmax (m_max, fabs(pzp.second.pole.imag()));
+      m_max = jmax (m_max, fabs(pzp.second.zero.real()));
+      m_max = jmax (m_max, fabs(pzp.second.zero.imag()));
+    }
   }
 }

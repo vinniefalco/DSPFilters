@@ -110,7 +110,7 @@ public:
     doSetParameters (parameters);
   }
 
-  virtual const PoleZeros getPoleZeros() const = 0;
+  virtual std::vector<PoleZeroPair> getPoleZeros() const = 0;
  
   virtual complex_t response (double normalizedFrequency) const = 0;
 
@@ -167,7 +167,7 @@ public:
     return m_design.getParamInfo (index);
   }
 
-  const PoleZeros getPoleZeros() const
+  std::vector<PoleZeroPair> getPoleZeros() const
   {
     return m_design.getPoleZeros();
   }
