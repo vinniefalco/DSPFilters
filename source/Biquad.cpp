@@ -51,28 +51,28 @@ BiquadPoleState::BiquadPoleState (const BiquadBase& s)
   if (a2 == 0 && b2 == 0)
   {
     // single pole
-    first.pole = -a1;
-    first.zero = -b0 / b1;
-    second.pole = 0;
-    second.zero = 0;
+    pole.first = -a1;
+    zero.first = -b0 / b1;
+    pole.second = 0;
+    zero.second = 0;
   }
   else
   {
     {
       const complex_t c = sqrt (complex_t (a1 * a1 - 4 * a0 * a2, 0));
       double d = 2. * a0;
-      first.pole = -(a1 + c) / d;
-      second.pole =  (c - a1) / d;
-      assert (!Dsp::isnan (first.pole) && !Dsp::isnan (second.pole));
+      pole.first = -(a1 + c) / d;
+      pole.second =  (c - a1) / d;
+      assert (!pole.is_nan());
     }
 
     {
       const complex_t c = sqrt (complex_t (
         b1 * b1 - 4 * b0 * b2, 0));
       double d = 2. * b0;
-      first.zero = -(b1 + c) / d;
-      second.zero =  (c - b1) / d;
-      assert (!Dsp::isnan (first.zero) && !Dsp::isnan (second.zero));
+      zero.first = -(b1 + c) / d;
+      zero.second =  (c - b1) / d;
+      assert (!zero.is_nan());
     }
   }
 
@@ -119,8 +119,8 @@ std::vector<PoleZeroPair> BiquadBase::getPoleZeros () const
 void BiquadBase::setCoefficients (double a0, double a1, double a2,
                                   double b0, double b1, double b2)
 {
-  assert (!Dsp::isnan (a0) && !Dsp::isnan (a1) && !Dsp::isnan (a2) &&
-          !Dsp::isnan (b0) && !Dsp::isnan (b1) && !Dsp::isnan (b2));
+  assert (!Dsp::is_nan (a0) && !Dsp::is_nan (a1) && !Dsp::is_nan (a2) &&
+          !Dsp::is_nan (b0) && !Dsp::is_nan (b1) && !Dsp::is_nan (b2));
 
   m_a0 = a0;
   m_a1 = a1/a0;
@@ -203,16 +203,7 @@ void BiquadBase::setTwoPole (complex_t pole1, complex_t zero1,
 
 void BiquadBase::setPoleZeroForm (const BiquadPoleState& bps)
 {
-  if (bps.isSinglePole())
-  {
-    setOnePole (bps.first.pole, bps.first.zero);
-  }
-  else
-  {
-    setTwoPole (bps.first.pole, bps.first.zero,
-                bps.second.pole, bps.second.zero);
-  }
-
+  setPoleZeroPair (bps);
   applyScale (bps.gain);
 }
 
