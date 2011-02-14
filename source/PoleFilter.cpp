@@ -64,11 +64,18 @@ void LowPassTransform::transform (double fc,
   const int numPoles = analog.getNumPoles ();
   const int pairs = numPoles / 2;
   for (int i = 0; i < pairs; ++i)
-    digital.addPoleZeroConjugatePairs (transform (f, analog[i].poles.first),
-                                       transform (f, analog[i].zeros.first));
+  {
+    const PoleZeroPair& pair = analog[i];
+    digital.addPoleZeroConjugatePairs (transform (f, pair.poles.first),
+                                       transform (f, pair.zeros.first));
+  }
+
   if (numPoles & 1)
-    digital.add (transform (f, analog[pairs].poles.first),
-                         transform (f, analog[pairs].zeros.first));
+  {
+    const PoleZeroPair& pair = analog[pairs];
+    digital.add (transform (f, pair.poles.first),
+                 transform (f, pair.zeros.first));
+  }
 
   digital.setNormal (analog.getNormalW(),
                      analog.getNormalGain());
@@ -101,11 +108,18 @@ void HighPassTransform::transform (double fc,
   const int numPoles = analog.getNumPoles ();
   const int pairs = numPoles / 2;
   for (int i = 0; i < pairs; ++i)
-    digital.addPoleZeroConjugatePairs (transform (f, analog[i].poles.first),
-                                       transform (f, analog[i].zeros.first));
+  {
+    const PoleZeroPair& pair = analog[i];
+    digital.addPoleZeroConjugatePairs (transform (f, pair.poles.first),
+                                       transform (f, pair.zeros.first));
+  }
+  
   if (numPoles & 1)
-    digital.add (transform (f, analog[pairs].poles.first),
-                         transform (f, analog[pairs].zeros.first));
+  {
+    const PoleZeroPair& pair = analog[pairs];
+    digital.add (transform (f, pair.poles.first),
+                 transform (f, pair.zeros.first));
+  }
 
   digital.setNormal (doublePi - analog.getNormalW(),
                      analog.getNormalGain());
@@ -164,12 +178,15 @@ BandPassTransform::BandPassTransform (double fc,
     ComplexPair p1 = transform (pair.poles.first);
     ComplexPair z1 = transform (pair.zeros.first);
 
-    // these two aren't even needed
+    //
+    // Optimize out the calculations for conjugates for Release builds
+    //
+#ifndef NDEBUG
     ComplexPair p2 = transform (pair.poles.second);
     ComplexPair z2 = transform (pair.zeros.second);
-
     assert (p2.first == std::conj (p1.first));
     assert (p2.second == std::conj (p1.second));
+#endif
 
     digital.addPoleZeroConjugatePairs (p1.first, z1.first);
     digital.addPoleZeroConjugatePairs (p1.second, z1.second);
@@ -193,8 +210,7 @@ ComplexPair BandPassTransform::transform (complex_t c)
   if (c == infinity())
     return ComplexPair (-1, 1);
 
-  // bilinear transform
-  c = (1. + c) / (1. - c);
+  c = (1. + c) / (1. - c); // bilinear
 
   complex_t v = 0;
   v = addmul (v, 4 * (b2 * (a2 - 1) + 1), c);
@@ -246,8 +262,20 @@ BandStopTransform::BandStopTransform (double fc,
   const int pairs = numPoles / 2;
   for (int i = 0; i < pairs; ++i)
   {
-    ComplexPair p  = transform (analog[i].poles.first);
-    ComplexPair z  = transform (analog[i].zeros.first);
+    const PoleZeroPair& pair = analog[i];
+    ComplexPair p  = transform (pair.poles.first);
+    ComplexPair z  = transform (pair.zeros.first);
+
+    //
+    // Optimize out the calculations for conjugates for Release builds
+    //
+#ifdef NDEBUG
+    // trick to get the conjugate
+    if (z.second == z.first)
+      z.second = std::conj (z.first);
+
+#else
+    // Do the full calculation to verify correctness
     ComplexPair pc = transform (analog[i].poles.second);
     ComplexPair zc = transform (analog[i].zeros.second);
 
@@ -259,6 +287,8 @@ BandStopTransform::BandStopTransform (double fc,
     assert (pc.second == std::conj (p.second));
     assert (zc.first  == std::conj (z.first));
     assert (zc.second == std::conj (z.second));
+
+#endif
 
     digital.addPoleZeroConjugatePairs (p.first, z.first);
     digital.addPoleZeroConjugatePairs (p.second, z.second);
@@ -283,8 +313,7 @@ ComplexPair BandStopTransform::transform (complex_t c)
   if (c == infinity())
     c = -1;
   else
-    // bilinear transform
-    c = (1. + c) / (1. - c);
+    c = (1. + c) / (1. - c); // bilinear
 
   complex_t u (0);
   u = addmul (u, 4 * (b2 + a2 - 1), c);

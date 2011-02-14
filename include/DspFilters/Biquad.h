@@ -106,15 +106,8 @@ protected:
 
   void applyScale (double scale);
 
-private:
-#if 0
-  void setPoleZeros (complex_t const* poles, complex_t const* zeros);
-  void setPoleZero (complex_t pole, complex_t zero);
-  void setPoles (complex_t pole1, complex_t pole2);
-  void setZeros (complex_t zero1, complex_t zero2);
-#endif
-
 protected:
+public:// UNFORTUNATELY had to do this for DirectFormI/II
   double m_a0;
   double m_a1;
   double m_a2;
