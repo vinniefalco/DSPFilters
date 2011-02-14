@@ -60,12 +60,57 @@ public:
 
   void design (const int numPoles,
                double rippleDb,
-               double rollOff);
+               double rolloff);
 
 private:
+  void prodpoly    (int sn);
+  void calcfz2     (int i);
+  void calcfz      ();
+  void calcqz      ();
+  double findfact	 (int t);
+  double calcsn		 (double u);
+  double ellipticK (double k);
+
+  template<int n>
+  struct CalcArray
+  {
+    double& operator[](size_t index)
+    {
+      assert( index<n );
+      return m_a[index];
+    }
+  private:
+    double m_a[n];
+  };
+
+  double m_p0;
+  double m_q;
+  double m_K;
+  double m_Kprime;
+  double m_e;
+  int m_nin;
+  int m_m;
+  int m_n2;
+  int m_em;
+  CalcArray<100> m_zeros;
+  CalcArray<100> m_c1;
+  CalcArray<100> m_b1;
+  CalcArray<100> m_a1;
+  CalcArray<100> m_d1;
+  CalcArray<100> m_q1;
+  CalcArray<100> m_z1;
+  CalcArray<100> m_f1;
+  CalcArray<100> m_s1;
+  CalcArray<100> m_p ;
+  CalcArray<100> m_zw1;
+  CalcArray<100> m_zf1;
+  CalcArray<100> m_zq1;
+  CalcArray<100> m_rootR;
+  CalcArray<100> m_rootI;
+
   int m_numPoles;
   double m_rippleDb;
-  double m_rollOff;
+  double m_rolloff;
 };
 
 //------------------------------------------------------------------------------
@@ -78,7 +123,7 @@ struct LowPassBase : PoleFilterBase <AnalogLowPass>
               double sampleRate,
               double cutoffFrequency,
               double rippleDb,
-              double rollOff);
+              double rolloff);
 };
 
 struct HighPassBase : PoleFilterBase <AnalogLowPass>
@@ -87,7 +132,7 @@ struct HighPassBase : PoleFilterBase <AnalogLowPass>
               double sampleRate,
               double cutoffFrequency,
               double rippleDb,
-              double rollOff);
+              double rolloff);
 };
 
 struct BandPassBase : PoleFilterBase <AnalogLowPass>
@@ -97,7 +142,7 @@ struct BandPassBase : PoleFilterBase <AnalogLowPass>
               double centerFrequency,
               double widthFrequency,
               double rippleDb,
-              double rollOff);
+              double rolloff);
 };
 
 struct BandStopBase : PoleFilterBase <AnalogLowPass>
@@ -107,7 +152,7 @@ struct BandStopBase : PoleFilterBase <AnalogLowPass>
               double centerFrequency,
               double widthFrequency,
               double rippleDb,
-              double rollOff);
+              double rolloff);
 };
 
 //------------------------------------------------------------------------------
@@ -148,6 +193,8 @@ struct TypeI : DesignBase, FilterClass
   {
     addBuiltinParamInfo (idOrder);
     addBuiltinParamInfo (idFrequency);
+    addBuiltinParamInfo (idPassbandRippleDb);
+    addBuiltinParamInfo (idRolloff);
   }
 
   void setParams (const Params& params)
@@ -169,6 +216,8 @@ struct TypeII : DesignBase, FilterClass
     addBuiltinParamInfo (idOrder);
     addBuiltinParamInfo (idFrequency);
     addBuiltinParamInfo (idBandwidthHz);
+    addBuiltinParamInfo (idPassbandRippleDb);
+    addBuiltinParamInfo (idRolloff);
   }
 
   void setParams (const Params& params)

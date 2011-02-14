@@ -64,6 +64,8 @@ enum ParamID
   idOrder,
   idPassbandRippleDb,
   idStopAttenuationDb,
+  idRolloff,
+
   idPoleRho,
   idPoleTheta,
   idZeroRho,
