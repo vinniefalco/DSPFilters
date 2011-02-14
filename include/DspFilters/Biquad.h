@@ -64,11 +64,11 @@ public:
   std::vector<PoleZeroPair> getPoleZeros () const;
 
   double getA0 () const { return m_a0; }
-  double getA1 () const { return m_a1; }
-  double getA2 () const { return m_a2; }
-  double getB0 () const { return m_b0; }
-  double getB1 () const { return m_b1; }
-  double getB2 () const { return m_b2; }
+  double getA1 () const { return m_a1*m_a0; }
+  double getA2 () const { return m_a2*m_a0; }
+  double getB0 () const { return m_b0*m_a0; }
+  double getB1 () const { return m_b1*m_a0; }
+  double getB2 () const { return m_b2*m_a0; }
 
   // Process a block of samples in the given form
   template <class StateType, typename Sample>

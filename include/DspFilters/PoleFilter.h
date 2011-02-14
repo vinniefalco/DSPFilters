@@ -52,17 +52,23 @@ namespace Dsp {
  *
  */
 
-// Factored implementation to reduce template instantiations
-class PoleFilterBase : public Cascade
+// Factored implementations to reduce template instantiations
+
+class PoleFilterBase2 : public Cascade
 {
 public:
   // This gets the poles/zeros directly from the digital
-  // prototype since apparently the code to get them from
-  // the cascade coefficients is not working.
+  // prototype. It is used to double check the correctness
+  // of the recovery of pole/zeros from biquad coefficients.
+  //
+  // It can also be used to accelerate the interpolation
+  // of pole/zeros for parameter modulation, since a pole
+  // filter already has them calculated
+
 #if 0
   // Commenting this out will pass the call to the Cascade,
   // which tries to compute the poles and zeros from the biquad
-  // coefficients
+  // coefficients.
   const PoleZeros getPoleZeros () const
   {
     const LayoutBase& proto = m_digitalProto;
@@ -86,16 +92,24 @@ public:
 #endif
 
 protected:
+  LayoutBase m_digitalProto;
+};
+
+// Serves a container to hold the analog prototype
+// and the digital pole/zero layout.
+template <class AnalogPrototype>
+class PoleFilterBase : public PoleFilterBase2
+{
+protected:
   void setPrototypeStorage (const LayoutBase& analogStorage,
                             const LayoutBase& digitalStorage)
   {
-    m_analogProto = analogStorage;
+    m_analogProto.setStorage (analogStorage);
     m_digitalProto = digitalStorage;
   }
 
 protected:
-  LayoutBase m_analogProto;
-  LayoutBase m_digitalProto;
+  AnalogPrototype m_analogProto;
 };
 
 //------------------------------------------------------------------------------
@@ -156,19 +170,24 @@ struct HighPassTransform
 };
 
 // low pass to band pass transform
-struct BandPassTransform
+class BandPassTransform
 {
-  static complex_t transform_bp (int i, double wc, double wc2, complex_t c);
+private:
+  // pre-calcs
+  double wc;
+  double wc2;
+  double m_a;
+  double m_b;
 
-  static std::pair<complex_t, complex_t> transform1 (int i,
-                                                    double wc,
-                                                    double wc2,
-                                                    complex_t c);
+public:
+  BandPassTransform (double fc,
+                     double fw,
+                     LayoutBase& digital,
+                     LayoutBase const& analog);
 
-  static void transform (double fc,
-                         double fw,
-                         LayoutBase& digital,
-                         LayoutBase const& analog);
+  complex_t transform_bp (int i, complex_t c);
+
+  std::pair<complex_t, complex_t> transform1 (int i, complex_t c);
 };
 
 // low pass to band stop transform

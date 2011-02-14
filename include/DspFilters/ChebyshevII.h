@@ -55,15 +55,17 @@ namespace detail {
 
 // Half-band analog prototypes (s-plane)
 
-struct AnalogLowPass
+class AnalogLowPass : public LayoutBase
 {
+public:
   static void design (const int numPoles,
                       double rippleDb,
                       LayoutBase& proto);
 };
 
-struct AnalogLowShelf
+class AnalogLowShelf : public LayoutBase
 {
+public:
   static void design (int numPoles,
                       double gainDb,
                       double rippleDb,
@@ -74,7 +76,7 @@ struct AnalogLowShelf
 
 // Factored implementations to reduce template instantiations
 
-struct LowPassBase : PoleFilterBase
+struct LowPassBase : PoleFilterBase <detail::AnalogLowPass>
 {
   void setup (int order,
               double sampleRate,
@@ -82,7 +84,7 @@ struct LowPassBase : PoleFilterBase
               double rippleDb);
 };
 
-struct HighPassBase : PoleFilterBase
+struct HighPassBase : PoleFilterBase <detail::AnalogLowPass>
 {
   void setup (int order,
               double sampleRate,
@@ -90,7 +92,7 @@ struct HighPassBase : PoleFilterBase
               double rippleDb);
 };
 
-struct BandPassBase : PoleFilterBase
+struct BandPassBase : PoleFilterBase <detail::AnalogLowPass>
 {
   void setup (int order,
               double sampleRate,
@@ -99,7 +101,7 @@ struct BandPassBase : PoleFilterBase
               double rippleDb);
 };
 
-struct BandStopBase : PoleFilterBase
+struct BandStopBase : PoleFilterBase <detail::AnalogLowPass>
 {
   void setup (int order,
               double sampleRate,
@@ -108,7 +110,7 @@ struct BandStopBase : PoleFilterBase
               double rippleDb);
 };
 
-struct LowShelfBase : PoleFilterBase
+struct LowShelfBase : PoleFilterBase <detail::AnalogLowShelf>
 {
   void setup (int order,
               double sampleRate,
@@ -117,7 +119,7 @@ struct LowShelfBase : PoleFilterBase
               double rippleDb);
 };
 
-struct HighShelfBase : PoleFilterBase
+struct HighShelfBase : PoleFilterBase <detail::AnalogLowShelf>
 {
   void setup (int order,
               double sampleRate,
@@ -126,7 +128,7 @@ struct HighShelfBase : PoleFilterBase
               double rippleDb);
 };
 
-struct BandShelfBase : PoleFilterBase
+struct BandShelfBase : PoleFilterBase <detail::AnalogLowShelf>
 {
   void setup (int order,
               double sampleRate,
