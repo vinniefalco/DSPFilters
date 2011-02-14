@@ -64,6 +64,8 @@ private:
   int m_numPoles;
 };
 
+//------------------------------------------------------------------------------
+
 class AnalogLowShelf : public LayoutBase
 {
 public:

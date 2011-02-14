@@ -40,7 +40,7 @@ namespace Dsp {
 
 //------------------------------------------------------------------------------
 
-complex_t LowPassTransform::transform (double f, complex_t c)
+complex_t LowPassTransform::transform (complex_t c)
 {
   if (c == infinity())
     return complex_t (-1, 0);
@@ -52,29 +52,29 @@ complex_t LowPassTransform::transform (double f, complex_t c)
   return (1. + c) / (1. - c);
 }
 
-void LowPassTransform::transform (double fc,
-                                  LayoutBase& digital,
-                                  LayoutBase const& analog)
+LowPassTransform::LowPassTransform (double fc,
+                                    LayoutBase& digital,
+                                    LayoutBase const& analog)
 {
   digital.reset ();
 
   // prewarp
-  const double f = tan (doublePi * fc);
+  f = tan (doublePi * fc);
 
   const int numPoles = analog.getNumPoles ();
   const int pairs = numPoles / 2;
   for (int i = 0; i < pairs; ++i)
   {
     const PoleZeroPair& pair = analog[i];
-    digital.addPoleZeroConjugatePairs (transform (f, pair.poles.first),
-                                       transform (f, pair.zeros.first));
+    digital.addPoleZeroConjugatePairs (transform (pair.poles.first),
+                                       transform (pair.zeros.first));
   }
 
   if (numPoles & 1)
   {
     const PoleZeroPair& pair = analog[pairs];
-    digital.add (transform (f, pair.poles.first),
-                 transform (f, pair.zeros.first));
+    digital.add (transform (pair.poles.first),
+                 transform (pair.zeros.first));
   }
 
   digital.setNormal (analog.getNormalW(),
@@ -83,8 +83,7 @@ void LowPassTransform::transform (double fc,
 
 //------------------------------------------------------------------------------
 
-complex_t HighPassTransform::transform (double f,
-                                        complex_t c)
+complex_t HighPassTransform::transform (complex_t c)
 {
   if (c == infinity())
     return complex_t (1, 0);
@@ -96,29 +95,29 @@ complex_t HighPassTransform::transform (double f,
   return - (1. + c) / (1. - c);
 }
 
-void HighPassTransform::transform (double fc,
-                                   LayoutBase& digital,
-                                   LayoutBase const& analog)
+HighPassTransform::HighPassTransform (double fc,
+                                      LayoutBase& digital,
+                                      LayoutBase const& analog)
 {
   digital.reset ();
 
   // prewarp
-  const double f = 1. / tan (doublePi * fc);
+  f = 1. / tan (doublePi * fc);
 
   const int numPoles = analog.getNumPoles ();
   const int pairs = numPoles / 2;
   for (int i = 0; i < pairs; ++i)
   {
     const PoleZeroPair& pair = analog[i];
-    digital.addPoleZeroConjugatePairs (transform (f, pair.poles.first),
-                                       transform (f, pair.zeros.first));
+    digital.addPoleZeroConjugatePairs (transform (pair.poles.first),
+                                       transform (pair.zeros.first));
   }
   
   if (numPoles & 1)
   {
     const PoleZeroPair& pair = analog[pairs];
-    digital.add (transform (f, pair.poles.first),
-                 transform (f, pair.zeros.first));
+    digital.add (transform (pair.poles.first),
+                 transform (pair.zeros.first));
   }
 
   digital.setNormal (doublePi - analog.getNormalW(),

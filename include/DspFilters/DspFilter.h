@@ -1388,12 +1388,12 @@ struct ChebyIIEq : PoleFilterSpace<ChebyIIShelf, BandPass, 2*order, channels>
 
 //--------------------------------------------------------------------------
 //
-// Elliptic
+// EllipticOld
 //
 //--------------------------------------------------------------------------
 
 // Low pass prototype
-struct Elliptic : Prototype
+struct EllipticOld : Prototype
 {
   void Design( const Spec& spec );
 
@@ -1453,7 +1453,7 @@ protected:
 //--------------------------------------------------------------------------
 
 template<int order, int channels>
-struct EllipticLowPass : PoleFilterSpace<Elliptic, LowPass, order, channels>
+struct EllipticLowPass : PoleFilterSpace<EllipticOld, LowPass, order, channels>
 {
   void SetupAs( CalcT cutoffFreq, CalcT passRippleDb, CalcT rollOff )
   {
@@ -1463,14 +1463,14 @@ struct EllipticLowPass : PoleFilterSpace<Elliptic, LowPass, order, channels>
     spec.sampleRate=1;
     spec.passRippleDb=passRippleDb;
     spec.rollOff=rollOff;
-    PoleFilterSpace<Elliptic, LowPass, order, channels>::Setup( spec );
+    PoleFilterSpace<EllipticOld, LowPass, order, channels>::Setup( spec );
   }
 };
 
 //--------------------------------------------------------------------------
 
 template<int order, int channels>
-struct EllipticHighPass : PoleFilterSpace<Elliptic, HighPass, order, channels>
+struct EllipticHighPass : PoleFilterSpace<EllipticOld, HighPass, order, channels>
 {
   void SetupAs( CalcT cutoffFreq, CalcT passRippleDb, CalcT rollOff )
   {
@@ -1480,14 +1480,14 @@ struct EllipticHighPass : PoleFilterSpace<Elliptic, HighPass, order, channels>
     spec.sampleRate=1;
     spec.passRippleDb=passRippleDb;
     spec.rollOff=rollOff;
-    PoleFilterSpace<Elliptic, HighPass, order, channels>::Setup( spec );
+    PoleFilterSpace<EllipticOld, HighPass, order, channels>::Setup( spec );
   }
 };
 
 //--------------------------------------------------------------------------
 
 template<int order, int channels>
-struct EllipticBandPass : PoleFilterSpace<Elliptic, BandPass, 2*order, channels>
+struct EllipticBandPass : PoleFilterSpace<EllipticOld, BandPass, 2*order, channels>
 {
   void SetupAs( CalcT centerFreq, CalcT normWidth, CalcT passRippleDb, CalcT rollOff )
   {
@@ -1498,14 +1498,14 @@ struct EllipticBandPass : PoleFilterSpace<Elliptic, BandPass, 2*order, channels>
     spec.sampleRate=1;
     spec.passRippleDb=passRippleDb;
     spec.rollOff=rollOff;
-    PoleFilterSpace<Elliptic, BandPass, 2*order, channels>::Setup( spec );
+    PoleFilterSpace<EllipticOld, BandPass, 2*order, channels>::Setup( spec );
   }
 };
 
 //--------------------------------------------------------------------------
 
 template<int order, int channels>
-struct EllipticBandStop : PoleFilterSpace<Elliptic, BandStop, 2*order, channels>
+struct EllipticBandStop : PoleFilterSpace<EllipticOld, BandStop, 2*order, channels>
 {
   void SetupAs( CalcT centerFreq, CalcT normWidth, CalcT passRippleDb, CalcT rollOff )
   {
@@ -1516,7 +1516,7 @@ struct EllipticBandStop : PoleFilterSpace<Elliptic, BandStop, 2*order, channels>
     spec.sampleRate=1;
     spec.passRippleDb=passRippleDb;
     spec.rollOff=rollOff;
-    PoleFilterSpace<Elliptic, BandStop, 2*order, channels>::Setup( spec );
+    PoleFilterSpace<EllipticOld, BandStop, 2*order, channels>::Setup( spec );
   }
 };
 

@@ -38,4 +38,103 @@ THE SOFTWARE.
 
 namespace Dsp {
 
+namespace Elliptic {
+
+AnalogLowPass::AnalogLowPass ()
+  : m_numPoles (-1)
+{
+  setNormal (0, 1);
+}
+
+void AnalogLowPass::design (int numPoles,
+                            double rippleDb,
+                            double rollOff)
+{
+  if (m_numPoles != numPoles)
+  {
+    m_numPoles = numPoles;
+
+    reset ();
+
+    const double n2 = 2 * numPoles;
+    const int pairs = numPoles / 2;
+    for (int i = 0; i < pairs; ++i)
+    {
+      complex_t c = std::polar (1., doublePi_2 + (2 * i + 1) * doublePi / n2);
+      addPoleZeroConjugatePairs (c, infinity());
+    }
+
+    if (numPoles & 1)
+      add (-1, infinity());
+  }
+}
+
+//------------------------------------------------------------------------------
+
+void LowPassBase::setup (int order,
+                         double sampleRate,
+                         double cutoffFrequency,
+                         double rippleDb,
+                         double rollOff)
+{
+  m_analogProto.design (order, rippleDb, rollOff);
+
+  LowPassTransform (cutoffFrequency / sampleRate,
+                    m_digitalProto,
+                    m_analogProto);
+
+  Cascade::setLayout (m_digitalProto);
+}
+
+void HighPassBase::setup (int order,
+                          double sampleRate,
+                          double cutoffFrequency,
+                          double rippleDb,
+                          double rollOff)
+{
+  m_analogProto.design (order, rippleDb, rollOff);
+
+  HighPassTransform (cutoffFrequency / sampleRate,
+                     m_digitalProto,
+                     m_analogProto);
+
+  Cascade::setLayout (m_digitalProto);
+}
+
+void BandPassBase::setup (int order,
+                          double sampleRate,
+                          double centerFrequency,
+                          double widthFrequency,
+                          double rippleDb,
+                          double rollOff)
+{
+  m_analogProto.design (order, rippleDb, rollOff);
+
+  BandPassTransform (centerFrequency / sampleRate,
+                     widthFrequency / sampleRate,
+                     m_digitalProto,
+                     m_analogProto);
+
+  Cascade::setLayout (m_digitalProto);
+}
+
+void BandStopBase::setup (int order,
+                          double sampleRate,
+                          double centerFrequency,
+                          double widthFrequency,
+                          double rippleDb,
+                          double rollOff)
+{
+  m_analogProto.design (order, rippleDb, rollOff);
+
+  BandStopTransform (centerFrequency / sampleRate,
+                     widthFrequency / sampleRate,
+                     m_digitalProto,
+                     m_analogProto);
+
+  Cascade::setLayout (m_digitalProto);
+}
+
+}
+
 }

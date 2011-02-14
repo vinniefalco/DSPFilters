@@ -37,9 +37,214 @@ THE SOFTWARE.
 #define DSPFILTERS_ELLIPTIC_H
 
 #include "DspFilters/Common.h"
+#include "DspFilters/Cascade.h"
+#include "DspFilters/Design.h"
+#include "DspFilters/Filter.h"
+#include "DspFilters/PoleFilter.h"
 
 namespace Dsp {
+
+/*
+ * Filters with Elliptic response characteristics
+ *
+ */
+
+namespace Elliptic {
+
+// Half-band analog prototype (s-plane)
+
+class AnalogLowPass : public LayoutBase
+{
+public:
+  AnalogLowPass ();
+
+  void design (const int numPoles,
+               double rippleDb,
+               double rollOff);
+
+private:
+  int m_numPoles;
+  double m_rippleDb;
+  double m_rollOff;
+};
+
+//------------------------------------------------------------------------------
+
+// Factored implementations to reduce template instantiations
+
+struct LowPassBase : PoleFilterBase <AnalogLowPass>
+{
+  void setup (int order,
+              double sampleRate,
+              double cutoffFrequency,
+              double rippleDb,
+              double rollOff);
+};
+
+struct HighPassBase : PoleFilterBase <AnalogLowPass>
+{
+  void setup (int order,
+              double sampleRate,
+              double cutoffFrequency,
+              double rippleDb,
+              double rollOff);
+};
+
+struct BandPassBase : PoleFilterBase <AnalogLowPass>
+{
+  void setup (int order,
+              double sampleRate,
+              double centerFrequency,
+              double widthFrequency,
+              double rippleDb,
+              double rollOff);
+};
+
+struct BandStopBase : PoleFilterBase <AnalogLowPass>
+{
+  void setup (int order,
+              double sampleRate,
+              double centerFrequency,
+              double widthFrequency,
+              double rippleDb,
+              double rollOff);
+};
+
+//------------------------------------------------------------------------------
+
+//
+// Raw filters
+//
+
+template <int MaxOrder>
+struct LowPass : PoleFilter <LowPassBase, MaxOrder>
+{
+};
+
+template <int MaxOrder>
+struct HighPass : PoleFilter <HighPassBase, MaxOrder>
+{
+};
+
+template <int MaxOrder>
+struct BandPass : PoleFilter <BandPassBase, MaxOrder, MaxOrder*2>
+{
+};
+
+template <int MaxOrder>
+struct BandStop : PoleFilter <BandStopBase, MaxOrder, MaxOrder*2>
+{
+};
+
+//------------------------------------------------------------------------------
+
+namespace Design {
+
+template <class FilterClass>
+struct TypeI : DesignBase, FilterClass
+{
+  // this ctor could be factored out
+  TypeI ()
+  {
+    addBuiltinParamInfo (idOrder);
+    addBuiltinParamInfo (idFrequency);
+  }
+
+  void setParams (const Params& params)
+  {
+    FilterClass::setup (int(params[1]),
+                        params[0],
+                        params[2],
+                        params[3],
+                        params[4]);
+  }
+};
+
+template <class FilterClass>
+struct TypeII : DesignBase, FilterClass
+{
+  // this ctor could be factored out
+  TypeII ()
+  {
+    addBuiltinParamInfo (idOrder);
+    addBuiltinParamInfo (idFrequency);
+    addBuiltinParamInfo (idBandwidthHz);
+  }
+
+  void setParams (const Params& params)
+  {
+    FilterClass::setup (int(params[1]),
+                        params[0],
+                        params[2],
+                        params[3],
+                        params[4],
+                        params[5]);
+  }
+};
+
+//------------------------------------------------------------------------------
+
+// Factored descriptions to reduce template instantiations
+
+struct LowPassDescription
+{
+  Kind getKind () const { return kindLowPass; }
+  const char* getName() const { return "Elliptic Low Pass"; }
+};
+
+struct HighPassDescription
+{
+  Kind getKind () const { return kindHighPass; }
+  const char* getName() const { return "Elliptic High Pass"; }
+};
+
+struct BandPassDescription
+{
+  Kind getKind () const { return kindHighPass; }
+  const char* getName() const { return "Elliptic Band Pass"; }
+};
+
+struct BandStopDescription
+{
+  Kind getKind () const { return kindHighPass; }
+  const char* getName() const { return "Elliptic Band Stop"; }
+};
+
+//------------------------------------------------------------------------------
+
+//
+// Gui-friendly Design layer
+//
+
+template <int MaxOrder>
+struct LowPass : TypeI <Elliptic::LowPass <MaxOrder> >,
+                 LowPassDescription
+{
+};
+
+template <int MaxOrder>
+struct HighPass : TypeI <Elliptic::HighPass <MaxOrder> >,
+                  HighPassDescription
+{
+};
+
+template <int MaxOrder>
+struct BandPass : TypeII <Elliptic::BandPass <MaxOrder> >,
+                  BandPassDescription
+{
+};
+
+template <int MaxOrder>
+struct BandStop : TypeII <Elliptic::BandStop <MaxOrder> >,
+                  BandStopDescription
+{
+};
+
+}
+
+}
 
 }
 
 #endif
+

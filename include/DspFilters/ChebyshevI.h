@@ -51,32 +51,43 @@ namespace Dsp {
 
 namespace ChebyshevI {
 
-namespace detail {
-
 // Half-band analog prototypes (s-plane)
 
 class AnalogLowPass : public LayoutBase
 {
 public:
-  static void design (const int numPoles,
-                      double rippleDb,
-                      LayoutBase& proto);
+  AnalogLowPass ();
+
+  void design (const int numPoles,
+               double rippleDb);
+
+private:
+  int m_numPoles;
+  double m_rippleDb;
 };
+
+//------------------------------------------------------------------------------
 
 class AnalogLowShelf : public LayoutBase
 {
 public:
-  static void design (int numPoles,
-                      double gainDb,
-                      double rippleDb,
-                      LayoutBase& proto);
+  AnalogLowShelf ();
+
+  void design (int numPoles,
+               double gainDb,
+               double rippleDb);
+
+private:
+  int m_numPoles;
+  double m_rippleDb;
+  double m_gainDb;
 };
 
 //------------------------------------------------------------------------------
 
 // Factored implementations to reduce template instantiations
 
-struct LowPassBase : PoleFilterBase <detail::AnalogLowPass>
+struct LowPassBase : PoleFilterBase <AnalogLowPass>
 {
   void setup (int order,
               double sampleRate,
@@ -84,7 +95,7 @@ struct LowPassBase : PoleFilterBase <detail::AnalogLowPass>
               double rippleDb);
 };
 
-struct HighPassBase : PoleFilterBase <detail::AnalogLowPass>
+struct HighPassBase : PoleFilterBase <AnalogLowPass>
 {
   void setup (int order,
               double sampleRate,
@@ -92,7 +103,7 @@ struct HighPassBase : PoleFilterBase <detail::AnalogLowPass>
               double rippleDb);
 };
 
-struct BandPassBase : PoleFilterBase <detail::AnalogLowPass>
+struct BandPassBase : PoleFilterBase <AnalogLowPass>
 {
   void setup (int order,
               double sampleRate,
@@ -101,7 +112,7 @@ struct BandPassBase : PoleFilterBase <detail::AnalogLowPass>
               double rippleDb);
 };
 
-struct BandStopBase : PoleFilterBase <detail::AnalogLowPass>
+struct BandStopBase : PoleFilterBase <AnalogLowPass>
 {
   void setup (int order,
               double sampleRate,
@@ -110,7 +121,7 @@ struct BandStopBase : PoleFilterBase <detail::AnalogLowPass>
               double rippleDb);
 };
 
-struct LowShelfBase : PoleFilterBase <detail::AnalogLowShelf>
+struct LowShelfBase : PoleFilterBase <AnalogLowShelf>
 {
   void setup (int order,
               double sampleRate,
@@ -119,7 +130,7 @@ struct LowShelfBase : PoleFilterBase <detail::AnalogLowShelf>
               double rippleDb);
 };
 
-struct HighShelfBase : PoleFilterBase <detail::AnalogLowShelf>
+struct HighShelfBase : PoleFilterBase <AnalogLowShelf>
 {
   void setup (int order,
               double sampleRate,
@@ -128,7 +139,7 @@ struct HighShelfBase : PoleFilterBase <detail::AnalogLowShelf>
               double rippleDb);
 };
 
-struct BandShelfBase : PoleFilterBase <detail::AnalogLowShelf>
+struct BandShelfBase : PoleFilterBase <AnalogLowShelf>
 {
   void setup (int order,
               double sampleRate,
@@ -137,8 +148,6 @@ struct BandShelfBase : PoleFilterBase <detail::AnalogLowShelf>
               double gainDb,
               double rippleDb);
 };
-
-}
 
 //------------------------------------------------------------------------------
 
@@ -147,37 +156,37 @@ struct BandShelfBase : PoleFilterBase <detail::AnalogLowShelf>
 //
 
 template <int MaxOrder>
-struct LowPass : PoleFilter <detail::LowPassBase, MaxOrder>
+struct LowPass : PoleFilter <LowPassBase, MaxOrder>
 {
 };
 
 template <int MaxOrder>
-struct HighPass : PoleFilter <detail::HighPassBase, MaxOrder>
+struct HighPass : PoleFilter <HighPassBase, MaxOrder>
 {
 };
 
 template <int MaxOrder>
-struct BandPass : PoleFilter <detail::BandPassBase, MaxOrder, MaxOrder*2>
+struct BandPass : PoleFilter <BandPassBase, MaxOrder, MaxOrder*2>
 {
 };
 
 template <int MaxOrder>
-struct BandStop : PoleFilter <detail::BandStopBase, MaxOrder, MaxOrder*2>
+struct BandStop : PoleFilter <BandStopBase, MaxOrder, MaxOrder*2>
 {
 };
 
 template <int MaxOrder>
-struct LowShelf : PoleFilter <detail::LowShelfBase, MaxOrder>
+struct LowShelf : PoleFilter <LowShelfBase, MaxOrder>
 {
 };
 
 template <int MaxOrder>
-struct HighShelf : PoleFilter <detail::HighShelfBase, MaxOrder>
+struct HighShelf : PoleFilter <HighShelfBase, MaxOrder>
 {
 };
 
 template <int MaxOrder>
-struct BandShelf : PoleFilter <detail::BandShelfBase, MaxOrder, MaxOrder*2>
+struct BandShelf : PoleFilter <BandShelfBase, MaxOrder, MaxOrder*2>
 {
 };
 
