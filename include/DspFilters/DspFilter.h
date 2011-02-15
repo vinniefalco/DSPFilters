@@ -176,7 +176,7 @@ private:
 
 // Finds the complex roots of the given polynomial with
 // complex-valued coefficients using a numerical method.
-struct RootFinder
+struct RootFinderOld
 {
   // Find roots of polynomial f(x)=a[0]+a[1]*x+a[2]*x^2...+a[degree]*x^degree
   // The input coefficients are set using coef()[].
@@ -206,9 +206,9 @@ protected:
 //------------------------------------------------------------------------------
 
 template<int maxdegree>
-struct RootFinderSpace : virtual RootFinder
+struct RootFinderOldSpace : virtual RootFinderOld
 {
-  RootFinderSpace()
+  RootFinderOldSpace()
   {
     m_maxdegree=maxdegree;
     m_a=m_a0;
@@ -1522,12 +1522,12 @@ struct EllipticBandStop : PoleFilterSpace<EllipticOld, BandStop, 2*order, channe
 
 //--------------------------------------------------------------------------
 //
-// Bessel
+// BesselOld
 //
 //--------------------------------------------------------------------------
 
 // Low pass prototype
-struct Bessel : Prototype
+struct BesselOld : Prototype
 {
   void Design( const Spec& spec );
 
@@ -1538,7 +1538,7 @@ struct Bessel : Prototype
 };
 
 // Low shelf prototype
-struct BesselShelf : Prototype
+struct BesselOldShelf : Prototype
 {
   void Design( const Spec& spec );
 
@@ -1551,7 +1551,7 @@ struct BesselShelf : Prototype
 //--------------------------------------------------------------------------
 
 template<int order, int channels>
-struct BesselLowPass : PoleFilterSpace<Bessel, LowPass, order, channels>
+struct BesselOldLowPass : PoleFilterSpace<BesselOld, LowPass, order, channels>
 {
   void SetupAs( CalcT cutoffFreq )
   {
@@ -1559,14 +1559,14 @@ struct BesselLowPass : PoleFilterSpace<Bessel, LowPass, order, channels>
     spec.order=order;
     spec.cutoffFreq=cutoffFreq;
     spec.sampleRate=1;
-    PoleFilterSpace<Bessel, LowPass, order, channels>::Setup( spec );
+    PoleFilterSpace<BesselOld, LowPass, order, channels>::Setup( spec );
   }
 };
 
 //--------------------------------------------------------------------------
 
 template<int order, int channels>
-struct BesselHighPass : PoleFilterSpace<Bessel, HighPass, order, channels>
+struct BesselOldHighPass : PoleFilterSpace<BesselOld, HighPass, order, channels>
 {
   void SetupAs( CalcT cutoffFreq )
   {
@@ -1574,14 +1574,14 @@ struct BesselHighPass : PoleFilterSpace<Bessel, HighPass, order, channels>
     spec.order=order;
     spec.cutoffFreq=cutoffFreq;
     spec.sampleRate=1;
-    PoleFilterSpace<Bessel, HighPass, order, channels>::Setup( spec );
+    PoleFilterSpace<BesselOld, HighPass, order, channels>::Setup( spec );
   }
 };
 
 //--------------------------------------------------------------------------
 
 template<int order, int channels>
-struct BesselBandPass : PoleFilterSpace<Bessel, BandPass, 2*order, channels>
+struct BesselOldBandPass : PoleFilterSpace<BesselOld, BandPass, 2*order, channels>
 {
   void SetupAs( CalcT centerFreq, CalcT normWidth )
   {
@@ -1590,14 +1590,14 @@ struct BesselBandPass : PoleFilterSpace<Bessel, BandPass, 2*order, channels>
     spec.centerFreq=centerFreq;
     spec.normWidth=normWidth;
     spec.sampleRate=1;
-    PoleFilterSpace<Bessel, BandPass, 2*order, channels>::Setup( spec );
+    PoleFilterSpace<BesselOld, BandPass, 2*order, channels>::Setup( spec );
   }
 };
 
 //--------------------------------------------------------------------------
 
 template<int order, int channels>
-struct BesselBandStop : PoleFilterSpace<Bessel, BandStop, 2*order, channels>
+struct BesselOldBandStop : PoleFilterSpace<BesselOld, BandStop, 2*order, channels>
 {
   void SetupAs( CalcT centerFreq, CalcT normWidth )
   {
@@ -1606,14 +1606,14 @@ struct BesselBandStop : PoleFilterSpace<Bessel, BandStop, 2*order, channels>
     spec.centerFreq=centerFreq;
     spec.normWidth=normWidth;
     spec.sampleRate=1;
-    PoleFilterSpace<Bessel, BandStop, 2*order, channels>::Setup( spec );
+    PoleFilterSpace<BesselOld, BandStop, 2*order, channels>::Setup( spec );
   }
 };
 
 //--------------------------------------------------------------------------
 
 template<int order, int channels>
-struct BesselLowShelf : PoleFilterSpace<BesselShelf, LowPass, order, channels>
+struct BesselOldLowShelf : PoleFilterSpace<BesselOldShelf, LowPass, order, channels>
 {
   void SetupAs( CalcT cutoffFreq, CalcT gainDb )
   {
@@ -1622,7 +1622,7 @@ struct BesselLowShelf : PoleFilterSpace<BesselShelf, LowPass, order, channels>
     spec.cutoffFreq=cutoffFreq;
     spec.sampleRate=1;
     spec.gainDb=gainDb;
-    PoleFilterSpace<BesselShelf, LowPass, order, channels>::Setup( spec );
+    PoleFilterSpace<BesselOldShelf, LowPass, order, channels>::Setup( spec );
   }
 };
 
