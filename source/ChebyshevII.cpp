@@ -104,7 +104,8 @@ void AnalogLowShelf::design (int numPoles,
                              double stopBandDb)
 {
   if (m_numPoles != numPoles ||
-      m_stopBandDb != stopBandDb)
+      m_stopBandDb != stopBandDb ||
+      m_gainDb != gainDb)
   {
     m_numPoles = numPoles;
     m_stopBandDb = stopBandDb;
