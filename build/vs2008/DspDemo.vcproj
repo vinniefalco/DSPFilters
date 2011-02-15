@@ -508,6 +508,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\include\DspFilters\RootFinder.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\include\DspFilters\SmoothedFilter.h"
 					>
 				</File>
@@ -581,6 +585,10 @@
 				</File>
 				<File
 					RelativePath="..\..\source\RBJ.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\RootFinder.cpp"
 					>
 				</File>
 				<File

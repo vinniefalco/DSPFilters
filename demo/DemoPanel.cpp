@@ -373,7 +373,7 @@ DemoPanel::DemoPanel()
 	m_menuProto->addItem( "Chebyshev", idChebyI );
 	m_menuProto->addItem( "Inverse Chebyshev", idChebyII );
 	m_menuProto->addItem( "Elliptic", idElliptic );
-	m_menuProto->addItem( "Bessel", idBessel );
+	m_menuProto->addItem( "Bessel", idBesselOld );
 	m_menuProto->addItem( "Legendere", idLegendere );
 	m_menuProto->setSelectedId( idButter );
 	m_menuProto->setBounds( x, y, tw, th );
@@ -563,7 +563,7 @@ Dsp::PoleFilterOld *DemoPanel::SpecToFilter( const Spec &spec, Filters *filters 
 		case idBandStop: filter=&filters->ellipticBs; break;
 		};
 		break;
-	case idBessel:
+	case idBesselOld:
 		switch( spec.kind )
 		{
 		default:
@@ -624,7 +624,7 @@ void DemoPanel::comboBoxChanged( ComboBox *ctrl )
 			m_menuKind->setItemEnabled( idPeakEq, true );
 			break;
 		case idElliptic:
-		case idBessel:
+		case idBesselOld:
 			m_menuKind->setItemEnabled( idLowPass, true );
 			m_menuKind->setItemEnabled( idHighPass, true );
 			m_menuKind->setItemEnabled( idBandPass, true );

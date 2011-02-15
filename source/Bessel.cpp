@@ -35,7 +35,127 @@ THE SOFTWARE.
 
 #include "DspFilters/Common.h"
 #include "DspFilters/Bessel.h"
+#include "DspFilters/RootFinder.h"
 
 namespace Dsp {
+
+namespace Bessel {
+
+// returns fact(n) = n!
+static double fact( double n )
+{
+  if (n == 0)
+    return 1;
+  else
+    return n * fact (n - 1);
+}
+
+// returns the k-th zero based coefficient of the reverse bessel polynomial of degree n
+static double reversebessel (int k, int n)
+{
+  return fact (2 * n - k) / 
+    ((fact (n - k) * fact(k)) * pow(2., n - k));
+}
+
+AnalogLowPass::AnalogLowPass ()
+  : m_numPoles (-1)
+{
+  setNormal (0, 1);
+}
+
+void AnalogLowPass::design (int numPoles)
+{
+  if (m_numPoles != numPoles)
+  {
+    m_numPoles = numPoles;
+
+    reset ();
+
+    RootFinderSpace<50> solver;
+    for (int i = 0; i < numPoles + 1; ++i)
+      solver.coef()[i] = reversebessel (i, numPoles);
+
+    solver.solve (numPoles);
+
+#if 0
+    for (int i = 0; i < numPoles; ++i)
+    {
+      complex_t y = solver.eval (numPoles + 1, solver.root()[i]);
+      assert (y.real() < 1e-6 && y.imag() < 1e-6);
+    }
+#endif
+
+    const double n2 = 2 * numPoles;
+    const int pairs = numPoles / 2;
+    for (int i = 0; i < pairs; ++i)
+    {
+      complex_t c = solver.root()[2*i];
+      addPoleZeroConjugatePairs (c, infinity());
+    }
+
+    if (numPoles & 1)
+      add (-1, infinity());
+  }
+}
+
+//------------------------------------------------------------------------------
+
+void LowPassBase::setup (int order,
+                         double sampleRate,
+                         double cutoffFrequency)
+{
+  m_analogProto.design (order);
+
+  LowPassTransform (cutoffFrequency / sampleRate,
+                    m_digitalProto,
+                    m_analogProto);
+
+  Cascade::setLayout (m_digitalProto);
+}
+
+void HighPassBase::setup (int order,
+                          double sampleRate,
+                          double cutoffFrequency)
+{
+  m_analogProto.design (order);
+
+  HighPassTransform (cutoffFrequency / sampleRate,
+                     m_digitalProto,
+                     m_analogProto);
+
+  Cascade::setLayout (m_digitalProto);
+}
+
+void BandPassBase::setup (int order,
+                          double sampleRate,
+                          double centerFrequency,
+                          double widthFrequency)
+{
+  m_analogProto.design (order);
+
+  BandPassTransform (centerFrequency / sampleRate,
+                     widthFrequency / sampleRate,
+                     m_digitalProto,
+                     m_analogProto);
+
+  Cascade::setLayout (m_digitalProto);
+}
+
+void BandStopBase::setup (int order,
+                          double sampleRate,
+                          double centerFrequency,
+                          double widthFrequency)
+{
+  m_analogProto.design (order);
+
+  BandStopTransform (centerFrequency / sampleRate,
+                     widthFrequency / sampleRate,
+                     m_digitalProto,
+                     m_analogProto);
+
+  Cascade::setLayout (m_digitalProto);
+}
+
+}
 
 }

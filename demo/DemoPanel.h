@@ -67,7 +67,7 @@ private:
 	  idChebyI=2,
 	  idChebyII=3,
 	  idElliptic=4,
-	  idBessel=5,
+	  idBesselOld=5,
 	  idLegendere=6
   };
 
@@ -141,10 +141,10 @@ private:
 	  Dsp::EllipticBandPass<kMaxOrder,1> ellipticBp;
 	  Dsp::EllipticBandStop<kMaxOrder,1> ellipticBs;
 
-	  Dsp::BesselLowPass<kMaxOrder,1> besselLp;
-	  Dsp::BesselHighPass<kMaxOrder,1> besselHp;
-	  Dsp::BesselBandPass<kMaxOrder,1> besselBp;
-	  Dsp::BesselBandStop<kMaxOrder,1> besselBs;
+	  Dsp::BesselOldLowPass<kMaxOrder,1> besselLp;
+	  Dsp::BesselOldHighPass<kMaxOrder,1> besselHp;
+	  Dsp::BesselOldBandPass<kMaxOrder,1> besselBp;
+	  Dsp::BesselOldBandStop<kMaxOrder,1> besselBs;
 
 	  Dsp::LegendereLowPass<kMaxOrder,1> legendereLp;
   };

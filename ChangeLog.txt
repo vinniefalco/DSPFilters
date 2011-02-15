@@ -7,3 +7,5 @@ CHANGELOG (From Newest to Oldest)
 - Optimized DirectFormII
 
 - Added Pink Noise as a sound source
+
+- Started Bessel filter implementation

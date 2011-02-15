@@ -37,9 +37,198 @@ THE SOFTWARE.
 #define DSPFILTERS_BESSEL_H
 
 #include "DspFilters/Common.h"
+#include "DspFilters/Cascade.h"
+#include "DspFilters/Design.h"
+#include "DspFilters/Filter.h"
+#include "DspFilters/PoleFilter.h"
 
 namespace Dsp {
+
+/*
+ * Filters with Bessel response characteristics
+ *
+ */
+
+namespace Bessel {
+
+// Half-band analog prototypes (s-plane)
+
+class AnalogLowPass : public LayoutBase
+{
+public:
+  AnalogLowPass ();
+
+  void design (const int numPoles);
+
+private:
+  int m_numPoles;
+};
+
+//------------------------------------------------------------------------------
+
+// Factored implementations to reduce template instantiations
+
+struct LowPassBase : PoleFilterBase <AnalogLowPass>
+{
+  void setup (int order,
+              double sampleRate,
+              double cutoffFrequency);
+};
+
+struct HighPassBase : PoleFilterBase <AnalogLowPass>
+{
+  void setup (int order,
+              double sampleRate,
+              double cutoffFrequency);
+};
+
+struct BandPassBase : PoleFilterBase <AnalogLowPass>
+{
+  void setup (int order,
+              double sampleRate,
+              double centerFrequency,
+              double widthFrequency);
+};
+
+struct BandStopBase : PoleFilterBase <AnalogLowPass>
+{
+  void setup (int order,
+              double sampleRate,
+              double centerFrequency,
+              double widthFrequency);
+};
+
+//------------------------------------------------------------------------------
+
+//
+// Raw filters
+//
+
+template <int MaxOrder>
+struct LowPass : PoleFilter <LowPassBase, MaxOrder>
+{
+};
+
+template <int MaxOrder>
+struct HighPass : PoleFilter <HighPassBase, MaxOrder>
+{
+};
+
+template <int MaxOrder>
+struct BandPass : PoleFilter <BandPassBase, MaxOrder, MaxOrder*2>
+{
+};
+
+template <int MaxOrder>
+struct BandStop : PoleFilter <BandStopBase, MaxOrder, MaxOrder*2>
+{
+};
+
+//------------------------------------------------------------------------------
+
+namespace Design {
+
+template <class FilterClass>
+struct TypeI : DesignBase, FilterClass
+{
+  // this ctor could be factored out
+  TypeI ()
+  {
+    addBuiltinParamInfo (idOrder);
+    addBuiltinParamInfo (idFrequency);
+  }
+
+  void setParams (const Params& params)
+  {
+    FilterClass::setup (int(params[1]),
+                        params[0],
+                        params[2]);
+  }
+};
+
+template <class FilterClass>
+struct TypeII : DesignBase, FilterClass
+{
+  // this ctor could be factored out
+  TypeII ()
+  {
+    addBuiltinParamInfo (idOrder);
+    addBuiltinParamInfo (idFrequency);
+    addBuiltinParamInfo (idBandwidthHz);
+  }
+
+  void setParams (const Params& params)
+  {
+    FilterClass::setup (int(params[1]),
+                        params[0],
+                        params[2],
+                        params[3]);
+  }
+};
+
+//------------------------------------------------------------------------------
+
+// Factored descriptions to reduce template instantiations
+
+struct LowPassDescription
+{
+  Kind getKind () const { return kindLowPass; }
+  const char* getName() const { return "Bessel Low Pass"; }
+};
+
+struct HighPassDescription
+{
+  Kind getKind () const { return kindHighPass; }
+  const char* getName() const { return "Bessel High Pass"; }
+};
+
+struct BandPassDescription
+{
+  Kind getKind () const { return kindHighPass; }
+  const char* getName() const { return "Bessel Band Pass"; }
+};
+
+struct BandStopDescription
+{
+  Kind getKind () const { return kindHighPass; }
+  const char* getName() const { return "Bessel Band Stop"; }
+};
+
+//------------------------------------------------------------------------------
+
+//
+// Gui-friendly Design layer
+//
+
+template <int MaxOrder>
+struct LowPass : TypeI <Bessel::LowPass <MaxOrder> >,
+                 LowPassDescription
+{
+};
+
+template <int MaxOrder>
+struct HighPass : TypeI <Bessel::HighPass <MaxOrder> >,
+                  HighPassDescription
+{
+};
+
+template <int MaxOrder>
+struct BandPass : TypeII <Bessel::BandPass <MaxOrder> >,
+                  BandPassDescription
+{
+};
+
+template <int MaxOrder>
+struct BandStop : TypeII <Bessel::BandStop <MaxOrder> >,
+                  BandStopDescription
+{
+};
+
+}
+
+}
 
 }
 
 #endif
+

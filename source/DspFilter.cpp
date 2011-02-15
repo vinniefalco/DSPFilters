@@ -1957,10 +1957,10 @@ CalcT EllipticOld::ellipticK(CalcT k)
 
 //******************************************************************************
 //
-// RootFinder
+// RootFinderOld
 //
 
-void RootFinder::solve( int degree, Roots* roots, bool bPolish, bool bSort )
+void RootFinderOld::solve( int degree, Roots* roots, bool bPolish, bool bSort )
 {
   assert( degree<=m_maxdegree );
 
@@ -2011,7 +2011,7 @@ void RootFinder::solve( int degree, Roots* roots, bool bPolish, bool bSort )
 
 //------------------------------------------------------------------------------
 
-void RootFinder::laguerre( int degree, Complex a[], Complex& x, int& its)
+void RootFinderOld::laguerre( int degree, Complex a[], Complex& x, int& its)
 {
   const int MR=8,MT=10,MAXIT=MT*MR;
   const CalcT EPS=std::numeric_limits<CalcT>::epsilon();
@@ -2056,7 +2056,7 @@ void RootFinder::laguerre( int degree, Complex a[], Complex& x, int& its)
 
 //------------------------------------------------------------------------------
 
-Complex RootFinder::eval( int degree, const Complex& x )
+Complex RootFinderOld::eval( int degree, const Complex& x )
 {
   Complex y;
   if( x!=0. )
@@ -2071,6 +2071,7 @@ Complex RootFinder::eval( int degree, const Complex& x )
 
   return y;
 }
+
 //******************************************************************************
 
 // returns factorial(n) (n!)
@@ -2098,13 +2099,13 @@ static double bessel( int k, int n )
 
 //------------------------------------------------------------------------------
 
-void Bessel::Design( const Spec& spec )
+void BesselOld::Design( const Spec& spec )
 {
   int n=spec.order;
 
   CalcT k=1./sqrt((2*n-1)*log(2.));
 
-  RootFinderSpace<100> rf;
+  RootFinderOldSpace<100> rf;
   for( int i=0; i<=n; i++ )
     rf.coef()[i]=Complex( reversebessel( i, n ), 0 );
   rf.solve( n, &Poles() );
@@ -2122,7 +2123,7 @@ void Bessel::Design( const Spec& spec )
 
 //------------------------------------------------------------------------------
 
-void BesselShelf::Design( const Spec& /*spec*/ )
+void BesselOldShelf::Design( const Spec& /*spec*/ )
 {
 #if 0
   int n=spec.order;
@@ -2141,7 +2142,7 @@ void BesselShelf::Design( const Spec& /*spec*/ )
   for( int i=0; i<=degree; i++ )
     ca[i]=Complex( a[i], 0 );
   co.resize(degree);
-  RootFinderSpace<100> rf;
+  RootFinderOldSpace<100> rf;
   rf.solve( degree, ca, co );
   int count=co.size();
 
@@ -2386,8 +2387,8 @@ To do:
 
 Changes:
 
-- Added RootFinder, for finding complex roots of polynomials
-- Added Bessel low pass analog prototype
-- Added BesselLowPass, BesselHighPass, BesselBandPass, and BesselBandStop filters
+- Added RootFinderOld, for finding complex roots of polynomials
+- Added BesselOld low pass analog prototype
+- Added BesselOldLowPass, BesselOldHighPass, BesselOldBandPass, and BesselOldBandStop filters
 
 */
