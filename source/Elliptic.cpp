@@ -40,6 +40,32 @@ namespace Dsp {
 
 namespace Elliptic {
 
+// shit ton of math in here
+
+// approximation to complete elliptic integral of the first kind.
+// fast convergence, peak error less than 2e-16.
+double Solver::ellipticK (double k)
+{
+  double m = k*k;
+  double a = 1;
+  double b = sqrt (1 - m);
+  double c = a - b;
+  double co;
+  do
+  {
+    co = c;
+    c = (a - b) / 2;
+    double ao = (a + b) / 2;
+    b = sqrt (a*b);
+    a = ao;
+  }
+  while (c<co);
+ 
+  return doublePi / (a + a);
+}
+
+//------------------------------------------------------------------------------
+
 AnalogLowPass::AnalogLowPass ()
   : m_numPoles (-1)
 {
@@ -60,12 +86,18 @@ void AnalogLowPass::design (int numPoles,
 
     reset ();
 
-    int n=numPoles;
+    // calculate
+    const double ep = rippleDb; // passband ripple
+
+    const int n = numPoles;
 
     double e2=pow(10.,rippleDb/10)-1;
-    double xi=rolloff+1;
-    m_Kprime = ellipticK(sqrt(1-1/(xi*xi)));
-    m_K = ellipticK(1/xi);
+    //double xi = rolloff + 1;
+    double xi = 5 * exp (rolloff - 1) + 1;
+
+    m_K = Solver::ellipticK(1/xi);
+    m_Kprime = Solver::ellipticK(sqrt(1-1/(xi*xi)));
+
     int ni = ((n & 1) == 1) ? 0 : 1;
     int i;
     double f[100]; // HACK!!!
@@ -76,7 +108,7 @@ void AnalogLowPass::design (int numPoles,
       sn *= 2*doublePi/m_K;
       f[i] = m_zeros[i-1] = 1/sn;
     }
-    m_zeros[n/2] = 1e30;
+    m_zeros[n/2] = std::numeric_limits<double>::infinity();
     double fb = 1/(2*doublePi);
     m_nin = n % 2;
     m_n2 = n/2;
@@ -109,29 +141,27 @@ void AnalogLowPass::design (int numPoles,
       m_zf1[r] = fb/pow(d, .25);
       m_zq1[r] = 1/sqrt(abs(2*(1-m_b1[r]/(m_zf1[r]*m_zf1[r]))));
       m_zw1[r] = tp*m_zf1[r];
+
       m_rootR[r] = -.5*m_zw1[r]/m_zq1[r];
       m_rootR[r+m_em/2] = m_rootR[r];
       m_rootI[r] = .5*sqrt(abs(m_zw1[r]*m_zw1[r]/(m_zq1[r]*m_zq1[r]) - 4*m_zw1[r]*m_zw1[r]));
       m_rootI[r+m_em/2] = -m_rootI[r];
+
+      complex_t pole (
+        -.5*m_zw1[r]/m_zq1[r],
+        .5*sqrt(abs(m_zw1[r]*m_zw1[r]/(m_zq1[r]*m_zq1[r]) - 4*m_zw1[r]*m_zw1[r])));
+
+      complex_t zero (0, m_zeros[r-1]);
+
+      addPoleZeroConjugatePairs (pole, zero);
     }
+
     if (a0 != 0)
     {
       m_rootR[r+1+m_em/2] = -sqrt(fbb/(.1*a0-1))*tp;
       m_rootI[r+1+m_em/2] = 0;
-    }
 
-    for (int i = 0; i < n; i+=2)
-    {
-      ComplexPair poles;
-      ComplexPair zeros;
-
-      poles.first = complex_t (m_rootR[i+1], m_rootI[i+1]);
-      zeros.first = complex_t (0, m_zeros[i/2]);
-
-      poles.second = std::conj (poles.first);
-      zeros.second = std::conj (zeros.first);
-
-      add (poles, zeros);
+      add (-sqrt(fbb/(.1*a0-1))*tp, infinity());
     }
 
     setNormal (0, (numPoles&1) ? 1. : pow (10., -rippleDb / 20.0));
@@ -281,34 +311,6 @@ double AnalogLowPass::calcsn(double u)
       break;
   }
   return sn;
-}
-
-double AnalogLowPass::ellipticK(double k)
-{
-  double a[50];
-  double theta[50];
-  a[0] = atan(k/sqrt(1-k*k));
-  theta[0] = doublePi*.5;
-  int i = 0;
-  for(;;)
-  {
-    double x = 2/(1+sin(a[i]))-1;
-    double y = sin(a[i])*sin(theta[i]);
-    a[i+1] = atan(sqrt(1-x*x)/x);
-    theta[i+1] = .5*(theta[i]+atan(y/sqrt(1-y*y)));
-    double e = 1-a[i+1]*2/doublePi;
-    i++;
-    if (e < 1e-7)
-      break;
-    if (i == 49)
-      break;
-  }
-  int j;
-  double p = 1;
-  for (j = 1; j <= i; j++)
-    p *= 1+cos(a[j]);
-  double x = doublePi*.25 + theta[i]/2;
-  return log(tan(x))*p;
 }
 
 //------------------------------------------------------------------------------

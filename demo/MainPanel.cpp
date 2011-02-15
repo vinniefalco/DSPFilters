@@ -95,8 +95,9 @@ MainPanel::MainPanel()
     ComboBox* c = new ComboBox;
     c->setBounds (x, y, 120, 24);
     c->addItem ("Amen Break", 1);
-    c->addItem ("White Noise", 2);
-    c->addItem ("Sine Wave (440Hz)", 3);
+    c->addItem ("Sine Wave (440Hz)", 2);
+    c->addItem ("White Noise", 3);
+    c->addItem ("Pink Noise", 4);
     addToLayout (c, anchorTopLeft);
     addAndMakeVisible (c);
     m_menuAudio = c;    
@@ -227,11 +228,11 @@ MainPanel::~MainPanel()
 
 /*
 
-Gain  Phase  Poles
+Resp   Phase  Poles
 
-+--------+   Delay
-|Response|
-+--------+   Step
++---------+   Delay
+|  Brick  |
++---------+   Step
 
 */
 void MainPanel::createCharts (const Rectangle<int>& r)
@@ -243,7 +244,7 @@ void MainPanel::createCharts (const Rectangle<int>& r)
   const int h2 = h * 2 + gap; //r.getHeight() - (h + gap);
 
   {
-    BrickWallChart* c = new BrickWallChart (m_listeners);
+    GainChart* c = new GainChart (m_listeners);
     c->setBounds (r.getX(), r.getY(), w, h);
     addToLayout (c, Point<int>(0, 0), Point<int>(33, 33));
     addAndMakeVisible (c);
@@ -264,7 +265,7 @@ void MainPanel::createCharts (const Rectangle<int>& r)
   }
 
   {
-    GainChart* c = new GainChart (m_listeners);
+    BrickWallChart* c = new BrickWallChart (m_listeners);
     c->setBounds (r.getX(), r.getY() + h + gap, w2, h2);
     addToLayout (c, Point<int>(0, 33), Point<int>(66, 100));
     addAndMakeVisible (c);
@@ -540,17 +541,21 @@ void MainPanel::setAudio (int audioId)
     }
     break;
 
-  case 2: // White Noise
-    source = new NoiseAudioSource;
-    break;
-
-  case 3: // sine wave
+  case 2: // sine wave
     {
       ToneGeneratorAudioSource* tgas = new ToneGeneratorAudioSource ();
       tgas->setFrequency (440);
       tgas->setAmplitude (1.f);
       source = tgas;
     }
+    break;
+
+  case 3: // White Noise
+    source = new NoiseAudioSource;
+    break;
+
+  case 4: // Pink Noise
+    source = new NoiseAudioSource (true);
     break;
   };
 

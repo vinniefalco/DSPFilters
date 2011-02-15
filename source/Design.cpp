@@ -386,13 +386,13 @@ public:
 class RolloffInfo : public ParamInfo
 {
 public:
-  RolloffInfo () : ParamInfo (idRolloff, "Rolloff")
+  RolloffInfo () : ParamInfo (idRolloff, "W")
   {
-    szName = "Rolloff";
+    szName = "Transition Width";
     szUnits= "";
-    minValue = 0.00001;
-    maxValue = 0.5;
-    defaultValue = .01;
+    minValue = -16;
+    maxValue = 4;
+    defaultValue = 0;
   }
 };
 

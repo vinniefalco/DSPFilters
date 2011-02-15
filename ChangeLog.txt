@@ -1,0 +1,9 @@
+---------------------------------
+CHANGELOG (From Newest to Oldest)
+---------------------------------
+
+2/14/2011
+
+- Optimized DirectFormII
+
+- Added Pink Noise as a sound source

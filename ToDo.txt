@@ -18,4 +18,7 @@
 - SmoothedFilterDesign API to use sample rate to allow specification
   of transition time in milliseconds
 
+- Process all channels at once per sample in SmoothedFilter, never loop
+  over channels per sample, so we can specialize for stereo states
+
 More Documentation, Bibliography

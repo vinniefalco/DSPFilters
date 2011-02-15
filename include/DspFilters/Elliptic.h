@@ -51,6 +51,13 @@ namespace Dsp {
 
 namespace Elliptic {
 
+// Solves for Jacobi elliptics
+class Solver
+{
+public:
+  static double ellipticK (double k);
+};
+
 // Half-band analog prototype (s-plane)
 
 class AnalogLowPass : public LayoutBase
@@ -69,8 +76,8 @@ private:
   void calcqz      ();
   double findfact	 (int t);
   double calcsn		 (double u);
-  double ellipticK (double k);
 
+#if 0
   template<int n>
   struct CalcArray
   {
@@ -82,6 +89,8 @@ private:
   private:
     double m_a[n];
   };
+#else
+#endif
 
   double m_p0;
   double m_q;
@@ -92,21 +101,21 @@ private:
   int m_m;
   int m_n2;
   int m_em;
-  CalcArray<100> m_zeros;
-  CalcArray<100> m_c1;
-  CalcArray<100> m_b1;
-  CalcArray<100> m_a1;
-  CalcArray<100> m_d1;
-  CalcArray<100> m_q1;
-  CalcArray<100> m_z1;
-  CalcArray<100> m_f1;
-  CalcArray<100> m_s1;
-  CalcArray<100> m_p ;
-  CalcArray<100> m_zw1;
-  CalcArray<100> m_zf1;
-  CalcArray<100> m_zq1;
-  CalcArray<100> m_rootR;
-  CalcArray<100> m_rootI;
+  double m_zeros[100];
+  double m_c1[100];
+  double m_b1[100];
+  double m_a1[100];
+  double m_d1[100];
+  double m_q1[100];
+  double m_z1[100];
+  double m_f1[100];
+  double m_s1[100];
+  double m_p [100];
+  double m_zw1[100];
+  double m_zf1[100];
+  double m_zq1[100];
+  double m_rootR[100];
+  double m_rootI[100];
 
   int m_numPoles;
   double m_rippleDb;
