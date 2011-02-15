@@ -68,8 +68,8 @@ public:
   // The solutions are placed in roots.
   //
   void solve (int degree,
-              bool polish = false,
-              bool sort = false);
+              bool polish = true,
+              bool sort = true);
 
   // Evaluates the polynomial at x
   complex_t eval (int degree,
