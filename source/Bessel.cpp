@@ -42,12 +42,16 @@ namespace Dsp {
 namespace Bessel {
 
 // returns fact(n) = n!
-static double fact( double n )
+static double fact (int n)
 {
   if (n == 0)
     return 1;
-  else
-    return n * fact (n - 1);
+
+  double y = n;
+  for (double m = n; --m;)
+    y *= m;
+
+  return y;
 }
 
 // returns the k-th zero based coefficient of the reverse bessel polynomial of degree n
@@ -77,24 +81,16 @@ void AnalogLowPass::design (int numPoles)
 
     solver.solve (numPoles);
 
-#if 0
-    for (int i = 0; i < numPoles; ++i)
-    {
-      complex_t y = solver.eval (numPoles + 1, solver.root()[i]);
-      assert (y.real() < 1e-6 && y.imag() < 1e-6);
-    }
-#endif
-
     const double n2 = 2 * numPoles;
     const int pairs = numPoles / 2;
     for (int i = 0; i < pairs; ++i)
     {
-      complex_t c = solver.root()[2*i];
+      complex_t c = solver.root()[i];
       addPoleZeroConjugatePairs (c, infinity());
     }
 
     if (numPoles & 1)
-      add (-1, infinity());
+      add (solver.root()[pairs].real(), infinity());
   }
 }
 

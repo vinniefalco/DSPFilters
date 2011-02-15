@@ -44,7 +44,7 @@ void RootFinder::solve (int degree,
 {
   assert (degree <= m_maxdegree);
 
-  const double EPS = 1.0e-14;
+  const double EPS = 1.0e-30;
 
   int i, its;
   complex_t x, b, c;
@@ -81,6 +81,7 @@ void RootFinder::solve (int degree,
     for (int j = 0; j < m; ++j)
       laguerre (degree, m_a, m_root[j], its);
 
+  // sort by descending imag()
   if (sort)
   {
     for (int j = 1; j < m; ++j)
@@ -89,7 +90,7 @@ void RootFinder::solve (int degree,
 
       for (i = j - 1; i >= 0; --i )
       {
-        if (std::real (m_root[i]) <= std::real(x))
+        if (m_root[i].imag() >= x.imag())
           break;
 
         m_root[i+1] = m_root[i];
@@ -137,7 +138,7 @@ void RootFinder::laguerre (int degree,
     g2 = g * g;
     h  = g2 - 2.0 * f / b;
     
-    sq = sqrt(double(m - 1) * (double(m) * h - g2));
+    sq = sqrt (double(m - 1) * (double(m) * h - g2));
     gp = g + sq;
     gm = g - sq;
     
@@ -154,6 +155,8 @@ void RootFinder::laguerre (int degree,
     else
       x -= frac[iter / MT] * dx;
   }
+
+  throw std::logic_error ("laguerre failed");
 }
 
 //------------------------------------------------------------------------------

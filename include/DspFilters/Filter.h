@@ -179,7 +179,7 @@ protected:
 
 template <class DesignClass,
           int Channels = 0,
-          class StateType = DirectFormI>
+          class StateType = DirectFormII>
 class FilterDesign : public FilterDesignBase <DesignClass>
 {
 public:
