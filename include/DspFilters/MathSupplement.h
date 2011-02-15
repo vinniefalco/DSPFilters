@@ -67,7 +67,7 @@ inline const complex_t infinity()
 
 inline const complex_t adjust_imag (const complex_t& c)
 {
-  if (fabs (c.imag()) < 1e-6)
+  if (fabs (c.imag()) < 1e-30)
     return complex_t (c.real(), 0);
   else
     return c;

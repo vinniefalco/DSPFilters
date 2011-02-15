@@ -137,7 +137,6 @@ public:
 
   void reset ()
   {
-    m_v0 = 0;
     m_v1 = 0;
     m_v2 = 0;
   }
@@ -145,15 +144,21 @@ public:
   template <typename Sample>
   Sample process (const Sample in, const BiquadBase& s)
   {
+#if 0
     double d2 = m_v2 = m_v1;
     double d1 = m_v1 = m_v0;
     double d0 = m_v0 = in - s.m_a1 * d1 + s.m_a2 * d2;
     double out = s.m_b0 * d0 + s.m_b1 * d1 + s.m_b2 * d2 + ac();
+#else
+    double w   = in - s.m_a1 * m_v1 - s.m_a2 * m_v2 + ac();
+    double out =      s.m_b0 * w    + s.m_b1 * m_v1 + s.m_b2 * m_v2;
+    m_v2 = m_v1;
+    m_v1 = w;
+#endif
     return static_cast<Sample> (out);
   }
 
 private:
-  double m_v0; // v[0]
   double m_v1; // v[-1]
   double m_v2; // v[-2]
 };
