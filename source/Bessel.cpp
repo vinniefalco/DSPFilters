@@ -61,6 +61,8 @@ static double reversebessel (int k, int n)
     ((fact (n - k) * fact(k)) * pow(2., n - k));
 }
 
+//------------------------------------------------------------------------------
+
 AnalogLowPass::AnalogLowPass ()
   : m_numPoles (-1)
 {
@@ -91,6 +93,52 @@ void AnalogLowPass::design (int numPoles)
 
     if (numPoles & 1)
       add (solver.root()[pairs].real(), infinity());
+  }
+}
+
+//------------------------------------------------------------------------------
+
+AnalogLowShelf::AnalogLowShelf ()
+  : m_numPoles (-1)
+{
+  setNormal (doublePi, 1);
+}
+
+void AnalogLowShelf::design (int numPoles, double gainDb)
+{
+  if (m_numPoles != numPoles ||
+      m_gainDb != gainDb)
+  {
+    m_numPoles = numPoles;
+    m_gainDb = gainDb;
+
+    reset ();
+
+    const double G = pow (10., gainDb / 20) - 1;
+
+    RootFinderSpace<50> poles;
+    for (int i = 0; i < numPoles + 1; ++i)
+      poles.coef()[i] = reversebessel (i, numPoles);
+    poles.solve (numPoles);
+
+    RootFinderSpace<50> zeros;
+    for (int i = 0; i < numPoles + 1; ++i)
+      zeros.coef()[i] = reversebessel (i, numPoles);
+    double a0 = reversebessel (0, numPoles);
+    zeros.coef()[0] += G * a0;
+    zeros.solve (numPoles);
+
+    const double n2 = 2 * numPoles;
+    const int pairs = numPoles / 2;
+    for (int i = 0; i < pairs; ++i)
+    {
+      complex_t p = poles.root()[i];
+      complex_t z = zeros.root()[i];
+      addPoleZeroConjugatePairs (p, z);
+    }
+
+    if (numPoles & 1)
+      add (poles.root()[pairs].real(), zeros.root()[pairs].real());
   }
 }
 
@@ -148,6 +196,20 @@ void BandStopBase::setup (int order,
                      widthFrequency / sampleRate,
                      m_digitalProto,
                      m_analogProto);
+
+  Cascade::setLayout (m_digitalProto);
+}
+
+void LowShelfBase::setup (int order,
+                          double sampleRate,
+                          double cutoffFrequency,
+                          double gainDb)
+{
+  m_analogProto.design (order, gainDb);
+
+  LowPassTransform (cutoffFrequency / sampleRate,
+                    m_digitalProto,
+                    m_analogProto);
 
   Cascade::setLayout (m_digitalProto);
 }
