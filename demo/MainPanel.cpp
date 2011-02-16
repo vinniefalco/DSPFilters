@@ -369,6 +369,7 @@ void MainPanel::buildTypeMenu (ComboBox* ctrl)
     // 3
 	  ctrl->addItem ("Band Pass",   4);
 	  ctrl->addItem ("Band Stop",   5);
+	  ctrl->addItem ("Low Shelf",   6);
 	  break;
 
   case 7: // Custom
@@ -511,6 +512,7 @@ void MainPanel::createFilter ()
     case 2: createFilterState <Dsp::Bessel::Design::HighPass <50> > (&f, &fo); break;
     case 4: createFilterState <Dsp::Bessel::Design::BandPass <50> > (&f, &fo); break;
     case 5: createFilterState <Dsp::Bessel::Design::BandStop <50> > (&f, &fo); break;
+    case 6: createFilterState <Dsp::Bessel::Design::LowShelf <50> > (&f, &fo); break;
     };
   }
   //

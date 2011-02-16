@@ -66,6 +66,20 @@ private:
 
 //------------------------------------------------------------------------------
 
+class AnalogLowShelf : public LayoutBase
+{
+public:
+  AnalogLowShelf ();
+
+  void design (int numPoles, double gainDb);
+
+private:
+  int m_numPoles;
+  double m_gainDb;
+};
+
+//------------------------------------------------------------------------------
+
 // Factored implementations to reduce template instantiations
 
 struct LowPassBase : PoleFilterBase <AnalogLowPass>
@@ -98,6 +112,14 @@ struct BandStopBase : PoleFilterBase <AnalogLowPass>
               double widthFrequency);
 };
 
+struct LowShelfBase : PoleFilterBase <AnalogLowShelf>
+{
+  void setup (int order,
+              double sampleRate,
+              double cutoffFrequency,
+              double gainDb);
+};
+
 //------------------------------------------------------------------------------
 
 //
@@ -121,6 +143,11 @@ struct BandPass : PoleFilter <BandPassBase, MaxOrder, MaxOrder*2>
 
 template <int MaxOrder>
 struct BandStop : PoleFilter <BandStopBase, MaxOrder, MaxOrder*2>
+{
+};
+
+template <int MaxOrder>
+struct LowShelf : PoleFilter <LowShelfBase, MaxOrder, MaxOrder*2>
 {
 };
 
@@ -166,6 +193,26 @@ struct TypeII : DesignBase, FilterClass
   }
 };
 
+template <class FilterClass>
+struct TypeIII : DesignBase, FilterClass
+{
+  // this ctor could be factored out
+  TypeIII ()
+  {
+    addBuiltinParamInfo (idOrder);
+    addBuiltinParamInfo (idFrequency);
+    addBuiltinParamInfo (idGain);
+  }
+
+  void setParams (const Params& params)
+  {
+    FilterClass::setup (int(params[1]),
+                        params[0],
+                        params[2],
+                        params[3]);
+  }
+};
+
 //------------------------------------------------------------------------------
 
 // Factored descriptions to reduce template instantiations
@@ -192,6 +239,12 @@ struct BandStopDescription
 {
   Kind getKind () const { return kindHighPass; }
   const char* getName() const { return "Bessel Band Stop"; }
+};
+
+struct LowShelfDescription
+{
+  Kind getKind () const { return kindLowShelf; }
+  const char* getName() const { return "Bessel Low Shelf"; }
 };
 
 //------------------------------------------------------------------------------
@@ -221,6 +274,12 @@ struct BandPass : TypeII <Bessel::BandPass <MaxOrder> >,
 template <int MaxOrder>
 struct BandStop : TypeII <Bessel::BandStop <MaxOrder> >,
                   BandStopDescription
+{
+};
+
+template <int MaxOrder>
+struct LowShelf : TypeIII <Bessel::LowShelf <MaxOrder> >,
+                  LowShelfDescription
 {
 };
 
