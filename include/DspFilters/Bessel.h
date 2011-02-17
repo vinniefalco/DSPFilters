@@ -381,3 +381,4 @@ struct LowShelf : TypeIII <Bessel::LowShelf <MaxOrder> >,
 
 #endif
 
+/* This is a test of svn:external */
