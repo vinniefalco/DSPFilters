@@ -61,7 +61,7 @@ public:
     template <typename Sample>
     inline Sample process (const Sample in, const BiquadBase& b)
     {
-      return static_cast<Sample> (StateType::process (in, b) + ac());
+      return static_cast<Sample> (StateType::process1 (in, b) + ac());
     }
   };
 
