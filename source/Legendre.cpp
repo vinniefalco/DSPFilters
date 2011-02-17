@@ -251,62 +251,41 @@ void AnalogLowPass::design (int numPoles)
 
     reset ();
 
-    if (numPoles == 3)
+    double w[50];
+    lopt(w, numPoles);
+
+    int degree = numPoles * 2;
+    RootFinderSpace<100> poles;
+    poles.coef()[0] = 1;
+    poles.coef()[1] = 0;
+    for (int i = 1; i <= degree; ++i)
     {
-      double w[20];
-      int i,n;
-
-      n = numPoles;
-
-      std::ostringstream os;
-
-      lopt(w,n);
-      for (i=1;i<=n;i++) {
-        if (w[i])
-        os << w[i] << "w^" << 2*i << ' ';
-      }
-
-      std::string s = os.str();
-
-      RootFinderSpace<50> factors;
-      factors.coef()[0] =  1;
-      factors.coef()[1] =  0;
-      factors.coef()[2] =  1;
-      factors.coef()[3] =  0;
-      factors.coef()[4] = -3;
-      factors.coef()[5] =  0;
-      factors.coef()[6] =  3;
-      factors.solve (6);
-
-      RootFinderSpace<50> poles;
-      poles.coef()[0] = 0.577;
-      poles.coef()[1] = 1.359;
-      poles.coef()[2] = 1.310;
-      poles.coef()[3] = 1;
-      poles.solve (numPoles);
-
-      const double n2 = 2 * numPoles;
-      const int pairs = numPoles / 2;
-      for (int i = 0; i < pairs; ++i)
-      {
-        complex_t c = poles.root()[i];
-        addPoleZeroConjugatePairs (c, infinity());
-      }
-
-      if (numPoles & 1)
-        add (poles.root()[pairs].real(), infinity());
+      poles.coef()[2*i] = w[i];
+      poles.coef()[2*i+1] = 0;
     }
-    else
-    {
-      const int pairs = numPoles / 2;
-      for (int i = 0; i < pairs; ++i)
-      {
-        addPoleZeroConjugatePairs (infinity(), infinity());
-      }
+    poles.solve (degree);
 
-      if (numPoles & 1)
-        add (infinity(), infinity());
-      }
+    // reverse a + bi
+    for (int i = 0; i < degree; ++i)
+      poles.root()[i] = complex_t (poles.root()[i].imag(), poles.root()[i].real());
+    // discard a > 0
+    int j = 0;
+    for (int i = 0; i < degree; ++i)
+      if (poles.root()[i].real() <= 0)
+        poles.root()[j++] = poles.root()[i];
+    // sort descending imag() and cut degree in half
+    poles.sort (degree/2);
+
+    const double n2 = 2 * numPoles;
+    const int pairs = numPoles / 2;
+    for (int i = 0; i < pairs; ++i)
+    {
+      complex_t c = poles.root()[i];
+      addPoleZeroConjugatePairs (c, infinity());
+    }
+
+    if (numPoles & 1)
+      add (poles.root()[pairs].real(), infinity());
   }
 }
 
