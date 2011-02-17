@@ -47,6 +47,8 @@ namespace Dsp {
  *
  */
 
+class BiquadBase;
+
 //------------------------------------------------------------------------------
 
 /*
@@ -56,20 +58,12 @@ namespace Dsp {
 class DenormalPrevention
 {
 public:
-  // small alternating current
-#if 0
-  static double ac ()
-  {
-    // technically not thread safe but does it matter?
-    static double v = 1e-16;
-    return v = -v;
-  }
-#else
   DenormalPrevention ()
     : m_v (1e-30)
   {
   }
 
+  // small alternating current
   inline double ac ()
   {
     return m_v = -m_v;
@@ -77,7 +71,6 @@ public:
 
 private:
   double m_v;
-#endif
 };
 
 //------------------------------------------------------------------------------
@@ -90,7 +83,7 @@ private:
  *  y[n] = (b0/a0)*x[n] + (b1/a0)*x[n-1] + (b2/a0)*x[n-2]
  *                      - (a1/a0)*y[n-1] - (a2/a0)*y[n-2]  
  */
-class DirectFormI : private DenormalPrevention
+class DirectFormI
 {
 public:
   DirectFormI ()
@@ -106,10 +99,9 @@ public:
     m_y2 = 0;
   }
 
-  // process one sample without denormal prevention,
-  // used by Cascade::Stage
+  // process one sample without denormal prevention
   template <typename Sample>
-  inline Sample process1 (const Sample in, const BiquadBase& s)
+  inline Sample process (const Sample in, const BiquadBase& s)
   {
     double out = s.m_b0*in + s.m_b1*m_x1 + s.m_b2*m_x2
                            - s.m_a1*m_y1 - s.m_a2*m_y2;
@@ -121,17 +113,11 @@ public:
     return static_cast<Sample> (out);
   }
 
-  template <typename Sample>
-  inline Sample process (const Sample in, const BiquadBase& s)
-  {
-    return static_cast<Sample> (process1 (in, s) + ac());
-  }
-
 protected:
-  double m_x1; // x[n-1]
   double m_x2; // x[n-2]
-  double m_y1; // y[n-1]
   double m_y2; // y[n-2]
+  double m_x1; // x[n-1]
+  double m_y1; // y[n-1]
 };
 
 //------------------------------------------------------------------------------
@@ -141,11 +127,11 @@ protected:
  *
  * Difference equation:
  *
- *  v[n] =        *x[n] - (a1/a0)*v[n-1] - (a2/a0)*v[n-2]
+ *  v[n] =         x[n] - (a1/a0)*v[n-1] - (a2/a0)*v[n-2]
  *  y(n) = (b0/a0)*v[n] + (b1/a0)*v[n-1] + (b2/a0)*v[n-2]
  *
  */
-class DirectFormII : private DenormalPrevention
+class DirectFormII
 {
 public:
   DirectFormII ()
@@ -160,19 +146,15 @@ public:
   }
 
   template <typename Sample>
-  Sample process1 (const Sample in, const BiquadBase& s)
+  Sample process (const Sample in, const BiquadBase& s)
   {
-    double w   = in - s.m_a1 * m_v1 - s.m_a2 * m_v2;
-    double out =      s.m_b0 * w    + s.m_b1 * m_v1 + s.m_b2 * m_v2;
+    double w   = in - s.m_a1*m_v1 - s.m_a2*m_v2;
+    double out =      s.m_b0*w    + s.m_b1*m_v1 + s.m_b2*m_v2;
+
     m_v2 = m_v1;
     m_v1 = w;
-    return static_cast<Sample> (out);
-  }
 
-  template <typename Sample>
-  inline Sample process (const Sample in, const BiquadBase& s)
-  {
-    return static_cast<Sample> (process1 (in, s) + ac());
+    return static_cast<Sample> (out);
   }
 
 private:
@@ -183,7 +165,7 @@ private:
 //------------------------------------------------------------------------------
 
 // Holds an array of states suitable for multi-channel processing
-template <int Channels, class StateType = DirectFormI>
+template <int Channels, class StateType>
 class ChannelsState
 {
 public:

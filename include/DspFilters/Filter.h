@@ -177,6 +177,8 @@ protected:
   DesignClass m_design;
 };
 
+
+
 template <class DesignClass,
           int Channels = 0,
           class StateType = DirectFormII>
@@ -189,7 +191,7 @@ public:
 
   int getNumChannels()
   {
-    return m_state.getNumChannels();
+    return Channels;
   }
 
   void reset ()
@@ -231,7 +233,7 @@ class SimpleFilter : public FilterClass
 public:
   int getNumChannels()
   {
-    return m_state.getNumChannels();
+    return Channels;
   }
 
   void reset ()
