@@ -56,6 +56,7 @@ THE SOFTWARE.
 #include "DspFilters/ChebyshevII.h"
 #include "DspFilters/Custom.h"
 #include "DspFilters/Elliptic.h"
+#include "DspFilters/Legendre.h"
 #include "DspFilters/RBJ.h"
 
 // OLD STUFF, DON'T USE!

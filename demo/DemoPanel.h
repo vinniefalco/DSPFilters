@@ -68,7 +68,7 @@ private:
 	  idChebyII=3,
 	  idElliptic=4,
 	  idBesselOld=5,
-	  idLegendere=6
+	  idLegendereOld=6
   };
 
   // Kind
@@ -146,7 +146,7 @@ private:
 	  Dsp::BesselOldBandPass<kMaxOrder,1> besselBp;
 	  Dsp::BesselOldBandStop<kMaxOrder,1> besselBs;
 
-	  Dsp::LegendereLowPass<kMaxOrder,1> legendereLp;
+	  Dsp::LegendereOldLowPass<kMaxOrder,1> LegendereOldLp;
   };
 
 private:

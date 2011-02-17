@@ -54,7 +54,7 @@ class Cascade
 {
 public:
   template <class StateType>
-  class StateBase
+  class StateBase : private DenormalPrevention
   {
   public:
     template <typename Sample>
@@ -64,7 +64,8 @@ public:
       StateType* state = m_stateArray;
       Biquad const* stage = c.m_stageArray;
       for (int i = c.m_numStages; --i >= 0; ++state, ++stage)
-        out = state->process (out, *stage);
+        out = state->process1 (out, *stage);
+      out += ac ();
       return static_cast<Sample> (out);
     }
 

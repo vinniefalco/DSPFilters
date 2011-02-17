@@ -296,7 +296,8 @@ void MainPanel::buildFamilyMenu (ComboBox* ctrl)
   ctrl->addItem ("Chebyshev II", 4);
   ctrl->addItem ("Elliptic",     5);
   ctrl->addItem ("Bessel",       6);
-  ctrl->addItem ("Custom",       7);
+  ctrl->addItem ("Legendre",    7);
+  ctrl->addItem ("Custom",       8);
 }
 
 void MainPanel::buildTypeMenu (ComboBox* ctrl)
@@ -372,7 +373,15 @@ void MainPanel::buildTypeMenu (ComboBox* ctrl)
 	  ctrl->addItem ("Low Shelf",   6);
 	  break;
 
-  case 7: // Custom
+  case 7: // Legendre
+    ctrl->addItem ("Low Pass",    1);
+	  ctrl->addItem ("High Pass",   2);
+    // 3
+	  ctrl->addItem ("Band Pass",   4);
+	  ctrl->addItem ("Band Stop",   5);
+	  break;
+
+  case 8: // Custom
     ctrl->addItem ("Two-Pole", 1);
     ctrl->addItem ("One-Pole", 2);
   };
@@ -403,7 +412,7 @@ void MainPanel::createFilterDesign (Dsp::Filter** pFilter, Dsp::Filter** pAudioF
 template <class DesignType>
 void MainPanel::createFilterState (Dsp::Filter** pFilter, Dsp::Filter** pAudioFilter)
 {
-  *pFilter = new Dsp::FilterDesign <DesignType>;
+  *pFilter = new Dsp::FilterDesign <DesignType, 1>;
 
   switch (m_menuStateType->getSelectedId())
   {
@@ -516,9 +525,22 @@ void MainPanel::createFilter ()
     };
   }
   //
-  // Custom
+  // Bessel
   //
   else if (familyId == 7)
+  {
+    switch (typeId)
+    {
+    case 1: createFilterState <Dsp::Legendre::Design::LowPass <50> > (&f, &fo); break;
+    case 2: createFilterState <Dsp::Legendre::Design::HighPass <50> > (&f, &fo); break;
+    case 4: createFilterState <Dsp::Legendre::Design::BandPass <50> > (&f, &fo); break;
+    case 5: createFilterState <Dsp::Legendre::Design::BandStop <50> > (&f, &fo); break;
+    };
+  }
+  //
+  // Custom
+  //
+  else if (familyId == 8)
   {
     switch (typeId)
     {

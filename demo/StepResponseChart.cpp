@@ -40,6 +40,7 @@ THE SOFTWARE.
 
 StepResponseChart::StepResponseChart (FilterListeners& listeners)
   : FilterChart (listeners)
+  , m_ymax (1)
 {
 }
 
@@ -66,17 +67,76 @@ void StepResponseChart::paintContents (Graphics& g)
 /*
  * compute the path.
  * the x coordinates will range from 0..1
- * the y coordinates will be in seconds
  *
  */
 void StepResponseChart::update ()
 {
+  m_isDefined = false;
   m_path.clear();
+
+  m_ymax = .25f;
 
   if (m_filter)
   {
+    m_filter->reset ();
+
     const Rectangle<int> bounds = getLocalBounds ();
     const Rectangle<int> r = bounds.reduced (4, 4);
+
+    //int numSamples = r.getWidth ();
+    int numSamples = 2048;
+    float* impulse = new float [numSamples];
+    Dsp::zero (numSamples, impulse);
+    impulse[0] = 1;
+    m_filter->process (numSamples, &impulse);
+
+    // chop off empty tail
+    int bigs = 0;
+    int n = numSamples-1;
+    for (int i = numSamples-1; i > 100; --i)
+    {
+      n--;
+      if (impulse[i] > 1e-4)
+      {
+        bigs++;
+        if (bigs > 10)
+          break;
+      }
+    }
+    numSamples = jmin (numSamples, int (1.2 * n));
+
+    m_isDefined = true;
+    for (int xi = 0; xi < r.getWidth()-1; ++xi )
+    {
+      // resample
+      float x = xi * numSamples / float(r.getWidth());
+      float t = x - floor(x);
+      const float y0 = impulse [int(x)];
+      const float y1 = impulse [int(x)+1];
+      float y = y0 + t * (y1 - y0);
+
+      if (!Dsp::is_nan (y))
+      {
+        x /= numSamples;
+        if (xi == 0)
+          m_path.startNewSubPath (x, y);
+        else
+          m_path.lineTo (x, y);
+
+        m_ymax = jmax (fabs(y), m_ymax);
+      }
+      else
+      {
+        m_path.clear ();
+        m_isDefined = false;
+        break;
+      }
+    }
+
+    if (m_isDefined)
+      m_path.startNewSubPath (0, 0);
+
+    delete[] impulse;
   }
 
   repaint();
@@ -88,6 +148,15 @@ AffineTransform StepResponseChart::calcTransform ()
   const Rectangle<int> r = bounds.reduced (4, 4);
 
   AffineTransform t;
+
+  // scale x from 0..1 to 0..getWidth(), flip vertical, scale
+  t = AffineTransform::scale (float(r.getWidth()), -1.f / m_ymax);
+
+  // scale y to fit bounds
+  t = t.scaled (1.f, r.getHeight () / 2.1f);
+
+  // translate
+  t = t.translated (float(r.getX()), float(r.getCentreY()));
 
   return t;
 }

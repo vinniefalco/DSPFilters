@@ -492,6 +492,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\include\DspFilters\Legendre.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\include\DspFilters\MathSupplement.h"
 					>
 				</File>
@@ -573,6 +577,10 @@
 				</File>
 				<File
 					RelativePath="..\..\source\Filter.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\Legendre.cpp"
 					>
 				</File>
 				<File

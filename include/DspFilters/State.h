@@ -49,8 +49,6 @@ namespace Dsp {
 
 //------------------------------------------------------------------------------
 
-namespace detail {
-
 /*
  * Hack to prevent denormals
  *
@@ -59,15 +57,28 @@ class DenormalPrevention
 {
 public:
   // small alternating current
+#if 0
   static double ac ()
   {
     // technically not thread safe but does it matter?
     static double v = 1e-16;
     return v = -v;
   }
-};
+#else
+  DenormalPrevention ()
+    : m_v (1e-30)
+  {
+  }
 
-}
+  inline double ac ()
+  {
+    return m_v = -m_v;
+  }
+
+private:
+  double m_v;
+#endif
+};
 
 //------------------------------------------------------------------------------
 
@@ -79,7 +90,7 @@ public:
  *  y[n] = (b0/a0)*x[n] + (b1/a0)*x[n-1] + (b2/a0)*x[n-2]
  *                      - (a1/a0)*y[n-1] - (a2/a0)*y[n-2]  
  */
-class DirectFormI : private detail::DenormalPrevention
+class DirectFormI : private DenormalPrevention
 {
 public:
   DirectFormI ()
@@ -95,18 +106,25 @@ public:
     m_y2 = 0;
   }
 
+  // process one sample without denormal prevention,
+  // used by Cascade::Stage
   template <typename Sample>
-  inline Sample process (const Sample in, const BiquadBase& s)
+  inline Sample process1 (const Sample in, const BiquadBase& s)
   {
     double out = s.m_b0*in + s.m_b1*m_x1 + s.m_b2*m_x2
-                           - s.m_a1*m_y1 - s.m_a2*m_y2
-                           + ac();
+                           - s.m_a1*m_y1 - s.m_a2*m_y2;
     m_x2 = m_x1;
     m_y2 = m_y1;
     m_x1 = in;
     m_y1 = out;
 
     return static_cast<Sample> (out);
+  }
+
+  template <typename Sample>
+  inline Sample process (const Sample in, const BiquadBase& s)
+  {
+    return static_cast<Sample> (process1 (in, s) + ac());
   }
 
 protected:
@@ -127,7 +145,7 @@ protected:
  *  y(n) = (b0/a0)*v[n] + (b1/a0)*v[n-1] + (b2/a0)*v[n-2]
  *
  */
-class DirectFormII : private detail::DenormalPrevention
+class DirectFormII : private DenormalPrevention
 {
 public:
   DirectFormII ()
@@ -142,20 +160,19 @@ public:
   }
 
   template <typename Sample>
-  Sample process (const Sample in, const BiquadBase& s)
+  Sample process1 (const Sample in, const BiquadBase& s)
   {
-#if 0
-    double d2 = m_v2 = m_v1;
-    double d1 = m_v1 = m_v0;
-    double d0 = m_v0 = in - s.m_a1 * d1 + s.m_a2 * d2;
-    double out = s.m_b0 * d0 + s.m_b1 * d1 + s.m_b2 * d2 + ac();
-#else
-    double w   = in - s.m_a1 * m_v1 - s.m_a2 * m_v2 + ac();
+    double w   = in - s.m_a1 * m_v1 - s.m_a2 * m_v2;
     double out =      s.m_b0 * w    + s.m_b1 * m_v1 + s.m_b2 * m_v2;
     m_v2 = m_v1;
     m_v1 = w;
-#endif
     return static_cast<Sample> (out);
+  }
+
+  template <typename Sample>
+  inline Sample process (const Sample in, const BiquadBase& s)
+  {
+    return static_cast<Sample> (process1 (in, s) + ac());
   }
 
 private:

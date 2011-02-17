@@ -1628,12 +1628,12 @@ struct BesselOldLowShelf : PoleFilterSpace<BesselOldShelf, LowPass, order, chann
 
 //--------------------------------------------------------------------------
 //
-// Legendere
+// LegendereOld
 //
 //--------------------------------------------------------------------------
 
 // Low pass prototype
-struct Legendere : Prototype
+struct LegendereOld : Prototype
 {
   void Design( const Spec& spec );
 
@@ -1644,7 +1644,7 @@ struct Legendere : Prototype
 };
 
 template<int order, int channels>
-struct LegendereLowPass : PoleFilterSpace<Legendere, LowPass, order, channels>
+struct LegendereOldLowPass : PoleFilterSpace<LegendereOld, LowPass, order, channels>
 {
   void SetupAs( CalcT cutoffFreq )
   {
@@ -1652,7 +1652,7 @@ struct LegendereLowPass : PoleFilterSpace<Legendere, LowPass, order, channels>
     spec.order=order;
     spec.cutoffFreq=cutoffFreq;
     spec.sampleRate=1;
-    PoleFilterSpace<Legendere, LowPass, order, channels>::Setup( spec );
+    PoleFilterSpace<LegendereOld, LowPass, order, channels>::Setup( spec );
   }
 };
 

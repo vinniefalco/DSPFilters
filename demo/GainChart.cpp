@@ -98,7 +98,7 @@ void GainChart::update ()
 
   if (m_filter)
   {
-    m_isDefined = false;
+    m_isDefined = true;
 
     const Rectangle<int> bounds = getLocalBounds ();
     const Rectangle<int> r = bounds.reduced (4, 4);

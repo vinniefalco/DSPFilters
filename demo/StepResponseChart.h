@@ -58,7 +58,9 @@ private:
   AffineTransform calcTransform ();
 
 private:
+  bool m_isDefined;
   Path m_path;
+  float m_ymax;
 };
 
 #endif
