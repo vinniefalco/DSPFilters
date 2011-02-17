@@ -11,7 +11,8 @@ win32:LIBS += \
   -lcomdlg32 \
   -luuid \
   -loleaut32 \
-  -lvfw32
+  -lvfw32 \
+  -lshlwapi
 
 QT =
 
@@ -31,27 +32,26 @@ HEADERS = \
   Common.h \
   ContentComponentConstrainer.h \
   CpuMeter.h \
-  Custom.h \
   CustomSlider.h \
-  FilterChart.h \
-  GainChart.h \
-  GroupDelayChart.h \
-  StepResponseChart.h \
   DemoPanel.h \
+  FilterChart.h \
   FilterChartOld.h \
+  FilterControls.h \
   FilterGraph.h \
+  FilteringAudioSource.h \
+  FilterListener.h \
+  GainChart.h \
   Graph.h \
+  GroupDelayChart.h \
+  MainApp.h \
+  MainPanel.h \
+  MainWindow.h \
+  StepResponseChart.h \
   NoiseAudioSource.h \
   ResamplingReader.h \
   ResizableLayout.h \
   SliderGroup.h \
   ThreadQueue.h \
-  FilterControls.h \
-  FilteringAudioSource.h \
-  FilterListener.h \
-  MainApp.h \
-  MainPanel.h \
-  MainWindow.h \
   PhaseChart.h \
   PoleZeroChart.h \
   SettingsPanel.h \
@@ -63,6 +63,7 @@ HEADERS = \
   DspFilters/ChebyshevI.h \
   DspFilters/ChebyshevII.h \
   DspFilters/Common.h \
+  DspFilters/Custom.h \
   DspFilters/Design.h \
   DspFilters/Dsp.h \
   DspFilters/DspFilter.h \
@@ -73,6 +74,7 @@ HEADERS = \
   DspFilters/PoleFilter.h \
   DspFilters/SmoothedFilter.h \
   DspFilters/RBJ.h \
+  DspFilters/RootFinder.h \
   DspFilters/State.h \
   DspFilters/Types.h \
   DspFilters/Utilities.h \
@@ -83,30 +85,31 @@ SOURCES = \
   AudioOutput.cpp \
   binaries.cpp \
   BrickWallChart.cpp \
+  BrickWallGraph.cpp \
+  CpuMeter.cpp \
+  DemoPanel.cpp \
   FilterChart.cpp \
+  FilterChartOld.cpp \
+  FilterControls.cpp \
+  FilterGraph.cpp \
+  FilteringAudioSource.cpp \
   GainChart.cpp \
+  Graph.cpp \
   GroupDelayChart.cpp \
   PhaseChart.cpp \
   PoleZeroChart.cpp \
   StepResponseChart.cpp \
-  BrickWallGraph.cpp \
-  DemoPanel.cpp \
-  FilterChartOld.cpp \
-  FilterGraph.cpp \
-  Graph.cpp \
-  CpuMeter.cpp \
   NoiseAudioSource.cpp \
   ResamplingReader.cpp \
   ResizableLayout.cpp \
   SliderGroup.cpp \
   ThreadQueue.cpp \
-  FilterControls.cpp \
-  FilteringAudioSource.cpp \
   MainApp.cpp \
   MainPanel.cpp \
   MainWindow.cpp \
   SettingsPanel.cpp \
   SettingsWindow.cpp \
+  \
   Bessel.cpp \
   Biquad.cpp \
   Butterworth.cpp \
@@ -121,5 +124,6 @@ SOURCES = \
   Param.cpp \
   PoleFilter.cpp \
   RBJ.cpp \
+  Rootfinder.cpp \
   State.cpp \
   juce_amalgamated.cpp
