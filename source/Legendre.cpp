@@ -35,6 +35,7 @@ THE SOFTWARE.
 
 #include "DspFilters/Common.h"
 #include "DspFilters/Legendre.h"
+#include "DspFilters/RootFinder.h"
 
 #include <sstream>
 #include <iostream>
@@ -250,24 +251,62 @@ void AnalogLowPass::design (int numPoles)
 
     reset ();
 
+    if (numPoles == 3)
+    {
+      double w[20];
+      int i,n;
 
+      n = numPoles;
 
-    double w[20];
-    int i,n;
+      std::ostringstream os;
 
-    n = numPoles;
+      lopt(w,n);
+      for (i=1;i<=n;i++) {
+        if (w[i])
+        os << w[i] << "w^" << 2*i << ' ';
+      }
 
-    n = 10;
-    std::ostringstream os;
+      std::string s = os.str();
 
-    lopt(w,n);
-    for (i=1;i<=n;i++) {
-      if (w[i])
-      os << w[i] << "w^" << 2*i << ' ';
+      RootFinderSpace<50> factors;
+      factors.coef()[0] =  1;
+      factors.coef()[1] =  0;
+      factors.coef()[2] =  1;
+      factors.coef()[3] =  0;
+      factors.coef()[4] = -3;
+      factors.coef()[5] =  0;
+      factors.coef()[6] =  3;
+      factors.solve (6);
+
+      RootFinderSpace<50> poles;
+      poles.coef()[0] = 0.577;
+      poles.coef()[1] = 1.359;
+      poles.coef()[2] = 1.310;
+      poles.coef()[3] = 1;
+      poles.solve (numPoles);
+
+      const double n2 = 2 * numPoles;
+      const int pairs = numPoles / 2;
+      for (int i = 0; i < pairs; ++i)
+      {
+        complex_t c = poles.root()[i];
+        addPoleZeroConjugatePairs (c, infinity());
+      }
+
+      if (numPoles & 1)
+        add (poles.root()[pairs].real(), infinity());
     }
+    else
+    {
+      const int pairs = numPoles / 2;
+      for (int i = 0; i < pairs; ++i)
+      {
+        addPoleZeroConjugatePairs (infinity(), infinity());
+      }
 
-    std::string s = os.str();
-    n = 0;
+      if (numPoles & 1)
+        add (infinity(), infinity());
+      }
   }
 }
 

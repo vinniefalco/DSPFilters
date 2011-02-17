@@ -74,7 +74,7 @@ void StepResponseChart::update ()
   m_isDefined = false;
   m_path.clear();
 
-  m_ymax = .25f;
+  m_ymax = .1f;
 
   if (m_filter)
   {
@@ -88,15 +88,16 @@ void StepResponseChart::update ()
     float* impulse = new float [numSamples];
     Dsp::zero (numSamples, impulse);
     impulse[0] = 1;
+    impulse[1] = -1;
     m_filter->process (numSamples, &impulse);
 
     // chop off empty tail
     int bigs = 0;
     int n = numSamples-1;
-    for (int i = numSamples-1; i > 100; --i)
+    for (int i = numSamples-1; i > 10; --i)
     {
       n--;
-      if (impulse[i] > 1e-4)
+      if (impulse[i] > 1e-3)
       {
         bigs++;
         if (bigs > 10)
