@@ -38,6 +38,7 @@ THE SOFTWARE.
 
 #include "DspFilters/Common.h"
 #include "DspFilters/MathSupplement.h"
+#include "DspFilters/State.h"
 #include "DspFilters/Types.h"
 
 namespace Dsp {
@@ -55,7 +56,14 @@ class BiquadBase
 {
 public:
   template <class StateType>
-  struct State : StateType { };
+  struct State : StateType, DenormalPrevention
+  {
+    template <typename Sample>
+    inline Sample process (const Sample in, const BiquadBase& b)
+    {
+      return static_cast<Sample> (StateType::process (in, b) + ac());
+    }
+  };
 
 public:
   // Calculate filter response at the given normalized frequency.
