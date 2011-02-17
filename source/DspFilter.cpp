@@ -2172,7 +2172,7 @@ void BesselOldShelf::Design( const Spec& /*spec*/ )
 
 //******************************************************************************
 
-void Legendere::Design( const Spec& /*spec*/ )
+void LegendereOld::Design( const Spec& /*spec*/ )
 {
 }
 
