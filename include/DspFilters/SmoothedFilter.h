@@ -98,6 +98,9 @@ public:
       }
 
       m_remainingSamples -= remainingSamples;
+
+      if (m_remainingSamples == 0)
+        m_transitionParams = this->getParams();
     }
 
     // do what's left
@@ -126,8 +129,6 @@ protected:
   {
     if (m_remainingSamples >= 0)
     {
-      if (m_remainingSamples == 0)
-        m_transitionParams = this->getParams();
       m_remainingSamples = m_transitionSamples;
     }
     else
