@@ -39,9 +39,9 @@ THE SOFTWARE.
 
 namespace Dsp {
 
-void RootFinder::solve (int degree,
-                        bool polish,
-                        bool doSort)
+void RootFinderBase::solve (int degree,
+                            bool polish,
+                            bool doSort)
 {
   assert (degree <= m_maxdegree);
 
@@ -86,7 +86,7 @@ void RootFinder::solve (int degree,
     sort (degree);
 }
 
-void RootFinder::sort (int degree)
+void RootFinderBase::sort (int degree)
 {
   for (int j = 1; j < degree; ++j)
   {
@@ -107,7 +107,7 @@ void RootFinder::sort (int degree)
 
 //------------------------------------------------------------------------------
 
-void RootFinder::laguerre (int degree,
+void RootFinderBase::laguerre (int degree,
                            complex_t a[],
                            complex_t& x,
                            int& its)
@@ -165,7 +165,7 @@ void RootFinder::laguerre (int degree,
 
 //------------------------------------------------------------------------------
 
-complex_t RootFinder::eval (int degree,
+complex_t RootFinderBase::eval (int degree,
                             const complex_t& x )
 {
   complex_t y;

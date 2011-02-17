@@ -46,7 +46,7 @@ namespace Dsp {
 // complex-valued coefficients using a numerical method.
 //
 
-class RootFinder
+class RootFinderBase
 {
 public:
   struct Array
@@ -108,9 +108,9 @@ protected:
 //------------------------------------------------------------------------------
 
 template<int maxdegree>
-struct RootFinderSpace : RootFinder
+struct RootFinder : RootFinderBase
 {
-  RootFinderSpace()
+  RootFinder()
   {
     m_maxdegree = maxdegree;
     m_a  = m_a0;

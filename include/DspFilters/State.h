@@ -59,7 +59,7 @@ class DenormalPrevention
 {
 public:
   DenormalPrevention ()
-    : m_v (1e-30)
+    : m_v (1e-16)
   {
   }
 
@@ -101,7 +101,7 @@ public:
 
   // process one sample without denormal prevention
   template <typename Sample>
-  inline Sample process (const Sample in, const BiquadBase& s)
+  inline Sample process1 (const Sample in, const BiquadBase& s)
   {
     double out = s.m_b0*in + s.m_b1*m_x1 + s.m_b2*m_x2
                            - s.m_a1*m_y1 - s.m_a2*m_y2;
@@ -146,7 +146,7 @@ public:
   }
 
   template <typename Sample>
-  Sample process (const Sample in, const BiquadBase& s)
+  Sample process1 (const Sample in, const BiquadBase& s)
   {
     double w   = in - s.m_a1*m_v1 - s.m_a2*m_v2;
     double out =      s.m_b0*w    + s.m_b1*m_v1 + s.m_b2*m_v2;

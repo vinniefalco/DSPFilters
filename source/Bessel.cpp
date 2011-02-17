@@ -69,7 +69,8 @@ AnalogLowPass::AnalogLowPass ()
   setNormal (0, 1);
 }
 
-void AnalogLowPass::design (int numPoles)
+void AnalogLowPass::design (int numPoles,
+                            WorkspaceBase& w)
 {
   if (m_numPoles != numPoles)
   {
@@ -77,10 +78,9 @@ void AnalogLowPass::design (int numPoles)
 
     reset ();
 
-    RootFinderSpace<50> solver;
+    RootFinderBase& solver (w.roots);
     for (int i = 0; i < numPoles + 1; ++i)
       solver.coef()[i] = reversebessel (i, numPoles);
-
     solver.solve (numPoles);
 
     const double n2 = 2 * numPoles;
@@ -104,7 +104,9 @@ AnalogLowShelf::AnalogLowShelf ()
   setNormal (doublePi, 1);
 }
 
-void AnalogLowShelf::design (int numPoles, double gainDb)
+void AnalogLowShelf::design (int numPoles,
+                             double gainDb,
+                             WorkspaceBase& w)
 {
   if (m_numPoles != numPoles ||
       m_gainDb != gainDb)
@@ -116,12 +118,12 @@ void AnalogLowShelf::design (int numPoles, double gainDb)
 
     const double G = pow (10., gainDb / 20) - 1;
 
-    RootFinderSpace<50> poles;
+    RootFinderBase& poles (w.roots);
     for (int i = 0; i < numPoles + 1; ++i)
       poles.coef()[i] = reversebessel (i, numPoles);
     poles.solve (numPoles);
 
-    RootFinderSpace<50> zeros;
+    RootFinder<50> zeros;
     for (int i = 0; i < numPoles + 1; ++i)
       zeros.coef()[i] = reversebessel (i, numPoles);
     double a0 = reversebessel (0, numPoles);
@@ -146,9 +148,10 @@ void AnalogLowShelf::design (int numPoles, double gainDb)
 
 void LowPassBase::setup (int order,
                          double sampleRate,
-                         double cutoffFrequency)
+                         double cutoffFrequency,
+                         WorkspaceBase& w)
 {
-  m_analogProto.design (order);
+  m_analogProto.design (order, w);
 
   LowPassTransform (cutoffFrequency / sampleRate,
                     m_digitalProto,
@@ -159,9 +162,10 @@ void LowPassBase::setup (int order,
 
 void HighPassBase::setup (int order,
                           double sampleRate,
-                          double cutoffFrequency)
+                          double cutoffFrequency,
+                          WorkspaceBase& w)
 {
-  m_analogProto.design (order);
+  m_analogProto.design (order, w);
 
   HighPassTransform (cutoffFrequency / sampleRate,
                      m_digitalProto,
@@ -173,9 +177,10 @@ void HighPassBase::setup (int order,
 void BandPassBase::setup (int order,
                           double sampleRate,
                           double centerFrequency,
-                          double widthFrequency)
+                          double widthFrequency,
+                          WorkspaceBase& w)
 {
-  m_analogProto.design (order);
+  m_analogProto.design (order, w);
 
   BandPassTransform (centerFrequency / sampleRate,
                      widthFrequency / sampleRate,
@@ -188,9 +193,10 @@ void BandPassBase::setup (int order,
 void BandStopBase::setup (int order,
                           double sampleRate,
                           double centerFrequency,
-                          double widthFrequency)
+                          double widthFrequency,
+                          WorkspaceBase& w)
 {
-  m_analogProto.design (order);
+  m_analogProto.design (order, w);
 
   BandStopTransform (centerFrequency / sampleRate,
                      widthFrequency / sampleRate,
@@ -203,9 +209,10 @@ void BandStopBase::setup (int order,
 void LowShelfBase::setup (int order,
                           double sampleRate,
                           double cutoffFrequency,
-                          double gainDb)
+                          double gainDb,
+                          WorkspaceBase& w)
 {
-  m_analogProto.design (order, gainDb);
+  m_analogProto.design (order, gainDb, w);
 
   LowPassTransform (cutoffFrequency / sampleRate,
                     m_digitalProto,

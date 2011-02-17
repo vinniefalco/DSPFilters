@@ -41,6 +41,7 @@ THE SOFTWARE.
 #include "DspFilters/Design.h"
 #include "DspFilters/Filter.h"
 #include "DspFilters/PoleFilter.h"
+#include "DspFilters/RootFinder.h"
 
 namespace Dsp {
 
@@ -51,6 +52,32 @@ namespace Dsp {
 
 namespace Bessel {
 
+// A Workspace is necessary to find roots
+
+struct WorkspaceBase
+{
+  WorkspaceBase (RootFinderBase* rootsBase)
+    : roots (*rootsBase)
+  {
+  }
+
+  RootFinderBase& roots;
+};
+
+template <int MaxOrder>
+struct Workspace : WorkspaceBase
+{
+  Workspace ()
+    : WorkspaceBase (&m_roots)
+  {
+  }
+
+private:
+  RootFinder <MaxOrder> m_roots;
+};
+
+//------------------------------------------------------------------------------
+
 // Half-band analog prototypes (s-plane)
 
 class AnalogLowPass : public LayoutBase
@@ -58,7 +85,8 @@ class AnalogLowPass : public LayoutBase
 public:
   AnalogLowPass ();
 
-  void design (const int numPoles);
+  void design (const int numPoles,
+               WorkspaceBase& w);
 
 private:
   int m_numPoles;
@@ -71,7 +99,9 @@ class AnalogLowShelf : public LayoutBase
 public:
   AnalogLowShelf ();
 
-  void design (int numPoles, double gainDb);
+  void design (int numPoles,
+               double gainDb,
+               WorkspaceBase& w);
 
 private:
   int m_numPoles;
@@ -86,14 +116,16 @@ struct LowPassBase : PoleFilterBase <AnalogLowPass>
 {
   void setup (int order,
               double sampleRate,
-              double cutoffFrequency);
+              double cutoffFrequency,
+              WorkspaceBase& w);
 };
 
 struct HighPassBase : PoleFilterBase <AnalogLowPass>
 {
   void setup (int order,
               double sampleRate,
-              double cutoffFrequency);
+              double cutoffFrequency,
+              WorkspaceBase& w);
 };
 
 struct BandPassBase : PoleFilterBase <AnalogLowPass>
@@ -101,7 +133,8 @@ struct BandPassBase : PoleFilterBase <AnalogLowPass>
   void setup (int order,
               double sampleRate,
               double centerFrequency,
-              double widthFrequency);
+              double widthFrequency,
+              WorkspaceBase& w);
 };
 
 struct BandStopBase : PoleFilterBase <AnalogLowPass>
@@ -109,7 +142,8 @@ struct BandStopBase : PoleFilterBase <AnalogLowPass>
   void setup (int order,
               double sampleRate,
               double centerFrequency,
-              double widthFrequency);
+              double widthFrequency,
+              WorkspaceBase& w);
 };
 
 struct LowShelfBase : PoleFilterBase <AnalogLowShelf>
@@ -117,7 +151,8 @@ struct LowShelfBase : PoleFilterBase <AnalogLowShelf>
   void setup (int order,
               double sampleRate,
               double cutoffFrequency,
-              double gainDb);
+              double gainDb,
+              WorkspaceBase& w);
 };
 
 //------------------------------------------------------------------------------
@@ -129,26 +164,77 @@ struct LowShelfBase : PoleFilterBase <AnalogLowShelf>
 template <int MaxOrder>
 struct LowPass : PoleFilter <LowPassBase, MaxOrder>
 {
+  void setup (int order,
+              double sampleRate,
+              double cutoffFrequency)
+  {
+    LowPassBase::setup (order,
+                        sampleRate,
+                        cutoffFrequency,
+                        Workspace <MaxOrder> ());
+  }
 };
 
 template <int MaxOrder>
 struct HighPass : PoleFilter <HighPassBase, MaxOrder>
 {
+  void setup (int order,
+              double sampleRate,
+              double cutoffFrequency)
+  {
+    HighPassBase::setup (order,
+                         sampleRate,
+                         cutoffFrequency,
+                         Workspace <MaxOrder> ());
+  }
 };
 
 template <int MaxOrder>
 struct BandPass : PoleFilter <BandPassBase, MaxOrder, MaxOrder*2>
 {
+  void setup (int order,
+              double sampleRate,
+              double centerFrequency,
+              double widthFrequency)
+  {
+    BandPassBase::setup (order,
+                         sampleRate,
+                         centerFrequency,
+                         widthFrequency,
+                         Workspace <MaxOrder> ());
+  }
 };
 
 template <int MaxOrder>
 struct BandStop : PoleFilter <BandStopBase, MaxOrder, MaxOrder*2>
 {
+  void setup (int order,
+              double sampleRate,
+              double centerFrequency,
+              double widthFrequency)
+  {
+    BandStopBase::setup (order,
+                         sampleRate,
+                         centerFrequency,
+                         widthFrequency,
+                         Workspace <MaxOrder> ());
+  }
 };
 
 template <int MaxOrder>
 struct LowShelf : PoleFilter <LowShelfBase, MaxOrder, MaxOrder*2>
 {
+  void setup (int order,
+              double sampleRate,
+              double cutoffFrequency,
+              double gainDb)
+  {
+    LowShelfBase::setup (order,
+                         sampleRate,
+                         cutoffFrequency,
+                         gainDb,
+                         Workspace <MaxOrder> ());
+  }
 };
 
 //------------------------------------------------------------------------------

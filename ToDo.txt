@@ -1,17 +1,9 @@
 - spread scale factor between all stages in a Cascade
 
-- factor a0 out of the biquad coefficients and fix everything
-
 - eliminate the second pole/zero of all conjugate pairs from the
   implementation
 
 - global remembered parameter settings by ParamID
-
-- wrapper template class for simple filter plus channel state
-
-- reuse calculations in filters when only some parameters change
-
-- put private stuff in detail namespace
 
 - SmoothedFilterDesign API to allow changing the transition samples
 
@@ -20,5 +12,11 @@
 
 - Process all channels at once per sample in SmoothedFilter, never loop
   over channels per sample, so we can specialize for stereo states
+
+- Recurrence relation for bessel polynomial to avoid overflow in fact()
+
+- Fix elliptics
+
+- Graph the cutoff, passband gain, stopband gain, ripple zone
 
 More Documentation, Bibliography
