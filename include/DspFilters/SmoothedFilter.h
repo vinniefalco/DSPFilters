@@ -47,7 +47,7 @@ namespace Dsp {
  */
 template <class DesignClass,
           int Channels,
-          class StateType = DirectFormI>
+          class StateType = DirectFormII>
 class SmoothedFilterDesign
   : public FilterDesign <DesignClass,
                        Channels,
@@ -78,7 +78,7 @@ public:
     if (remainingSamples > 0)
     {
       // interpolate parameters for each sample
-      double t = 1. / m_remainingSamples;
+      const double t = 1. / m_remainingSamples;
       double dp[maxParameters];
       for (int i = 0; i < this->m_design.getNumParams(); ++i)
         dp[i] = (this->getParams()[i] - m_transitionParams[i]) * t;

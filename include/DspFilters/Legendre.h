@@ -125,6 +125,10 @@ struct WorkspaceBase
 
   PolynomialFinderBase& poly;
   RootFinderBase& roots;
+
+private:
+  WorkspaceBase (WorkspaceBase&);
+  WorkspaceBase& operator= (WorkspaceBase&);
 };
 
 template <int MaxOrder>
