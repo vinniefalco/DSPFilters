@@ -35,7 +35,6 @@ THE SOFTWARE.
 
 #include "ContentComponentConstrainer.h"
 #include "MainWindow.h"
-#include "DemoPanel.h"
 #include "MainPanel.h"
 
 MainWindow::MainWindow () 
@@ -46,17 +45,11 @@ MainWindow::MainWindow ()
 {
   setResizable (true, false);
   
-#if 0
-  DemoPanel* contentComponent = new DemoPanel;
-  setMenuBar (contentComponent);
-  setContentComponent (contentComponent, true, true);
-#else
   MainPanel* contentComponent = new MainPanel;
   setMenuBar (contentComponent);
   setContentComponent (contentComponent, true, true);
   contentComponent->setAsConstrainerFor (this);
   ContentComponentConstrainer::attachTo (this);
-#endif
 
   centreWithSize (getWidth(), getHeight());
   setVisible (true);
