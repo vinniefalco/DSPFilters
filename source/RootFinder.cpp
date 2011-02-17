@@ -41,13 +41,13 @@ namespace Dsp {
 
 void RootFinder::solve (int degree,
                         bool polish,
-                        bool sort)
+                        bool doSort)
 {
   assert (degree <= m_maxdegree);
 
   const double EPS = 1.0e-30;
 
-  int i, its;
+  int its;
   complex_t x, b, c;
 
   int m = degree;
@@ -82,23 +82,26 @@ void RootFinder::solve (int degree,
     for (int j = 0; j < m; ++j)
       laguerre (degree, m_a, m_root[j], its);
 
-  // sort by descending imag()
-  if (sort)
+  if (doSort)
+    sort (degree);
+}
+
+void RootFinder::sort (int degree)
+{
+  for (int j = 1; j < degree; ++j)
   {
-    for (int j = 1; j < m; ++j)
+    complex_t x = m_root[j];
+
+    int i;
+    for (i = j - 1; i >= 0; --i )
     {
-      x = m_root[j];
+      if (m_root[i].imag() >= x.imag())
+        break;
 
-      for (i = j - 1; i >= 0; --i )
-      {
-        if (m_root[i].imag() >= x.imag())
-          break;
-
-        m_root[i+1] = m_root[i];
-      }
-
-      m_root[i+1] = x;
+      m_root[i+1] = m_root[i];
     }
+
+    m_root[i+1] = x;
   }
 }
 

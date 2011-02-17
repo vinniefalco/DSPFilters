@@ -69,7 +69,7 @@ public:
   //
   void solve (int degree,
               bool polish = true,
-              bool sort = true);
+              bool doSort = true);
 
   // Evaluates the polynomial at x
   complex_t eval (int degree,
@@ -82,10 +82,13 @@ public:
   }
 
   // Direct access to the resulting roots array of size degree
-  const complex_t* root() const
+  complex_t* root()
   {
     return m_root;
   }
+
+  // sort the roots by descending imaginary part
+  void sort (int degree);
 
 private:
   // Improves x as a root using Laguerre's method.
