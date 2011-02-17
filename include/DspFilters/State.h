@@ -59,7 +59,7 @@ class DenormalPrevention
 {
 public:
   DenormalPrevention ()
-    : m_v (1e-16)
+    : m_v (1e-10)
   {
   }
 
