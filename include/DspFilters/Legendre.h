@@ -141,7 +141,7 @@ struct Workspace : WorkspaceBase
 
 private:
   PolynomialFinder <MaxOrder> m_poly;
-  RootFinder <MaxOrder> m_roots;
+  RootFinder <MaxOrder * 2> m_roots;
 };
 
 //------------------------------------------------------------------------------
