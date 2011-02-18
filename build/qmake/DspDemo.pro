@@ -32,11 +32,8 @@ HEADERS = \
   ContentComponentConstrainer.h \
   CpuMeter.h \
   CustomSlider.h \
-  DemoPanel.h \
   FilterChart.h \
-  FilterChartOld.h \
   FilterControls.h \
-  FilterGraph.h \
   FilteringAudioSource.h \
   FilterListener.h \
   GainChart.h \
