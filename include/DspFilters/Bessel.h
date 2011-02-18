@@ -172,10 +172,11 @@ struct LowPass : PoleFilter <LowPassBase, MaxOrder>
               double sampleRate,
               double cutoffFrequency)
   {
+    Workspace <MaxOrder> w;
     LowPassBase::setup (order,
                         sampleRate,
                         cutoffFrequency,
-                        &Workspace <MaxOrder> ());
+                        &w);
   }
 };
 
@@ -186,10 +187,11 @@ struct HighPass : PoleFilter <HighPassBase, MaxOrder>
               double sampleRate,
               double cutoffFrequency)
   {
+    Workspace <MaxOrder> w;
     HighPassBase::setup (order,
                          sampleRate,
                          cutoffFrequency,
-                         &Workspace <MaxOrder> ());
+                         &w);
   }
 };
 
@@ -201,11 +203,12 @@ struct BandPass : PoleFilter <BandPassBase, MaxOrder, MaxOrder*2>
               double centerFrequency,
               double widthFrequency)
   {
+    Workspace <MaxOrder> w;
     BandPassBase::setup (order,
                          sampleRate,
                          centerFrequency,
                          widthFrequency,
-                         &Workspace <MaxOrder> ());
+                         &w);
   }
 };
 
@@ -217,11 +220,12 @@ struct BandStop : PoleFilter <BandStopBase, MaxOrder, MaxOrder*2>
               double centerFrequency,
               double widthFrequency)
   {
+    Workspace <MaxOrder> w;
     BandStopBase::setup (order,
                          sampleRate,
                          centerFrequency,
                          widthFrequency,
-                         &Workspace <MaxOrder> ());
+                         &w);
   }
 };
 
@@ -233,11 +237,12 @@ struct LowShelf : PoleFilter <LowShelfBase, MaxOrder, MaxOrder*2>
               double cutoffFrequency,
               double gainDb)
   {
+    Workspace <MaxOrder> w;
     LowShelfBase::setup (order,
                          sampleRate,
                          cutoffFrequency,
                          gainDb,
-                         &Workspace <MaxOrder> ());
+                         &w);
   }
 };
 
