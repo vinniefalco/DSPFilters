@@ -87,8 +87,17 @@ void StepResponseChart::update ()
     int numSamples = 2048;
     float* impulse = new float [numSamples];
     Dsp::zero (numSamples, impulse);
+#if 1
     impulse[0] = 1;
     impulse[1] = -1;
+#else
+    // Heaviside step function
+    impulse[0] = 0;
+    impulse[1] = 0.5;
+    impulse[2] = 1;
+    for (int i = 3; i < numSamples; ++i)
+      impulse[i] = 1;
+#endif
     m_filter->process (numSamples, &impulse);
 
     // chop off empty tail
