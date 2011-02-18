@@ -78,6 +78,7 @@ AudioOutput::AudioOutput()
 
 AudioOutput::~AudioOutput()
 {
+  m_audioDeviceManager->closeAudioDevice ();
   m_audioDeviceManager = 0;
 }
 
