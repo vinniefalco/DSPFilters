@@ -38,7 +38,6 @@ THE SOFTWARE.
 
 #include "DspFilters/Common.h"
 #include "DspFilters/MathSupplement.h"
-#include "DspFilters/State.h"
 #include "DspFilters/Types.h"
 
 namespace Dsp {

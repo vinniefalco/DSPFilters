@@ -236,7 +236,8 @@ AnalogLowPass::AnalogLowPass ()
   setNormal (0, 1);
 }
 
-void AnalogLowPass::design (int numPoles, WorkspaceBase& w)
+void AnalogLowPass::design (int numPoles,
+                            WorkspaceBase* w)
 {
   if (m_numPoles != numPoles)
   {
@@ -244,8 +245,8 @@ void AnalogLowPass::design (int numPoles, WorkspaceBase& w)
 
     reset ();
 
-    PolynomialFinderBase& poly (w.poly);
-    RootFinderBase& poles (w.roots);
+    PolynomialFinderBase& poly (w->poly);
+    RootFinderBase& poles (w->roots);
 
     poly.solve (numPoles);
     int degree = numPoles * 2;
@@ -287,7 +288,7 @@ void AnalogLowPass::design (int numPoles, WorkspaceBase& w)
 void LowPassBase::setup (int order,
                          double sampleRate,
                          double cutoffFrequency,
-                         WorkspaceBase& w)
+                         WorkspaceBase* w)
 {
   m_analogProto.design (order, w);
 
@@ -301,7 +302,7 @@ void LowPassBase::setup (int order,
 void HighPassBase::setup (int order,
                           double sampleRate,
                           double cutoffFrequency,
-                          WorkspaceBase& w)
+                          WorkspaceBase* w)
 {
   m_analogProto.design (order, w);
 
@@ -316,7 +317,7 @@ void BandPassBase::setup (int order,
                           double sampleRate,
                           double centerFrequency,
                           double widthFrequency,
-                          WorkspaceBase& w)
+                          WorkspaceBase* w)
 {
   m_analogProto.design (order, w);
 
@@ -332,7 +333,7 @@ void BandStopBase::setup (int order,
                           double sampleRate,
                           double centerFrequency,
                           double widthFrequency,
-                          WorkspaceBase& w)
+                          WorkspaceBase* w)
 {
   m_analogProto.design (order, w);
 

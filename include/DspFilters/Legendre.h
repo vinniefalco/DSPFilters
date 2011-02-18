@@ -153,7 +153,7 @@ class AnalogLowPass : public LayoutBase
 public:
   AnalogLowPass ();
 
-  void design (const int numPoles, WorkspaceBase& w);
+  void design (const int numPoles, WorkspaceBase* w);
 
 private:
   int m_numPoles;
@@ -168,7 +168,7 @@ struct LowPassBase : PoleFilterBase <AnalogLowPass>
   void setup (int order,
               double sampleRate,
               double cutoffFrequency,
-              WorkspaceBase& w);
+              WorkspaceBase* w);
 };
 
 struct HighPassBase : PoleFilterBase <AnalogLowPass>
@@ -176,7 +176,7 @@ struct HighPassBase : PoleFilterBase <AnalogLowPass>
   void setup (int order,
               double sampleRate,
               double cutoffFrequency,
-              WorkspaceBase& w);
+              WorkspaceBase* w);
 };
 
 struct BandPassBase : PoleFilterBase <AnalogLowPass>
@@ -185,7 +185,7 @@ struct BandPassBase : PoleFilterBase <AnalogLowPass>
               double sampleRate,
               double centerFrequency,
               double widthFrequency,
-              WorkspaceBase& w);
+              WorkspaceBase* w);
 };
 
 struct BandStopBase : PoleFilterBase <AnalogLowPass>
@@ -194,7 +194,7 @@ struct BandStopBase : PoleFilterBase <AnalogLowPass>
               double sampleRate,
               double centerFrequency,
               double widthFrequency,
-              WorkspaceBase& w);
+              WorkspaceBase* w);
 };
 
 //------------------------------------------------------------------------------
@@ -213,7 +213,7 @@ struct LowPass : PoleFilter <LowPassBase, MaxOrder>
     LowPassBase::setup (order,
                         sampleRate,
                         cutoffFrequency,
-                        Workspace <MaxOrder> ());
+                        &Workspace <MaxOrder> ());
   }
 };
 
@@ -227,7 +227,7 @@ struct HighPass : PoleFilter <HighPassBase, MaxOrder>
     HighPassBase::setup (order,
                          sampleRate,
                          cutoffFrequency,
-                         Workspace <MaxOrder> ());
+                         &Workspace <MaxOrder> ());
   }
 };
 
@@ -243,7 +243,7 @@ struct BandPass : PoleFilter <BandPassBase, MaxOrder, MaxOrder*2>
                          sampleRate,
                          centerFrequency,
                          widthFrequency,
-                         Workspace <MaxOrder> ());
+                         &Workspace <MaxOrder> ());
   }
 };
 
@@ -259,7 +259,7 @@ struct BandStop : PoleFilter <BandStopBase, MaxOrder, MaxOrder*2>
                          sampleRate,
                          centerFrequency,
                          widthFrequency,
-                         Workspace <MaxOrder> ());
+                         &Workspace <MaxOrder> ());
   }
 };
 
