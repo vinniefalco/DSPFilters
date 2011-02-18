@@ -124,7 +124,7 @@ void StepResponseChart::update ()
         else
           m_path.lineTo (x, y);
 
-        m_ymax = jmax (fabs(y), m_ymax);
+        m_ymax = jmax (float(fabs(y)), float(m_ymax));
       }
       else
       {

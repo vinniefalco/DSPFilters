@@ -28,7 +28,6 @@ HEADERS = \
   binaries.h \
   bond.h \
   BrickWallChart.h \
-  BrickWallGraph.h \
   Common.h \
   ContentComponentConstrainer.h \
   CpuMeter.h \
@@ -85,16 +84,11 @@ SOURCES = \
   AudioOutput.cpp \
   binaries.cpp \
   BrickWallChart.cpp \
-  BrickWallGraph.cpp \
   CpuMeter.cpp \
-  DemoPanel.cpp \
   FilterChart.cpp \
-  FilterChartOld.cpp \
   FilterControls.cpp \
-  FilterGraph.cpp \
   FilteringAudioSource.cpp \
   GainChart.cpp \
-  Graph.cpp \
   GroupDelayChart.cpp \
   PhaseChart.cpp \
   PoleZeroChart.cpp \
@@ -121,6 +115,7 @@ SOURCES = \
   DspFilter.cpp \
   Elliptic.cpp \
   Filter.cpp \
+  Legendre.cpp \
   Param.cpp \
   PoleFilter.cpp \
   RBJ.cpp \

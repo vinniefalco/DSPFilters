@@ -70,7 +70,7 @@ AnalogLowPass::AnalogLowPass ()
 }
 
 void AnalogLowPass::design (int numPoles,
-                            WorkspaceBase& w)
+                            WorkspaceBase* w)
 {
   if (m_numPoles != numPoles)
   {
@@ -78,7 +78,7 @@ void AnalogLowPass::design (int numPoles,
 
     reset ();
 
-    RootFinderBase& solver (w.roots);
+    RootFinderBase& solver (w->roots);
     for (int i = 0; i < numPoles + 1; ++i)
       solver.coef()[i] = reversebessel (i, numPoles);
     solver.solve (numPoles);
@@ -106,7 +106,7 @@ AnalogLowShelf::AnalogLowShelf ()
 
 void AnalogLowShelf::design (int numPoles,
                              double gainDb,
-                             WorkspaceBase& w)
+                             WorkspaceBase* w)
 {
   if (m_numPoles != numPoles ||
       m_gainDb != gainDb)
@@ -118,7 +118,7 @@ void AnalogLowShelf::design (int numPoles,
 
     const double G = pow (10., gainDb / 20) - 1;
 
-    RootFinderBase& poles (w.roots);
+    RootFinderBase& poles (w->roots);
     for (int i = 0; i < numPoles + 1; ++i)
       poles.coef()[i] = reversebessel (i, numPoles);
     poles.solve (numPoles);
@@ -149,7 +149,7 @@ void AnalogLowShelf::design (int numPoles,
 void LowPassBase::setup (int order,
                          double sampleRate,
                          double cutoffFrequency,
-                         WorkspaceBase& w)
+                         WorkspaceBase* w)
 {
   m_analogProto.design (order, w);
 
@@ -163,7 +163,7 @@ void LowPassBase::setup (int order,
 void HighPassBase::setup (int order,
                           double sampleRate,
                           double cutoffFrequency,
-                          WorkspaceBase& w)
+                          WorkspaceBase* w)
 {
   m_analogProto.design (order, w);
 
@@ -178,7 +178,7 @@ void BandPassBase::setup (int order,
                           double sampleRate,
                           double centerFrequency,
                           double widthFrequency,
-                          WorkspaceBase& w)
+                          WorkspaceBase* w)
 {
   m_analogProto.design (order, w);
 
@@ -194,7 +194,7 @@ void BandStopBase::setup (int order,
                           double sampleRate,
                           double centerFrequency,
                           double widthFrequency,
-                          WorkspaceBase& w)
+                          WorkspaceBase* w)
 {
   m_analogProto.design (order, w);
 
@@ -210,7 +210,7 @@ void LowShelfBase::setup (int order,
                           double sampleRate,
                           double cutoffFrequency,
                           double gainDb,
-                          WorkspaceBase& w)
+                          WorkspaceBase* w)
 {
   m_analogProto.design (order, gainDb, w);
 

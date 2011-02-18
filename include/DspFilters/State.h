@@ -47,32 +47,6 @@ namespace Dsp {
  *
  */
 
-class BiquadBase;
-
-//------------------------------------------------------------------------------
-
-/*
- * Hack to prevent denormals
- *
- */
-class DenormalPrevention
-{
-public:
-  DenormalPrevention ()
-    : m_v (1e-10)
-  {
-  }
-
-  // small alternating current
-  inline double ac ()
-  {
-    return m_v = -m_v;
-  }
-
-private:
-  double m_v;
-};
-
 //------------------------------------------------------------------------------
 
 /*
