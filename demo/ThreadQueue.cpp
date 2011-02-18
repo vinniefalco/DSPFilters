@@ -2,9 +2,9 @@
 #include "ThreadQueue.h"
 
 ThreadQueue::ThreadQueue ()
-  : m_head (0)
+  : m_isClosed (false)
+  , m_head (0)
   , m_tail (0)
-  , m_isClosed (false)
 {
 }
 

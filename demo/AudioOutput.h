@@ -88,9 +88,9 @@ private:
   ResamplingAudioSource* m_resampler;
   float m_gain;
   float m_gainNext;
-  int m_tempoSamplesFade;
   float m_tempo;
   float m_tempoNext;
+  int m_tempoSamplesFade;
 };
 
 #endif
