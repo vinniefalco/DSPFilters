@@ -73,7 +73,7 @@ namespace JuceDummyNamespace {}
 */
 #define JUCE_MAJOR_VERSION	  1
 #define JUCE_MINOR_VERSION	  53
-#define JUCE_BUILDNUMBER	30
+#define JUCE_BUILDNUMBER	34
 
 /** Current Juce version number.
 
@@ -1324,7 +1324,7 @@ inline int64 abs64 (const int64 n) throw()
 template <typename Type>
 inline Type juce_negate (Type n) throw()
 {
-	return sizeof (Type) == 1 ? (Type) -(char) n
+	return sizeof (Type) == 1 ? (Type) -(signed char) n
 		: (sizeof (Type) == 2 ? (Type) -(short) n
 		: (sizeof (Type) == 4 ? (Type) -(int) n
 		: ((Type) -(int64) n)));
@@ -1884,12 +1884,22 @@ public:
 	static int ftime (juce_wchar* dest, int maxChars, const juce_wchar* format, const struct tm* tm) throw();
 
 	template <typename CharPointerType>
-	static size_t lengthUpTo (const CharPointerType& text, const size_t maxCharsToCount) throw()
+	static size_t lengthUpTo (CharPointerType text, const size_t maxCharsToCount) throw()
 	{
 		size_t len = 0;
-		CharPointerType t (text);
 
-		while (len < maxCharsToCount && t.getAndAdvance() != 0)
+		while (len < maxCharsToCount && text.getAndAdvance() != 0)
+			++len;
+
+		return len;
+	}
+
+	template <typename CharPointerType>
+	static size_t lengthUpTo (CharPointerType start, const CharPointerType& end) throw()
+	{
+		size_t len = 0;
+
+		while (start < end && start.getAndAdvance() != 0)
 			++len;
 
 		return len;
@@ -2498,16 +2508,12 @@ public:
 	}
 
 	/** This is a pointer comparison, it doesn't compare the actual text. */
-	inline bool operator== (const CharPointer_UTF8& other) const throw()
-	{
-		return data == other.data;
-	}
-
-	/** This is a pointer comparison, it doesn't compare the actual text. */
-	inline bool operator!= (const CharPointer_UTF8& other) const throw()
-	{
-		return data == other.data;
-	}
+	inline bool operator== (const CharPointer_UTF8& other) const throw() { return data == other.data; }
+	inline bool operator!= (const CharPointer_UTF8& other) const throw() { return data != other.data; }
+	inline bool operator<= (const CharPointer_UTF8& other) const throw() { return data <= other.data; }
+	inline bool operator<  (const CharPointer_UTF8& other) const throw() { return data < other.data; }
+	inline bool operator>= (const CharPointer_UTF8& other) const throw() { return data >= other.data; }
+	inline bool operator>  (const CharPointer_UTF8& other) const throw() { return data > other.data; }
 
 	/** Returns the address that this pointer is pointing to. */
 	inline CharType* getAddress() const throw()	 { return data; }
@@ -2521,7 +2527,7 @@ public:
 	/** Returns the unicode character that this pointer is pointing to. */
 	juce_wchar operator*() const throw()
 	{
-		const char byte = *data;
+		const signed char byte = (signed char) *data;
 
 		if (byte >= 0)
 			return byte;
@@ -2557,7 +2563,7 @@ public:
 	/** Moves this pointer along to the next character in the string. */
 	CharPointer_UTF8& operator++() throw()
 	{
-		const char n = *data++;
+		const signed char n = (signed char) *data++;
 
 		if (n < 0)
 		{
@@ -2577,7 +2583,7 @@ public:
 		advances the pointer to point to the next character. */
 	juce_wchar getAndAdvance() throw()
 	{
-		const char byte = *data++;
+		const signed char byte = (signed char) *data++;
 
 		if (byte >= 0)
 			return byte;
@@ -2679,6 +2685,12 @@ public:
 	size_t lengthUpTo (const size_t maxCharsToCount) const throw()
 	{
 		return CharacterFunctions::lengthUpTo (*this, maxCharsToCount);
+	}
+
+	/** Returns the number of characters in this string, or up to the given end pointer, whichever is lower. */
+	size_t lengthUpTo (const CharPointer_UTF8& end) const throw()
+	{
+		return CharacterFunctions::lengthUpTo (*this, end);
 	}
 
 	/** Returns the number of bytes that are used to represent this string.
@@ -2922,7 +2934,7 @@ public:
 	{
 		while (--maxBytesToRead >= 0 && *dataToTest != 0)
 		{
-			const char byte = *dataToTest;
+			const signed char byte = (signed char) *dataToTest;
 
 			if (byte < 0)
 			{
@@ -3013,16 +3025,12 @@ public:
 	}
 
 	/** This is a pointer comparison, it doesn't compare the actual text. */
-	inline bool operator== (const CharPointer_UTF16& other) const throw()
-	{
-		return data == other.data;
-	}
-
-	/** This is a pointer comparison, it doesn't compare the actual text. */
-	inline bool operator!= (const CharPointer_UTF16& other) const throw()
-	{
-		return data == other.data;
-	}
+	inline bool operator== (const CharPointer_UTF16& other) const throw() { return data == other.data; }
+	inline bool operator!= (const CharPointer_UTF16& other) const throw() { return data != other.data; }
+	inline bool operator<= (const CharPointer_UTF16& other) const throw() { return data <= other.data; }
+	inline bool operator<  (const CharPointer_UTF16& other) const throw() { return data < other.data; }
+	inline bool operator>= (const CharPointer_UTF16& other) const throw() { return data >= other.data; }
+	inline bool operator>  (const CharPointer_UTF16& other) const throw() { return data > other.data; }
 
 	/** Returns the address that this pointer is pointing to. */
 	inline CharType* getAddress() const throw()	 { return data; }
@@ -3149,6 +3157,12 @@ public:
 	size_t lengthUpTo (const size_t maxCharsToCount) const throw()
 	{
 		return CharacterFunctions::lengthUpTo (*this, maxCharsToCount);
+	}
+
+	/** Returns the number of characters in this string, or up to the given end pointer, whichever is lower. */
+	size_t lengthUpTo (const CharPointer_UTF16& end) const throw()
+	{
+		return CharacterFunctions::lengthUpTo (*this, end);
 	}
 
 	/** Returns the number of bytes that are used to represent this string.
@@ -3444,16 +3458,12 @@ public:
 	}
 
 	/** This is a pointer comparison, it doesn't compare the actual text. */
-	inline bool operator== (const CharPointer_UTF32& other) const throw()
-	{
-		return data == other.data;
-	}
-
-	/** This is a pointer comparison, it doesn't compare the actual text. */
-	inline bool operator!= (const CharPointer_UTF32& other) const throw()
-	{
-		return data == other.data;
-	}
+	inline bool operator== (const CharPointer_UTF32& other) const throw() { return data == other.data; }
+	inline bool operator!= (const CharPointer_UTF32& other) const throw() { return data != other.data; }
+	inline bool operator<= (const CharPointer_UTF32& other) const throw() { return data <= other.data; }
+	inline bool operator<  (const CharPointer_UTF32& other) const throw() { return data < other.data; }
+	inline bool operator>= (const CharPointer_UTF32& other) const throw() { return data >= other.data; }
+	inline bool operator>  (const CharPointer_UTF32& other) const throw() { return data > other.data; }
 
 	/** Returns the address that this pointer is pointing to. */
 	inline CharType* getAddress() const throw()	 { return data; }
@@ -3556,6 +3566,12 @@ public:
 	size_t lengthUpTo (const size_t maxCharsToCount) const throw()
 	{
 		return CharacterFunctions::lengthUpTo (*this, maxCharsToCount);
+	}
+
+	/** Returns the number of characters in this string, or up to the given end pointer, whichever is lower. */
+	size_t lengthUpTo (const CharPointer_UTF32& end) const throw()
+	{
+		return CharacterFunctions::lengthUpTo (*this, end);
 	}
 
 	/** Returns the number of bytes that are used to represent this string.
@@ -3796,16 +3812,12 @@ public:
 	}
 
 	/** This is a pointer comparison, it doesn't compare the actual text. */
-	inline bool operator== (const CharPointer_ASCII& other) const throw()
-	{
-		return data == other.data;
-	}
-
-	/** This is a pointer comparison, it doesn't compare the actual text. */
-	inline bool operator!= (const CharPointer_ASCII& other) const throw()
-	{
-		return data == other.data;
-	}
+	inline bool operator== (const CharPointer_ASCII& other) const throw() { return data == other.data; }
+	inline bool operator!= (const CharPointer_ASCII& other) const throw() { return data != other.data; }
+	inline bool operator<= (const CharPointer_ASCII& other) const throw() { return data <= other.data; }
+	inline bool operator<  (const CharPointer_ASCII& other) const throw() { return data < other.data; }
+	inline bool operator>= (const CharPointer_ASCII& other) const throw() { return data >= other.data; }
+	inline bool operator>  (const CharPointer_ASCII& other) const throw() { return data > other.data; }
 
 	/** Returns the address that this pointer is pointing to. */
 	inline CharType* getAddress() const throw()	 { return data; }
@@ -3901,6 +3913,12 @@ public:
 	size_t lengthUpTo (const size_t maxCharsToCount) const throw()
 	{
 		return CharacterFunctions::lengthUpTo (*this, maxCharsToCount);
+	}
+
+	/** Returns the number of characters in this string, or up to the given end pointer, whichever is lower. */
+	size_t lengthUpTo (const CharPointer_ASCII& end) const throw()
+	{
+		return CharacterFunctions::lengthUpTo (*this, end);
 	}
 
 	/** Returns the number of bytes that are used to represent this string.
@@ -4097,7 +4115,7 @@ public:
 	{
 		while (--maxBytesToRead >= 0)
 		{
-			if (*dataToTest <= 0)
+			if (((signed char) *dataToTest) <= 0)
 				return *dataToTest == 0;
 
 			++dataToTest;
@@ -4194,6 +4212,9 @@ public:
 
 	/** Creates a string from a UTF-32 character string */
 	String (const CharPointer_UTF32& text, size_t maxChars);
+
+	/** Creates a string from a UTF-32 character string */
+	String (const CharPointer_UTF32& start, const CharPointer_UTF32& end);
 
 	/** Creates a string from an ASCII character string */
 	String (const CharPointer_ASCII& text);
@@ -4832,7 +4853,8 @@ public:
 	/** Returns a section from the start of the string that only contains a certain set of characters.
 
 		This returns the leftmost section of the string, up to (and not including) the
-		first character that occurs in the string passed in.
+		first character that occurs in the string passed in. (If none of the specified
+		characters are found in the string, the return value will just be the original string).
 	*/
 	const String initialSectionNotContaining (const String& charactersToStopAt) const;
 
@@ -5435,7 +5457,7 @@ public:
 	{
 		if (--(getCounter().numObjects) < 0)
 		{
-			DBG ("*** Dangling pointer deletion! Class: " << String (typeid (OwnerClass).name()));
+			DBG ("*** Dangling pointer deletion! Class: " << OwnerClass::getLeakedObjectClassName());
 
 			/** If you hit this, then you've managed to delete more instances of this class than you've
 				created.. That indicates that you're deleting some dangling pointers.
@@ -5463,7 +5485,7 @@ private:
 		{
 			if (numObjects.value > 0)
 			{
-				DBG ("*** Leaked objects detected: " << numObjects.value << " instance(s) of class " << String (typeid (OwnerClass).name()));
+				DBG ("*** Leaked objects detected: " << numObjects.value << " instance(s) of class " << OwnerClass::getLeakedObjectClassName());
 
 				/** If you hit this, then you've leaked one or more objects of the type specified by
 					the 'OwnerClass' template parameter - the name should have been printed by the line above.
@@ -5506,7 +5528,10 @@ private:
 
 	  @see JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR, LeakedObjectDetector
   */
-  #define JUCE_LEAK_DETECTOR(OwnerClass)	 JUCE_NAMESPACE::LeakedObjectDetector<OwnerClass> JUCE_JOIN_MACRO (leakDetector, __LINE__);
+  #define JUCE_LEAK_DETECTOR(OwnerClass) \
+		friend class JUCE_NAMESPACE::LeakedObjectDetector<OwnerClass>; \
+		static const char* getLeakedObjectClassName() throw() { return #OwnerClass; } \
+		JUCE_NAMESPACE::LeakedObjectDetector<OwnerClass> JUCE_JOIN_MACRO (leakDetector, __LINE__);
  #else
   #define JUCE_LEAK_DETECTOR(OwnerClass)
  #endif
@@ -8271,6 +8296,7 @@ public:
 
 	var (const var& valueToCopy);
 	var (int value) throw();
+	var (int64 value) throw();
 	var (bool value) throw();
 	var (double value) throw();
 	var (const char* value);
@@ -8281,6 +8307,7 @@ public:
 
 	var& operator= (const var& valueToCopy);
 	var& operator= (int value);
+	var& operator= (int64 value);
 	var& operator= (bool value);
 	var& operator= (double value);
 	var& operator= (const char* value);
@@ -8292,6 +8319,7 @@ public:
 	void swapWith (var& other) throw();
 
 	operator int() const;
+	operator int64() const;
 	operator bool() const;
 	operator float() const;
 	operator double() const;
@@ -8301,6 +8329,7 @@ public:
 
 	bool isVoid() const throw();
 	bool isInt() const throw();
+	bool isInt64() const throw();
 	bool isBool() const throw();
 	bool isDouble() const throw();
 	bool isString() const throw();
@@ -8355,6 +8384,8 @@ private:
 	friend class VariantType_Void;
 	class VariantType_Int;
 	friend class VariantType_Int;
+	class VariantType_Int64;
+	friend class VariantType_Int64;
 	class VariantType_Double;
 	friend class VariantType_Double;
 	class VariantType_Float;
@@ -8371,6 +8402,7 @@ private:
 	union ValueUnion
 	{
 		int intValue;
+		int64 int64Value;
 		bool boolValue;
 		double doubleValue;
 		String* stringValue;
@@ -19537,6 +19569,124 @@ private:
 #ifndef __JUCE_BUFFEREDINPUTSTREAM_JUCEHEADER__
 #define __JUCE_BUFFEREDINPUTSTREAM_JUCEHEADER__
 
+
+/*** Start of inlined file: juce_OptionalScopedPointer.h ***/
+#ifndef __JUCE_OPTIONALSCOPEDPOINTER_JUCEHEADER__
+#define __JUCE_OPTIONALSCOPEDPOINTER_JUCEHEADER__
+
+/**
+	Holds a pointer to an object which can optionally be deleted when this pointer
+	goes out of scope.
+
+	This acts in many ways like a ScopedPointer, but allows you to specify whether or
+	not the object is deleted.
+
+	@see ScopedPointer
+*/
+template <class ObjectType>
+class OptionalScopedPointer
+{
+public:
+
+	/** Creates an empty OptionalScopedPointer. */
+	OptionalScopedPointer() : shouldDelete (false) {}
+
+	/** Creates an OptionalScopedPointer to point to a given object, and specifying whether
+		the OptionalScopedPointer will delete it.
+
+		If takeOwnership is true, then the OptionalScopedPointer will act like a ScopedPointer,
+		deleting the object when it is itself deleted. If this parameter is false, then the
+		OptionalScopedPointer just holds a normal pointer to the object, and won't delete it.
+	*/
+	OptionalScopedPointer (ObjectType* objectToHold, bool takeOwnership)
+		: object (objectToHold), shouldDelete (takeOwnership)
+	{
+	}
+
+	/** Takes ownership of the object that another OptionalScopedPointer holds.
+
+		Like a normal ScopedPointer, the objectToTransferFrom object will become null,
+		as ownership of the managed object is transferred to this object.
+
+		The flag to indicate whether or not to delete the managed object is also
+		copied from the source object.
+	*/
+	OptionalScopedPointer (OptionalScopedPointer& objectToTransferFrom)
+		: object (objectToTransferFrom.release()),
+		  shouldDelete (objectToTransferFrom.shouldDelete)
+	{
+	}
+
+	/** Takes ownership of the object that another OptionalScopedPointer holds.
+
+		Like a normal ScopedPointer, the objectToTransferFrom object will become null,
+		as ownership of the managed object is transferred to this object.
+
+		The ownership flag that says whether or not to delete the managed object is also
+		copied from the source object.
+	*/
+	OptionalScopedPointer& operator= (OptionalScopedPointer& objectToTransferFrom)
+	{
+		if (object != objectToTransferFrom.object)
+		{
+			clear();
+			object = objectToTransferFrom.object;
+		}
+
+		shouldDelete = objectToTransferFrom.shouldDelete;
+		return *this;
+	}
+
+	/** The destructor may or may not delete the object that is being held, depending on the
+		takeOwnership flag that was specified when the object was first passed into an
+		OptionalScopedPointer constructor.
+	*/
+	~OptionalScopedPointer()
+	{
+		clear();
+	}
+
+	/** Returns the object that this pointer is managing. */
+	inline operator ObjectType*() const throw()			 { return object; }
+
+	/** Returns the object that this pointer is managing. */
+	inline ObjectType& operator*() const throw()			{ return *object; }
+
+	/** Lets you access methods and properties of the object that this pointer is holding. */
+	inline ObjectType* operator->() const throw()		   { return object; }
+
+	/** Removes the current object from this OptionalScopedPointer without deleting it.
+		This will return the current object, and set this OptionalScopedPointer to a null pointer.
+	*/
+	ObjectType* release() throw()				   { return object.release(); }
+
+	/** Resets this pointer to null, possibly deleting the object that it holds, if it has
+		ownership of it.
+	*/
+	void clear()
+	{
+		if (! shouldDelete)
+			object.release();
+	}
+
+	/** Swaps this object with another OptionalScopedPointer.
+		The two objects simply exchange their states.
+	*/
+	void swapWith (OptionalScopedPointer<ObjectType>& other) throw()
+	{
+		object.swapWith (other.object);
+		swapVariables (shouldDelete, other.shouldDelete);
+	}
+
+private:
+
+	ScopedPointer<ObjectType> object;
+	bool shouldDelete;
+};
+
+#endif   // __JUCE_OPTIONALSCOPEDPOINTER_JUCEHEADER__
+/*** End of inlined file: juce_OptionalScopedPointer.h ***/
+
 /** Wraps another input stream, and reads from it using an intermediate buffer
 
 	If you're using an input stream such as a file input stream, and making lots of
@@ -19583,8 +19733,7 @@ public:
 
 private:
 
-	InputStream* const source;
-	ScopedPointer <InputStream> sourceToDelete;
+	OptionalScopedPointer<InputStream> source;
 	int bufferSize;
 	int64 position, lastReadPos, bufferStart, bufferOverlap;
 	HeapBlock <char> buffer;
@@ -19686,8 +19835,7 @@ public:
 
 private:
 
-	OutputStream* const destStream;
-	ScopedPointer <OutputStream> streamToDelete;
+	OptionalScopedPointer<OutputStream> destStream;
 	HeapBlock <uint8> buffer;
 	class GZIPCompressorHelper;
 	friend class ScopedPointer <GZIPCompressorHelper>;
@@ -19754,8 +19902,7 @@ public:
 	int read (void* destBuffer, int maxBytesToRead);
 
 private:
-	InputStream* const sourceStream;
-	ScopedPointer <InputStream> streamToDelete;
+	OptionalScopedPointer<InputStream> sourceStream;
 	const int64 uncompressedStreamLength;
 	const bool noWrap;
 	bool isEof;
@@ -19998,8 +20145,7 @@ public:
 	bool isExhausted();
 
 private:
-	InputStream* const source;
-	ScopedPointer <InputStream> sourceToDelete;
+	OptionalScopedPointer<InputStream> source;
 	const int64 startPositionInSourceStream, lengthOfSourceStream;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SubregionStream);
@@ -20380,6 +20526,9 @@ private:
 
 #endif
 #ifndef __JUCE_MEMORYBLOCK_JUCEHEADER__
+
+#endif
+#ifndef __JUCE_OPTIONALSCOPEDPOINTER_JUCEHEADER__
 
 #endif
 #ifndef __JUCE_REFERENCECOUNTEDOBJECT_JUCEHEADER__
@@ -23954,7 +24103,7 @@ public:
 		const Point<ValueType> delta (end - start);
 		const double length = juce_hypot ((double) delta.getX(),
 										  (double) delta.getY());
-		if (length == 0)
+		if (length <= 0)
 			return start;
 
 		return Point<ValueType> (start.getX() + (ValueType) ((delta.getX() * distanceFromStart - delta.getY() * perpendicularDistance) / length),
@@ -27543,8 +27692,8 @@ private:
 			: position (position_), colour (colour_)
 		{}
 
-		bool operator== (const ColourPoint& other) const throw()   { return position == other.position && colour == other.colour; }
-		bool operator!= (const ColourPoint& other) const throw()   { return position != other.position || colour != other.colour; }
+		bool operator== (const ColourPoint& other) const throw();
+		bool operator!= (const ColourPoint& other) const throw();
 
 		double position;
 		Colour colour;
@@ -29985,6 +30134,13 @@ public:
 	*/
 	void setBounds (const RelativeRectangle& newBounds);
 
+	/** Sets the component's bounds with an expression.
+		The string is parsed as a RelativeRectangle expression - see the notes for
+		Component::setBounds (const RelativeRectangle&) for more information. This method is
+		basically just a shortcut for writing setBounds (RelativeRectangle ("..."))
+	*/
+	void setBounds (const String& newBoundsExpression);
+
 	/** Changes the component's position and size in terms of fractions of its parent's size.
 
 		The values are factors of the parent's size, so for example
@@ -31605,6 +31761,13 @@ public:
 
 		/** Returns the component that this positioner controls. */
 		Component& getComponent() const throw()	 { return component; }
+
+		/** Attempts to set the component's position to the given rectangle.
+			Unlike simply calling Component::setBounds(), this may involve the positioner
+			being smart enough to adjust itself to fit the new bounds, e.g. a RelativeRectangle's
+			positioner may try to reverse the expressions used to make them fit these new coordinates.
+		*/
+		virtual void applyNewBounds (const Rectangle<int>& newBounds) = 0;
 
 	private:
 		Component& component;
@@ -45989,6 +46152,8 @@ private:
 	int typeToScan;
 
 	void scanFor (AudioPluginFormat* format);
+	static void optionsMenuStaticCallback (int result, PluginListComponent*);
+	void optionsMenuCallback (int result);
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginListComponent);
 };
@@ -48973,6 +49138,11 @@ protected:
 		{
 			ComponentScope scope (getComponent());
 			owner.recalculateCoordinates (&scope);
+		}
+
+		void applyNewBounds (const Rectangle<int>&)
+		{
+			jassertfalse; // drawables can't be resized directly!
 		}
 
 	private:
@@ -54921,7 +55091,7 @@ private:
 #define __JUCE_RESIZABLEBORDERCOMPONENT_JUCEHEADER__
 
 /**
-	A component that resizes its parent window when dragged.
+	A component that resizes its parent component when dragged.
 
 	This component forms a frame around the edge of a component, allowing it to
 	be dragged by the edges or corners to resize it - like the way windows are
@@ -55089,7 +55259,7 @@ private:
 #ifndef __JUCE_RESIZABLECORNERCOMPONENT_JUCEHEADER__
 #define __JUCE_RESIZABLECORNERCOMPONENT_JUCEHEADER__
 
-/** A component that resizes a parent window when dragged.
+/** A component that resizes a parent component when dragged.
 
 	This is the small triangular stripey resizer component you get in the bottom-right
 	of windows (more commonly on the Mac than Windows). Put one in the corner of
@@ -55154,8 +55324,8 @@ private:
 /**
 	A base class for top-level windows that can be dragged around and resized.
 
-	To add content to the window, use its setContentComponent() method to
-	give it a component that will remain positioned inside it (leaving a gap around
+	To add content to the window, use its setContentOwned() or setContentNonOwned() methods
+	to give it a component that will remain positioned inside it (leaving a gap around
 	the edges for a border).
 
 	It's not advisable to add child components directly to a ResizableWindow: put them
@@ -55198,9 +55368,7 @@ public:
 					 bool addToDesktop);
 
 	/** Destructor.
-
-		If a content component has been set with setContentComponent(), it
-		will be deleted.
+		If a content component has been set with setContentOwned(), it will be deleted.
 	*/
 	~ResizableWindow();
 
@@ -55341,10 +55509,10 @@ public:
 
 	/** Returns the current content component.
 
-		This will be the component set by setContentComponent(), or 0 if none
+		This will be the component set by setContentOwned() or setContentNonOwned, or 0 if none
 		has yet been specified.
 
-		@see setContentComponent
+		@see setContentOwned, setContentNonOwned
 	*/
 	Component* getContentComponent() const throw()		  { return contentComponent; }
 
@@ -55356,21 +55524,41 @@ public:
 		You should never add components directly to a ResizableWindow (or any of its subclasses)
 		with addChildComponent(). Instead, add them to the content component.
 
-		@param newContentComponent  the new component to use (or null to not use one) - this
-									component will be deleted either when replaced by another call
-									to this method, or when the ResizableWindow is deleted.
-									To remove a content component without deleting it, use
-									setContentComponent (0, false).
-		@param deleteOldOne	 if true, the previous content component will be deleted; if
-									false, the previous component will just be removed without
-									deleting it.
-		@param resizeToFit	  if true, the ResizableWindow will maintain its size such that
-									it always fits around the size of the content component. If false, the
-									new content will be resized to fit the current space available.
+		@param newContentComponent  the new component to use - this component will be deleted when it's
+									no longer needed (i.e. when the window is deleted or a new content
+									component is set for it). To set a component that this window will not
+									delete, call setContentNonOwned() instead.
+		@param resizeToFitWhenContentChangesSize  if true, then the ResizableWindow will maintain its size
+									such that it always fits around the size of the content component. If false,
+									the new content will be resized to fit the current space available.
 	*/
-	void setContentComponent (Component* newContentComponent,
-							  bool deleteOldOne = true,
-							  bool resizeToFit = false);
+	void setContentOwned (Component* newContentComponent,
+						  bool resizeToFitWhenContentChangesSize);
+
+	/** Changes the current content component.
+
+		This sets a component that will be placed in the centre of the ResizableWindow,
+		(leaving a space around the edge for the border).
+
+		You should never add components directly to a ResizableWindow (or any of its subclasses)
+		with addChildComponent(). Instead, add them to the content component.
+
+		@param newContentComponent  the new component to use - this component will NOT be deleted by this
+									component, so it's the caller's responsibility to manage its lifetime (it's
+									ok to delete it while this window is still using it). To set a content
+									component that the window will delete, call setContentOwned() instead.
+		@param resizeToFitWhenContentChangesSize  if true, then the ResizableWindow will maintain its size
+									such that it always fits around the size of the content component. If false,
+									the new content will be resized to fit the current space available.
+	*/
+	void setContentNonOwned (Component* newContentComponent,
+							 bool resizeToFitWhenContentChangesSize);
+
+	/** Removes the current content component.
+		If the previous content component was added with setContentOwned(), it will also be deleted. If
+		it was added with setContentNonOwned(), it will simply be removed from this component.
+	*/
+	void clearContentComponent();
 
 	/** Changes the window so that the content component ends up with the specified size.
 
@@ -55401,6 +55589,11 @@ public:
 		backgroundColourId	  = 0x1005700,  /**< A colour to use to fill the window's background. */
 	};
 
+	/** @deprecated - use setContentOwned() and setContentNonOwned() instead. */
+	JUCE_DEPRECATED (void setContentComponent (Component* newContentComponent,
+											   bool deleteOldOne = true,
+											   bool resizeToFit = false));
+
 protected:
 
 	/** @internal */
@@ -55428,20 +55621,19 @@ protected:
 
 #if JUCE_DEBUG
 	/** Overridden to warn people about adding components directly to this component
-		instead of using setContentComponent().
+		instead of using setContentOwned().
 
 		If you know what you're doing and are sure you really want to add a component, specify
 		a base-class method call to Component::addAndMakeVisible(), to side-step this warning.
 	*/
 	void addChildComponent (Component* child, int zOrder = -1);
 	/** Overridden to warn people about adding components directly to this component
-		instead of using setContentComponent().
+		instead of using setContentOwned().
 
 		If you know what you're doing and are sure you really want to add a component, specify
 		a base-class method call to Component::addAndMakeVisible(), to side-step this warning.
 	*/
 	void addAndMakeVisible (Component* child, int zOrder = -1);
-
 #endif
 
 	ScopedPointer <ResizableCornerComponent> resizableCorner;
@@ -55450,7 +55642,7 @@ protected:
 private:
 
 	Component::SafePointer <Component> contentComponent;
-	bool resizeToFitContent, fullscreen;
+	bool ownsContentComponent, resizeToFitContent, fullscreen;
 	ComponentDragger dragger;
 	Rectangle<int> lastNonFullScreenPos;
 	ComponentBoundsConstrainer defaultConstrainer;
@@ -55460,6 +55652,7 @@ private:
 	#endif
 
 	void updateLastPos();
+	void setContent (Component* newComp, bool takeOwnership, bool resizeToFit);
 
    #if JUCE_CATCH_DEPRECATED_CODE_MISUSE
 	// The parameters for these methods have changed - please update your code!
@@ -56340,6 +56533,7 @@ public:
 	/** Destructor. */
 	~FileChooserDialogBox();
 
+   #if JUCE_MODAL_LOOPS_PERMITTED
 	/** Displays and runs the dialog box modally.
 
 		This will show the box with the specified size, returning true if the user
@@ -56357,6 +56551,7 @@ public:
 		Leave the width or height as 0 to use the default size.
 	*/
 	bool showAt (int x, int y, int width, int height);
+   #endif
 
 	/** Sets the size of this dialog box to its default and positions it either in the
 		centre of the screen, or centred around a component that is provided.
@@ -58163,9 +58358,7 @@ public:
 					bool addToDesktop = true);
 
 	/** Destructor.
-
-		If a content component has been set with setContentComponent(), it
-		will be deleted.
+		If a content component has been set with setContentOwned(), it will be deleted.
 	*/
 	~DocumentWindow();
 
@@ -58610,6 +58803,85 @@ private:
 
 #endif
 #ifndef __JUCE_RESIZABLECORNERCOMPONENT_JUCEHEADER__
+
+#endif
+#ifndef __JUCE_RESIZABLEEDGECOMPONENT_JUCEHEADER__
+
+/*** Start of inlined file: juce_ResizableEdgeComponent.h ***/
+#ifndef __JUCE_RESIZABLEEDGECOMPONENT_JUCEHEADER__
+#define __JUCE_RESIZABLEEDGECOMPONENT_JUCEHEADER__
+
+/**
+	A component that resizes its parent component when dragged.
+
+	This component forms a bar along one edge of a component, allowing it to
+	be dragged by that edges to resize it.
+
+	To use it, just add it to your component, positioning it along the appropriate
+	edge. Make sure you reposition the resizer component each time the parent's size
+	changes, to keep it in the correct position.
+
+	@see ResizbleBorderComponent, ResizableCornerComponent
+*/
+class JUCE_API  ResizableEdgeComponent  : public Component
+{
+public:
+
+	enum Edge
+	{
+		leftEdge,   /**< Indicates a vertical bar that can be dragged left/right to move the component's left-hand edge. */
+		rightEdge,  /**< Indicates a vertical bar that can be dragged left/right to move the component's right-hand edge. */
+		topEdge,	/**< Indicates a horizontal bar that can be dragged up/down to move the top of the component. */
+		bottomEdge  /**< Indicates a horizontal bar that can be dragged up/down to move the bottom of the component. */
+	};
+
+	/** Creates a resizer bar.
+
+		Pass in the target component which you want to be resized when this one is
+		dragged. The target component will usually be this component's parent, but this
+		isn't mandatory.
+
+		Remember that when the target component is resized, it'll need to move and
+		resize this component to keep it in place, as this won't happen automatically.
+
+		If the constrainer parameter is non-zero, then this object will be used to enforce
+		limits on the size and position that the component can be stretched to. Make sure
+		that the constrainer isn't deleted while still in use by this object.
+
+		@see ComponentBoundsConstrainer
+	*/
+	ResizableEdgeComponent (Component* componentToResize,
+							ComponentBoundsConstrainer* constrainer,
+							Edge edgeToResize);
+
+	/** Destructor. */
+	~ResizableEdgeComponent();
+
+	bool isVertical() const throw();
+
+protected:
+
+	/** @internal */
+	void paint (Graphics& g);
+	/** @internal */
+	void mouseDown (const MouseEvent& e);
+	/** @internal */
+	void mouseDrag (const MouseEvent& e);
+	/** @internal */
+	void mouseUp (const MouseEvent& e);
+
+private:
+	WeakReference<Component> component;
+	ComponentBoundsConstrainer* constrainer;
+	Rectangle<int> originalBounds;
+	const Edge edge;
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ResizableEdgeComponent);
+};
+
+#endif   // __JUCE_RESIZABLEEDGECOMPONENT_JUCEHEADER__
+/*** End of inlined file: juce_ResizableEdgeComponent.h ***/
+
 
 #endif
 #ifndef __JUCE_SCROLLBAR_JUCEHEADER__
@@ -63542,8 +63814,9 @@ private:
 	Any of the methods available to a DocumentWindow or ResizableWindow are also
 	available to this, so it can be made resizable, have a menu bar, etc.
 
-	To add items to the box, see the ResizableWindow::setContentComponent() method.
-	Don't add components directly to this class - always put them in a content component!
+	To add items to the box, see the ResizableWindow::setContentOwned() or
+	ResizableWindow::setContentNonOwned() methods. Don't add components directly to this
+	class - always put them in a content component!
 
 	You'll need to override the DocumentWindow::closeButtonPressed() method to handle
 	the user clicking the close button - for more info, see the DocumentWindow
@@ -63572,9 +63845,7 @@ public:
 				  bool addToDesktop = true);
 
 	/** Destructor.
-
-		If a content component has been set with setContentComponent(), it
-		will be deleted.
+		If a content component has been set with setContentOwned(), it will be deleted.
 	*/
 	~DialogWindow();
 
@@ -65415,8 +65686,7 @@ public:
 	int subPathIndex;
 
 	/** Returns true if the current segment is the last in the current sub-path. */
-	bool isLastInSubpath() const throw()	{ return stackPos == stackBase.getData()
-														   && (index >= path.numElements || points [index] == Path::moveMarker); }
+	bool isLastInSubpath() const throw();
 
 	/** This is the default value that should be used for the tolerance value (see the constructor parameters). */
 	static const float defaultTolerance;
