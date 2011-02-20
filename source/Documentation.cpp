@@ -43,15 +43,15 @@ has remained shrouded in secrecy with little publicly available source
 code....until now."_
 
 ----
-Building on the work of cherished luminaries such as Sophocles Orfanidis, Andreas Antoniou, Martin Holters, and Udo Zolzer, this library harnesses the power of C++ templates to solve a useful problem in digital signal processing: the realization of multichannel IIR filters of arbitrary order and prescribed specifications with various properties such as Butterworth, Chebyshev, and Elliptic responses. The library is provided under the MIT license and is therefore fully compatible with proprietary usage.
+Building on the work of cherished luminaries such as Sophocles Orfanidis, Andreas Antoniou, Martin Holters, and Udo Zolzer, this library harnesses the power of C++ templates to solve a useful problem in digital signal processing: the realization of multichannel IIR filters of arbitrary order and prescribed specifications with various properties such as Butterworth, Chebyshev, Elliptic, and Optimum-L (Legendre) responses. The library is provided under the MIT license and is therefore fully compatible with proprietary usage.
 
 Classes are designed as independent re-usable building blocks. Use some or all of the provided features, or extend the functionality by writing your own objects that plug into the robust framework. Only the code that you need will get linked into your application. Here's a list of features:
 
 	* Exclusive focus on IIR filters instead of boring FIR filters
 	* Complete implementation of all "RBJ Biquad" Cookbook filter formulas
-	* Butterworth, Chebyshev, Elliptic, Bessel designs
+	* Butterworth, Chebyshev, Elliptic, Bessel, Legendre designs
 	* Low Pass, High Pass, Band Pass, Band Stop transformations
-	* Low, High, and Band Shelf filter implementations for all types
+	* Low, High, and Band Shelf filter implementations for most types
 	* Smooth interpolation of filter settings, pole/zeros, and biquad coefficients to achieve seamless parameter changes
 	* Representation of digital filters using poles and zeros
 	* Realization using Direct Form I, Direct Form II, or user provided class
@@ -60,14 +60,6 @@ Classes are designed as independent re-usable building blocks. Use some or all o
 	* Utility template functions for manipulating buffers of sample data
 	* No calls to malloc or new, great for embedded systems
 	* No external dependencies, just the standard C++ library!
-
-An accompanying demonstration application, which works on most popular platforms by using the separately licensed Juce source library (included), exercises all the functionality of the library, including these features:
-
-	* Dynamic interface creates itself using filter introspection capabilities
-	* Audio playback with real time application of a selected filter
-	* Live time stretching and amplitude modulation without clicks or popping
-	* Charts to show magnitude, phase response and pole/zero placement
-	* Thread safety "best practices" for audio applications
 
 Using these filters is easy:
 
@@ -82,6 +74,18 @@ Using these filters is easy:
              1);   // ripple dB
     f.process (numSamples, arrayOfChannels);
 }}}
+
+An accompanying demonstration program that works on most popular platforms by using the separately licensed Juce application framework (included), exercises all the functionality of the library, including these features:
+
+	* Dynamic interface creates itself using filter introspection capabilities
+	* Audio playback with real time application of a selected filter
+	* Live time stretching and amplitude modulation without clicks or popping
+	* Charts to show magnitude, phase response and pole/zero placement
+	* Thread safety "best practices" for audio applications
+
+Here's a screenshot of the DspFilters Demo
+
+http://dspfilterscpp.googlecode.com/files/dspfiltersdemo.png
 
 If you've been searching in futility on the Internet for some source code for implementing high order filters, then look no further because this is it! Whether you are a student of C++ or digital signal processing, a writer of audio plugins, or even a VST synthesizer coder, "A Collection of Useful C++ Classes for Digital Signal Processing" might have something for you!
 

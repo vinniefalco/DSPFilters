@@ -47,16 +47,6 @@ THE SOFTWARE.
 #  pragma warning (disable: 4355)
 #endif
 
-class FilterChartOld;
-const int kSampleRate=44100;
-const int kMaxOrder=50;
-
-struct Spec : Dsp::Spec
-{
-	int proto;
-	int kind;
-};
-
 inline Rectangle<int> tlbr (int top, int left, int bottom, int right)
 {
   return Rectangle<int> (left, top, right-left, bottom-top);

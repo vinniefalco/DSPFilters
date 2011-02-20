@@ -384,6 +384,26 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="_Juce"
+				>
+				<File
+					RelativePath="..\..\demo\juce_amalgamated.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\juce_amalgamated.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\juce_amalgamated.mm"
+					>
+				</File>
+				<File
+					RelativePath="..\..\demo\juce_Config.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="DspFilters"
@@ -429,10 +449,6 @@
 				</File>
 				<File
 					RelativePath="..\..\include\DspFilters\Dsp.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\include\DspFilters\DspFilter.h"
 					>
 				</File>
 				<File
@@ -524,10 +540,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\source\DspFilter.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\source\Elliptic.cpp"
 					>
 				</File>
@@ -560,26 +572,6 @@
 					>
 				</File>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="Juce"
-			>
-			<File
-				RelativePath="..\..\demo\juce_amalgamated.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\demo\juce_amalgamated.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\demo\juce_amalgamated.mm"
-				>
-			</File>
-			<File
-				RelativePath="..\..\demo\juce_Config.h"
-				>
-			</File>
 		</Filter>
 		<File
 			RelativePath="..\..\ChangeLog.txt"
