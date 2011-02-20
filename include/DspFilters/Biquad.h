@@ -184,18 +184,18 @@ public:
   {
     BiquadPoleState z (*this);
     double t = 1. / numSamples;
-    complex_t dp0 = (z.pole[0] - zPrev.pole[0]) * t;
-    complex_t dp1 = (z.pole[1] - zPrev.pole[1]) * t;
-    complex_t dz0 = (z.zero[0] - zPrev.zero[0]) * t;
-    complex_t dz1 = (z.zero[1] - zPrev.zero[1]) * t;
+    complex_t dp0 = (z.poles.first  - zPrev.poles.first) * t;
+    complex_t dp1 = (z.poles.second - zPrev.poles.second) * t;
+    complex_t dz0 = (z.zeros.first  - zPrev.zeros.first) * t;
+    complex_t dz1 = (z.zeros.second - zPrev.zeros.second) * t;
     double dg = (z.gain - zPrev.gain) * t;
 
     while (--numSamples >= 0)
     {
-      zPrev.pole[0] += dp0;
-      zPrev.pole[1] += dp1;
-      zPrev.zero[0] += dz0;
-      zPrev.zero[1] += dz1;
+      zPrev.poles.first += dp0;
+      zPrev.poles.second += dp1;
+      zPrev.zeros.first += dz0;
+      zPrev.zeros.second += dz1;
       zPrev.gain += dg;
 
       *dest++ = state.process (*dest, Biquad (zPrev));
