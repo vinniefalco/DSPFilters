@@ -87,7 +87,7 @@ void AnalogLowPass::design (int numPoles,
     reset ();
 
     // calculate
-    const double ep = rippleDb; // passband ripple
+    //const double ep = rippleDb; // passband ripple
 
     const int n = numPoles;
 

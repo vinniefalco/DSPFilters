@@ -326,7 +326,7 @@ class PassbandRippleDbInfo : public ParamInfo
 {
 public:
   PassbandRippleDbInfo ()
-    : ParamInfo (idPassbandRippleDb, "Ripple")
+    : ParamInfo (idRippleDb, "Ripple")
   {
     szName = "Passband Ripple";
     szUnits= "dB";
@@ -356,7 +356,7 @@ public:
 class StopAttenuationDbInfo : public ParamInfo
 {
 public:
-  StopAttenuationDbInfo () : ParamInfo (idStopAttenuationDb, "Stop")
+  StopAttenuationDbInfo () : ParamInfo (idStopDb, "Stop")
   {
     szName = "Stopband Attenuation";
     szUnits= "dB";
@@ -539,8 +539,8 @@ ParamInfo* DesignBase::getBuiltinParamInfo (int paramId)
   case idGain:              p = &builtinParamGain; break;
   case idSlope:             p = &builtinParamSlope; break;
   case idOrder:             p = &builtinParamOrder; break;
-  case idPassbandRippleDb:  p = &builtinPassbandRippleDb; break;
-  case idStopAttenuationDb: p = &builtinStopAttenuationDb; break;
+  case idRippleDb:  p = &builtinPassbandRippleDb; break;
+  case idStopDb: p = &builtinStopAttenuationDb; break;
   case idRolloff:         p = &builtinRolloff; break;
   
   case idPoleRho:           p = &builtinPoleRho; break;

@@ -113,8 +113,7 @@ protected:
 
   void applyScale (double scale);
 
-protected:
-public:// UNFORTUNATELY had to do this for DirectFormI/II
+public:
   double m_a0;
   double m_a1;
   double m_a2;
@@ -148,12 +147,12 @@ public:
   // Process a block of samples, interpolating from the old section's coefficients
   // to this section's coefficients, over numSamples. This implements smooth
   // parameter changes.
-#if 0
+
   template <class StateType, typename Sample>
-  void process (int numSamples,
-                Sample* dest,
-                StateType& state,
-                Biquad sectionPrev) const 
+  void smoothProcess1 (int numSamples,
+                       Sample* dest,
+                       StateType& state,
+                       Biquad sectionPrev) const 
   {
     double t = 1. / numSamples;
     double da1 = (m_a1 - sectionPrev.m_a1) * t;
@@ -178,10 +177,10 @@ public:
   // to this section's pole/zeros, over numSamples. The interpolation is done
   // in the z-plane using polar coordinates.
   template <class StateType, typename Sample>
-  void process (int numSamples,
-                Sample* dest,
-                StateType& state,
-                BiquadPoleState zPrev) const 
+  void smoothProcess2 (int numSamples,
+                       Sample* dest,
+                       StateType& state,
+                       BiquadPoleState zPrev) const 
   {
     BiquadPoleState z (*this);
     double t = 1. / numSamples;
@@ -202,7 +201,6 @@ public:
       *dest++ = state.process (*dest, Biquad (zPrev));
     }
   }
-#endif
 
 public:
   // Export these as public

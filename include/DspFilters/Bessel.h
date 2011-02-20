@@ -248,37 +248,82 @@ struct LowShelf : PoleFilter <LowShelfBase, MaxOrder, MaxOrder*2>
 
 //------------------------------------------------------------------------------
 
+//
+// Gui-friendly Design layer
+//
+
 namespace Design {
 
-template <class FilterClass>
-struct TypeI : DesignBase, FilterClass
+struct TypeIBase : DesignBase
 {
-  // this ctor could be factored out
-  TypeI ()
+  static int getNumParams ()
   {
-    addBuiltinParamInfo (idOrder);
-    addBuiltinParamInfo (idFrequency);
+    return 3;
   }
 
-  void setParams (const Params& params)
+  static const ParamInfo2 getParamInfo_2 ()
   {
-    FilterClass::setup (int(params[1]),
-                        params[0],
-                        params[2]);
+    return ParamInfo2::defaultCutoffFrequencyParam ();
   }
 };
 
 template <class FilterClass>
-struct TypeII : DesignBase, FilterClass
+struct TypeI : TypeIBase, FilterClass
 {
-  // this ctor could be factored out
-  TypeII ()
+  void setParams (const Params& params)
   {
-    addBuiltinParamInfo (idOrder);
-    addBuiltinParamInfo (idFrequency);
-    addBuiltinParamInfo (idBandwidthHz);
+    FilterClass::setup (int(params[1]), params[0], params[2]);
+  }
+};
+
+struct TypeIIBase : DesignBase
+{
+  static int getNumParams ()
+  {
+    return 4;
   }
 
+  static const ParamInfo2 getParamInfo_2 ()
+  {
+    return ParamInfo2::defaultCenterFrequencyParam ();
+  }
+
+  static const ParamInfo2 getParamInfo_3 ()
+  {
+    return ParamInfo2::defaultBandwidthHzParam ();
+  }
+};
+
+template <class FilterClass>
+struct TypeII : TypeIIBase, FilterClass
+{
+  void setParams (const Params& params)
+  {
+    FilterClass::setup (int(params[1]), params[0], params[2], params[3]);
+  }
+};
+
+struct TypeIIIBase : DesignBase
+{
+  static int getNumParams ()
+  {
+    return 4;
+  }
+
+  static const ParamInfo2 getParamInfo_2 ()
+  {
+    return ParamInfo2::defaultCutoffFrequencyParam ();
+  }
+
+  static const ParamInfo2 getParamInfo_3 ()
+  {
+    return ParamInfo2::defaultGainParam ();
+  }
+};
+
+template <class FilterClass>
+struct TypeIII : TypeIIIBase, FilterClass
+{
   void setParams (const Params& params)
   {
     FilterClass::setup (int(params[1]),
@@ -288,58 +333,85 @@ struct TypeII : DesignBase, FilterClass
   }
 };
 
-template <class FilterClass>
-struct TypeIII : DesignBase, FilterClass
+struct TypeIVBase : DesignBase
 {
-  // this ctor could be factored out
-  TypeIII ()
+  static int getNumParams ()
   {
-    addBuiltinParamInfo (idOrder);
-    addBuiltinParamInfo (idFrequency);
-    addBuiltinParamInfo (idGain);
+    return 5;
   }
 
-  void setParams (const Params& params)
+  static const ParamInfo2 getParamInfo_2 ()
   {
-    FilterClass::setup (int(params[1]),
-                        params[0],
-                        params[2],
-                        params[3]);
+    return ParamInfo2::defaultCenterFrequencyParam ();
+  }
+
+  static const ParamInfo2 getParamInfo_3 ()
+  {
+    return ParamInfo2::defaultBandwidthHzParam ();
+  }
+
+  static const ParamInfo2 getParamInfo_4 ()
+  {
+    return ParamInfo2::defaultGainParam ();
   }
 };
 
-//------------------------------------------------------------------------------
+template <class FilterClass>
+struct TypeIV : TypeIVBase, FilterClass
+{
+  void setParams (const Params& params)
+  {
+    FilterClass::setup (int(params[1]), params[0], params[2], params[3], params[4]);
+  }
+};
 
-// Factored descriptions to reduce template instantiations
+// Factored kind and name
 
 struct LowPassDescription
 {
-  Kind getKind () const { return kindLowPass; }
-  const char* getName() const { return "Bessel Low Pass"; }
+  static Kind getKind () { return kindLowPass; }
+  static const char* getName() { return "Bessel Low Pass"; }
 };
 
 struct HighPassDescription
 {
-  Kind getKind () const { return kindHighPass; }
-  const char* getName() const { return "Bessel High Pass"; }
+  static Kind getKind () { return kindHighPass; }
+  static const char* getName() { return "Bessel High Pass"; }
 };
 
 struct BandPassDescription
 {
-  Kind getKind () const { return kindHighPass; }
-  const char* getName() const { return "Bessel Band Pass"; }
+  static Kind getKind () { return kindHighPass; }
+  static const char* getName() { return "Bessel Band Pass"; }
 };
 
 struct BandStopDescription
 {
-  Kind getKind () const { return kindHighPass; }
-  const char* getName() const { return "Bessel Band Stop"; }
+  static Kind getKind () { return kindHighPass; }
+  static const char* getName() { return "Bessel Band Stop"; }
 };
 
 struct LowShelfDescription
 {
-  Kind getKind () const { return kindLowShelf; }
-  const char* getName() const { return "Bessel Low Shelf"; }
+  static Kind getKind () { return kindLowShelf; }
+  static const char* getName() { return "Bessel Low Shelf"; }
+};
+
+// This glues on the Order parameter
+template <int MaxOrder,
+          template <class> class TypeClass,
+          template <int> class FilterClass>
+struct OrderBase : TypeClass <FilterClass <MaxOrder> >
+{
+  const ParamInfo2 getParamInfo_1 () const
+  {
+    return ParamInfo2 (idOrder, "Order", "Order",
+                       1, MaxOrder, 2,
+                       &ParamInfo2::Int_toControlValue,
+                       &ParamInfo2::Int_toNativeValue,
+                       &ParamInfo2::Int_toString);
+
+  }
 };
 
 //------------------------------------------------------------------------------
@@ -349,31 +421,35 @@ struct LowShelfDescription
 //
 
 template <int MaxOrder>
-struct LowPass : TypeI <Bessel::LowPass <MaxOrder> >,
+struct LowPass : OrderBase <MaxOrder, TypeI, Bessel::LowPass>,
                  LowPassDescription
 {
 };
 
 template <int MaxOrder>
-struct HighPass : TypeI <Bessel::HighPass <MaxOrder> >,
+struct HighPass : OrderBase <MaxOrder, TypeI, Bessel::HighPass>,
                   HighPassDescription
 {
 };
 
 template <int MaxOrder>
-struct BandPass : TypeII <Bessel::BandPass <MaxOrder> >,
+struct BandPass : OrderBase <MaxOrder, TypeII, Bessel::BandPass>,
                   BandPassDescription
 {
 };
 
 template <int MaxOrder>
-struct BandStop : TypeII <Bessel::BandStop <MaxOrder> >,
+struct BandStop : OrderBase <MaxOrder, TypeII, Bessel::BandStop>,
                   BandStopDescription
 {
 };
 
+/*
+ * NOT IMPLEMENTED
+ *
+ */
 template <int MaxOrder>
-struct LowShelf : TypeIII <Bessel::LowShelf <MaxOrder> >,
+struct LowShelf : OrderBase <MaxOrder, TypeIII, Bessel::LowShelf>,
                   LowShelfDescription
 {
 };

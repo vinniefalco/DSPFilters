@@ -68,7 +68,6 @@ static inline double m_sqrt2 ()
 //
 //  (n+1)Pn+1 = (2n+1)xPn - nPn-1 	Recursion relation.
 //
-
 void PolynomialFinderBase::legendre (double *p, int n)
 {
   int i,j;
@@ -105,7 +104,6 @@ void PolynomialFinderBase::legendre (double *p, int n)
     for (j=i-1;j>=0;j-=2) {
       p[j+1] += (2*i-1)*m_bb[j]/i;
     }
-
   }
 }
 
@@ -255,15 +253,11 @@ void AnalogLowPass::design (int numPoles,
     poles.coef()[1] = 0;
     for (int i = 1; i <= degree; ++i)
     {
-      poles.coef()[2*i] = poly.coef()[i];
+      poles.coef()[2*i] = poly.coef()[i] * ((i & 1) ? -1 : 1);
       poles.coef()[2*i+1] = 0;
     }
     poles.solve (degree);
 
-    // reverse a + bi
-    for (int i = 0; i < degree; ++i)
-      poles.root()[i] = complex_t (poles.root()[i].imag(), poles.root()[i].real());
-    // discard a > 0
     int j = 0;
     for (int i = 0; i < degree; ++i)
       if (poles.root()[i].real() <= 0)

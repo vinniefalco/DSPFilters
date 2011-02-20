@@ -53,6 +53,21 @@ public:
 
   const ParamInfo& getParamInfo (int index) const;
 
+  // Sampling rate is the first param for every Design filter
+  static const ParamInfo2 getParamInfo_0 ()
+  {
+    return ParamInfo2::defaultSampleRateParam ();
+  }
+
+  // These should never get called
+  static const ParamInfo2 getParamInfo_1 () { return ParamInfo2(); }
+  static const ParamInfo2 getParamInfo_2 () { return ParamInfo2(); }
+  static const ParamInfo2 getParamInfo_3 () { return ParamInfo2(); }
+  static const ParamInfo2 getParamInfo_4 () { return ParamInfo2(); }
+  static const ParamInfo2 getParamInfo_5 () { return ParamInfo2(); }
+  static const ParamInfo2 getParamInfo_6 () { return ParamInfo2(); }
+  static const ParamInfo2 getParamInfo_7 () { return ParamInfo2(); }
+
 protected:
   // Called by the subclass hierarchy to append parameters
   void addParamInfo (const ParamInfo* paramInfo);
