@@ -14,10 +14,11 @@ win32:LIBS += \
   -lvfw32 \
   -lshlwapi
 
+win32:QMAKE_LFLAGS += -static-libgcc
+
 QT =
 
 QMAKE_CXXFLAGS += -march=i486
-#QMAKE_LFLAGS += -static
 
 VPATH = ../../source ../../demo ../../include
 
@@ -37,7 +38,6 @@ HEADERS = \
   FilteringAudioSource.h \
   FilterListener.h \
   GainChart.h \
-  Graph.h \
   GroupDelayChart.h \
   MainApp.h \
   MainPanel.h \
