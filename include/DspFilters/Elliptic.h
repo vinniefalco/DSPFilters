@@ -210,19 +210,19 @@ struct TypeIBase : DesignBase
     return 5;
   }
 
-  static const ParamInfo2 getParamInfo_2 ()
+  static const ParamInfo getParamInfo_2 ()
   {
-    return ParamInfo2::defaultCutoffFrequencyParam ();
+    return ParamInfo::defaultCutoffFrequencyParam ();
   }
 
-  static const ParamInfo2 getParamInfo_3 ()
+  static const ParamInfo getParamInfo_3 ()
   {
-    return ParamInfo2::defaultRippleDbParam ();
+    return ParamInfo::defaultRippleDbParam ();
   }
 
-  static const ParamInfo2 getParamInfo_4 ()
+  static const ParamInfo getParamInfo_4 ()
   {
-    return ParamInfo2::defaultRolloffParam ();
+    return ParamInfo::defaultRolloffParam ();
   }
 };
 
@@ -247,24 +247,24 @@ struct TypeIIBase : DesignBase
     return 6;
   }
 
-  static const ParamInfo2 getParamInfo_2 ()
+  static const ParamInfo getParamInfo_2 ()
   {
-    return ParamInfo2::defaultCenterFrequencyParam ();
+    return ParamInfo::defaultCenterFrequencyParam ();
   }
 
-  static const ParamInfo2 getParamInfo_3 ()
+  static const ParamInfo getParamInfo_3 ()
   {
-    return ParamInfo2::defaultBandwidthHzParam ();
+    return ParamInfo::defaultBandwidthHzParam ();
   }
 
-  static const ParamInfo2 getParamInfo_4 ()
+  static const ParamInfo getParamInfo_4 ()
   {
-    return ParamInfo2::defaultRippleDbParam ();
+    return ParamInfo::defaultRippleDbParam ();
   }
 
-  static const ParamInfo2 getParamInfo_5 ()
+  static const ParamInfo getParamInfo_5 ()
   {
-    return ParamInfo2::defaultRolloffParam ();
+    return ParamInfo::defaultRolloffParam ();
   }
 };
 
@@ -309,13 +309,13 @@ template <int MaxOrder,
           template <int> class FilterClass>
 struct OrderBase : TypeClass <FilterClass <MaxOrder> >
 {
-  const ParamInfo2 getParamInfo_1 () const
+  const ParamInfo getParamInfo_1 () const
   {
-    return ParamInfo2 (idOrder, "Order", "Order",
+    return ParamInfo (idOrder, "Order", "Order",
                        1, MaxOrder, 2,
-                       &ParamInfo2::Int_toControlValue,
-                       &ParamInfo2::Int_toNativeValue,
-                       &ParamInfo2::Int_toString);
+                       &ParamInfo::Int_toControlValue,
+                       &ParamInfo::Int_toNativeValue,
+                       &ParamInfo::Int_toString);
 
   }
 };

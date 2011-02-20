@@ -144,14 +144,14 @@ struct TypeIBase : DesignBase
     return 3;
   }
 
-  static const ParamInfo2 getParamInfo_1 ()
+  static const ParamInfo getParamInfo_1 ()
   {
-    return ParamInfo2::defaultCutoffFrequencyParam ();
+    return ParamInfo::defaultCutoffFrequencyParam ();
   }
 
-  static const ParamInfo2 getParamInfo_2 ()
+  static const ParamInfo getParamInfo_2 ()
   {
-    return ParamInfo2::defaultQParam ();
+    return ParamInfo::defaultQParam ();
   }
 };
 
@@ -176,14 +176,14 @@ struct TypeIIBase : DesignBase
     return 3;
   }
 
-  static const ParamInfo2 getParamInfo_1 ()
+  static const ParamInfo getParamInfo_1 ()
   {
-    return ParamInfo2::defaultCenterFrequencyParam ();
+    return ParamInfo::defaultCenterFrequencyParam ();
   }
 
-  static const ParamInfo2 getParamInfo_2 ()
+  static const ParamInfo getParamInfo_2 ()
   {
-    return ParamInfo2::defaultBandwidthParam ();
+    return ParamInfo::defaultBandwidthParam ();
   }
 };
 
@@ -208,19 +208,19 @@ struct TypeIIIBase : DesignBase
     return 4;
   }
 
-  static const ParamInfo2 getParamInfo_1 ()
+  static const ParamInfo getParamInfo_1 ()
   {
-    return ParamInfo2::defaultCutoffFrequencyParam ();
+    return ParamInfo::defaultCutoffFrequencyParam ();
   }
 
-  static const ParamInfo2 getParamInfo_2 ()
+  static const ParamInfo getParamInfo_2 ()
   {
-    return ParamInfo2::defaultGainParam ();
+    return ParamInfo::defaultGainParam ();
   }
 
-  static const ParamInfo2 getParamInfo_3 ()
+  static const ParamInfo getParamInfo_3 ()
   {
-    return ParamInfo2::defaultSlopeParam ();
+    return ParamInfo::defaultSlopeParam ();
   }
 };
 
@@ -245,19 +245,19 @@ struct TypeIVBase : DesignBase
     return 4;
   }
 
-  static const ParamInfo2 getParamInfo_1 ()
+  static const ParamInfo getParamInfo_1 ()
   {
-    return ParamInfo2::defaultCenterFrequencyParam ();
+    return ParamInfo::defaultCenterFrequencyParam ();
   }
 
-  static const ParamInfo2 getParamInfo_2 ()
+  static const ParamInfo getParamInfo_2 ()
   {
-    return ParamInfo2::defaultGainParam ();
+    return ParamInfo::defaultGainParam ();
   }
 
-  static const ParamInfo2 getParamInfo_3 ()
+  static const ParamInfo getParamInfo_3 ()
   {
-    return ParamInfo2::defaultBandwidthParam ();
+    return ParamInfo::defaultBandwidthParam ();
   }
 };
 

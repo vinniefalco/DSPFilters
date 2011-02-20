@@ -41,44 +41,22 @@ THE SOFTWARE.
 
 namespace Dsp {
 
-class DesignBase
+struct DesignBase
 {
-public:
-  DesignBase ();
-
-  int getNumParams () const
-  {
-    return m_numParams;
-  }
-
-  const ParamInfo& getParamInfo (int index) const;
-
   // Sampling rate is the first param for every Design filter
-  static const ParamInfo2 getParamInfo_0 ()
+  static const ParamInfo getParamInfo_0 ()
   {
-    return ParamInfo2::defaultSampleRateParam ();
+    return ParamInfo::defaultSampleRateParam ();
   }
 
   // These should never get called
-  static const ParamInfo2 getParamInfo_1 () { return ParamInfo2(); }
-  static const ParamInfo2 getParamInfo_2 () { return ParamInfo2(); }
-  static const ParamInfo2 getParamInfo_3 () { return ParamInfo2(); }
-  static const ParamInfo2 getParamInfo_4 () { return ParamInfo2(); }
-  static const ParamInfo2 getParamInfo_5 () { return ParamInfo2(); }
-  static const ParamInfo2 getParamInfo_6 () { return ParamInfo2(); }
-  static const ParamInfo2 getParamInfo_7 () { return ParamInfo2(); }
-
-protected:
-  // Called by the subclass hierarchy to append parameters
-  void addParamInfo (const ParamInfo* paramInfo);
-
-  ParamInfo* getBuiltinParamInfo (int paramId);
-
-  void addBuiltinParamInfo (int paramId);
-
-private:
-  int m_numParams;
-  const ParamInfo* m_paramInfo [maxParameters];
+  static const ParamInfo getParamInfo_1 () { return ParamInfo(); }
+  static const ParamInfo getParamInfo_2 () { return ParamInfo(); }
+  static const ParamInfo getParamInfo_3 () { return ParamInfo(); }
+  static const ParamInfo getParamInfo_4 () { return ParamInfo(); }
+  static const ParamInfo getParamInfo_5 () { return ParamInfo(); }
+  static const ParamInfo getParamInfo_6 () { return ParamInfo(); }
+  static const ParamInfo getParamInfo_7 () { return ParamInfo(); }
 };
 
 }

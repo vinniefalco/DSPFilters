@@ -108,56 +108,14 @@ struct Params
 class ParamInfo
 {
 public:
-  // Used to identify well-known parameters (like cutoff frequency)
-  ParamID getId () const
-  {
-    return m_id;
-  }
-
-  // Returns a short label suitable for placement on a control
-  const char* getLabel () const
-  {
-    return m_szLabel;
-  }
-
-  virtual double toControlValue (double nativeValue) const;
-  virtual double toNativeValue (double controlValue) const;
-  virtual std::string toString (double nativeValue) const;
-
-  // DEPRECATED
-  const char* szName;
-  const char* szUnits;
-  double minValue;
-  double maxValue;
-  double defaultValue;
-
-protected:
-  ParamInfo (ParamID id,
-             const char* szLabel);
-
-private:
-  ParamInfo (const ParamInfo& other);
-
-private:
-  ParamID m_id;
-  const char* m_szLabel;
-};
-
-//
-// Provides meta-information about a filter parameter
-// to achieve run-time introspection.
-//
-class ParamInfo2
-{
-public:
-  typedef double (ParamInfo2::*toControlValue_t) (double) const;
-  typedef double (ParamInfo2::*toNativeValue_t) (double) const;
-  typedef std::string (ParamInfo2::*toString_t) (double) const;
+  typedef double (ParamInfo::*toControlValue_t) (double) const;
+  typedef double (ParamInfo::*toNativeValue_t) (double) const;
+  typedef std::string (ParamInfo::*toString_t) (double) const;
 
   // dont use this one
-  ParamInfo2 (); // throws std::logic_error
+  ParamInfo (); // throws std::logic_error
 
-  ParamInfo2 (ParamID id,
+  ParamInfo (ParamID id,
               const char* szLabel,
               const char* szName,
               double arg1,
@@ -235,23 +193,23 @@ public:
   std::string Real_toString (double nativeValue) const;
   std::string Db_toString (double nativeValue) const;
 
-  static ParamInfo2 defaultSampleRateParam ();
-  static ParamInfo2 defaultCutoffFrequencyParam ();
-  static ParamInfo2 defaultCenterFrequencyParam ();
-  static ParamInfo2 defaultQParam ();
-  static ParamInfo2 defaultBandwidthParam ();
-  static ParamInfo2 defaultBandwidthHzParam ();
-  static ParamInfo2 defaultGainParam ();
-  static ParamInfo2 defaultSlopeParam ();
-  static ParamInfo2 defaultRippleDbParam ();
-  static ParamInfo2 defaultStopDbParam ();
-  static ParamInfo2 defaultRolloffParam ();
-  static ParamInfo2 defaultPoleRhoParam ();
-  static ParamInfo2 defaultPoleThetaParam ();
-  static ParamInfo2 defaultZeroRhoParam ();
-  static ParamInfo2 defaultZeroThetaParam ();
-  static ParamInfo2 defaultPoleRealParam ();
-  static ParamInfo2 defaultZeroRealParam ();
+  static ParamInfo defaultSampleRateParam ();
+  static ParamInfo defaultCutoffFrequencyParam ();
+  static ParamInfo defaultCenterFrequencyParam ();
+  static ParamInfo defaultQParam ();
+  static ParamInfo defaultBandwidthParam ();
+  static ParamInfo defaultBandwidthHzParam ();
+  static ParamInfo defaultGainParam ();
+  static ParamInfo defaultSlopeParam ();
+  static ParamInfo defaultRippleDbParam ();
+  static ParamInfo defaultStopDbParam ();
+  static ParamInfo defaultRolloffParam ();
+  static ParamInfo defaultPoleRhoParam ();
+  static ParamInfo defaultPoleThetaParam ();
+  static ParamInfo defaultZeroRhoParam ();
+  static ParamInfo defaultZeroThetaParam ();
+  static ParamInfo defaultPoleRealParam ();
+  static ParamInfo defaultZeroRealParam ();
 
 private:
   ParamID m_id;

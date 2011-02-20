@@ -45,7 +45,7 @@ Params Filter::getDefaultParams() const
   params.clear();
 
   for (int i = 0; i < getNumParams(); ++i)
-    params[i] = getParamInfo2(i).getDefaultValue();
+    params[i] = getParamInfo(i).getDefaultValue();
 
   return params;
 }
@@ -74,7 +74,7 @@ void Filter::setParamById (int paramId, double nativeValue)
 {
   for (int i = getNumParams(); --i >= 0;)
   {
-    if (getParamInfo2 (i).getId () == paramId)
+    if (getParamInfo (i).getId () == paramId)
     {
       setParam (i, nativeValue);
       return;
@@ -94,12 +94,12 @@ void Filter::copyParamsFrom (Dsp::Filter const* other)
     // now loop
     for (int i = 0; i < getNumParams (); ++i)
     {
-      const ParamInfo2& paramInfo = getParamInfo2 (i);
+      const ParamInfo& paramInfo = getParamInfo (i);
 
       // find a match
       for (int j = 0; j < other->getNumParams(); ++j)
       {
-        const ParamInfo2& otherParamInfo = other->getParamInfo2 (j);
+        const ParamInfo& otherParamInfo = other->getParamInfo (j);
 
         if (paramInfo.getId() == otherParamInfo.getId())
         {

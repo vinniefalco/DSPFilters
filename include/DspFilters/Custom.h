@@ -91,19 +91,19 @@ struct OnePole : DesignBase, Custom::OnePole
     return 4;
   }
 
-  static const ParamInfo2 getParamInfo_1 ()
+  static const ParamInfo getParamInfo_1 ()
   {
-    return ParamInfo2::defaultGainParam ();
+    return ParamInfo::defaultGainParam ();
   }
 
-  static const ParamInfo2 getParamInfo_2 ()
+  static const ParamInfo getParamInfo_2 ()
   {
-    return ParamInfo2::defaultPoleRealParam ();
+    return ParamInfo::defaultPoleRealParam ();
   }
 
-  static const ParamInfo2 getParamInfo_3 ()
+  static const ParamInfo getParamInfo_3 ()
   {
-    return ParamInfo2::defaultZeroRealParam ();
+    return ParamInfo::defaultZeroRealParam ();
   }
 
   static Kind getKind () { return kindOther; }
@@ -129,29 +129,29 @@ struct TwoPole : DesignBase, Custom::TwoPole
     return 6;
   }
 
-  static const ParamInfo2 getParamInfo_1 ()
+  static const ParamInfo getParamInfo_1 ()
   {
-    return ParamInfo2::defaultGainParam ();
+    return ParamInfo::defaultGainParam ();
   }
 
-  static const ParamInfo2 getParamInfo_2 ()
+  static const ParamInfo getParamInfo_2 ()
   {
-    return ParamInfo2::defaultPoleRhoParam ();
+    return ParamInfo::defaultPoleRhoParam ();
   }
 
-  static const ParamInfo2 getParamInfo_3 ()
+  static const ParamInfo getParamInfo_3 ()
   {
-    return ParamInfo2::defaultPoleThetaParam ();
+    return ParamInfo::defaultPoleThetaParam ();
   }
 
-  static const ParamInfo2 getParamInfo_4 ()
+  static const ParamInfo getParamInfo_4 ()
   {
-    return ParamInfo2::defaultZeroRhoParam ();
+    return ParamInfo::defaultZeroRhoParam ();
   }
 
-  static const ParamInfo2 getParamInfo_5 ()
+  static const ParamInfo getParamInfo_5 ()
   {
-    return ParamInfo2::defaultZeroThetaParam ();
+    return ParamInfo::defaultZeroThetaParam ();
   }
 
 
