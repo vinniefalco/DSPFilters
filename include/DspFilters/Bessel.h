@@ -256,6 +256,11 @@ namespace Design {
 
 struct TypeIBase : DesignBase
 {
+  enum
+  {
+    NumParams = 3
+  };
+
   static int getNumParams ()
   {
     return 3;
@@ -278,6 +283,11 @@ struct TypeI : TypeIBase, FilterClass
 
 struct TypeIIBase : DesignBase
 {
+  enum
+  {
+    NumParams = 4
+  };
+
   static int getNumParams ()
   {
     return 4;
@@ -305,6 +315,11 @@ struct TypeII : TypeIIBase, FilterClass
 
 struct TypeIIIBase : DesignBase
 {
+  enum
+  {
+    NumParams = 4
+  };
+
   static int getNumParams ()
   {
     return 4;
@@ -335,6 +350,11 @@ struct TypeIII : TypeIIIBase, FilterClass
 
 struct TypeIVBase : DesignBase
 {
+  enum
+  {
+    NumParams = 5
+  };
+
   static int getNumParams ()
   {
     return 5;

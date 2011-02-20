@@ -81,6 +81,11 @@ namespace Design {
 
 struct OnePole : DesignBase, Custom::OnePole
 {
+  enum
+  {
+    NumParams = 4
+  };
+
   static int getNumParams ()
   {
     return 4;
@@ -114,6 +119,11 @@ struct OnePole : DesignBase, Custom::OnePole
 
 struct TwoPole : DesignBase, Custom::TwoPole
 {
+  enum
+  {
+    NumParams = 6
+  };
+
   static int getNumParams ()
   {
     return 6;

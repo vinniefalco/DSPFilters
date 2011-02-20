@@ -80,12 +80,12 @@ public:
       // interpolate parameters for each sample
       const double t = 1. / m_remainingSamples;
       double dp[maxParameters];
-      for (int i = 0; i < this->m_design.getNumParams(); ++i)
+      for (int i = 0; i < DesignClass::NumParams; ++i)
         dp[i] = (this->getParams()[i] - m_transitionParams[i]) * t;
 
       for (int n = 0; n < remainingSamples; ++n)
       {
-        for (int i = this->m_design.getNumParams(); --i >=0;)
+        for (int i = DesignClass::NumParams; --i >=0;)
           m_transitionParams[i] += dp[i];
 
         m_transitionFilter.setParams (m_transitionParams);
