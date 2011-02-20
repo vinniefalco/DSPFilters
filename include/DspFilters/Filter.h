@@ -63,9 +63,7 @@ public:
 
   virtual int getNumParams () const = 0;  
 
-  virtual const ParamInfo& getParamInfo (int index) const = 0;
-
-  virtual ParamInfo2 getParamInfo2 (int index) const = 0;
+  virtual ParamInfo getParamInfo (int index) const = 0;
 
   Params getDefaultParams() const;
 
@@ -146,7 +144,6 @@ public:
 
   int getNumParams () const
   {
-    //return m_design.getNumParams();
     return DesignClass::NumParams;
   }
 
@@ -155,12 +152,7 @@ public:
     return m_design.getDefaultParams();
   }
 
-  const ParamInfo& getParamInfo (int index) const
-  {
-    return m_design.getParamInfo (index);
-  }
-
-  ParamInfo2 getParamInfo2 (int index) const
+  ParamInfo getParamInfo (int index) const
   {
     switch (index)
     {
@@ -174,7 +166,7 @@ public:
     case 7: return m_design.getParamInfo_7 ();
     };
 
-    return ParamInfo2();
+    return ParamInfo();
   }
 
   std::vector<PoleZeroPair> getPoleZeros() const
