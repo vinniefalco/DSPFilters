@@ -192,186 +192,245 @@ struct BandShelf : PoleFilter <BandShelfBase, MaxOrder, MaxOrder*2>
 
 //------------------------------------------------------------------------------
 
-namespace Design {
-
-template <class FilterClass>
-struct TypeI : DesignBase, FilterClass
-{
-  // this ctor could be factored out
-  TypeI ()
-  {
-    this->addBuiltinParamInfo (idOrder);
-    this->addBuiltinParamInfo (idFrequency);
-    this->addBuiltinParamInfo (idPassbandRippleDb);
-  }
-
-  void setParams (const Params& params)
-  {
-    FilterClass::setup (int(params[1]),
-                        params[0],
-                        params[2],
-                        params[3]);
-  }
-};
-
-template <class FilterClass>
-struct TypeII : DesignBase, FilterClass
-{
-  // this ctor could be factored out
-  TypeII ()
-  {
-    this->addBuiltinParamInfo (idOrder);
-    this->addBuiltinParamInfo (idFrequency);
-    this->addBuiltinParamInfo (idGain);
-    this->addBuiltinParamInfo (idPassbandRippleDb);
-  }
-
-  void setParams (const Params& params)
-  {
-    FilterClass::setup (int(params[1]),
-                        params[0],
-                        params[2],
-                        params[3],
-                        params[4]);
-  }
-};
-
-template <class FilterClass>
-struct TypeIII : DesignBase, FilterClass
-{
-  // this ctor could be factored out
-  TypeIII ()
-  {
-    this->addBuiltinParamInfo (idOrder);
-    this->addBuiltinParamInfo (idFrequency);
-    this->addBuiltinParamInfo (idBandwidthHz);
-    this->addBuiltinParamInfo (idPassbandRippleDb);
-  }
-
-  void setParams (const Params& params)
-  {
-    FilterClass::setup (int(params[1]),
-                        params[0],
-                        params[2],
-                        params[3],
-                        params[4]);
-  }
-};
-
-template <class FilterClass>
-struct TypeIV : DesignBase, FilterClass
-{
-  // this ctor could be factored out
-  TypeIV ()
-  {
-    this->addBuiltinParamInfo (idOrder);
-    this->addBuiltinParamInfo (idFrequency);
-    this->addBuiltinParamInfo (idBandwidthHz);
-    this->addBuiltinParamInfo (idGain);
-    this->addBuiltinParamInfo (idPassbandRippleDb);
-  }
-
-  void setParams (const Params& params)
-  {
-    FilterClass::setup (int(params[1]),
-                        params[0],
-                        params[2],
-                        params[3],
-                        params[4],
-                        params[5]);
-  }
-};
-
-//------------------------------------------------------------------------------
-
-// Factored descriptions to reduce template instantiations
-
-struct LowPassDescription
-{
-  Kind getKind () const { return kindLowPass; }
-  const char* getName() const { return "Chebyshev I Low Pass"; }
-};
-
-struct HighPassDescription
-{
-  Kind getKind () const { return kindHighPass; }
-  const char* getName() const { return "Chebyshev I High Pass"; }
-};
-
-struct BandPassDescription
-{
-  Kind getKind () const { return kindHighPass; }
-  const char* getName() const { return "Chebyshev I Band Pass"; }
-};
-
-struct BandStopDescription
-{
-  Kind getKind () const { return kindHighPass; }
-  const char* getName() const { return "Chebyshev I Band Stop"; }
-};
-
-struct LowShelfDescription
-{
-  Kind getKind () const { return kindLowShelf; }
-  const char* getName() const { return "Chebyshev I Low Shelf"; }
-};
-
-struct HighShelfDescription
-{
-  Kind getKind () const { return kindHighShelf; }
-  const char* getName() const { return "Chebyshev I High Shelf"; }
-};
-
-struct BandShelfDescription
-{
-  Kind getKind () const { return kindBandShelf; }
-  const char* getName() const { return "Chebyshev I Band Shelf"; }
-};
-
-//------------------------------------------------------------------------------
-
 //
 // Gui-friendly Design layer
 //
 
+namespace Design {
+
+struct TypeIBase : DesignBase
+{
+  static int getNumParams ()
+  {
+    return 4;
+  }
+
+  static const ParamInfo2 getParamInfo_2 ()
+  {
+    return ParamInfo2::defaultCutoffFrequencyParam ();
+  }
+
+  static const ParamInfo2 getParamInfo_3 ()
+  {
+    return ParamInfo2::defaultRippleDbParam ();
+  }
+};
+
+template <class FilterClass>
+struct TypeI : TypeIBase, FilterClass
+{
+  void setParams (const Params& params)
+  {
+    FilterClass::setup (int(params[1]), params[0], params[2], params[3]);
+  }
+};
+
+struct TypeIIBase : DesignBase
+{
+  static int getNumParams ()
+  {
+    return 5;
+  }
+
+  static const ParamInfo2 getParamInfo_2 ()
+  {
+    return ParamInfo2::defaultCenterFrequencyParam ();
+  }
+
+  static const ParamInfo2 getParamInfo_3 ()
+  {
+    return ParamInfo2::defaultBandwidthHzParam ();
+  }
+
+  static const ParamInfo2 getParamInfo_4 ()
+  {
+    return ParamInfo2::defaultRippleDbParam ();
+  }
+};
+
+template <class FilterClass>
+struct TypeII : TypeIIBase, FilterClass
+{
+  void setParams (const Params& params)
+  {
+    FilterClass::setup (int(params[1]), params[0], params[2], params[3], params[4]);
+  }
+};
+
+struct TypeIIIBase : DesignBase
+{
+  static int getNumParams ()
+  {
+    return 5;
+  }
+
+  static const ParamInfo2 getParamInfo_2 ()
+  {
+    return ParamInfo2::defaultCutoffFrequencyParam ();
+  }
+
+  static const ParamInfo2 getParamInfo_3 ()
+  {
+    return ParamInfo2::defaultGainParam ();
+  }
+
+  static const ParamInfo2 getParamInfo_4 ()
+  {
+    return ParamInfo2::defaultRippleDbParam ();
+  }
+};
+
+template <class FilterClass>
+struct TypeIII : TypeIIIBase, FilterClass
+{
+  void setParams (const Params& params)
+  {
+    FilterClass::setup (int(params[1]), params[0], params[2], params[3], params[4]);
+  }
+};
+
+struct TypeIVBase : DesignBase
+{
+  static int getNumParams ()
+  {
+    return 6;
+  }
+
+  static const ParamInfo2 getParamInfo_2 ()
+  {
+    return ParamInfo2::defaultCenterFrequencyParam ();
+  }
+
+  static const ParamInfo2 getParamInfo_3 ()
+  {
+    return ParamInfo2::defaultBandwidthHzParam ();
+  }
+
+  static const ParamInfo2 getParamInfo_4 ()
+  {
+    return ParamInfo2::defaultGainParam ();
+  }
+
+  static const ParamInfo2 getParamInfo_5 ()
+  {
+    return ParamInfo2::defaultRippleDbParam ();
+  }
+};
+
+template <class FilterClass>
+struct TypeIV : TypeIVBase, FilterClass
+{
+  void setParams (const Params& params)
+  {
+    FilterClass::setup (int(params[1]), params[0], params[2], params[3], params[4], params[5]);
+  }
+};
+
+// Factored kind and name
+
+struct LowPassDescription
+{
+  static Kind getKind () { return kindLowPass; }
+  static const char* getName() { return "Chebyshev I Low Pass"; }
+};
+
+struct HighPassDescription
+{
+  static Kind getKind () { return kindHighPass; }
+  static const char* getName() { return "Chebyshev I High Pass"; }
+};
+
+struct BandPassDescription
+{
+  static Kind getKind () { return kindHighPass; }
+  static const char* getName() { return "Chebyshev I Band Pass"; }
+};
+
+struct BandStopDescription
+{
+  static Kind getKind () { return kindHighPass; }
+  static const char* getName() { return "Chebyshev I Band Stop"; }
+};
+
+struct LowShelfDescription
+{
+  static Kind getKind () { return kindLowShelf; }
+  static const char* getName() { return "Chebyshev I Low Shelf"; }
+};
+
+struct HighShelfDescription
+{
+  static Kind getKind () { return kindHighShelf; }
+  static const char* getName() { return "Chebyshev I High Shelf"; }
+};
+
+struct BandShelfDescription
+{
+  static Kind getKind () { return kindBandShelf; }
+  static const char* getName() { return "Chebyshev I Band Shelf"; }
+};
+
+// This glues on the Order parameter
+template <int MaxOrder,
+          template <class> class TypeClass,
+          template <int> class FilterClass>
+struct OrderBase : TypeClass <FilterClass <MaxOrder> >
+{
+  const ParamInfo2 getParamInfo_1 () const
+  {
+    return ParamInfo2 (idOrder, "Order", "Order",
+                       1, MaxOrder, 2,
+                       &ParamInfo2::Int_toControlValue,
+                       &ParamInfo2::Int_toNativeValue,
+                       &ParamInfo2::Int_toString);
+
+  }
+};
+
+//------------------------------------------------------------------------------
+
+//
+// Design filters
+//
+
 template <int MaxOrder>
-struct LowPass : TypeI <ChebyshevI::LowPass <MaxOrder> >,
+struct LowPass : OrderBase <MaxOrder, TypeI, ChebyshevI::LowPass>,
                  LowPassDescription
 {
 };
 
 template <int MaxOrder>
-struct HighPass : TypeI <ChebyshevI::HighPass <MaxOrder> >,
+struct HighPass : OrderBase <MaxOrder, TypeI, ChebyshevI::HighPass>,
                   HighPassDescription
 {
 };
 
 template <int MaxOrder>
-struct BandPass : TypeIII <ChebyshevI::BandPass <MaxOrder> >,
+struct BandPass : OrderBase <MaxOrder, TypeII, ChebyshevI::BandPass>,
                   BandPassDescription
 {
 };
 
 template <int MaxOrder>
-struct BandStop : TypeIII <ChebyshevI::BandStop <MaxOrder> >,
+struct BandStop : OrderBase <MaxOrder, TypeII, ChebyshevI::BandStop>,
                   BandStopDescription
 {
 };
 
 template <int MaxOrder>
-struct LowShelf : TypeII <ChebyshevI::LowShelf <MaxOrder> >,
+struct LowShelf : OrderBase <MaxOrder, TypeIII, ChebyshevI::LowShelf>,
                   LowShelfDescription
 {
 };
 
 template <int MaxOrder>
-struct HighShelf : TypeII <ChebyshevI::HighShelf <MaxOrder> >,
+struct HighShelf : OrderBase <MaxOrder, TypeIII, ChebyshevI::HighShelf>,
                    HighShelfDescription
 {
 };
 
 template <int MaxOrder>
-struct BandShelf : TypeIV <ChebyshevI::BandShelf <MaxOrder> >,
+struct BandShelf : OrderBase <MaxOrder, TypeIV, ChebyshevI::BandShelf>,
                    BandShelfDescription
 {
 };

@@ -127,7 +127,9 @@ http://crca.ucsd.edu/~msp/techniques/v0.08/book-html/node1.html
 // This is the only include you need
 #include "DspFilters/Dsp.h"
 
-static void UsageExamples ()
+namespace {
+
+void UsageExamples ()
 {
   // create a two channel audio buffer
   int numSamples = 2000;
@@ -221,4 +223,6 @@ static void UsageExamples ()
              1);   // ripple dB
     f.process (numSamples, audioData);
   }
+}
+
 }

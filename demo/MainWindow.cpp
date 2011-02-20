@@ -47,7 +47,7 @@ MainWindow::MainWindow ()
   
   MainPanel* contentComponent = new MainPanel;
   setMenuBar (contentComponent);
-  setContentComponent (contentComponent, true, true);
+  setContentOwned (contentComponent, true);
   contentComponent->setAsConstrainerFor (this);
   ContentComponentConstrainer::attachTo (this);
 

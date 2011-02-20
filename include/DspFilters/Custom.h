@@ -81,22 +81,28 @@ namespace Design {
 
 struct OnePole : DesignBase, Custom::OnePole
 {
-  OnePole ()
+  static int getNumParams ()
   {
-    addBuiltinParamInfo (idGain);
-    addBuiltinParamInfo (idPoleReal);
-    addBuiltinParamInfo (idZeroReal);
+    return 4;
   }
 
-  Kind getKind () const
+  static const ParamInfo2 getParamInfo_1 ()
   {
-    return kindOther;
+    return ParamInfo2::defaultGainParam ();
   }
 
-  const char* getName() const
+  static const ParamInfo2 getParamInfo_2 ()
   {
-    return "Custom One-Pole";
+    return ParamInfo2::defaultPoleRealParam ();
   }
+
+  static const ParamInfo2 getParamInfo_3 ()
+  {
+    return ParamInfo2::defaultZeroRealParam ();
+  }
+
+  static Kind getKind () { return kindOther; }
+  static const char* getName() { return "Custom One-Pole"; }
 
   void setParams (const Params& params)
   {
@@ -108,24 +114,39 @@ struct OnePole : DesignBase, Custom::OnePole
 
 struct TwoPole : DesignBase, Custom::TwoPole
 {
-  TwoPole ()
+  static int getNumParams ()
   {
-    addBuiltinParamInfo (idGain);
-    addBuiltinParamInfo (idPoleRho);
-    addBuiltinParamInfo (idPoleTheta);
-    addBuiltinParamInfo (idZeroRho);
-    addBuiltinParamInfo (idZeroTheta);
+    return 6;
   }
 
-  Kind getKind () const
+  static const ParamInfo2 getParamInfo_1 ()
   {
-    return kindOther;
+    return ParamInfo2::defaultGainParam ();
   }
 
-  const char* getName() const
+  static const ParamInfo2 getParamInfo_2 ()
   {
-    return "Custom Two-Pole";
+    return ParamInfo2::defaultPoleRhoParam ();
   }
+
+  static const ParamInfo2 getParamInfo_3 ()
+  {
+    return ParamInfo2::defaultPoleThetaParam ();
+  }
+
+  static const ParamInfo2 getParamInfo_4 ()
+  {
+    return ParamInfo2::defaultZeroRhoParam ();
+  }
+
+  static const ParamInfo2 getParamInfo_5 ()
+  {
+    return ParamInfo2::defaultZeroThetaParam ();
+  }
+
+
+  static Kind getKind () { return kindOther; }
+  static const char* getName() { return "Custom Two-Pole"; }
 
   void setParams (const Params& params)
   {

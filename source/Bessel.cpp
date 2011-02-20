@@ -83,7 +83,6 @@ void AnalogLowPass::design (int numPoles,
       solver.coef()[i] = reversebessel (i, numPoles);
     solver.solve (numPoles);
 
-    const double n2 = 2 * numPoles;
     const int pairs = numPoles / 2;
     for (int i = 0; i < pairs; ++i)
     {
@@ -130,7 +129,6 @@ void AnalogLowShelf::design (int numPoles,
     zeros.coef()[0] += G * a0;
     zeros.solve (numPoles);
 
-    const double n2 = 2 * numPoles;
     const int pairs = numPoles / 2;
     for (int i = 0; i < pairs; ++i)
     {

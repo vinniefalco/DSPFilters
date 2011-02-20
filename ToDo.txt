@@ -17,6 +17,12 @@
 
 - Fix elliptics
 
+- Clean up Elliptics and give it a Workspace
+
 - Graph the cutoff, passband gain, stopband gain, ripple zone
+
+- Fix biquad shelf slope range causing Nan
+
+- Clean up knob label / parameter names for RBJ Band Pass 1 (constant skirt)
 
 More Documentation, Bibliography

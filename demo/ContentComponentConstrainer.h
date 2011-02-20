@@ -1,16 +1,17 @@
-// Copyright (C) 2008-2011 by One Guy Group, Inc., All rights reserved worldwide.
 /*******************************************************************************
 
-Content Component Constrainer for Juce
-By Vincent Falco
+"A Collection of Useful C++ Classes for Digital Signal Processing"
+ By Vincent Falco
 
-Juce:
-http://www.rawmaterialsoftware
+Official project location:
+http://code.google.com/p/dspfilterscpp/
+
+See Documentation.cpp for contact information, notes, and bibliography.
 
 --------------------------------------------------------------------------------
 
 License: MIT License (http://www.opensource.org/licenses/mit-license.php)
-Copyright (c) 2011 by Vincent Falco
+Copyright (c) 2009 by Vincent Falco
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

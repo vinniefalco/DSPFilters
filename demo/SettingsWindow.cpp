@@ -53,7 +53,7 @@ SettingsWindow::SettingsWindow ()
   Component::addToDesktop (getDesktopWindowStyleFlags());
 
   // must happen after addToDesktop()
-  setContentComponent (contentComp, true, true);
+  setContentOwned (contentComp, true);
 
   centreWithSize (getWidth(), getHeight());
   setVisible (true);

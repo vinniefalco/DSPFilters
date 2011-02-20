@@ -40,12 +40,14 @@ namespace Dsp {
 
 Params Filter::getDefaultParams() const
 {
-  Params parameters;
+  Params params;
+
+  params.clear();
 
   for (int i = 0; i < getNumParams(); ++i)
-    parameters[i] = getParamInfo(i).defaultValue;
+    params[i] = getParamInfo2(i).getDefaultValue();
 
-  return parameters;
+  return params;
 }
 
 Filter::~Filter()
@@ -72,7 +74,7 @@ void Filter::setParamById (int paramId, double nativeValue)
 {
   for (int i = getNumParams(); --i >= 0;)
   {
-    if (getParamInfo (i).getId () == paramId)
+    if (getParamInfo2 (i).getId () == paramId)
     {
       setParam (i, nativeValue);
       return;
@@ -92,21 +94,25 @@ void Filter::copyParamsFrom (Dsp::Filter const* other)
     // now loop
     for (int i = 0; i < getNumParams (); ++i)
     {
-      const ParamInfo& paramInfo = getParamInfo (i);
+      const ParamInfo2& paramInfo = getParamInfo2 (i);
 
       // find a match
       for (int j = 0; j < other->getNumParams(); ++j)
       {
-        const ParamInfo& otherParamInfo = other->getParamInfo (j);
+        const ParamInfo2& otherParamInfo = other->getParamInfo2 (j);
 
         if (paramInfo.getId() == otherParamInfo.getId())
         {
           // match!
           double v = other->getParam (j);
+
+          // BUG: Can't clamp now
+          /*
           if (v > paramInfo.maxValue)
             v = paramInfo.maxValue;
           else if (v < paramInfo.minValue)
             v = paramInfo.minValue;
+          */
           m_params [i] = v;
           break;
         }
@@ -118,3 +124,37 @@ void Filter::copyParamsFrom (Dsp::Filter const* other)
 }
 
 }
+
+/*
+
+template<int Index>
+void doit ()
+{
+}
+
+struct Info
+{
+  Info (bool flag, int index) : flag_ (flag), index_ (index) { }
+  const bool canModulate () const { return flag_; }
+  //const int getIndex () const { return index_; }
+  const int getIndex () const { return 1; }
+  const bool flag_;
+  const int index_;
+};
+
+struct Base
+{
+  static const Info getInfo0 () { return Info (false, 0); }
+  static const Info getInfo1 () { return Info (true, 1); }
+};
+
+void test ()
+{
+  if (Base::getInfo0().canModulate())
+  {
+    // does the conditional get compiled out?
+    //doit <Base::getInfo0().getIndex()> ();
+  }
+}
+
+*/

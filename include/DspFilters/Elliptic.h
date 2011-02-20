@@ -192,108 +192,149 @@ struct BandStop : PoleFilter <BandStopBase, MaxOrder, MaxOrder*2>
 
 //------------------------------------------------------------------------------
 
-namespace Design {
-
-template <class FilterClass>
-struct TypeI : DesignBase, FilterClass
-{
-  // this ctor could be factored out
-  TypeI ()
-  {
-    addBuiltinParamInfo (idOrder);
-    addBuiltinParamInfo (idFrequency);
-    addBuiltinParamInfo (idPassbandRippleDb);
-    addBuiltinParamInfo (idRolloff);
-  }
-
-  void setParams (const Params& params)
-  {
-    FilterClass::setup (int(params[1]),
-                        params[0],
-                        params[2],
-                        params[3],
-                        params[4]);
-  }
-};
-
-template <class FilterClass>
-struct TypeII : DesignBase, FilterClass
-{
-  // this ctor could be factored out
-  TypeII ()
-  {
-    addBuiltinParamInfo (idOrder);
-    addBuiltinParamInfo (idFrequency);
-    addBuiltinParamInfo (idBandwidthHz);
-    addBuiltinParamInfo (idPassbandRippleDb);
-    addBuiltinParamInfo (idRolloff);
-  }
-
-  void setParams (const Params& params)
-  {
-    FilterClass::setup (int(params[1]),
-                        params[0],
-                        params[2],
-                        params[3],
-                        params[4],
-                        params[5]);
-  }
-};
-
-//------------------------------------------------------------------------------
-
-// Factored descriptions to reduce template instantiations
-
-struct LowPassDescription
-{
-  Kind getKind () const { return kindLowPass; }
-  const char* getName() const { return "Elliptic Low Pass"; }
-};
-
-struct HighPassDescription
-{
-  Kind getKind () const { return kindHighPass; }
-  const char* getName() const { return "Elliptic High Pass"; }
-};
-
-struct BandPassDescription
-{
-  Kind getKind () const { return kindHighPass; }
-  const char* getName() const { return "Elliptic Band Pass"; }
-};
-
-struct BandStopDescription
-{
-  Kind getKind () const { return kindHighPass; }
-  const char* getName() const { return "Elliptic Band Stop"; }
-};
-
-//------------------------------------------------------------------------------
-
 //
 // Gui-friendly Design layer
 //
 
+namespace Design {
+
+struct TypeIBase : DesignBase
+{
+  static int getNumParams ()
+  {
+    return 5;
+  }
+
+  static const ParamInfo2 getParamInfo_2 ()
+  {
+    return ParamInfo2::defaultCutoffFrequencyParam ();
+  }
+
+  static const ParamInfo2 getParamInfo_3 ()
+  {
+    return ParamInfo2::defaultRippleDbParam ();
+  }
+
+  static const ParamInfo2 getParamInfo_4 ()
+  {
+    return ParamInfo2::defaultRolloffParam ();
+  }
+};
+
+template <class FilterClass>
+struct TypeI : TypeIBase, FilterClass
+{
+  void setParams (const Params& params)
+  {
+    FilterClass::setup (int(params[1]), params[0], params[2], params[3], params[4]);
+  }
+};
+
+struct TypeIIBase : DesignBase
+{
+  static int getNumParams ()
+  {
+    return 6;
+  }
+
+  static const ParamInfo2 getParamInfo_2 ()
+  {
+    return ParamInfo2::defaultCenterFrequencyParam ();
+  }
+
+  static const ParamInfo2 getParamInfo_3 ()
+  {
+    return ParamInfo2::defaultBandwidthHzParam ();
+  }
+
+  static const ParamInfo2 getParamInfo_4 ()
+  {
+    return ParamInfo2::defaultRippleDbParam ();
+  }
+
+  static const ParamInfo2 getParamInfo_5 ()
+  {
+    return ParamInfo2::defaultRolloffParam ();
+  }
+};
+
+template <class FilterClass>
+struct TypeII : TypeIIBase, FilterClass
+{
+  void setParams (const Params& params)
+  {
+    FilterClass::setup (int(params[1]), params[0], params[2], params[3], params[4], params[5]);
+  }
+};
+
+// Factored kind and name
+
+struct LowPassDescription
+{
+  static Kind getKind () { return kindLowPass; }
+  static const char* getName() { return "Elliptic Low Pass"; }
+};
+
+struct HighPassDescription
+{
+  static Kind getKind () { return kindHighPass; }
+  static const char* getName() { return "Elliptic High Pass"; }
+};
+
+struct BandPassDescription
+{
+  static Kind getKind () { return kindHighPass; }
+  static const char* getName() { return "Elliptic Band Pass"; }
+};
+
+struct BandStopDescription
+{
+  static Kind getKind () { return kindHighPass; }
+  static const char* getName() { return "Elliptic Band Stop"; }
+};
+
+// This glues on the Order parameter
+template <int MaxOrder,
+          template <class> class TypeClass,
+          template <int> class FilterClass>
+struct OrderBase : TypeClass <FilterClass <MaxOrder> >
+{
+  const ParamInfo2 getParamInfo_1 () const
+  {
+    return ParamInfo2 (idOrder, "Order", "Order",
+                       1, MaxOrder, 2,
+                       &ParamInfo2::Int_toControlValue,
+                       &ParamInfo2::Int_toNativeValue,
+                       &ParamInfo2::Int_toString);
+
+  }
+};
+//------------------------------------------------------------------------------
+
+//
+// Design filters
+//
+
 template <int MaxOrder>
-struct LowPass : TypeI <Elliptic::LowPass <MaxOrder> >,
+struct LowPass : OrderBase <MaxOrder, TypeI, Elliptic::LowPass>,
                  LowPassDescription
 {
 };
 
 template <int MaxOrder>
-struct HighPass : TypeI <Elliptic::HighPass <MaxOrder> >,
+struct HighPass : OrderBase <MaxOrder, TypeI, Elliptic::HighPass>,
                   HighPassDescription
 {
 };
 
 template <int MaxOrder>
-struct BandPass : TypeII <Elliptic::BandPass <MaxOrder> >,
+struct BandPass : OrderBase <MaxOrder, TypeII, Elliptic::BandPass>,
                   BandPassDescription
 {
 };
 
 template <int MaxOrder>
-struct BandStop : TypeII <Elliptic::BandStop <MaxOrder> >,
+struct BandStop : OrderBase <MaxOrder, TypeII, Elliptic::BandStop>,
                   BandStopDescription
 {
 };

@@ -46,7 +46,7 @@ StepResponseChart::StepResponseChart (FilterListeners& listeners)
 
 const String StepResponseChart::getName () const
 {
-  return "Step Response";
+  return "Impulse Response";
 }
 
 int StepResponseChart::yToScreen (float y)

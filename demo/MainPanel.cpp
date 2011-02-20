@@ -296,7 +296,7 @@ void MainPanel::buildFamilyMenu (ComboBox* ctrl)
   ctrl->addItem ("Chebyshev II", 4);
   ctrl->addItem ("Elliptic",     5);
   ctrl->addItem ("Bessel",       6);
-  ctrl->addItem ("Legendre",    7);
+  ctrl->addItem ("Legendre",     7);
   ctrl->addItem ("Custom",       8);
 }
 
@@ -370,7 +370,7 @@ void MainPanel::buildTypeMenu (ComboBox* ctrl)
     // 3
 	  ctrl->addItem ("Band Pass",   4);
 	  ctrl->addItem ("Band Stop",   5);
-	  ctrl->addItem ("Low Shelf",   6);
+	  //ctrl->addItem ("Low Shelf",   6);
 	  break;
 
   case 7: // Legendre
@@ -456,11 +456,11 @@ void MainPanel::createFilter ()
   {
     switch (typeId)
     {
-    case 1: createFilterState <Dsp::Butterworth::Design::LowPass <50> > (&f, &fo); break;
-    case 2: createFilterState <Dsp::Butterworth::Design::HighPass <50> > (&f, &fo); break;
-    case 4: createFilterState <Dsp::Butterworth::Design::BandPass <50> > (&f, &fo); break;
-    case 5: createFilterState <Dsp::Butterworth::Design::BandStop <50> > (&f, &fo); break;
-    case 6: createFilterState <Dsp::Butterworth::Design::LowShelf <50> > (&f, &fo); break;
+    case 1: createFilterState <Dsp::Butterworth::Design::LowPass   <50> > (&f, &fo); break;
+    case 2: createFilterState <Dsp::Butterworth::Design::HighPass  <50> > (&f, &fo); break;
+    case 4: createFilterState <Dsp::Butterworth::Design::BandPass  <50> > (&f, &fo); break;
+    case 5: createFilterState <Dsp::Butterworth::Design::BandStop  <50> > (&f, &fo); break;
+    case 6: createFilterState <Dsp::Butterworth::Design::LowShelf  <50> > (&f, &fo); break;
     case 7: createFilterState <Dsp::Butterworth::Design::HighShelf <50> > (&f, &fo); break;
     case 8: createFilterState <Dsp::Butterworth::Design::BandShelf <50> > (&f, &fo); break;
     };
@@ -472,11 +472,11 @@ void MainPanel::createFilter ()
   {
     switch (typeId)
     {
-    case 1: createFilterState <Dsp::ChebyshevI::Design::LowPass <50> > (&f, &fo); break;
-    case 2: createFilterState <Dsp::ChebyshevI::Design::HighPass <50> > (&f, &fo); break;
-    case 4: createFilterState <Dsp::ChebyshevI::Design::BandPass <50> > (&f, &fo); break;
-    case 5: createFilterState <Dsp::ChebyshevI::Design::BandStop <50> > (&f, &fo); break;
-    case 6: createFilterState <Dsp::ChebyshevI::Design::LowShelf <50> > (&f, &fo); break;
+    case 1: createFilterState <Dsp::ChebyshevI::Design::LowPass   <50> > (&f, &fo); break;
+    case 2: createFilterState <Dsp::ChebyshevI::Design::HighPass  <50> > (&f, &fo); break;
+    case 4: createFilterState <Dsp::ChebyshevI::Design::BandPass  <50> > (&f, &fo); break;
+    case 5: createFilterState <Dsp::ChebyshevI::Design::BandStop  <50> > (&f, &fo); break;
+    case 6: createFilterState <Dsp::ChebyshevI::Design::LowShelf  <50> > (&f, &fo); break;
     case 7: createFilterState <Dsp::ChebyshevI::Design::HighShelf <50> > (&f, &fo); break;
     case 8: createFilterState <Dsp::ChebyshevI::Design::BandShelf <50> > (&f, &fo); break;
     };
@@ -488,11 +488,11 @@ void MainPanel::createFilter ()
   {
     switch (typeId)
     {
-    case 1: createFilterState <Dsp::ChebyshevII::Design::LowPass <50> > (&f, &fo); break;
-    case 2: createFilterState <Dsp::ChebyshevII::Design::HighPass <50> > (&f, &fo); break;
-    case 4: createFilterState <Dsp::ChebyshevII::Design::BandPass <50> > (&f, &fo); break;
-    case 5: createFilterState <Dsp::ChebyshevII::Design::BandStop <50> > (&f, &fo); break;
-    case 6: createFilterState <Dsp::ChebyshevII::Design::LowShelf <50> > (&f, &fo); break;
+    case 1: createFilterState <Dsp::ChebyshevII::Design::LowPass   <50> > (&f, &fo); break;
+    case 2: createFilterState <Dsp::ChebyshevII::Design::HighPass  <50> > (&f, &fo); break;
+    case 4: createFilterState <Dsp::ChebyshevII::Design::BandPass  <50> > (&f, &fo); break;
+    case 5: createFilterState <Dsp::ChebyshevII::Design::BandStop  <50> > (&f, &fo); break;
+    case 6: createFilterState <Dsp::ChebyshevII::Design::LowShelf  <50> > (&f, &fo); break;
     case 7: createFilterState <Dsp::ChebyshevII::Design::HighShelf <50> > (&f, &fo); break;
     case 8: createFilterState <Dsp::ChebyshevII::Design::BandShelf <50> > (&f, &fo); break;
     };
@@ -504,7 +504,7 @@ void MainPanel::createFilter ()
   {
     switch (typeId)
     {
-    case 1: createFilterState <Dsp::Elliptic::Design::LowPass <50> > (&f, &fo); break;
+    case 1: createFilterState <Dsp::Elliptic::Design::LowPass  <50> > (&f, &fo); break;
     case 2: createFilterState <Dsp::Elliptic::Design::HighPass <50> > (&f, &fo); break;
     case 4: createFilterState <Dsp::Elliptic::Design::BandPass <50> > (&f, &fo); break;
     case 5: createFilterState <Dsp::Elliptic::Design::BandStop <50> > (&f, &fo); break;
@@ -517,24 +517,24 @@ void MainPanel::createFilter ()
   {
     switch (typeId)
     {
-    case 1: createFilterState <Dsp::Bessel::Design::LowPass <50> > (&f, &fo); break;
-    case 2: createFilterState <Dsp::Bessel::Design::HighPass <50> > (&f, &fo); break;
-    case 4: createFilterState <Dsp::Bessel::Design::BandPass <50> > (&f, &fo); break;
-    case 5: createFilterState <Dsp::Bessel::Design::BandStop <50> > (&f, &fo); break;
-    case 6: createFilterState <Dsp::Bessel::Design::LowShelf <50> > (&f, &fo); break;
+    case 1: createFilterState <Dsp::Bessel::Design::LowPass  <25> > (&f, &fo); break;
+    case 2: createFilterState <Dsp::Bessel::Design::HighPass <25> > (&f, &fo); break;
+    case 4: createFilterState <Dsp::Bessel::Design::BandPass <25> > (&f, &fo); break;
+    case 5: createFilterState <Dsp::Bessel::Design::BandStop <25> > (&f, &fo); break;
+    case 6: createFilterState <Dsp::Bessel::Design::LowShelf <25> > (&f, &fo); break;
     };
   }
   //
-  // Bessel
+  // Legendre
   //
   else if (familyId == 7)
   {
     switch (typeId)
     {
-    case 1: createFilterState <Dsp::Legendre::Design::LowPass <50> > (&f, &fo); break;
-    case 2: createFilterState <Dsp::Legendre::Design::HighPass <50> > (&f, &fo); break;
-    case 4: createFilterState <Dsp::Legendre::Design::BandPass <50> > (&f, &fo); break;
-    case 5: createFilterState <Dsp::Legendre::Design::BandStop <50> > (&f, &fo); break;
+    case 1: createFilterState <Dsp::Legendre::Design::LowPass  <25> > (&f, &fo); break;
+    case 2: createFilterState <Dsp::Legendre::Design::HighPass <25> > (&f, &fo); break;
+    case 4: createFilterState <Dsp::Legendre::Design::BandPass <25> > (&f, &fo); break;
+    case 5: createFilterState <Dsp::Legendre::Design::BandStop <25> > (&f, &fo); break;
     };
   }
   //

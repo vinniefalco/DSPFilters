@@ -269,100 +269,130 @@ struct BandStop : PoleFilter <BandStopBase, MaxOrder, MaxOrder*2>
 
 //------------------------------------------------------------------------------
 
-namespace Design {
-
-template <class FilterClass>
-struct TypeI : DesignBase, FilterClass
-{
-  // this ctor could be factored out
-  TypeI ()
-  {
-    addBuiltinParamInfo (idOrder);
-    addBuiltinParamInfo (idFrequency);
-  }
-
-  void setParams (const Params& params)
-  {
-    FilterClass::setup (int(params[1]),
-                        params[0],
-                        params[2]);
-  }
-};
-
-template <class FilterClass>
-struct TypeII : DesignBase, FilterClass
-{
-  // this ctor could be factored out
-  TypeII ()
-  {
-    addBuiltinParamInfo (idOrder);
-    addBuiltinParamInfo (idFrequency);
-    addBuiltinParamInfo (idBandwidthHz);
-  }
-
-  void setParams (const Params& params)
-  {
-    FilterClass::setup (int(params[1]),
-                        params[0],
-                        params[2],
-                        params[3]);
-  }
-};
-
-//------------------------------------------------------------------------------
-
-// Factored descriptions to reduce template instantiations
-
-struct LowPassDescription
-{
-  Kind getKind () const { return kindLowPass; }
-  const char* getName() const { return "Legendre Low Pass"; }
-};
-
-struct HighPassDescription
-{
-  Kind getKind () const { return kindHighPass; }
-  const char* getName() const { return "Legendre High Pass"; }
-};
-
-struct BandPassDescription
-{
-  Kind getKind () const { return kindHighPass; }
-  const char* getName() const { return "Legendre Band Pass"; }
-};
-
-struct BandStopDescription
-{
-  Kind getKind () const { return kindHighPass; }
-  const char* getName() const { return "Legendre Band Stop"; }
-};
-
-//------------------------------------------------------------------------------
-
 //
 // Gui-friendly Design layer
 //
 
+namespace Design {
+
+struct TypeIBase : DesignBase
+{
+  static int getNumParams ()
+  {
+    return 3;
+  }
+
+  static const ParamInfo2 getParamInfo_2 ()
+  {
+    return ParamInfo2::defaultCutoffFrequencyParam ();
+  }
+};
+
+template <class FilterClass>
+struct TypeI : TypeIBase, FilterClass
+{
+  void setParams (const Params& params)
+  {
+    FilterClass::setup (int(params[1]), params[0], params[2]);
+  }
+};
+
+struct TypeIIBase : DesignBase
+{
+  static int getNumParams ()
+  {
+    return 4;
+  }
+
+  static const ParamInfo2 getParamInfo_2 ()
+  {
+    return ParamInfo2::defaultCenterFrequencyParam ();
+  }
+
+  static const ParamInfo2 getParamInfo_3 ()
+  {
+    return ParamInfo2::defaultBandwidthHzParam ();
+  }
+};
+
+template <class FilterClass>
+struct TypeII : TypeIIBase, FilterClass
+{
+  void setParams (const Params& params)
+  {
+    FilterClass::setup (int(params[1]), params[0], params[2], params[3]);
+  }
+};
+
+// Factored kind and name
+
+struct LowPassDescription
+{
+  static Kind getKind () { return kindLowPass; }
+  static const char* getName() { return "Legendre Low Pass"; }
+};
+
+struct HighPassDescription
+{
+  static Kind getKind () { return kindHighPass; }
+  static const char* getName() { return "Legendre High Pass"; }
+};
+
+struct BandPassDescription
+{
+  static Kind getKind () { return kindHighPass; }
+  static const char* getName() { return "Legendre Band Pass"; }
+};
+
+struct BandStopDescription
+{
+  static Kind getKind () { return kindHighPass; }
+  static const char* getName() { return "Legendre Band Stop"; }
+};
+
+// This glues on the Order parameter
+template <int MaxOrder,
+          template <class> class TypeClass,
+          template <int> class FilterClass>
+struct OrderBase : TypeClass <FilterClass <MaxOrder> >
+{
+  const ParamInfo2 getParamInfo_1 () const
+  {
+    return ParamInfo2 (idOrder, "Order", "Order",
+                       1, MaxOrder, 2,
+                       &ParamInfo2::Int_toControlValue,
+                       &ParamInfo2::Int_toNativeValue,
+                       &ParamInfo2::Int_toString);
+
+  }
+};
+
+//------------------------------------------------------------------------------
+
+//
+// Design filters
+//
+
 template <int MaxOrder>
-struct LowPass : TypeI <Legendre::LowPass <MaxOrder> >,
+struct LowPass : OrderBase <MaxOrder, TypeI, Legendre::LowPass>,
                  LowPassDescription
 {
 };
 
 template <int MaxOrder>
-struct HighPass : TypeI <Legendre::HighPass <MaxOrder> >,
+struct HighPass : OrderBase <MaxOrder, TypeI, Legendre::HighPass>,
                   HighPassDescription
 {
 };
 
 template <int MaxOrder>
-struct BandPass : TypeII <Legendre::BandPass <MaxOrder> >,
+struct BandPass : OrderBase <MaxOrder, TypeII, Legendre::BandPass>,
                   BandPassDescription
 {
 };
 
 template <int MaxOrder>
-struct BandStop : TypeII <Legendre::BandStop <MaxOrder> >,
+struct BandStop : OrderBase <MaxOrder, TypeII, Legendre::BandStop>,
                   BandStopDescription
 {
 };

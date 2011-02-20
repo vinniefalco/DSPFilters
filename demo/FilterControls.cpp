@@ -46,7 +46,11 @@ public:
     : m_listeners (listeners)
     , m_filter (filter)
     , m_paramIndex (paramIndex)
+#if 0
     , m_paramInfo (m_filter->getParamInfo (paramIndex))
+#else
+    , m_paramInfo (m_filter->getParamInfo2 (paramIndex))
+#endif
   {
   }
 
@@ -72,7 +76,11 @@ public:
 
   const String getNativeValueAsText () const
   {
+#if 0
     const Dsp::ParamInfo& paramInfo = m_filter->getParamInfo (m_paramIndex);
+#else
+    const Dsp::ParamInfo2 paramInfo = m_filter->getParamInfo2 (m_paramIndex);
+#endif
     return String (paramInfo.toString (m_filter->getParam (m_paramIndex)).c_str ());
   }
 
@@ -84,7 +92,11 @@ private:
   ListenerList<FilterListener>& m_listeners;
   Dsp::Filter* m_filter;
   int m_paramIndex;
+#if 0
   const Dsp::ParamInfo& m_paramInfo;
+#else
+  const Dsp::ParamInfo2 m_paramInfo;
+#endif
 };
 
 //------------------------------------------------------------------------------
@@ -127,7 +139,11 @@ void FilterControls::onFilterChanged (Dsp::Filter* newFilter)
   int x = bounds.getX() + 2;
   for (int i = 0; i < m_filter->getNumParams(); ++i)
   {
+#if 0
     const Dsp::ParamInfo& info = m_filter->getParamInfo (i);
+#else
+    const Dsp::ParamInfo2 info = m_filter->getParamInfo2 (i);
+#endif
 
     if (info.getId() != Dsp::idSampleRate)
     {
