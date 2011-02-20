@@ -146,7 +146,8 @@ public:
 
   int getNumParams () const
   {
-    return m_design.getNumParams();
+    //return m_design.getNumParams();
+    return DesignClass::NumParams;
   }
 
   Params getDefaultParams() const
