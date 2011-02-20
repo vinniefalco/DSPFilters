@@ -239,7 +239,7 @@ protected:
  */
 template <class FilterClass,
           int Channels = 0,
-          class StateType = DirectFormI>
+          class StateType = DirectFormII>
 class SimpleFilter : public FilterClass
 {
 public:

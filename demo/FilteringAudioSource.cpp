@@ -65,10 +65,13 @@ void FilteringAudioSource::setFilter (Dsp::Filter* filter)
   }
 }
 
-void FilteringAudioSource::setFilterParameters (Dsp::Params parameters)
+void FilteringAudioSource::setFilterParameters (Dsp::Params params)
 {
   if (m_filter)
-    m_filter->setParams (parameters);
+  {
+    params[m_filter->findParamId (Dsp::idSampleRate)] = m_sampleRate;
+    m_filter->setParams (params);
+  }
 }
 
 void FilteringAudioSource::reset ()
