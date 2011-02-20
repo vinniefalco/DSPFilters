@@ -63,9 +63,9 @@ public:
       double out = in;
       StateType* state = m_stateArray;
       Biquad const* stage = c.m_stageArray;
+      double vsa = ac();
       for (int i = c.m_numStages; --i >= 0; ++state, ++stage)
-        out = state->process1 (out, *stage);
-      out += ac ();
+        out = state->process1 (out, *stage, vsa);
       return static_cast<Sample> (out);
     }
 

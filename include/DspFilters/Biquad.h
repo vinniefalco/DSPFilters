@@ -55,12 +55,12 @@ class BiquadBase
 {
 public:
   template <class StateType>
-  struct State : StateType, DenormalPrevention
+  struct State : StateType, private DenormalPrevention
   {
     template <typename Sample>
     inline Sample process (const Sample in, const BiquadBase& b)
     {
-      return static_cast<Sample> (StateType::process1 (in, b) + ac());
+      return static_cast<Sample> (StateType::process1 (in, b, ac()));
     }
   };
 

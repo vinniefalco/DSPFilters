@@ -120,11 +120,15 @@ inline bool is_nan<complex_t> (complex_t v)
  * Hack to prevent denormals
  *
  */
+
+const double anti_denormal_vsa = 1e-16;
+//const double anti_denormal_vsa = 0;
+
 class DenormalPrevention
 {
 public:
   DenormalPrevention ()
-    : m_v (1e-10)
+    : m_v (anti_denormal_vsa)
   {
   }
 
@@ -132,6 +136,12 @@ public:
   inline double ac ()
   {
     return m_v = -m_v;
+  }
+
+  // small direct current
+  static inline double dc ()
+  {
+    return anti_denormal_vsa;
   }
 
 private:
