@@ -59,7 +59,4 @@ THE SOFTWARE.
 #include "DspFilters/Legendre.h"
 #include "DspFilters/RBJ.h"
 
-// OLD STUFF, DON'T USE!
-#include "DspFilters/DspFilter.h"
-
 #endif
