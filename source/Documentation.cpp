@@ -131,6 +131,10 @@ http://crca.ucsd.edu/~msp/techniques/v0.08/book-html/node1.html
 // This is the only include you need
 #include "DspFilters/Dsp.h"
 
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+
 namespace {
 
 void UsageExamples ()
@@ -226,6 +230,28 @@ void UsageExamples ()
              880,  // band width
              1);   // ripple dB
     f.process (numSamples, audioData);
+  }
+
+  // Set up a filter, extract the coefficients and print them to standard
+  // output. Note that this filter is not capable of processing samples,
+  // as it has no state. It only has coefficients.
+  {
+    Dsp::SimpleFilter <Dsp::RBJ::LowPass> f;
+    f.setup (44100, // sample rate Hz
+             440, // cutoff frequency Hz
+             1); // "Q" (resonance)
+
+    std::ostringstream os;
+
+    os << "a0 = " << f.getA0 () << "\n"
+       << "a1 = " << f.getA1 () << "\n"
+       << "a2 = " << f.getA2 () << "\n"
+       << "b0 = " << f.getB0 () << "\n"
+       << "b1 = " << f.getB1 () << "\n"
+       << "b2 = " << f.getB2 () << "\n";
+      ;
+
+    std::cout << os.str();
   }
 }
 

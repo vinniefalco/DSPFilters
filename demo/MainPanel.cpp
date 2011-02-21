@@ -169,8 +169,10 @@ MainPanel::MainPanel()
     c->setBounds (x, y, 120, 24);
     c->addItem ("Direct Form I", 1);
     c->addItem ("Direct Form II", 2);
-    c->addItem ("Lattice Form", 3); c->setItemEnabled (3, false);
-    c->addItem ("State Variable", 4); c->setItemEnabled (4, false);
+    c->addItem ("Transposed Direct Form I", 3);
+    c->addItem ("Transposed Direct Form II", 4);
+    c->addItem ("Lattice Form", 5); c->setItemEnabled (5, false);
+    c->addItem ("State Variable", 6); c->setItemEnabled (6, false);
     c->setSelectedId (1);
     addToLayout (c, anchorTopLeft);
     addAndMakeVisible (c);
@@ -418,6 +420,8 @@ void MainPanel::createFilterState (Dsp::Filter** pFilter, Dsp::Filter** pAudioFi
   {
   case 1: createFilterDesign <DesignType, Dsp::DirectFormI> (pFilter, pAudioFilter); break;
   case 2: createFilterDesign <DesignType, Dsp::DirectFormII> (pFilter, pAudioFilter); break;
+  case 3: createFilterDesign <DesignType, Dsp::TransposedDirectFormI> (pFilter, pAudioFilter); break;
+  case 4: createFilterDesign <DesignType, Dsp::TransposedDirectFormII> (pFilter, pAudioFilter); break;
   default:
     createFilterDesign <DesignType, Dsp::DirectFormI> (pFilter, pAudioFilter);
   };
