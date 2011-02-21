@@ -99,6 +99,12 @@ public:
     Stage* stageArray;
   };
 
+  const Stage& operator[] (int index)
+  {
+    assert (index >= 0 && index <= m_numStages);
+    return m_stageArray[index];
+  }
+
 public:
   // Calculate filter response at the given normalized frequency.
   complex_t response (double normalizedFrequency) const;

@@ -253,6 +253,18 @@ void UsageExamples ()
 
     std::cout << os.str();
   }
+
+  // Create an instance of a raw filter. This is as low as it gets, any
+  // lower and we will just have either a Biquad or a Cascade, and you'll
+  // be setting the coefficients manually.
+  {
+    // This is basically like eating uncooked food
+    Dsp::RBJ::LowPass f;
+    f.setup (44100, 440, 1);
+
+    // calculate response at frequency 440 Hz
+    Dsp::complex_t response = f.response (440./44100);
+  }
 }
 
 }
