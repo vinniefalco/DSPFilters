@@ -142,6 +142,115 @@ private:
 
 //------------------------------------------------------------------------------
 
+/*
+ * Transposed Direct Form I and II
+ * by lubomir i. ivanov (neolit123 [at] gmail)
+ *
+ * Reference:
+ * http://www.kvraudio.com/forum/viewtopic.php?p=4430351
+ *
+ */
+
+// I think this one is broken
+class TransposedDirectFormI
+{
+public:
+  TransposedDirectFormI ()
+  {
+    reset ();
+  }
+
+  void reset ()
+  {
+    m_v = 0;
+    m_s1 = 0;
+    m_s1_1 = 0;
+    m_s2 = 0;
+    m_s2_1 = 0;
+    m_s3 = 0;
+    m_s3_1 = 0;
+    m_s4 = 0;
+    m_s4_1 = 0;
+  }
+
+  template <typename Sample>
+  inline Sample process1 (const Sample in,
+                          const BiquadBase& s,
+                          const double vsa)
+  {
+    double out;
+
+    // can be: in += m_s1_1;
+    m_v = in + m_s1_1;
+    out = s.m_b0*m_v + m_s3_1;
+    m_s1 = m_s2_1 - s.m_a1*m_v;
+    m_s2 = -s.m_a2*m_v;
+    m_s3 = s.m_b1*m_v + m_s4_1;
+    m_s4 = s.m_b2*m_v; 
+
+    m_s4_1 = m_s4;
+    m_s3_1 = m_s3;
+    m_s2_1 = m_s2;
+    m_s1_1 = m_s1;
+
+    return static_cast<Sample> (out);
+  }
+
+private:
+  double m_v;
+  double m_s1;
+  double m_s1_1;
+  double m_s2;
+  double m_s2_1;
+  double m_s3;
+  double m_s3_1;
+  double m_s4;
+  double m_s4_1;
+};
+
+//------------------------------------------------------------------------------
+
+class TransposedDirectFormII
+{
+public:
+  TransposedDirectFormII ()
+  {
+    reset ();
+  }
+
+  void reset ()
+  {
+    m_s1 = 0;
+    m_s1_1 = 0;
+    m_s2 = 0;
+    m_s2_1 = 0;
+  }
+
+  template <typename Sample>
+  inline Sample process1 (const Sample in,
+                          const BiquadBase& s,
+                          const double vsa)
+  {
+    double out;
+
+    out = m_s1_1 + s.m_b0*in + vsa;
+    m_s1 = m_s2_1 + s.m_b1*in - s.m_a1*out;
+    m_s2 = s.m_b2*in - s.m_a2*out;
+    m_s1_1 = m_s1;
+    m_s2_1 = m_s2;
+
+    return static_cast<Sample> (out);
+  }
+
+private:
+  double m_s1;
+  double m_s1_1;
+  double m_s2;
+  double m_s2_1;
+};
+
+//------------------------------------------------------------------------------
+
 // Holds an array of states suitable for multi-channel processing
 template <int Channels, class StateType>
 class ChannelsState
