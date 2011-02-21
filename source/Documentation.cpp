@@ -89,36 +89,197 @@ http://dspfilterscpp.googlecode.com/files/dspfiltersdemo.png
 
 If you've been searching in futility on the Internet for some source code for implementing high order filters, then look no further because this is it! Whether you are a student of C++ or digital signal processing, a writer of audio plugins, or even a VST synthesizer coder, "A Collection of Useful C++ Classes for Digital Signal Processing" might have something for you!
 
------
-Notes
------
+********************************************************************************
 
-Please direct all comments this DSP and Plug-in Development forum:
+Notes:
 
-http://www.kvraudio.com/forum/viewforum.php?f=33
+  Please direct all comments this DSP and Plug-in Development forum:
 
--------
+  http://www.kvraudio.com/forum/viewforum.php?f=33
+
 Credits
--------
 
-All of this code was written by the author Vincent Falco except where marked.
+  All of this code was written by the author Vincent Falco except where marked.
 
-Some filter ideas are based on a java applet (http://www.falstad.com/dfilter/)
-developed by Paul Falstad.
+  Some filter ideas are based on a java applet (http://www.falstad.com/dfilter/)
+  developed by Paul Falstad.
 
-------------
 Bibliography
-------------
 
-"High-Order Digital Parametric Equalizer Design"
- Sophocles J. Orfanidis
- (Journal of the Audio Engineering Society, vol 53. pp 1026-1046)
+  "High-Order Digital Parametric Equalizer Design"
+   Sophocles J. Orfanidis
+   (Journal of the Audio Engineering Society, vol 53. pp 1026-1046)
 
-http://crca.ucsd.edu/~msp/techniques/v0.08/book-html/node1.html
+  http://crca.ucsd.edu/~msp/techniques/v0.08/book-html/node1.html
  
-"Spectral Transformations for digital filters"
- A. G. Constantinides, B.Sc.(Eng.) Ph.D.
- (Proceedings of the IEEE, vol. 117, pp. 1585-1590, August 1970)
+  "Spectral Transformations for digital filters"
+   A. G. Constantinides, B.Sc.(Eng.) Ph.D.
+   (Proceedings of the IEEE, vol. 117, pp. 1585-1590, August 1970)
+
+********************************************************************************
+
+DOCUMENTATION
+
+All symbols are in the Dsp namespace.
+
+class Filter
+
+  This is an abstract polymorphic interface that supports any filter. The
+  parameters to the filter are passed in the Params structure, which is
+  essentially an array of floating point numbers with a hard coded size
+  limit (maxParameters). Each filter makes use of the Params as it sees fit.
+
+  Filter::getKind ()
+  Filter::getName ()
+  Filter::getNumParams ()
+  Filter::getParamInfo ()
+
+  Through the use of these functions, the caller can determine the meaning
+  of each indexed filter parameter at run-time. The ParamInfo structure
+  contains methods that describe information about an individual parameter,
+  including convenience functions to map a filter parameter to a "control
+  value" in the range 0...1, suitable for presentation by a GUI element such
+  as a knob or scrollbar.
+
+  Filter::getDefaultParams ()
+  Filter::getParams ()
+  Filter::getParam ()
+  Filter::setParam ()
+  Filter::findParamId ()
+  Filter::setParamById ()
+  Filter::setParams ()
+  Filter::copyParamsFrom ()
+
+  These methods allow the caller to inspect the values of the parameters,
+  and set the filter parameters in various ways. When parameters are changed
+  they take effect on the filter immediately.
+
+  Filter::getPoleZeros ()
+  Filter::response ()
+
+  For analysis, these routines provide insight into the pole/zero arrangement
+  in the z-plane, and the complex valued response at a given normalized
+  frequency in the range (0..nyquist = 0.5]. From the complex number the
+  magnitude and phase can be calculated.
+
+  Filter::getNumChannels()
+  Filter::reset()
+  Filter::process()
+
+  These functions are for applying the filter to channels of data. If the
+  filter was not created with channel state (i.e. Channels==0 in the derived
+  class template) then they will throw an exception.
+
+  To create a Filter object, use operator new on a subclass template with
+  appropriate parameters based on the type of filter you want. Here are the
+  subclasses.
+
+
+
+template <class DesignClass, int Channels = 0, class StateType = DirectFormII>
+class FilterDesign : public Filter
+
+  This subclass of Filter takes a DesignClass (explained below) representing
+  a filter, an optional parameter for the number of channels of data to
+  process, and an optional customizable choice of which state realization
+  to use for processing samples. Channels may be zero, in which case the
+  object can only be used for analysis.
+
+  Because the DesignClass is a member and not inherited, it is in general
+  not possible to call members of the DesignClass directly. You must go
+  through the Filter interface.
+
+
+
+template <class DesignClass, int Channels, class StateType = DirectFormII>
+class SmoothedFilterDesign : public Filter
+
+  This subclass of FilterDesign implements a filter of the given DesignClass,
+  and also performs smoothing of parameters over time. Specifically, when
+  one or more filter parameters (such as cutoff frequency) are changed, the
+  class creates a transition over a given number of samples from the original
+  values to the new values. This process is invisible and seamless to the
+  caller, except that the constructor takes an additional parameter that
+  indicates the duration of transitions when parameters change.
+
+
+
+template <class FilterClass, int Channels = 0, class StateType = DirectFormII>
+class SimpleFilter : public FilterClass
+
+  This is a simple wrapper around a given raw FilterClass (explained below).
+  It uses inheritance so all of the members of the FilterClass are available
+  to instances of this object. The simple wrapper provides state information
+  for processing channels in the given form.
+
+  The wrapper does not support introspection, parameter smoothing, or the
+  Params style of applying filter settings. Instead, it uses the interface
+  of the given FilterClass, which is typically a function called setup()
+  that takes a list of arguments representing the parameters.
+
+  The use of this class bypasses the virtual function overhead of going
+  through a Filter object. It is not practical to change filter parameters
+  of a SimpleFilter, unless you are re-using the filter for a brand new
+  stream of data in which case reset() should be called immediately before
+  or after changing parameters, to clear the state and prevent audible
+  artifacts.
+
+
+
+Filter family namespaces
+
+  Each family of filters is given its own namespace. Currently these namespaces
+  include:
+
+  RBJ:          Filters from the RBJ Cookbook
+  Butterworth:  Filters with Butterworth response
+  ChebyshevI:   Filters using Chebyshev polynomials (ripple in the passband)
+  ChebyshevII:  "Inverse Chebyshev" filters (ripple in the stopband)
+  Elliptic:     Filters with ripple in both the passband and stopband
+  Bessel:       Uses Bessel polynomials, theoretically with linear phase
+  Legendre:     "Optimum-L" filters with steepest transition and monotonic passband.
+  Custom:       Simple filters that allow poles and zeros to be specified directly
+
+<class FilterClass>
+
+  Within each namespace we have a set of "raw filters" (each one is an example
+  of a FilterClass). For example, the raw filters in the Butterworth namespace are:
+
+  Butterworth::LowPass
+  Butterworth::HighPass
+  Butterworth::BandPass
+  Butterworth::BandStop
+  Butterworth::LowShelf
+  Butterworth::HighShelf
+  Butterworth::BandShelf
+
+  When a class template (such as SimpleFilter) requires a FilterClass, it is
+  expecting an identifier of a raw filter. For example, Legendre::LowPass. The
+  raw filters do not have any support for introspection or the Params style of
+  changing filter settings. All they offer is a setup() function for updating
+  the IIR coefficients to a given set of parameters.
+
+<class DesignClass>
+
+  Each filter family namespace also has the nested namespace "Design". Inside
+  this namespace we have all of the raw filter names repeated, except that
+  these classes additional provide the Design interface, which adds
+  introspection, polymorphism, the Params style of changing filter settings,
+  and in general all of the features necessary to interoperate with the Filter
+  virtual base class and its derived classes. For example, the design filters
+  from the Butterworth namespace are:
+
+  Butterworth::Design::LowPass
+  Butterworth::Design::HighPass
+  Butterworth::Design::BandPass
+  Butterworth::Design::BandStop
+  Butterworth::Design::LowShelf
+  Butterworth::Design::HighShelf
+  Butterworth::Design::BandShelf
+
+  For any class template that expects a DesignClass, you must pass a suitable
+  object from the Design namespace of the desired filter family. For example,
+  ChebyshevI::Design::BandPass.
 
 *******************************************************************************/
 

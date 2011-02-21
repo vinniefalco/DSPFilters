@@ -159,11 +159,18 @@ public:
     return m_defaultNativeValue;
   }
 
+  //
+  // Control value is always in the range [0..1]
+  //
   double toControlValue (double nativeValue) const
   {
     return (this->*m_toControlValue) (nativeValue);
   }
 
+  //
+  // Native value is in filter-specific units. For example,
+  // cutoff frequency would probably be in Hertz.
+  //
   double toNativeValue (double controlValue) const
   {
     return (this->*m_toNativeValue) (controlValue);
@@ -175,6 +182,11 @@ public:
   }
 
   double clamp (double nativeValue) const;
+
+  //
+  // These routines are used as function pointers when
+  // constructing the various ParamInfo used by filters
+  //
 
   double Int_toControlValue (double nativeValue) const;
   double Int_toNativeValue (double controlValue) const;
@@ -192,6 +204,10 @@ public:
   std::string Hz_toString (double nativeValue) const;
   std::string Real_toString (double nativeValue) const;
   std::string Db_toString (double nativeValue) const;
+
+  //
+  // Creates the specified ParamInfo
+  //
 
   static ParamInfo defaultSampleRateParam ();
   static ParamInfo defaultCutoffFrequencyParam ();
