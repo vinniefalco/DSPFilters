@@ -62,7 +62,6 @@ HEADERS = \
   DspFilters/Custom.h \
   DspFilters/Design.h \
   DspFilters/Dsp.h \
-  DspFilters/DspFilter.h \
   DspFilters/Elliptic.h \
   DspFilters/Filter.h \
   DspFilters/MathSupplement.h \
@@ -109,13 +108,12 @@ SOURCES = \
   ChebyshevII.cpp \
   Custom.cpp \
   Design.cpp \
-  DspFilter.cpp \
   Elliptic.cpp \
   Filter.cpp \
   Legendre.cpp \
   Param.cpp \
   PoleFilter.cpp \
   RBJ.cpp \
-  Rootfinder.cpp \
+  RootFinder.cpp \
   State.cpp \
   juce_amalgamated.cpp
