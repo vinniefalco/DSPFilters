@@ -39,6 +39,8 @@ THE SOFTWARE.
 #include "DspFilters/Common.h"
 #include "DspFilters/Biquad.h"
 
+#include <stdexcept>
+
 namespace Dsp {
 
 /*
@@ -302,7 +304,7 @@ public:
 
   void reset ()
   {
-    assert (0);
+    throw std::logic_error ("attempt to reset empty ChannelState");
   }
 
   template <class FilterDesign, typename Sample>
@@ -310,7 +312,7 @@ public:
                 Sample* const* arrayOfChannels,
                 FilterDesign& filter)
   {
-    assert (0);
+    throw std::logic_error ("attempt to process empty ChannelState");
   }
 };
 
