@@ -99,6 +99,11 @@ public:
     Stage* stageArray;
   };
 
+  int getNumStages () const
+  {
+    return m_numStages;
+  }
+
   const Stage& operator[] (int index)
   {
     assert (index >= 0 && index <= m_numStages);
