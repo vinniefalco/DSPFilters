@@ -37,7 +37,6 @@
 		96F0EC081B28C4C81039B42A /* NoiseAudioSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 306198EA078139F1D002749F /* NoiseAudioSource.cpp */; };
 		A61A403DBC58B58109371C5B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F9AF9C456F422DABA4EF370 /* Cocoa.framework */; };
 		A763CAB8638BA3AA43A60C36 /* Documentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8DF0089BA8FCFD0D27E7552 /* Documentation.cpp */; };
-		AC1A071277BDAF3AEBFB952B /* DspFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D0A8F818959FA3CD340C280 /* DspFilter.cpp */; };
 		ADD4E9082B62720184C25DD2 /* ThreadQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E72C270195A538E46A35A71C /* ThreadQueue.cpp */; };
 		B6CBF44D40D8D63A67C240C2 /* Cascade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B48C7063CAA055D188A6F2CF /* Cascade.cpp */; };
 		B8842CAF5A5B80DCADBC58CB /* BrickWallChart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 964C6C34C6D2069148EB32D6 /* BrickWallChart.cpp */; };
@@ -106,7 +105,6 @@
 		5AFC28B8DC0B0A1920385342 /* Elliptic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Elliptic.h; path = ../../include/DspFilters/Elliptic.h; sourceTree = SOURCE_ROOT; };
 		5C1DD7FE7F6FCBD550E15B06 /* SettingsPanel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SettingsPanel.cpp; path = ../../demo/SettingsPanel.cpp; sourceTree = SOURCE_ROOT; };
 		5C9D53BA46CE0EA424C2E4AD /* FilterListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FilterListener.h; path = ../../demo/FilterListener.h; sourceTree = SOURCE_ROOT; };
-		5D0A8F818959FA3CD340C280 /* DspFilter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DspFilter.cpp; path = ../../source/DspFilter.cpp; sourceTree = SOURCE_ROOT; };
 		5D0AB001A030923D58462211 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		60832E4888246FA1EFFFD5B7 /* AudioOutput.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AudioOutput.h; path = ../../demo/AudioOutput.h; sourceTree = SOURCE_ROOT; };
 		64412DF70C14AE2D0ACEAB9E /* MainPanel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MainPanel.cpp; path = ../../demo/MainPanel.cpp; sourceTree = SOURCE_ROOT; };
@@ -166,7 +164,6 @@
 		EE6147E02D7468557A5347E7 /* MainPanel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MainPanel.h; path = ../../demo/MainPanel.h; sourceTree = SOURCE_ROOT; };
 		EFD0F8987938FF993A45C355 /* DiscRecording.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiscRecording.framework; path = System/Library/Frameworks/DiscRecording.framework; sourceTree = SDKROOT; };
 		F7BFE22B37050734C1D2C073 /* Custom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Custom.h; path = ../../include/DspFilters/Custom.h; sourceTree = SOURCE_ROOT; };
-		F8600565838236C42C497EB5 /* DspFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DspFilter.h; path = ../../include/DspFilters/DspFilter.h; sourceTree = SOURCE_ROOT; };
 		F8627D09BDB8375AB154647E /* PhaseChart.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PhaseChart.cpp; path = ../../demo/PhaseChart.cpp; sourceTree = SOURCE_ROOT; };
 		FC84A38209820FEE5E2DF6C9 /* MainApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MainApp.h; path = ../../demo/MainApp.h; sourceTree = SOURCE_ROOT; };
 		FEA78B56D856A01614F216D5 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
@@ -288,7 +285,6 @@
 				F7BFE22B37050734C1D2C073 /* Custom.h */,
 				8607C87EB9F6A504E15E6E01 /* Design.h */,
 				3EA391D2E6D464E81D718E68 /* Dsp.h */,
-				F8600565838236C42C497EB5 /* DspFilter.h */,
 				5AFC28B8DC0B0A1920385342 /* Elliptic.h */,
 				AE467D3B57327BBE57991954 /* Filter.h */,
 				CFFC0D921396EF7C62C49742 /* Layout.h */,
@@ -352,7 +348,6 @@
 				71BECA12A36889EC947CDC2F /* Custom.cpp */,
 				AB97F5AE2ED99FEE887AB0E4 /* Design.cpp */,
 				D8DF0089BA8FCFD0D27E7552 /* Documentation.cpp */,
-				5D0A8F818959FA3CD340C280 /* DspFilter.cpp */,
 				477255F0DD38268F382D4EAD /* Elliptic.cpp */,
 				EBAE6BB60F7829C3443E208C /* Filter.cpp */,
 				201A809C5DB0D8979634AED0 /* Legendre.cpp */,
@@ -465,7 +460,6 @@
 				5BCFA8C72364CDFD2B76F16C /* Custom.cpp in Sources */,
 				FCF5266072C0784C6AFC9901 /* Design.cpp in Sources */,
 				A763CAB8638BA3AA43A60C36 /* Documentation.cpp in Sources */,
-				AC1A071277BDAF3AEBFB952B /* DspFilter.cpp in Sources */,
 				82FE38FCFEF775554CB742E6 /* Elliptic.cpp in Sources */,
 				23B8027CDB4FD3ADFCF52660 /* Filter.cpp in Sources */,
 				74993174CD7235DC90151B1C /* Legendre.cpp in Sources */,
