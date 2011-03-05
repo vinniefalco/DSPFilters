@@ -170,7 +170,7 @@ void copy (int channels,
 //--------------------------------------------------------------------------
 
 // Deinterleave channels. Performs implicit type conversion.
-template<typename Td, typename Ts>
+template <typename Td, typename Ts>
 void deinterleave (int channels,
                    int samples,
                    Td* const* dest,
@@ -306,7 +306,7 @@ void interleave (int channels,
   default:
     {
       for (int i = channels; --i >= 0;)
-        copy (1, samples, dest + i, src[i], channels - 1, 0);
+        copy (samples, dest + i, src[i], channels - 1, 0);
     }
     break;
   };
@@ -399,7 +399,7 @@ void reverse (int samples,
   }
 }
 
-template<typename Td, typename Ts>
+template <typename Td, typename Ts>
 void reverse (int channels, size_t frames, Td* const* dest, const Ts* const* src)
 {
   for (int i = channels; --i >= 0;)
@@ -439,7 +439,7 @@ struct zero
   }
 };
 
-template<typename Ty>
+template <typename Ty>
 struct zero<Ty, true>
 {
   static void process (int samples,
@@ -511,7 +511,7 @@ void zero (int channels,
 // Reference:
 // http://www.codeproject.com/KB/recipes/one_variable_optimize.aspx?msg=2779038
 
-template<class TFunction>
+template <class TFunction>
 double BrentMinimize
 (
   TFunction& f,	// [in] objective function to minimize
