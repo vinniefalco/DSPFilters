@@ -71,9 +71,9 @@ public:
 private:
   static MainApp* s_app;
 
-  ScopedPointer<ApplicationCommandManager> m_commandManager;
-  ScopedPointer<AudioOutput> m_audioOutput;
-  ScopedPointer<MainWindow> m_mainWindow;
+  ScopedPointer <ApplicationCommandManager> m_commandManager;
+  ScopedPointer <AudioOutput> m_audioOutput;
+  ScopedPointer <MainWindow> m_mainWindow;
 };
 
 #endif
