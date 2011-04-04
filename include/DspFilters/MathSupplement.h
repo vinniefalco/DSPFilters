@@ -121,8 +121,9 @@ inline bool is_nan<complex_t> (complex_t v)
  *
  */
 
-const double anti_denormal_vsa = 1e-16;
+//const double anti_denormal_vsa = 1e-16; // doesn't prevent denormals
 //const double anti_denormal_vsa = 0;
+const double anti_denormal_vsa = 1e-8;
 
 class DenormalPrevention
 {
