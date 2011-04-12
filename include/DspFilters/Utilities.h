@@ -412,6 +412,36 @@ void reverse (int channels, size_t frames, Td* const* dest, const Ts* const* src
 
 //--------------------------------------------------------------------------
 
+template <typename T>
+void to_mono (int samples, T* dest, T const* left, T const* right)
+{
+#if 0
+  while (samples-- > 0)
+    *dest++ = (*left++ + *right++) * T(0.70710678118654752440084436210485);
+#else
+  while (samples-- > 0)
+    *dest++ = (*left++ + *right++) * T(0.5);
+#endif
+}
+
+//--------------------------------------------------------------------------
+
+template <typename T>
+void validate (int numChannels, int numSamples, T const* const* src)
+{
+  for (int i = 0; i < numChannels; ++i)
+  {
+    T const* p = src [i];
+    for (int j = numSamples; j > 0; --j)
+    {
+      T v = *p++;
+      assert (v < 2 && v > -2);
+    }
+  }
+}
+
+//--------------------------------------------------------------------------
+
 #if 0
 /*
  * this stuff all depends on is_pod which is not always available
