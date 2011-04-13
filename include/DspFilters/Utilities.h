@@ -415,7 +415,7 @@ void reverse (int channels, size_t frames, Td* const* dest, const Ts* const* src
 template <typename T>
 void to_mono (int samples, T* dest, T const* left, T const* right)
 {
-#if 0
+#if 1
   while (samples-- > 0)
     *dest++ = (*left++ + *right++) * T(0.70710678118654752440084436210485);
 #else
