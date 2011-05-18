@@ -228,6 +228,37 @@ void deinterleave (int samples,
 
 //--------------------------------------------------------------------------
 
+// Fade dest
+template <typename Td,
+          typename Ty>
+void fade (int samples,
+           Td* dest,
+           Ty start = 0,
+           Ty end = 1)
+{
+  Ty t = start;
+  Ty dt = (end - start) / samples;
+
+  while (--samples >= 0)
+  {
+    *dest++ *= t;
+    t += dt;
+  }
+}
+
+// Fade dest cannels
+template <typename Td,
+          typename Ty>
+void fade (int channels,
+           int samples,
+           Td* const* dest,
+           Ty start = 0,
+           Ty end = 1)
+{
+  for (int i = channels; --i >= 0;)
+    fade (samples, dest[i], start, end);
+}
+
 // Fade src into dest
 template <typename Td,
           typename Ts,
