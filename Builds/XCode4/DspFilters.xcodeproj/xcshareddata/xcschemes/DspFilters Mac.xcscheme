@@ -35,6 +35,15 @@
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Debug">
+      <BuildableProductRunnable>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "2ED29FB413FCC0FA00750A4E"
+            BuildableName = "DspFilters.app"
+            BlueprintName = "DspFilters Mac"
+            ReferencedContainer = "container:DspFilters.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
