@@ -250,6 +250,7 @@ private:
     Anchor (Component* component=0);
     bool operator== (const Anchor& rhs) const;
     bool operator>= (const Anchor& rhs) const;
+    bool operator<  (const Anchor& rhs) const;
 	};
 
   struct State
@@ -263,6 +264,7 @@ private:
 
     bool operator== (const State& rhs) const;
     bool operator>= (const State& rhs) const;
+    bool operator<  (const State& rhs) const;
 	};
 
   void addStateFor (const Anchor& anchor);

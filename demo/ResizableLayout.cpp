@@ -61,7 +61,12 @@ bool ResizableLayout::Anchor::operator== (const Anchor& rhs) const
 
 bool ResizableLayout::Anchor::operator>= (const Anchor& rhs) const
 {
-  return component >= rhs.component;
+    return component >= rhs.component;
+}
+
+bool ResizableLayout::Anchor::operator< (const Anchor& rhs) const
+{
+    return component < rhs.component;
 }
 
 ResizableLayout::State::State (Component* component_)
@@ -84,7 +89,12 @@ bool ResizableLayout::State::operator== (const State& rhs) const
 
 bool ResizableLayout::State::operator>= (const State& rhs) const
 {
-  return component >= rhs.component;
+    return component >= rhs.component;
+}
+
+bool ResizableLayout::State::operator< (const State& rhs) const
+{
+    return component < rhs.component;
 }
 
 //------------------------------------------------------------------------------

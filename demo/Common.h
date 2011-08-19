@@ -36,7 +36,7 @@ THE SOFTWARE.
 #ifndef DSPDEMO_COMMON_H
 #define DSPDEMO_COMMON_H
 
-#include "juce_amalgamated.h"
+#include "JuceHeader.h"
 
 #include "DspFilters/Dsp.h"
 
