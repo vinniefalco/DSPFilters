@@ -18,8 +18,8 @@
 		2E8CA89913FE12B400A86A48 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA0868513FDD6390051A437 /* OpenGL.framework */; };
 		2E8CA89A13FE12B400A86A48 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA0868613FDD6390051A437 /* QTKit.framework */; };
 		2E8CA89B13FE12B400A86A48 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA0868713FDD6390051A437 /* QuartzCore.framework */; };
-		2E8CA89C13FE12B400A86A48 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA0868813FDD6390051A437 /* QuickTime.framework */; };
 		2E8CA89D13FE12B400A86A48 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA0868913FDD6390051A437 /* WebKit.framework */; };
+		2E92AE5613FF314900CCB44D /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E1F37B113FF2D84004DECD6 /* QuickTime.framework */; };
 		2E934DA213FEF3BD00370052 /* libJuceiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EAB695313FE29B00001C68F /* libJuceiOS.a */; };
 		2EA0858513FDA9E30051A437 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA0858413FDA9E30051A437 /* CoreText.framework */; };
 		2EA085BE13FDADB10051A437 /* AudioOutput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0858D13FDADB10051A437 /* AudioOutput.cpp */; };
@@ -136,6 +136,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2E1F37B113FF2D84004DECD6 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = System/Library/Frameworks/QuickTime.framework; sourceTree = SDKROOT; };
 		2E7BDB7713FE03B900367CFA /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prefix.pch; sourceTree = "<group>"; };
 		2E8CA87113FE087400A86A48 /* libJuceMac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libJuceMac.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EA0858413FDA9E30051A437 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
@@ -239,7 +240,6 @@
 		2EA0868513FDD6390051A437 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = ../../../System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		2EA0868613FDD6390051A437 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = ../../../System/Library/Frameworks/QTKit.framework; sourceTree = SDKROOT; };
 		2EA0868713FDD6390051A437 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = ../../../System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		2EA0868813FDD6390051A437 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = ../../../System/Library/Frameworks/QuickTime.framework; sourceTree = SDKROOT; };
 		2EA0868913FDD6390051A437 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = ../../../System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		2EA0869E13FDDCE40051A437 /* AppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppConfig.h; path = ../../Juce/AppConfig.h; sourceTree = "<group>"; };
 		2EA256B713FF048C00285FA2 /* iOSInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = iOSInfo.plist; sourceTree = "<group>"; };
@@ -296,8 +296,8 @@
 				2E8CA89913FE12B400A86A48 /* OpenGL.framework in Frameworks */,
 				2E8CA89A13FE12B400A86A48 /* QTKit.framework in Frameworks */,
 				2E8CA89B13FE12B400A86A48 /* QuartzCore.framework in Frameworks */,
-				2E8CA89C13FE12B400A86A48 /* QuickTime.framework in Frameworks */,
 				2E8CA89D13FE12B400A86A48 /* WebKit.framework in Frameworks */,
+				2E92AE5613FF314900CCB44D /* QuickTime.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,9 +345,9 @@
 				2EA0868313FDD6390051A437 /* DiscRecording.framework */,
 				2EA0868413FDD6390051A437 /* IOKit.framework */,
 				2EA0868513FDD6390051A437 /* OpenGL.framework */,
-				2EA0868613FDD6390051A437 /* QTKit.framework */,
 				2EA0868713FDD6390051A437 /* QuartzCore.framework */,
-				2EA0868813FDD6390051A437 /* QuickTime.framework */,
+				2E1F37B113FF2D84004DECD6 /* QuickTime.framework */,
+				2EA0868613FDD6390051A437 /* QTKit.framework */,
 				2EA0868913FDD6390051A437 /* WebKit.framework */,
 			);
 			name = Mac;
@@ -887,6 +887,7 @@
 				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = "";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "";
+				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				PRODUCT_NAME = DspFilters;
 				SDKROOT = macosx;
 				STRIP_INSTALLED_PRODUCT = NO;
@@ -900,6 +901,7 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EXECUTABLE_PREFIX = app;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -907,7 +909,7 @@
 					"$(inherited)",
 				);
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -933,6 +935,7 @@
 				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = "";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "";
+				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				PRODUCT_NAME = DspFilters;
 				SDKROOT = macosx;
 				STRIP_INSTALLED_PRODUCT = NO;
@@ -958,8 +961,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = iOSInfo.plist;
@@ -972,8 +973,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = iOSInfo.plist;
