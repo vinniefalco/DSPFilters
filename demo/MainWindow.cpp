@@ -38,7 +38,7 @@ THE SOFTWARE.
 #include "MainPanel.h"
 
 MainWindow::MainWindow () 
-  : DocumentWindow (TRANS("Dsp Filters Demo"),
+  : DocumentWindow (TRANS("DSP Filters"),
                     Colours::lightgrey, 
                     DocumentWindow::allButtons,
                     true)
