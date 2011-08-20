@@ -67,6 +67,8 @@ cat << EOF > "${JUCE}${CONF}";
 //#define  JUCE_OPENGL
 //#define  JUCE_USE_FLAC
 //#define  JUCE_USE_OGGVORBIS
+
+// Trying to turn these off causes compile errors
 //#define  JUCE_INCLUDE_ZLIB_CODE
 //#define  JUCE_INCLUDE_FLAC_CODE
 //#define  JUCE_INCLUDE_OGGVORBIS_CODE
