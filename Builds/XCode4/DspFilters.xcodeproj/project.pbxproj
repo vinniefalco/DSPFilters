@@ -8,18 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		2E5BB49113FEDAF3003DA790 /* libJuceMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8CA87113FE087400A86A48 /* libJuceMac.a */; };
-		2E8CA89213FE12B400A86A48 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA0867E13FDD6390051A437 /* AudioToolbox.framework */; };
-		2E8CA89313FE12B400A86A48 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA0867F13FDD6390051A437 /* Carbon.framework */; };
-		2E8CA89413FE12B400A86A48 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA0868013FDD6390051A437 /* Cocoa.framework */; };
-		2E8CA89513FE12B400A86A48 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA0868113FDD6390051A437 /* CoreAudio.framework */; };
-		2E8CA89613FE12B400A86A48 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA0868213FDD6390051A437 /* CoreMIDI.framework */; };
-		2E8CA89713FE12B400A86A48 /* DiscRecording.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA0868313FDD6390051A437 /* DiscRecording.framework */; };
-		2E8CA89813FE12B400A86A48 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA0868413FDD6390051A437 /* IOKit.framework */; };
-		2E8CA89913FE12B400A86A48 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA0868513FDD6390051A437 /* OpenGL.framework */; };
-		2E8CA89A13FE12B400A86A48 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA0868613FDD6390051A437 /* QTKit.framework */; };
-		2E8CA89B13FE12B400A86A48 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA0868713FDD6390051A437 /* QuartzCore.framework */; };
-		2E8CA89D13FE12B400A86A48 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA0868913FDD6390051A437 /* WebKit.framework */; };
-		2E92AE5613FF314900CCB44D /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E1F37B113FF2D84004DECD6 /* QuickTime.framework */; };
+		2E60CAD113FF63650088FA2C /* Mac.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2E60CAD013FF63650088FA2C /* Mac.icns */; };
+		2E71C273140071AD00643CF1 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E71C26C140071AD00643CF1 /* Icon-72.png */; };
+		2E71C274140071AD00643CF1 /* Icon-Small-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E71C26D140071AD00643CF1 /* Icon-Small-50.png */; };
+		2E71C275140071AD00643CF1 /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E71C26E140071AD00643CF1 /* Icon-Small.png */; };
+		2E71C276140071AD00643CF1 /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E71C26F140071AD00643CF1 /* Icon-Small@2x.png */; };
+		2E71C277140071AD00643CF1 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E71C270140071AD00643CF1 /* Icon.png */; };
+		2E71C278140071AD00643CF1 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E71C271140071AD00643CF1 /* Icon@2x.png */; };
+		2E71C279140071AD00643CF1 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E71C272140071AD00643CF1 /* iTunesArtwork.png */; };
+		2E85DB8013FFF70A00BDF580 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E85DB7F13FFF70A00BDF580 /* AudioToolbox.framework */; };
+		2E85DB8413FFF72700BDF580 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E85DB8313FFF72700BDF580 /* Cocoa.framework */; };
+		2E85DB8613FFF72E00BDF580 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E85DB8513FFF72E00BDF580 /* CoreAudio.framework */; };
+		2E85DB9013FFF75700BDF580 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E85DB8F13FFF75700BDF580 /* QuartzCore.framework */; };
+		2E85DB9613FFF85D00BDF580 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E85DB8713FFF73700BDF580 /* CoreMIDI.framework */; };
 		2E934DA213FEF3BD00370052 /* libJuceiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EAB695313FE29B00001C68F /* libJuceiOS.a */; };
 		2EA0858513FDA9E30051A437 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA0858413FDA9E30051A437 /* CoreText.framework */; };
 		2EA085BE13FDADB10051A437 /* AudioOutput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0858D13FDADB10051A437 /* AudioOutput.cpp */; };
@@ -136,8 +137,26 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2E1F37B113FF2D84004DECD6 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = System/Library/Frameworks/QuickTime.framework; sourceTree = SDKROOT; };
+		2E60CAD013FF63650088FA2C /* Mac.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Mac.icns; sourceTree = "<group>"; };
+		2E71C26C140071AD00643CF1 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "iOS Icons/Icon-72.png"; sourceTree = "<group>"; };
+		2E71C26D140071AD00643CF1 /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small-50.png"; path = "iOS Icons/Icon-Small-50.png"; sourceTree = "<group>"; };
+		2E71C26E140071AD00643CF1 /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small.png"; path = "iOS Icons/Icon-Small.png"; sourceTree = "<group>"; };
+		2E71C26F140071AD00643CF1 /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small@2x.png"; path = "iOS Icons/Icon-Small@2x.png"; sourceTree = "<group>"; };
+		2E71C270140071AD00643CF1 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = "iOS Icons/Icon.png"; sourceTree = "<group>"; };
+		2E71C271140071AD00643CF1 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "iOS Icons/Icon@2x.png"; sourceTree = "<group>"; };
+		2E71C272140071AD00643CF1 /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iTunesArtwork.png; path = "iOS Icons/iTunesArtwork.png"; sourceTree = "<group>"; };
 		2E7BDB7713FE03B900367CFA /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prefix.pch; sourceTree = "<group>"; };
+		2E85DB7F13FFF70A00BDF580 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		2E85DB8113FFF72000BDF580 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		2E85DB8313FFF72700BDF580 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		2E85DB8513FFF72E00BDF580 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		2E85DB8713FFF73700BDF580 /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
+		2E85DB8913FFF73E00BDF580 /* DiscRecording.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiscRecording.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/DiscRecording.framework; sourceTree = SDKROOT; };
+		2E85DB8B13FFF74400BDF580 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		2E85DB8D13FFF74B00BDF580 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		2E85DB8F13FFF75700BDF580 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		2E85DB9113FFF75E00BDF580 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/QuickTime.framework; sourceTree = SDKROOT; };
+		2E85DB9313FFF76500BDF580 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		2E8CA87113FE087400A86A48 /* libJuceMac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libJuceMac.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EA0858413FDA9E30051A437 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		2EA0858D13FDADB10051A437 /* AudioOutput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AudioOutput.cpp; path = ../../demo/AudioOutput.cpp; sourceTree = "<group>"; };
@@ -230,23 +249,12 @@
 		2EA0861D13FDAE070051A437 /* RBJ.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RBJ.cpp; path = ../../source/RBJ.cpp; sourceTree = "<group>"; };
 		2EA0861E13FDAE070051A437 /* RootFinder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RootFinder.cpp; path = ../../source/RootFinder.cpp; sourceTree = "<group>"; };
 		2EA0861F13FDAE070051A437 /* State.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = State.cpp; path = ../../source/State.cpp; sourceTree = "<group>"; };
-		2EA0867E13FDD6390051A437 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = ../../../System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		2EA0867F13FDD6390051A437 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = ../../../System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
-		2EA0868013FDD6390051A437 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = ../../../System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		2EA0868113FDD6390051A437 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = ../../../System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
-		2EA0868213FDD6390051A437 /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = ../../../System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
-		2EA0868313FDD6390051A437 /* DiscRecording.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiscRecording.framework; path = ../../../System/Library/Frameworks/DiscRecording.framework; sourceTree = SDKROOT; };
-		2EA0868413FDD6390051A437 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = ../../../System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
-		2EA0868513FDD6390051A437 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = ../../../System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
-		2EA0868613FDD6390051A437 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = ../../../System/Library/Frameworks/QTKit.framework; sourceTree = SDKROOT; };
-		2EA0868713FDD6390051A437 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = ../../../System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		2EA0868913FDD6390051A437 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = ../../../System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		2EA0869E13FDDCE40051A437 /* AppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppConfig.h; path = ../../Juce/AppConfig.h; sourceTree = "<group>"; };
 		2EA256B713FF048C00285FA2 /* iOSInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = iOSInfo.plist; sourceTree = "<group>"; };
 		2EA256B913FF049400285FA2 /* MacInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = MacInfo.plist; sourceTree = "<group>"; };
 		2EAB695313FE29B00001C68F /* libJuceiOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libJuceiOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		2ED29FB513FCC0FA00750A4E /* DspFilters.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DspFilters.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		2ED2A08613FCD1FC00750A4E /* DspFilters.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DspFilters.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2ED29FB513FCC0FA00750A4E /* DSP Filters.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "DSP Filters.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2ED2A08613FCD1FC00750A4E /* DSP Filters.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "DSP Filters.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2ED2A10413FCD38B00750A4E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		2ED2A10613FCD39100750A4E /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		2ED2A10813FCD3AF00750A4E /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
@@ -285,19 +293,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E85DB8013FFF70A00BDF580 /* AudioToolbox.framework in Frameworks */,
+				2E85DB8413FFF72700BDF580 /* Cocoa.framework in Frameworks */,
+				2E85DB8613FFF72E00BDF580 /* CoreAudio.framework in Frameworks */,
+				2E85DB9613FFF85D00BDF580 /* CoreMIDI.framework in Frameworks */,
+				2E85DB9013FFF75700BDF580 /* QuartzCore.framework in Frameworks */,
 				2E5BB49113FEDAF3003DA790 /* libJuceMac.a in Frameworks */,
-				2E8CA89213FE12B400A86A48 /* AudioToolbox.framework in Frameworks */,
-				2E8CA89313FE12B400A86A48 /* Carbon.framework in Frameworks */,
-				2E8CA89413FE12B400A86A48 /* Cocoa.framework in Frameworks */,
-				2E8CA89513FE12B400A86A48 /* CoreAudio.framework in Frameworks */,
-				2E8CA89613FE12B400A86A48 /* CoreMIDI.framework in Frameworks */,
-				2E8CA89713FE12B400A86A48 /* DiscRecording.framework in Frameworks */,
-				2E8CA89813FE12B400A86A48 /* IOKit.framework in Frameworks */,
-				2E8CA89913FE12B400A86A48 /* OpenGL.framework in Frameworks */,
-				2E8CA89A13FE12B400A86A48 /* QTKit.framework in Frameworks */,
-				2E8CA89B13FE12B400A86A48 /* QuartzCore.framework in Frameworks */,
-				2E8CA89D13FE12B400A86A48 /* WebKit.framework in Frameworks */,
-				2E92AE5613FF314900CCB44D /* QuickTime.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,6 +322,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2E60CAD413FF68CB0088FA2C /* Icons */ = {
+			isa = PBXGroup;
+			children = (
+				2E71C26C140071AD00643CF1 /* Icon-72.png */,
+				2E71C26D140071AD00643CF1 /* Icon-Small-50.png */,
+				2E71C26E140071AD00643CF1 /* Icon-Small.png */,
+				2E71C26F140071AD00643CF1 /* Icon-Small@2x.png */,
+				2E71C270140071AD00643CF1 /* Icon.png */,
+				2E71C271140071AD00643CF1 /* Icon@2x.png */,
+				2E71C272140071AD00643CF1 /* iTunesArtwork.png */,
+			);
+			name = Icons;
+			sourceTree = "<group>";
+		};
+		2E85DB9513FFF80A00BDF580 /* Unused Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2E85DB8113FFF72000BDF580 /* Carbon.framework */,
+				2E85DB8913FFF73E00BDF580 /* DiscRecording.framework */,
+				2E85DB8B13FFF74400BDF580 /* IOKit.framework */,
+				2E85DB8D13FFF74B00BDF580 /* OpenGL.framework */,
+				2E85DB9113FFF75E00BDF580 /* QuickTime.framework */,
+				2E85DB9313FFF76500BDF580 /* WebKit.framework */,
+			);
+			name = "Unused Frameworks";
+			sourceTree = "<group>";
+		};
 		2E8CA87813FE091E00A86A48 /* Sources (for reference) */ = {
 			isa = PBXGroup;
 			children = (
@@ -337,18 +365,13 @@
 			isa = PBXGroup;
 			children = (
 				2EA256B913FF049400285FA2 /* MacInfo.plist */,
-				2EA0867E13FDD6390051A437 /* AudioToolbox.framework */,
-				2EA0867F13FDD6390051A437 /* Carbon.framework */,
-				2EA0868013FDD6390051A437 /* Cocoa.framework */,
-				2EA0868113FDD6390051A437 /* CoreAudio.framework */,
-				2EA0868213FDD6390051A437 /* CoreMIDI.framework */,
-				2EA0868313FDD6390051A437 /* DiscRecording.framework */,
-				2EA0868413FDD6390051A437 /* IOKit.framework */,
-				2EA0868513FDD6390051A437 /* OpenGL.framework */,
-				2EA0868713FDD6390051A437 /* QuartzCore.framework */,
-				2E1F37B113FF2D84004DECD6 /* QuickTime.framework */,
-				2EA0868613FDD6390051A437 /* QTKit.framework */,
-				2EA0868913FDD6390051A437 /* WebKit.framework */,
+				2E60CAD013FF63650088FA2C /* Mac.icns */,
+				2E85DB7F13FFF70A00BDF580 /* AudioToolbox.framework */,
+				2E85DB8313FFF72700BDF580 /* Cocoa.framework */,
+				2E85DB8513FFF72E00BDF580 /* CoreAudio.framework */,
+				2E85DB8713FFF73700BDF580 /* CoreMIDI.framework */,
+				2E85DB8F13FFF75700BDF580 /* QuartzCore.framework */,
+				2E85DB9513FFF80A00BDF580 /* Unused Frameworks */,
 			);
 			name = Mac;
 			sourceTree = "<group>";
@@ -357,6 +380,7 @@
 			isa = PBXGroup;
 			children = (
 				2EA256B713FF048C00285FA2 /* iOSInfo.plist */,
+				2E60CAD413FF68CB0088FA2C /* Icons */,
 				2EA0858413FDA9E30051A437 /* CoreText.framework */,
 				2ED2A10413FCD38B00750A4E /* QuartzCore.framework */,
 				2ED2A10613FCD39100750A4E /* OpenGLES.framework */,
@@ -385,8 +409,8 @@
 		2ED29FB613FCC0FA00750A4E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2ED29FB513FCC0FA00750A4E /* DspFilters.app */,
-				2ED2A08613FCD1FC00750A4E /* DspFilters.app */,
+				2ED29FB513FCC0FA00750A4E /* DSP Filters.app */,
+				2ED2A08613FCD1FC00750A4E /* DSP Filters.app */,
 				2E8CA87113FE087400A86A48 /* libJuceMac.a */,
 				2EAB695313FE29B00001C68F /* libJuceiOS.a */,
 			);
@@ -581,9 +605,9 @@
 			productReference = 2EAB695313FE29B00001C68F /* libJuceiOS.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		2ED29FB413FCC0FA00750A4E /* DspFilters Mac */ = {
+		2ED29FB413FCC0FA00750A4E /* DSP Filters Mac */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2ED29FD313FCC0FA00750A4E /* Build configuration list for PBXNativeTarget "DspFilters Mac" */;
+			buildConfigurationList = 2ED29FD313FCC0FA00750A4E /* Build configuration list for PBXNativeTarget "DSP Filters Mac" */;
 			buildPhases = (
 				2ED29FB113FCC0FA00750A4E /* Sources */,
 				2ED29FB213FCC0FA00750A4E /* Frameworks */,
@@ -594,14 +618,14 @@
 			dependencies = (
 				2E8CA88113FE0A9500A86A48 /* PBXTargetDependency */,
 			);
-			name = "DspFilters Mac";
+			name = "DSP Filters Mac";
 			productName = "DspFilters Demo";
-			productReference = 2ED29FB513FCC0FA00750A4E /* DspFilters.app */;
+			productReference = 2ED29FB513FCC0FA00750A4E /* DSP Filters.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2ED2A08513FCD1FC00750A4E /* DspFilters iOS */ = {
+		2ED2A08513FCD1FC00750A4E /* DSP Filters iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2ED2A0A813FCD1FC00750A4E /* Build configuration list for PBXNativeTarget "DspFilters iOS" */;
+			buildConfigurationList = 2ED2A0A813FCD1FC00750A4E /* Build configuration list for PBXNativeTarget "DSP Filters iOS" */;
 			buildPhases = (
 				2ED2A08213FCD1FC00750A4E /* Sources */,
 				2ED2A08313FCD1FC00750A4E /* Frameworks */,
@@ -612,9 +636,9 @@
 			dependencies = (
 				2EF308E313FE357B0032484F /* PBXTargetDependency */,
 			);
-			name = "DspFilters iOS";
+			name = "DSP Filters iOS";
 			productName = "DspFilters Demo iOS";
-			productReference = 2ED2A08613FCD1FC00750A4E /* DspFilters.app */;
+			productReference = 2ED2A08613FCD1FC00750A4E /* DSP Filters.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -637,8 +661,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2ED29FB413FCC0FA00750A4E /* DspFilters Mac */,
-				2ED2A08513FCD1FC00750A4E /* DspFilters iOS */,
+				2ED29FB413FCC0FA00750A4E /* DSP Filters Mac */,
+				2ED2A08513FCD1FC00750A4E /* DSP Filters iOS */,
 				2E8CA87013FE087400A86A48 /* Juce Mac */,
 				2EAB695213FE29B00001C68F /* Juce iOS */,
 			);
@@ -650,6 +674,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E60CAD113FF63650088FA2C /* Mac.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -657,6 +682,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E71C273140071AD00643CF1 /* Icon-72.png in Resources */,
+				2E71C274140071AD00643CF1 /* Icon-Small-50.png in Resources */,
+				2E71C275140071AD00643CF1 /* Icon-Small.png in Resources */,
+				2E71C276140071AD00643CF1 /* Icon-Small@2x.png in Resources */,
+				2E71C277140071AD00643CF1 /* Icon.png in Resources */,
+				2E71C278140071AD00643CF1 /* Icon@2x.png in Resources */,
+				2E71C279140071AD00643CF1 /* iTunesArtwork.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -883,13 +915,13 @@
 				);
 				INSTALL_PATH = "${USER_APPS_DIR}";
 				MACOSX_DEPLOYMENT_TARGET = "";
-				"MACOSX_DEPLOYMENT_TARGET[arch=i386]" = "";
-				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = "";
+				"MACOSX_DEPLOYMENT_TARGET[arch=i386]" = 10.4;
+				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = 10.5;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "";
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
-				PRODUCT_NAME = DspFilters;
-				SDKROOT = macosx;
+				PRODUCT_NAME = "DSP Filters";
+				SDKROOT = macosx10.6;
 				STRIP_INSTALLED_PRODUCT = NO;
 				WARNING_CFLAGS = "-Wreorder";
 			};
@@ -931,13 +963,13 @@
 				);
 				INSTALL_PATH = "${USER_APPS_DIR}";
 				MACOSX_DEPLOYMENT_TARGET = "";
-				"MACOSX_DEPLOYMENT_TARGET[arch=i386]" = "";
-				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = "";
+				"MACOSX_DEPLOYMENT_TARGET[arch=i386]" = 10.4;
+				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = 10.5;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "";
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
-				PRODUCT_NAME = DspFilters;
-				SDKROOT = macosx;
+				PRODUCT_NAME = "DSP Filters";
+				SDKROOT = macosx10.6;
 				STRIP_INSTALLED_PRODUCT = NO;
 				WARNING_CFLAGS = "-Wreorder";
 			};
@@ -946,14 +978,20 @@
 		2ED29FD413FCC0FA00750A4E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = MacInfo.plist;
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
 		2ED29FD513FCC0FA00750A4E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = MacInfo.plist;
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
@@ -961,9 +999,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = iOSInfo.plist;
+				"MACOSX_DEPLOYMENT_TARGET[sdk=iphonesimulator*][arch=*]" = "";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -973,10 +1014,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = iOSInfo.plist;
+				"MACOSX_DEPLOYMENT_TARGET[sdk=iphonesimulator*][arch=*]" = "";
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1012,7 +1056,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		2ED29FD313FCC0FA00750A4E /* Build configuration list for PBXNativeTarget "DspFilters Mac" */ = {
+		2ED29FD313FCC0FA00750A4E /* Build configuration list for PBXNativeTarget "DSP Filters Mac" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2ED29FD413FCC0FA00750A4E /* Debug */,
@@ -1021,7 +1065,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		2ED2A0A813FCD1FC00750A4E /* Build configuration list for PBXNativeTarget "DspFilters iOS" */ = {
+		2ED2A0A813FCD1FC00750A4E /* Build configuration list for PBXNativeTarget "DSP Filters iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2ED2A0A913FCD1FC00750A4E /* Debug */,

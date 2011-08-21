@@ -13,9 +13,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2ED2A08513FCD1FC00750A4E"
-               BuildableName = "DspFilters.app"
-               BlueprintName = "DspFilters iOS"
+               BlueprintIdentifier = "2ED29FB413FCC0FA00750A4E"
+               BuildableName = "DSP Filters.app"
+               BlueprintName = "DSP Filters Mac"
                ReferencedContainer = "container:DspFilters.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -34,13 +34,13 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.GDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Release">
+      buildConfiguration = "Debug">
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2ED2A08513FCD1FC00750A4E"
-            BuildableName = "DspFilters.app"
-            BlueprintName = "DspFilters iOS"
+            BlueprintIdentifier = "2ED29FB413FCC0FA00750A4E"
+            BuildableName = "DSP Filters.app"
+            BlueprintName = "DSP Filters Mac"
             ReferencedContainer = "container:DspFilters.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -55,9 +55,9 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2ED2A08513FCD1FC00750A4E"
-            BuildableName = "DspFilters.app"
-            BlueprintName = "DspFilters iOS"
+            BlueprintIdentifier = "2ED29FB413FCC0FA00750A4E"
+            BuildableName = "DSP Filters.app"
+            BlueprintName = "DSP Filters Mac"
             ReferencedContainer = "container:DspFilters.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
