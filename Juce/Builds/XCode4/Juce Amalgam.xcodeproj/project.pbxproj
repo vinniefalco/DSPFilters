@@ -1,0 +1,435 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2EF3093913FE4F670032484F /* JuceLibraryCode4.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2EF308DB13FE327C0032484F /* JuceLibraryCode4.mm */; };
+		2EF3093C13FE4FC70032484F /* JuceLibraryCode4.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2EF308DB13FE327C0032484F /* JuceLibraryCode4.mm */; };
+		2EF3093D13FE4FF20032484F /* JuceLibraryCode2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2EF308D913FE327C0032484F /* JuceLibraryCode2.mm */; };
+		2EF3093E13FE50930032484F /* JuceLibraryCode2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2EF308D913FE327C0032484F /* JuceLibraryCode2.mm */; };
+		2EF3093F13FE50F50032484F /* JuceLibraryCode1.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2EF308D813FE327C0032484F /* JuceLibraryCode1.mm */; };
+		2EF3094013FE50F50032484F /* JuceLibraryCode3.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2EF308DA13FE327C0032484F /* JuceLibraryCode3.mm */; };
+		2EF3094113FE50F50032484F /* JuceLibraryCode1.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2EF308D813FE327C0032484F /* JuceLibraryCode1.mm */; };
+		2EF3094213FE50F50032484F /* JuceLibraryCode3.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2EF308DA13FE327C0032484F /* JuceLibraryCode3.mm */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2E7BDB7713FE03B900367CFA /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Prefix.pch; path = ../../../Builds/XCode4/Prefix.pch; sourceTree = "<group>"; };
+		2E85DB7F13FFF70A00BDF580 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		2E85DB8113FFF72000BDF580 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		2E85DB8313FFF72700BDF580 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		2E85DB8513FFF72E00BDF580 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		2E85DB8713FFF73700BDF580 /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
+		2E85DB8913FFF73E00BDF580 /* DiscRecording.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiscRecording.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/DiscRecording.framework; sourceTree = SDKROOT; };
+		2E85DB8B13FFF74400BDF580 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		2E85DB8D13FFF74B00BDF580 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		2E85DB8F13FFF75700BDF580 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		2E85DB9113FFF75E00BDF580 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/QuickTime.framework; sourceTree = SDKROOT; };
+		2E85DB9313FFF76500BDF580 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = ../MacOSX10.6.sdk/System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		2E8CA87113FE087400A86A48 /* libJuceAmalgamMac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libJuceAmalgamMac.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2EA0858413FDA9E30051A437 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		2EA085EB13FDADDB0051A437 /* JuceHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JuceHeader.h; path = ../../JuceHeader.h; sourceTree = "<group>"; };
+		2EA0869E13FDDCE40051A437 /* AppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppConfig.h; path = ../../AppConfig.h; sourceTree = "<group>"; };
+		2EAB695313FE29B00001C68F /* libJuceAmalgamiOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libJuceAmalgamiOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2ED2A10413FCD38B00750A4E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		2ED2A10613FCD39100750A4E /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		2ED2A10813FCD3AF00750A4E /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
+		2ED2A10A13FCD3B500750A4E /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		2ED2A10E13FCD50E00750A4E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		2ED2A11013FCD51700750A4E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		2ED2A11213FCD51F00750A4E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		2ED2A11813FCD60100750A4E /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		2EF308D813FE327C0032484F /* JuceLibraryCode1.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = JuceLibraryCode1.mm; path = ../../JuceLibraryCode1.mm; sourceTree = "<group>"; };
+		2EF308D913FE327C0032484F /* JuceLibraryCode2.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = JuceLibraryCode2.mm; path = ../../JuceLibraryCode2.mm; sourceTree = "<group>"; };
+		2EF308DA13FE327C0032484F /* JuceLibraryCode3.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = JuceLibraryCode3.mm; path = ../../JuceLibraryCode3.mm; sourceTree = "<group>"; };
+		2EF308DB13FE327C0032484F /* JuceLibraryCode4.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = JuceLibraryCode4.mm; path = ../../JuceLibraryCode4.mm; sourceTree = "<group>"; };
+		2EF3090213FE3B400032484F /* juce_amalgamated1.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_amalgamated1.cpp; path = ../../juce_amalgamated1.cpp; sourceTree = "<group>"; };
+		2EF3090313FE3B400032484F /* juce_amalgamated2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_amalgamated2.cpp; path = ../../juce_amalgamated2.cpp; sourceTree = "<group>"; };
+		2EF3090413FE3B400032484F /* juce_amalgamated3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_amalgamated3.cpp; path = ../../juce_amalgamated3.cpp; sourceTree = "<group>"; };
+		2EF3090513FE3B400032484F /* juce_amalgamated4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_amalgamated4.cpp; path = ../../juce_amalgamated4.cpp; sourceTree = "<group>"; };
+		2EF3091813FE3E190032484F /* juce_amalgamated.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_amalgamated.h; path = ../../juce_amalgamated.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2E8CA86E13FE087400A86A48 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2EAB695013FE29B00001C68F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2E8CA87813FE091E00A86A48 /* Sources (for reference) */ = {
+			isa = PBXGroup;
+			children = (
+				2EF3091813FE3E190032484F /* juce_amalgamated.h */,
+				2EF3090213FE3B400032484F /* juce_amalgamated1.cpp */,
+				2EF3090313FE3B400032484F /* juce_amalgamated2.cpp */,
+				2EF3090413FE3B400032484F /* juce_amalgamated3.cpp */,
+				2EF3090513FE3B400032484F /* juce_amalgamated4.cpp */,
+			);
+			name = "Sources (for reference)";
+			sourceTree = "<group>";
+		};
+		2E8CDF8314015F50004F9664 /* Configuration (edit as needed) */ = {
+			isa = PBXGroup;
+			children = (
+				2EA0869E13FDDCE40051A437 /* AppConfig.h */,
+			);
+			name = "Configuration (edit as needed)";
+			sourceTree = "<group>";
+		};
+		2E8CDF8F14016087004F9664 /* Header (#include in your project) */ = {
+			isa = PBXGroup;
+			children = (
+				2EA085EB13FDADDB0051A437 /* JuceHeader.h */,
+			);
+			name = "Header (#include in your project)";
+			sourceTree = "<group>";
+		};
+		2E8CDF90140160A3004F9664 /* Prefix (use in your project build settings) */ = {
+			isa = PBXGroup;
+			children = (
+				2E7BDB7713FE03B900367CFA /* Prefix.pch */,
+			);
+			name = "Prefix (use in your project build settings)";
+			sourceTree = "<group>";
+		};
+		2EA084AB13FCDE7D0051A437 /* Mac (copy to your project) */ = {
+			isa = PBXGroup;
+			children = (
+				2E85DB7F13FFF70A00BDF580 /* AudioToolbox.framework */,
+				2E85DB8113FFF72000BDF580 /* Carbon.framework */,
+				2E85DB8313FFF72700BDF580 /* Cocoa.framework */,
+				2E85DB8513FFF72E00BDF580 /* CoreAudio.framework */,
+				2E85DB8713FFF73700BDF580 /* CoreMIDI.framework */,
+				2E85DB8913FFF73E00BDF580 /* DiscRecording.framework */,
+				2E85DB8B13FFF74400BDF580 /* IOKit.framework */,
+				2E85DB8D13FFF74B00BDF580 /* OpenGL.framework */,
+				2E85DB9113FFF75E00BDF580 /* QuickTime.framework */,
+				2E85DB8F13FFF75700BDF580 /* QuartzCore.framework */,
+				2E85DB9313FFF76500BDF580 /* WebKit.framework */,
+			);
+			name = "Mac (copy to your project)";
+			sourceTree = "<group>";
+		};
+		2EA084AD13FCDE920051A437 /* iOS (copy to your project) */ = {
+			isa = PBXGroup;
+			children = (
+				2EA0858413FDA9E30051A437 /* CoreText.framework */,
+				2ED2A10413FCD38B00750A4E /* QuartzCore.framework */,
+				2ED2A10613FCD39100750A4E /* OpenGLES.framework */,
+				2ED2A10813FCD3AF00750A4E /* CoreMIDI.framework */,
+				2ED2A10A13FCD3B500750A4E /* CoreAudio.framework */,
+				2ED2A10E13FCD50E00750A4E /* UIKit.framework */,
+				2ED2A11013FCD51700750A4E /* Foundation.framework */,
+				2ED2A11813FCD60100750A4E /* AudioToolbox.framework */,
+				2ED2A11213FCD51F00750A4E /* CoreGraphics.framework */,
+			);
+			name = "iOS (copy to your project)";
+			sourceTree = "<group>";
+		};
+		2ED29FAA13FCC0F900750A4E = {
+			isa = PBXGroup;
+			children = (
+				2ED2A06613FCC3CF00750A4E /* Juce */,
+				2E8CDF8F14016087004F9664 /* Header (#include in your project) */,
+				2E8CDF90140160A3004F9664 /* Prefix (use in your project build settings) */,
+				2E8CDF8314015F50004F9664 /* Configuration (edit as needed) */,
+				2EA084AB13FCDE7D0051A437 /* Mac (copy to your project) */,
+				2EA084AD13FCDE920051A437 /* iOS (copy to your project) */,
+				2ED29FB613FCC0FA00750A4E /* Products (link your binary with these) */,
+			);
+			sourceTree = "<group>";
+		};
+		2ED29FB613FCC0FA00750A4E /* Products (link your binary with these) */ = {
+			isa = PBXGroup;
+			children = (
+				2E8CA87113FE087400A86A48 /* libJuceAmalgamMac.a */,
+				2EAB695313FE29B00001C68F /* libJuceAmalgamiOS.a */,
+			);
+			name = "Products (link your binary with these)";
+			sourceTree = "<group>";
+		};
+		2ED2A06613FCC3CF00750A4E /* Juce */ = {
+			isa = PBXGroup;
+			children = (
+				2EF308D813FE327C0032484F /* JuceLibraryCode1.mm */,
+				2EF308D913FE327C0032484F /* JuceLibraryCode2.mm */,
+				2EF308DA13FE327C0032484F /* JuceLibraryCode3.mm */,
+				2EF308DB13FE327C0032484F /* JuceLibraryCode4.mm */,
+				2E8CA87813FE091E00A86A48 /* Sources (for reference) */,
+			);
+			name = Juce;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		2E8CA86F13FE087400A86A48 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2EAB695113FE29B00001C68F /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		2E8CA87013FE087400A86A48 /* Juce Amalgam Mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2E8CA87213FE087400A86A48 /* Build configuration list for PBXNativeTarget "Juce Amalgam Mac" */;
+			buildPhases = (
+				2E8CA86D13FE087400A86A48 /* Sources */,
+				2E8CA86E13FE087400A86A48 /* Frameworks */,
+				2E8CA86F13FE087400A86A48 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Juce Amalgam Mac";
+			productName = Juce;
+			productReference = 2E8CA87113FE087400A86A48 /* libJuceAmalgamMac.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		2EAB695213FE29B00001C68F /* Juce Amalgam iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2EAB695D13FE29B00001C68F /* Build configuration list for PBXNativeTarget "Juce Amalgam iOS" */;
+			buildPhases = (
+				2EAB694F13FE29B00001C68F /* Sources */,
+				2EAB695013FE29B00001C68F /* Frameworks */,
+				2EAB695113FE29B00001C68F /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Juce Amalgam iOS";
+			productName = "Juce iOS";
+			productReference = 2EAB695313FE29B00001C68F /* libJuceAmalgamiOS.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2ED29FAC13FCC0F900750A4E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0410;
+				ORGANIZATIONNAME = "One Guy Group, Inc.";
+			};
+			buildConfigurationList = 2ED29FAF13FCC0F900750A4E /* Build configuration list for PBXProject "Juce Amalgam" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 2ED29FAA13FCC0F900750A4E;
+			productRefGroup = 2ED29FB613FCC0FA00750A4E /* Products (link your binary with these) */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2E8CA87013FE087400A86A48 /* Juce Amalgam Mac */,
+				2EAB695213FE29B00001C68F /* Juce Amalgam iOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2E8CA86D13FE087400A86A48 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2EF3093913FE4F670032484F /* JuceLibraryCode4.mm in Sources */,
+				2EF3093D13FE4FF20032484F /* JuceLibraryCode2.mm in Sources */,
+				2EF3094113FE50F50032484F /* JuceLibraryCode1.mm in Sources */,
+				2EF3094213FE50F50032484F /* JuceLibraryCode3.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2EAB694F13FE29B00001C68F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2EF3093C13FE4FC70032484F /* JuceLibraryCode4.mm in Sources */,
+				2EF3093E13FE50930032484F /* JuceLibraryCode2.mm in Sources */,
+				2EF3093F13FE50F50032484F /* JuceLibraryCode1.mm in Sources */,
+				2EF3094013FE50F50032484F /* JuceLibraryCode3.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2E8CA87313FE087400A86A48 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = JuceAmalgamMac;
+			};
+			name = Debug;
+		};
+		2E8CA87413FE087400A86A48 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = JuceAmalgamMac;
+			};
+			name = Release;
+		};
+		2EAB695E13FE29B00001C68F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				PRODUCT_NAME = JuceAmalgamiOS;
+				SDKROOT = iphoneos4.3;
+			};
+			name = Debug;
+		};
+		2EAB695F13FE29B00001C68F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				PRODUCT_NAME = JuceAmalgamiOS;
+				SDKROOT = iphoneos4.3;
+			};
+			name = Release;
+		};
+		2ED29FD113FCC0FA00750A4E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"_DEBUG=1",
+					"JUCE_ObjCExtraSuffix=",
+					"JUCE_UNIT_TESTS=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = "";
+				"MACOSX_DEPLOYMENT_TARGET[arch=i386]" = 10.4;
+				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = 10.5;
+				"MACOSX_DEPLOYMENT_TARGET[sdk=iphoneos*][arch=*]" = "";
+				"MACOSX_DEPLOYMENT_TARGET[sdk=iphonesimulator*][arch=*]" = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "";
+				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
+				PRODUCT_NAME = JuceAmalgam;
+				SDKROOT = macosx10.6;
+				SKIP_INSTALL = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WARNING_CFLAGS = "-Wreorder";
+			};
+			name = Debug;
+		};
+		2ED29FD213FCC0FA00750A4E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"NDEBUG=1",
+					"_NDEBUG=1",
+					"JUCE_ObjCExtraSuffix=",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = "";
+				"MACOSX_DEPLOYMENT_TARGET[arch=*]" = "";
+				"MACOSX_DEPLOYMENT_TARGET[arch=i386]" = 10.4;
+				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = 10.5;
+				"MACOSX_DEPLOYMENT_TARGET[sdk=iphoneos*][arch=*]" = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "";
+				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
+				PRODUCT_NAME = JuceAmalgam;
+				SDKROOT = macosx10.6;
+				SKIP_INSTALL = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WARNING_CFLAGS = "-Wreorder";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2E8CA87213FE087400A86A48 /* Build configuration list for PBXNativeTarget "Juce Amalgam Mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E8CA87313FE087400A86A48 /* Debug */,
+				2E8CA87413FE087400A86A48 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2EAB695D13FE29B00001C68F /* Build configuration list for PBXNativeTarget "Juce Amalgam iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2EAB695E13FE29B00001C68F /* Debug */,
+				2EAB695F13FE29B00001C68F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2ED29FAF13FCC0F900750A4E /* Build configuration list for PBXProject "Juce Amalgam" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2ED29FD113FCC0FA00750A4E /* Debug */,
+				2ED29FD213FCC0FA00750A4E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2ED29FAC13FCC0F900750A4E /* Project object */;
+}
