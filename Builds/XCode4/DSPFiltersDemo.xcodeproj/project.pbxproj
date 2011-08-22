@@ -107,43 +107,10 @@
 		2ED2A11113FCD51800750A4E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED2A11013FCD51700750A4E /* Foundation.framework */; };
 		2ED2A11313FCD51F00750A4E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED2A11213FCD51F00750A4E /* CoreGraphics.framework */; };
 		2ED2A11913FCD60100750A4E /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED2A11813FCD60100750A4E /* AudioToolbox.framework */; };
-		2EFB0B86140169C50079AB16 /* libJuceAmalgamMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E12A8691401667D00A67805 /* libJuceAmalgamMac.a */; };
-		2EFB0B89140169CD0079AB16 /* libJuceAmalgamiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E12A86B1401667D00A67805 /* libJuceAmalgamiOS.a */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		2E12A8681401667D00A67805 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2E12A8601401667D00A67805 /* Juce Amalgam.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2E8CA87113FE087400A86A48;
-			remoteInfo = "Juce Amalgam Mac";
-		};
-		2E12A86A1401667D00A67805 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2E12A8601401667D00A67805 /* Juce Amalgam.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2EAB695313FE29B00001C68F;
-			remoteInfo = "Juce Amalgam iOS";
-		};
-		2EFB0B84140169BE0079AB16 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2E12A8601401667D00A67805 /* Juce Amalgam.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 2E8CA87013FE087400A86A48;
-			remoteInfo = "Juce Amalgam Mac";
-		};
-		2EFB0B87140169CA0079AB16 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2E12A8601401667D00A67805 /* Juce Amalgam.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 2EAB695213FE29B00001C68F;
-			remoteInfo = "Juce Amalgam iOS";
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
-		2E12A8601401667D00A67805 /* Juce Amalgam.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Juce Amalgam.xcodeproj"; path = "../../Juce/Builds/XCode4/Juce Amalgam.xcodeproj"; sourceTree = "<group>"; };
+		2E12A8601401667D00A67805 /* JuceAmalgam.xcodeproj */ = {isa = PBXFileReference; name = JuceAmalgam.xcodeproj; path = ../../Juce/Builds/XCode4/JuceAmalgam.xcodeproj; sourceTree = "<group>"; };
 		2E60CAD013FF63650088FA2C /* Mac.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Mac.icns; sourceTree = "<group>"; };
 		2E71C26C140071AD00643CF1 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "iOS Icons/Icon-72.png"; sourceTree = "<group>"; };
 		2E71C26D140071AD00643CF1 /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small-50.png"; path = "iOS Icons/Icon-Small-50.png"; sourceTree = "<group>"; };
@@ -272,7 +239,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EFB0B86140169C50079AB16 /* libJuceAmalgamMac.a in Frameworks */,
 				2E8CDF9114016132004F9664 /* AudioToolbox.framework in Frameworks */,
 				2E8CDF9214016132004F9664 /* Cocoa.framework in Frameworks */,
 				2E8CDF9314016132004F9664 /* CoreAudio.framework in Frameworks */,
@@ -285,7 +251,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EFB0B89140169CD0079AB16 /* libJuceAmalgamiOS.a in Frameworks */,
 				2EA0858513FDA9E30051A437 /* CoreText.framework in Frameworks */,
 				2ED2A11913FCD60100750A4E /* AudioToolbox.framework in Frameworks */,
 				2ED2A11313FCD51F00750A4E /* CoreGraphics.framework in Frameworks */,
@@ -301,15 +266,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2E12A8611401667D00A67805 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				2E12A8691401667D00A67805 /* libJuceAmalgamMac.a */,
-				2E12A86B1401667D00A67805 /* libJuceAmalgamiOS.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		2E60CAD413FF68CB0088FA2C /* Icons */ = {
 			isa = PBXGroup;
 			children = (
@@ -378,7 +334,7 @@
 				2EA084AB13FCDE7D0051A437 /* Mac */,
 				2EA084AD13FCDE920051A437 /* iOS */,
 				2ED29FB613FCC0FA00750A4E /* Products */,
-				2E12A8601401667D00A67805 /* Juce Amalgam.xcodeproj */,
+				2E12A8601401667D00A67805 /* JuceAmalgam.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
@@ -524,7 +480,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				2EFB0B85140169BE0079AB16 /* PBXTargetDependency */,
 			);
 			name = "DSP Filters Demo Mac";
 			productName = "DspFilters Demo";
@@ -542,7 +497,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				2EFB0B88140169CA0079AB16 /* PBXTargetDependency */,
 			);
 			name = "DSP Filters Demo iOS";
 			productName = "DspFilters Demo iOS";
@@ -568,12 +522,6 @@
 			mainGroup = 2ED29FAA13FCC0F900750A4E;
 			productRefGroup = 2ED29FB613FCC0FA00750A4E /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 2E12A8611401667D00A67805 /* Products */;
-					ProjectRef = 2E12A8601401667D00A67805 /* Juce Amalgam.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				2ED29FB413FCC0FA00750A4E /* DSP Filters Demo Mac */,
@@ -581,23 +529,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		2E12A8691401667D00A67805 /* libJuceAmalgamMac.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libJuceAmalgamMac.a;
-			remoteRef = 2E12A8681401667D00A67805 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2E12A86B1401667D00A67805 /* libJuceAmalgamiOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libJuceAmalgamiOS.a;
-			remoteRef = 2E12A86A1401667D00A67805 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		2ED29FB313FCC0FA00750A4E /* Resources */ = {
@@ -718,19 +649,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		2EFB0B85140169BE0079AB16 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "Juce Amalgam Mac";
-			targetProxy = 2EFB0B84140169BE0079AB16 /* PBXContainerItemProxy */;
-		};
-		2EFB0B88140169CA0079AB16 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "Juce Amalgam iOS";
-			targetProxy = 2EFB0B87140169CA0079AB16 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		2ED29FD113FCC0FA00750A4E /* Debug */ = {

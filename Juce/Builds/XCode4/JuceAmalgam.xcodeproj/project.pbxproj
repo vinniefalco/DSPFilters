@@ -249,7 +249,7 @@
 				LastUpgradeCheck = 0410;
 				ORGANIZATIONNAME = "One Guy Group, Inc.";
 			};
-			buildConfigurationList = 2ED29FAF13FCC0F900750A4E /* Build configuration list for PBXProject "Juce Amalgam" */;
+			buildConfigurationList = 2ED29FAF13FCC0F900750A4E /* Build configuration list for PBXProject "JuceAmalgam" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -430,7 +430,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		2ED29FAF13FCC0F900750A4E /* Build configuration list for PBXProject "Juce Amalgam" */ = {
+		2ED29FAF13FCC0F900750A4E /* Build configuration list for PBXProject "JuceAmalgam" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2ED29FD113FCC0FA00750A4E /* Debug */,

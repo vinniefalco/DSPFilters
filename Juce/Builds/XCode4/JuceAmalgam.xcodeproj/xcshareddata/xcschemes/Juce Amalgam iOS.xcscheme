@@ -13,10 +13,10 @@
             buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2E8CA87013FE087400A86A48"
-               BuildableName = "libJuceAmalgamMac.a"
-               BlueprintName = "Juce Amalgam Mac"
-               ReferencedContainer = "container:Juce Amalgam.xcodeproj">
+               BlueprintIdentifier = "2EAB695213FE29B00001C68F"
+               BuildableName = "libJuceAmalgamiOS.a"
+               BlueprintName = "Juce Amalgam iOS"
+               ReferencedContainer = "container:JuceAmalgam.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
