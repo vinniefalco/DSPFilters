@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 *******************************************************************************/
 
+#include "Common.h"
 #include "MainApp.h"
 #include "SettingsWindow.h"
 
@@ -131,7 +132,11 @@ bool MainApp::perform (const InvocationInfo& info)
     {
       AlertWindow::showMessageBox (AlertWindow::InfoIcon,
         TRANS("About"),
-        TRANS("Dsp Demo written by Vincent Falco\nCopyright(C) 2010\nAll Rights Reserved Worldwide."),
+        TRANS(
+          "DSP Filters Demo\n"
+          "by Vincent Falco,\n"
+          "One Guy Group, Inc.\n"
+          "Copyright(C) 2010\nAll Rights Reserved Worldwide."),
         TRANS("OK"),
         m_mainWindow);
     }

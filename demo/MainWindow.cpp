@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 *******************************************************************************/
 
+#include "Common.h"
 #include "ContentComponentConstrainer.h"
 #include "MainWindow.h"
 #include "MainPanel.h"
