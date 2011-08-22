@@ -35,6 +35,7 @@
 		2EA085EB13FDADDB0051A437 /* JuceHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JuceHeader.h; path = ../../JuceHeader.h; sourceTree = "<group>"; };
 		2EA0869E13FDDCE40051A437 /* AppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppConfig.h; path = ../../AppConfig.h; sourceTree = "<group>"; };
 		2EAB695313FE29B00001C68F /* libJuceAmalgamiOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libJuceAmalgamiOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2EB95D971401E41500C9AD72 /* JuceAmalgamator.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = JuceAmalgamator.sh; path = ../../JuceAmalgamator.sh; sourceTree = "<group>"; };
 		2ED2A10413FCD38B00750A4E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		2ED2A10613FCD39100750A4E /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		2ED2A10813FCD3AF00750A4E /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
@@ -142,6 +143,14 @@
 			name = "iOS (copy to your project)";
 			sourceTree = "<group>";
 		};
+		2EB95D951401E3ED00C9AD72 /* Script (instructions in the file) */ = {
+			isa = PBXGroup;
+			children = (
+				2EB95D971401E41500C9AD72 /* JuceAmalgamator.sh */,
+			);
+			name = "Script (instructions in the file)";
+			sourceTree = "<group>";
+		};
 		2ED29FAA13FCC0F900750A4E = {
 			isa = PBXGroup;
 			children = (
@@ -151,6 +160,7 @@
 				2E8CDF8314015F50004F9664 /* Configuration (edit as needed) */,
 				2EA084AB13FCDE7D0051A437 /* Mac (copy to your project) */,
 				2EA084AD13FCDE920051A437 /* iOS (copy to your project) */,
+				2EB95D951401E3ED00C9AD72 /* Script (instructions in the file) */,
 				2ED29FB613FCC0FA00750A4E /* Products (link your binary with these) */,
 			);
 			sourceTree = "<group>";
