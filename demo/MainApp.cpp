@@ -122,11 +122,8 @@ bool MainApp::perform (const InvocationInfo& info)
   {
   case cmdSettings:
     {
-#if 0
       SettingsWindow* w = new SettingsWindow;
-      w->addToDesktop (w->getDesktopWindowStyleFlags());
       w->setVisible (true);
-#endif
     }
     return true;
 

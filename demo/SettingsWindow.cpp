@@ -41,13 +41,15 @@ SettingsWindow::SettingsWindow ()
 : DialogWindow (TRANS("Settings"),
                 Colour (192,192,192),
                 true,
-                true)
+                false) // do not add to desktop yet
 {
   SettingsPanel* contentComp = new SettingsPanel;
 
   setOpaque (true);
-  setDropShadowEnabled (false);
-  setUsingNativeTitleBar (true);
+  //setDropShadowEnabled (false);
+
+  // iOS doesn't have a native title bar
+  //setUsingNativeTitleBar (true);
 
   // must happen AFTER setUsingNativeTitleBar()
   Component::addToDesktop (getDesktopWindowStyleFlags());
