@@ -36,6 +36,9 @@
 		2EA0869E13FDDCE40051A437 /* AppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppConfig.h; path = ../../AppConfig.h; sourceTree = "<group>"; };
 		2EAB695313FE29B00001C68F /* libJuceAmalgamiOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libJuceAmalgamiOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EB95D971401E41500C9AD72 /* JuceAmalgamator.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = JuceAmalgamator.sh; path = ../../JuceAmalgamator.sh; sourceTree = "<group>"; };
+		2EBD8CC0140DA44A00D7059C /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Shared.xcconfig; sourceTree = "<group>"; };
+		2EBD8CC1140DA44A00D7059C /* SharedDebug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedDebug.xcconfig; sourceTree = "<group>"; };
+		2EBD8CC2140DA44A00D7059C /* SharedRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedRelease.xcconfig; sourceTree = "<group>"; };
 		2ED2A10413FCD38B00750A4E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		2ED2A10613FCD39100750A4E /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		2ED2A10813FCD3AF00750A4E /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
@@ -151,9 +154,20 @@
 			name = "Script (instructions in the file)";
 			sourceTree = "<group>";
 		};
+		2EBD8CBE140DA43A00D7059C /* .xcconfig */ = {
+			isa = PBXGroup;
+			children = (
+				2EBD8CC0140DA44A00D7059C /* Shared.xcconfig */,
+				2EBD8CC1140DA44A00D7059C /* SharedDebug.xcconfig */,
+				2EBD8CC2140DA44A00D7059C /* SharedRelease.xcconfig */,
+			);
+			name = .xcconfig;
+			sourceTree = "<group>";
+		};
 		2ED29FAA13FCC0F900750A4E = {
 			isa = PBXGroup;
 			children = (
+				2EBD8CBE140DA43A00D7059C /* .xcconfig */,
 				2ED2A06613FCC3CF00750A4E /* Juce */,
 				2E8CDF8F14016087004F9664 /* Header (#include in your project) */,
 				2E8CDF90140160A3004F9664 /* Prefix (use in your project build settings) */,
