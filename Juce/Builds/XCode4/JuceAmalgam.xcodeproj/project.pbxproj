@@ -335,7 +335,6 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
 				);
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -356,7 +355,6 @@
 				"MACOSX_DEPLOYMENT_TARGET[sdk=iphoneos*][arch=*]" = "";
 				"MACOSX_DEPLOYMENT_TARGET[sdk=iphonesimulator*][arch=*]" = "";
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = "";
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				PRODUCT_NAME = JuceAmalgam;
 				SDKROOT = macosx10.6;
@@ -378,7 +376,6 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
 				);
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"NDEBUG=1",
@@ -398,7 +395,6 @@
 				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = 10.5;
 				"MACOSX_DEPLOYMENT_TARGET[sdk=iphoneos*][arch=*]" = "";
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = "";
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				PRODUCT_NAME = JuceAmalgam;
 				SDKROOT = macosx10.6;

@@ -746,7 +746,6 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
 				);
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Prefix.pch;
@@ -758,7 +757,6 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				GCC_USE_STANDARD_INCLUDE_SEARCHING = YES;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -768,7 +766,7 @@
 					../../Juce,
 					"../../include/**",
 				);
-				INSTALL_PATH = "${USER_APPS_DIR}";
+				INSTALL_PATH = LuaD;
 				MACOSX_DEPLOYMENT_TARGET = "";
 				"MACOSX_DEPLOYMENT_TARGET[arch=i386]" = 10.4;
 				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = 10.5;
@@ -795,7 +793,6 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
 				);
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Prefix.pch;
@@ -806,7 +803,6 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				GCC_USE_STANDARD_INCLUDE_SEARCHING = YES;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -816,7 +812,7 @@
 					../../Juce,
 					"../../include/**",
 				);
-				INSTALL_PATH = "${USER_APPS_DIR}";
+				INSTALL_PATH = LuaD;
 				MACOSX_DEPLOYMENT_TARGET = "";
 				"MACOSX_DEPLOYMENT_TARGET[arch=i386]" = 10.4;
 				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = 10.5;
