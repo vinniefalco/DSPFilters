@@ -7,7 +7,7 @@
 
 // Architectures
 ARCHS = $(ARCHS_STANDARD_32_64_BIT)
-//SDKROOT = macosx10.7
+//SDKROOT = 10.6 // This breaks "Relative to SDK" framework references
 
 // Deployment
 MACOSX_DEPLOYMENT_TARGET = 10.4

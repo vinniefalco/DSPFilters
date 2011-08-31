@@ -7,7 +7,7 @@
 
 // Architectures
 ARCHS = $(ARCHS_STANDARD_32_BIT)
-//SDKROOT = iphoneos4.3
+//SDKROOT = iphoneos4.3 // This breaks "Relative to SDK" framework references
 
 // Deployment
 //MACOSX_DEPLOYMENT_TARGET[sdk=iphonesimulator*][arch=*] = 10.7

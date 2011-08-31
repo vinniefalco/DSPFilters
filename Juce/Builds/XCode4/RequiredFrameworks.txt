@@ -1,0 +1,25 @@
+MacOS
+
+    AudioToolbox
+    Carbon
+    Cocoa
+    CoreAudio
+    CoreMIDI
+    DiscRecording
+    IOKit
+    OpenGL
+    QuartzCore
+    QuickTime
+    WebKit
+
+iOS
+
+    AudioToolbox
+    CoreAudio
+    CoreGraphics
+    CoreMIDI
+    CoreText
+    Foundation
+    OpenGLES
+    QuartzCore
+    UIKit
