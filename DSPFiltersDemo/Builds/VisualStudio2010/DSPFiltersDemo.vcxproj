@@ -1,0 +1,303 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\demo\AudioOutput.h" />
+    <ClInclude Include="..\..\demo\binaries.h" />
+    <ClInclude Include="..\..\demo\bond.h" />
+    <ClInclude Include="..\..\demo\BrickWallChart.h" />
+    <ClInclude Include="..\..\demo\Common.h" />
+    <ClInclude Include="..\..\demo\ContentComponentConstrainer.h" />
+    <ClInclude Include="..\..\demo\CpuMeter.h" />
+    <ClInclude Include="..\..\demo\CustomSlider.h" />
+    <ClInclude Include="..\..\demo\FilterChart.h" />
+    <ClInclude Include="..\..\demo\FilterControls.h" />
+    <ClInclude Include="..\..\demo\FilteringAudioSource.h" />
+    <ClInclude Include="..\..\demo\FilterListener.h" />
+    <ClInclude Include="..\..\demo\GainChart.h" />
+    <ClInclude Include="..\..\demo\GroupDelayChart.h" />
+    <ClInclude Include="..\..\demo\MainApp.h" />
+    <ClInclude Include="..\..\demo\MainPanel.h" />
+    <ClInclude Include="..\..\demo\MainWindow.h" />
+    <ClInclude Include="..\..\demo\NoiseAudioSource.h" />
+    <ClInclude Include="..\..\demo\PhaseChart.h" />
+    <ClInclude Include="..\..\demo\PoleZeroChart.h" />
+    <ClInclude Include="..\..\demo\ResamplingReader.h" />
+    <ClInclude Include="..\..\demo\ResizableLayout.h" />
+    <ClInclude Include="..\..\demo\SettingsPanel.h" />
+    <ClInclude Include="..\..\demo\SettingsWindow.h" />
+    <ClInclude Include="..\..\demo\SliderGroup.h" />
+    <ClInclude Include="..\..\demo\StepResponseChart.h" />
+    <ClInclude Include="..\..\demo\ThreadQueue.h" />
+    <ClInclude Include="..\..\include\DspFilters\Bessel.h" />
+    <ClInclude Include="..\..\include\DspFilters\Biquad.h" />
+    <ClInclude Include="..\..\include\DspFilters\Butterworth.h" />
+    <ClInclude Include="..\..\include\DspFilters\Cascade.h" />
+    <ClInclude Include="..\..\include\DspFilters\ChebyshevI.h" />
+    <ClInclude Include="..\..\include\DspFilters\ChebyshevII.h" />
+    <ClInclude Include="..\..\include\DspFilters\Common.h" />
+    <ClInclude Include="..\..\include\DspFilters\Custom.h" />
+    <ClInclude Include="..\..\include\DspFilters\Design.h" />
+    <ClInclude Include="..\..\include\DspFilters\Dsp.h" />
+    <ClInclude Include="..\..\include\DspFilters\Elliptic.h" />
+    <ClInclude Include="..\..\include\DspFilters\Filter.h" />
+    <ClInclude Include="..\..\include\DspFilters\Layout.h" />
+    <ClInclude Include="..\..\include\DspFilters\Legendre.h" />
+    <ClInclude Include="..\..\include\DspFilters\MathSupplement.h" />
+    <ClInclude Include="..\..\include\DspFilters\Params.h" />
+    <ClInclude Include="..\..\include\DspFilters\PoleFilter.h" />
+    <ClInclude Include="..\..\include\DspFilters\RBJ.h" />
+    <ClInclude Include="..\..\include\DspFilters\RootFinder.h" />
+    <ClInclude Include="..\..\include\DspFilters\SmoothedFilter.h" />
+    <ClInclude Include="..\..\include\DspFilters\State.h" />
+    <ClInclude Include="..\..\include\DspFilters\Types.h" />
+    <ClInclude Include="..\..\include\DspFilters\Utilities.h" />
+    <ClInclude Include="..\..\Juce\AppConfig.h" />
+    <ClInclude Include="..\..\Juce\JuceHeader.h" />
+    <ClInclude Include="..\..\Juce\juce_amalgamated.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\demo\AudioOutput.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\binaries.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\BrickWallChart.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\CpuMeter.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\FilterChart.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\FilterControls.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\FilteringAudioSource.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\GainChart.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\GroupDelayChart.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\MainApp.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\MainPanel.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\MainWindow.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\NoiseAudioSource.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\PhaseChart.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\PoleZeroChart.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\Precompile.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Common.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\ResamplingReader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\ResizableLayout.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\SettingsPanel.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\SettingsWindow.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\SliderGroup.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\StepResponseChart.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\demo\ThreadQueue.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Common.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\Juce\JuceLibraryCode1.cpp" />
+    <ClCompile Include="..\..\Juce\JuceLibraryCode2.cpp" />
+    <ClCompile Include="..\..\Juce\JuceLibraryCode3.cpp" />
+    <ClCompile Include="..\..\Juce\JuceLibraryCode4.cpp" />
+    <ClCompile Include="..\..\Juce\juce_amalgamated1.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\Juce\juce_amalgamated2.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\Juce\juce_amalgamated3.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\Juce\juce_amalgamated4.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Bessel.cpp" />
+    <ClCompile Include="..\..\source\Biquad.cpp" />
+    <ClCompile Include="..\..\source\Butterworth.cpp" />
+    <ClCompile Include="..\..\source\Cascade.cpp" />
+    <ClCompile Include="..\..\source\ChebyshevI.cpp" />
+    <ClCompile Include="..\..\source\ChebyshevII.cpp" />
+    <ClCompile Include="..\..\source\Custom.cpp" />
+    <ClCompile Include="..\..\source\Design.cpp" />
+    <ClCompile Include="..\..\source\Documentation.cpp" />
+    <ClCompile Include="..\..\source\Elliptic.cpp" />
+    <ClCompile Include="..\..\source\Filter.cpp" />
+    <ClCompile Include="..\..\source\Legendre.cpp" />
+    <ClCompile Include="..\..\source\Param.cpp" />
+    <ClCompile Include="..\..\source\PoleFilter.cpp" />
+    <ClCompile Include="..\..\source\RBJ.cpp" />
+    <ClCompile Include="..\..\source\RootFinder.cpp" />
+    <ClCompile Include="..\..\source\State.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Juce\JuceAmalgamator.sh">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\..\Juce\JuceLibraryCode1.mm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\..\Juce\JuceLibraryCode2.mm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\..\Juce\JuceLibraryCode3.mm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\..\Juce\JuceLibraryCode4.mm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources.rc" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{AC67FAA8-EFEF-4253-A6BB-C8F4FC9FA1C9}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>DSPFiltersDemo</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IntDir>$(SolutionDir)$(Configuration)\obj\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IntDir>$(SolutionDir)$(Configuration)\obj\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../include;../../Juce</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../include;../../Juce</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
