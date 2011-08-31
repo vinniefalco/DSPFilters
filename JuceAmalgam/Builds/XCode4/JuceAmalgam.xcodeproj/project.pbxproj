@@ -19,12 +19,12 @@
 
 /* Begin PBXFileReference section */
 		2E7BDB7713FE03B900367CFA /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Prefix.pch; path = ../../../Builds/XCode4/Prefix.pch; sourceTree = "<group>"; };
-		2E7DB4EB140DFB3C009FE107 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Shared.xcconfig; path = ../../../Juce/Builds/XCode4/xcconfigs/Shared.xcconfig; sourceTree = "<group>"; };
-		2E7DB4EC140DFB3C009FE107 /* SharedDebug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharedDebug.xcconfig; path = ../../../Juce/Builds/XCode4/xcconfigs/SharedDebug.xcconfig; sourceTree = "<group>"; };
-		2E7DB4ED140DFB3C009FE107 /* SharediOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharediOS.xcconfig; path = ../../../Juce/Builds/XCode4/xcconfigs/SharediOS.xcconfig; sourceTree = "<group>"; };
-		2E7DB4EE140DFB3C009FE107 /* SharedMacOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharedMacOS.xcconfig; path = ../../../Juce/Builds/XCode4/xcconfigs/SharedMacOS.xcconfig; sourceTree = "<group>"; };
-		2E7DB4EF140DFB3C009FE107 /* SharedRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharedRelease.xcconfig; path = ../../../Juce/Builds/XCode4/xcconfigs/SharedRelease.xcconfig; sourceTree = "<group>"; };
-		2E7DB4F0140DFB3C009FE107 /* SharedReleaseApp.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharedReleaseApp.xcconfig; path = ../../../Juce/Builds/XCode4/xcconfigs/SharedReleaseApp.xcconfig; sourceTree = "<group>"; };
+		2E7DB4EB140DFB3C009FE107 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Shared.xcconfig; path = xcconfigs/Shared.xcconfig; sourceTree = SOURCE_ROOT; };
+		2E7DB4EC140DFB3C009FE107 /* SharedDebug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharedDebug.xcconfig; path = xcconfigs/SharedDebug.xcconfig; sourceTree = SOURCE_ROOT; };
+		2E7DB4ED140DFB3C009FE107 /* SharediOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharediOS.xcconfig; path = xcconfigs/SharediOS.xcconfig; sourceTree = SOURCE_ROOT; };
+		2E7DB4EE140DFB3C009FE107 /* SharedMacOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharedMacOS.xcconfig; path = xcconfigs/SharedMacOS.xcconfig; sourceTree = SOURCE_ROOT; };
+		2E7DB4EF140DFB3C009FE107 /* SharedRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharedRelease.xcconfig; path = xcconfigs/SharedRelease.xcconfig; sourceTree = SOURCE_ROOT; };
+		2E7DB4F0140DFB3C009FE107 /* SharedReleaseApp.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharedReleaseApp.xcconfig; path = xcconfigs/SharedReleaseApp.xcconfig; sourceTree = SOURCE_ROOT; };
 		2E8BDA19140DF20300D4A3AF /* RequiredFrameworks.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RequiredFrameworks.txt; sourceTree = "<group>"; };
 		2E8CA87113FE087400A86A48 /* libJuceAmalgamMac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libJuceAmalgamMac.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EA085EB13FDADDB0051A437 /* JuceHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JuceHeader.h; path = ../../JuceHeader.h; sourceTree = "<group>"; };
