@@ -112,6 +112,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		2E4C0FFD140DD6B40050ABF8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2E12A8601401667D00A67805 /* JuceAmalgam.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 2E8CA87013FE087400A86A48;
+			remoteInfo = "Juce Amalgam Mac";
+		};
+		2E4C0FFF140DD6B90050ABF8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2E12A8601401667D00A67805 /* JuceAmalgam.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 2EAB695213FE29B00001C68F;
+			remoteInfo = "Juce Amalgam iOS";
+		};
 		2EBD8D36140DC5F700D7059C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2E12A8601401667D00A67805 /* JuceAmalgam.xcodeproj */;
@@ -130,6 +144,12 @@
 
 /* Begin PBXFileReference section */
 		2E12A8601401667D00A67805 /* JuceAmalgam.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = JuceAmalgam.xcodeproj; path = ../../../Volumes/Code/Dev/repos/dspfilterscpp/Juce/Builds/XCode4/JuceAmalgam.xcodeproj; sourceTree = SDKROOT; };
+		2E4C0FF8140DD2D20050ABF8 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Shared.xcconfig; sourceTree = "<group>"; };
+		2E4C0FF9140DD2D20050ABF8 /* SharedDebug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedDebug.xcconfig; sourceTree = "<group>"; };
+		2E4C0FFA140DD2D20050ABF8 /* SharedRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedRelease.xcconfig; sourceTree = "<group>"; };
+		2E4C0FFB140DD2D20050ABF8 /* SharedMacOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedMacOS.xcconfig; sourceTree = "<group>"; };
+		2E4C0FFC140DD2D20050ABF8 /* SharediOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharediOS.xcconfig; sourceTree = "<group>"; };
+		2E4C1001140DD7F70050ABF8 /* SharedReleaseApp.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedReleaseApp.xcconfig; sourceTree = "<group>"; };
 		2E60CAD013FF63650088FA2C /* Mac.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Mac.icns; sourceTree = "<group>"; };
 		2E71C26C140071AD00643CF1 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "iOS Icons/Icon-72.png"; sourceTree = "<group>"; };
 		2E71C26D140071AD00643CF1 /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small-50.png"; path = "iOS Icons/Icon-Small-50.png"; sourceTree = "<group>"; };
@@ -287,6 +307,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2E4C0FF7140DD2D20050ABF8 /* .xcconfig */ = {
+			isa = PBXGroup;
+			children = (
+				2E4C0FF8140DD2D20050ABF8 /* Shared.xcconfig */,
+				2E4C0FF9140DD2D20050ABF8 /* SharedDebug.xcconfig */,
+				2E4C0FFA140DD2D20050ABF8 /* SharedRelease.xcconfig */,
+				2E4C1001140DD7F70050ABF8 /* SharedReleaseApp.xcconfig */,
+				2E4C0FFB140DD2D20050ABF8 /* SharedMacOS.xcconfig */,
+				2E4C0FFC140DD2D20050ABF8 /* SharediOS.xcconfig */,
+			);
+			name = .xcconfig;
+			path = ../../Juce/Builds/XCode4;
+			sourceTree = "<group>";
+		};
 		2E60CAD413FF68CB0088FA2C /* Icons */ = {
 			isa = PBXGroup;
 			children = (
@@ -359,6 +393,7 @@
 		2ED29FAA13FCC0F900750A4E = {
 			isa = PBXGroup;
 			children = (
+				2E4C0FF7140DD2D20050ABF8 /* .xcconfig */,
 				2ED29FDB13FCC27200750A4E /* DspFilters */,
 				2ED29FDC13FCC27400750A4E /* Demo */,
 				2EA084AB13FCDE7D0051A437 /* Mac */,
@@ -510,6 +545,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				2E4C0FFE140DD6B40050ABF8 /* PBXTargetDependency */,
 			);
 			name = "DSP Filters Demo Mac";
 			productName = "DspFilters Demo";
@@ -527,6 +563,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				2E4C1000140DD6B90050ABF8 /* PBXTargetDependency */,
 			);
 			name = "DSP Filters Demo iOS";
 			productName = "DspFilters Demo iOS";
@@ -703,21 +740,30 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		2E4C0FFE140DD6B40050ABF8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Juce Amalgam Mac";
+			targetProxy = 2E4C0FFD140DD6B40050ABF8 /* PBXContainerItemProxy */;
+		};
+		2E4C1000140DD6B90050ABF8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Juce Amalgam iOS";
+			targetProxy = 2E4C0FFF140DD6B90050ABF8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
 		2ED29FD113FCC0FA00750A4E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2E4C0FF9140DD2D20050ABF8 /* SharedDebug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Vincent Falco (945CEYZ684)";
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
 				EXECUTABLE_PREFIX = app;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
 				);
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -727,46 +773,26 @@
 					"JUCE_UNIT_TESTS=1",
 					"$(inherited)",
 				);
-				GCC_THREADSAFE_STATICS = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../../Juce,
 					"../../include/**",
 				);
-				INSTALL_PATH = LuaD;
-				MACOSX_DEPLOYMENT_TARGET = "";
-				"MACOSX_DEPLOYMENT_TARGET[arch=i386]" = 10.4;
-				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = 10.5;
-				OTHER_LDFLAGS = "-ObjC";
-				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				PRODUCT_NAME = "DSP Filters";
-				PROVISIONING_PROFILE = "71F2438B-C93E-4754-813F-995529DDE3B2";
 				SDKROOT = macosx10.6;
-				STRIP_INSTALLED_PRODUCT = NO;
-				WARNING_CFLAGS = "-Wreorder";
 			};
 			name = Debug;
 		};
 		2ED29FD213FCC0FA00750A4E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2E4C1001140DD7F70050ABF8 /* SharedReleaseApp.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Vincent Falco (945CEYZ684)";
-				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEPLOYMENT_POSTPROCESSING = YES;
 				EXECUTABLE_PREFIX = app;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
 				);
-				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -775,34 +801,20 @@
 					"JUCE_ObjCExtraSuffix=",
 					"$(inherited)",
 				);
-				GCC_THREADSAFE_STATICS = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../../Juce,
 					"../../include/**",
 				);
-				INSTALL_PATH = LuaD;
-				MACOSX_DEPLOYMENT_TARGET = "";
-				"MACOSX_DEPLOYMENT_TARGET[arch=i386]" = 10.4;
-				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = 10.5;
-				OTHER_LDFLAGS = "-ObjC";
-				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				PRODUCT_NAME = "DSP Filters";
-				PROVISIONING_PROFILE = "71F2438B-C93E-4754-813F-995529DDE3B2";
 				SDKROOT = macosx10.6;
-				SEPARATE_STRIP = YES;
-				STRIP_INSTALLED_PRODUCT = YES;
-				WARNING_CFLAGS = "-Wreorder";
 			};
 			name = Release;
 		};
 		2ED29FD413FCC0FA00750A4E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2E4C0FFB140DD2D20050ABF8 /* SharedMacOS.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)/../MacOSX10.6.sdk/System/Library/Frameworks\"",
@@ -817,7 +829,9 @@
 		};
 		2ED29FD513FCC0FA00750A4E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2E4C0FFB140DD2D20050ABF8 /* SharedMacOS.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)/../MacOSX10.6.sdk/System/Library/Frameworks\"",
@@ -832,23 +846,21 @@
 		};
 		2ED2A0A913FCD1FC00750A4E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2E4C0FFC140DD2D20050ABF8 /* SharediOS.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "";
 				INFOPLIST_FILE = iOSInfo.plist;
-				"MACOSX_DEPLOYMENT_TARGET[sdk=iphonesimulator*][arch=*]" = "";
 				SDKROOT = iphoneos4.3;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		2ED2A0AA13FCD1FC00750A4E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2E4C0FFC140DD2D20050ABF8 /* SharediOS.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "";
 				INFOPLIST_FILE = iOSInfo.plist;
-				"MACOSX_DEPLOYMENT_TARGET[sdk=iphonesimulator*][arch=*]" = "";
 				SDKROOT = iphoneos4.3;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

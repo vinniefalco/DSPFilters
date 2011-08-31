@@ -1,0 +1,18 @@
+// Copyright (c) 2009-2011 by Vincent Falco, One Guy Group, Inc.
+// License: MIT License (http://www.opensource.org/licenses/mit-license.php)
+
+//
+// For all Release configurations of targets that build applications
+// This will strip the symbols and debug information from the binary
+// while leaving the dSYMN file.
+
+#include "SharedRelease.xcconfig"
+
+// Build Options
+DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
+
+// Deployment
+DEPLOYMENT_POSTPROCESSING = YES
+SKIP_INSTALL = NO
+STRIP_INSTALLED_PRODUCT = YES
+SEPARATE_STRIP = YES
