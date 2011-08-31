@@ -60,7 +60,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2E7DB4EA140DFB3C009FE107 /* xcconfigs */ = {
+		2E7DB4EA140DFB3C009FE107 /* xcconfigs (shared build settings) */ = {
 			isa = PBXGroup;
 			children = (
 				2E7DB4EB140DFB3C009FE107 /* Shared.xcconfig */,
@@ -70,7 +70,7 @@
 				2E7DB4EF140DFB3C009FE107 /* SharedRelease.xcconfig */,
 				2E7DB4F0140DFB3C009FE107 /* SharedReleaseApp.xcconfig */,
 			);
-			name = xcconfigs;
+			name = "xcconfigs (shared build settings)";
 			path = ../../../Builds/XCode4/xcconfigs;
 			sourceTree = SOURCE_ROOT;
 		};
@@ -122,8 +122,8 @@
 			isa = PBXGroup;
 			children = (
 				2E8BDA19140DF20300D4A3AF /* RequiredFrameworks.txt */,
-				2E7DB4EA140DFB3C009FE107 /* xcconfigs */,
 				2ED2A06613FCC3CF00750A4E /* Juce */,
+				2E7DB4EA140DFB3C009FE107 /* xcconfigs (shared build settings) */,
 				2E8CDF8F14016087004F9664 /* Header (#include in your project) */,
 				2E8CDF90140160A3004F9664 /* Prefix (use in your project build settings) */,
 				2E8CDF8314015F50004F9664 /* Configuration (edit as needed) */,
