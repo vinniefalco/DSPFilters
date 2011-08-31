@@ -706,7 +706,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2E7DB4F5140DFB83009FE107 /* SharedMacOS.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
 				INFOPLIST_FILE = MacInfo.plist;
 			};
 			name = Debug;
@@ -715,7 +714,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2E7DB4F5140DFB83009FE107 /* SharedMacOS.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
 				INFOPLIST_FILE = MacInfo.plist;
 			};
 			name = Release;
@@ -724,7 +722,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2E7DB4F4140DFB83009FE107 /* SharediOS.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)/../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks\"",
@@ -738,7 +736,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2E7DB4F4140DFB83009FE107 /* SharediOS.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)/../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks\"",
