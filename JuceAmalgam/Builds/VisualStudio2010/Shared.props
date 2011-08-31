@@ -3,16 +3,21 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <OutDir>$(SolutionDir)DerivedData\VisualStudio2010\Products\$(ProjectName)-$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)DerivedData\VisualStudio2010\Products\$(ProjectName)-$(Platform)$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup>
-    <IntDir>$(SolutionDir)DerivedData\VisualStudio2010\Intermediates\$(ProjectName)-$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)DerivedData\VisualStudio2010\Intermediates\$(ProjectName)-$(Platform)$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <MinimalRebuild>false</MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WarningLevel>Level1</WarningLevel>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup />
 </Project>

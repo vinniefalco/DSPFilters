@@ -58,5 +58,11 @@
     <None Include="Shared.props">
       <Filter>_props %28shared project settings%29</Filter>
     </None>
+    <None Include="SharedDebug.props">
+      <Filter>_props %28shared project settings%29</Filter>
+    </None>
+    <None Include="SharedRelease.props">
+      <Filter>_props %28shared project settings%29</Filter>
+    </None>
   </ItemGroup>
 </Project>
