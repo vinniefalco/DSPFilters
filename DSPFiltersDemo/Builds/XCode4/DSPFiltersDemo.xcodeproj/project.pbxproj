@@ -29,8 +29,6 @@
 		2E8BDA14140DF1A500D4A3AF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8BDA13140DF1A500D4A3AF /* CoreGraphics.framework */; };
 		2E8BDA16140DF1AA00D4A3AF /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8BDA15140DF1AA00D4A3AF /* CoreAudio.framework */; };
 		2E8BDA18140DF1B100D4A3AF /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8BDA17140DF1B100D4A3AF /* AudioToolbox.framework */; };
-		2E99FC08140E091600E59548 /* libJuceAmalgamiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E99FC02140E08C800E59548 /* libJuceAmalgamiOS.a */; };
-		2E99FC09140E091A00E59548 /* libJuceAmalgamMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E99FC00140E08C800E59548 /* libJuceAmalgamMac.a */; };
 		2EA085BE13FDADB10051A437 /* AudioOutput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0858D13FDADB10051A437 /* AudioOutput.cpp */; };
 		2EA085BF13FDADB10051A437 /* AudioOutput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0858D13FDADB10051A437 /* AudioOutput.cpp */; };
 		2EA085C013FDADB10051A437 /* binaries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0858F13FDADB10051A437 /* binaries.cpp */; };
@@ -75,66 +73,36 @@
 		2EA085E713FDADB10051A437 /* StepResponseChart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA085BA13FDADB10051A437 /* StepResponseChart.cpp */; };
 		2EA085E813FDADB10051A437 /* ThreadQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA085BC13FDADB10051A437 /* ThreadQueue.cpp */; };
 		2EA085E913FDADB10051A437 /* ThreadQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA085BC13FDADB10051A437 /* ThreadQueue.cpp */; };
-		2EB9E048140E030200604805 /* libDSPFiltersiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EB9E043140E02E600604805 /* libDSPFiltersiOS.a */; };
-		2EB9E049140E030400604805 /* libDSPFiltersMacOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EB9E041140E02E600604805 /* libDSPFiltersMacOS.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		2E99FBFF140E08C800E59548 /* PBXContainerItemProxy */ = {
+		2E99FC22140E09D500E59548 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 2E99FBF7140E08C800E59548 /* JuceAmalgam.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2E8CA87113FE087400A86A48;
-			remoteInfo = "Juce Amalgam Mac";
-		};
-		2E99FC01140E08C800E59548 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2E99FBF7140E08C800E59548 /* JuceAmalgam.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2EAB695313FE29B00001C68F;
-			remoteInfo = "Juce Amalgam iOS";
-		};
-		2E99FC04140E090D00E59548 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2E99FBF7140E08C800E59548 /* JuceAmalgam.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 2E8CA87013FE087400A86A48;
-			remoteInfo = "Juce Amalgam Mac";
-		};
-		2E99FC06140E091100E59548 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2E99FBF7140E08C800E59548 /* JuceAmalgam.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 2EAB695213FE29B00001C68F;
-			remoteInfo = "Juce Amalgam iOS";
-		};
-		2EB9E040140E02E600604805 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2EB9E038140E02E500604805 /* DSPFilters.xcodeproj */;
+			containerPortal = 2E99FC18140E09C500E59548 /* DSPFilters.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 2E7DB503140DFBDF009FE107;
 			remoteInfo = DSPFiltersMacOS;
 		};
-		2EB9E042140E02E600604805 /* PBXContainerItemProxy */ = {
+		2E99FC24140E09D500E59548 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 2EB9E038140E02E500604805 /* DSPFilters.xcodeproj */;
+			containerPortal = 2E99FC18140E09C500E59548 /* DSPFilters.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 2E7DB526140DFC22009FE107;
 			remoteInfo = DSPFiltersiOS;
 		};
-		2EB9E044140E02F800604805 /* PBXContainerItemProxy */ = {
+		2E99FC45140E0A2400E59548 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 2EB9E038140E02E500604805 /* DSPFilters.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 2E7DB502140DFBDF009FE107;
-			remoteInfo = DSPFiltersMacOS;
+			containerPortal = 2E99FC26140E09DF00E59548 /* JuceAmalgam.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2E8CA87113FE087400A86A48;
+			remoteInfo = "Juce Amalgam Mac";
 		};
-		2EB9E046140E02FC00604805 /* PBXContainerItemProxy */ = {
+		2E99FC47140E0A2400E59548 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 2EB9E038140E02E500604805 /* DSPFilters.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 2E7DB525140DFC22009FE107;
-			remoteInfo = DSPFiltersiOS;
+			containerPortal = 2E99FC26140E09DF00E59548 /* JuceAmalgam.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2EAB695313FE29B00001C68F;
+			remoteInfo = "Juce Amalgam iOS";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -173,7 +141,8 @@
 		2E8BDA13140DF1A500D4A3AF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		2E8BDA15140DF1AA00D4A3AF /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		2E8BDA17140DF1B100D4A3AF /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		2E99FBF7140E08C800E59548 /* JuceAmalgam.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = JuceAmalgam.xcodeproj; path = ../../../Juce/Builds/XCode4/JuceAmalgam.xcodeproj; sourceTree = "<group>"; };
+		2E99FC18140E09C500E59548 /* DSPFilters.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DSPFilters.xcodeproj; path = ../../../DSPFilters/Builds/XCode4/DSPFilters.xcodeproj; sourceTree = SOURCE_ROOT; };
+		2E99FC26140E09DF00E59548 /* JuceAmalgam.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = JuceAmalgam.xcodeproj; path = ../../../Juce/Builds/XCode4/JuceAmalgam.xcodeproj; sourceTree = SOURCE_ROOT; };
 		2EA0858D13FDADB10051A437 /* AudioOutput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AudioOutput.cpp; path = ../../source/AudioOutput.cpp; sourceTree = "<group>"; };
 		2EA0858E13FDADB10051A437 /* AudioOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioOutput.h; path = ../../source/AudioOutput.h; sourceTree = "<group>"; };
 		2EA0858F13FDADB10051A437 /* binaries.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = binaries.cpp; path = ../../source/binaries.cpp; sourceTree = "<group>"; };
@@ -225,7 +194,6 @@
 		2EA085BD13FDADB10051A437 /* ThreadQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ThreadQueue.h; path = ../../source/ThreadQueue.h; sourceTree = "<group>"; };
 		2EA256B713FF048C00285FA2 /* iOSInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = iOSInfo.plist; sourceTree = "<group>"; };
 		2EA256B913FF049400285FA2 /* MacInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = MacInfo.plist; path = ../../../Builds/XCode4/MacInfo.plist; sourceTree = "<group>"; };
-		2EB9E038140E02E500604805 /* DSPFilters.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DSPFilters.xcodeproj; path = ../../../DSPFilters/Builds/XCode4/DSPFilters.xcodeproj; sourceTree = "<group>"; };
 		2ED29FB513FCC0FA00750A4E /* DSP Filters.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "DSP Filters.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2ED2A08613FCD1FC00750A4E /* DSP Filters.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "DSP Filters.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -235,8 +203,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EB9E049140E030400604805 /* libDSPFiltersMacOS.a in Frameworks */,
-				2E99FC09140E091A00E59548 /* libJuceAmalgamMac.a in Frameworks */,
 				2E8BDA02140DF0AE00D4A3AF /* AudioToolbox.framework in Frameworks */,
 				2E8BDA03140DF0AE00D4A3AF /* Cocoa.framework in Frameworks */,
 				2E8BDA04140DF0AE00D4A3AF /* CoreAudio.framework in Frameworks */,
@@ -249,8 +215,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EB9E048140E030200604805 /* libDSPFiltersiOS.a in Frameworks */,
-				2E99FC08140E091600E59548 /* libJuceAmalgamiOS.a in Frameworks */,
 				2E8BDA18140DF1B100D4A3AF /* AudioToolbox.framework in Frameworks */,
 				2E8BDA16140DF1AA00D4A3AF /* CoreAudio.framework in Frameworks */,
 				2E8BDA14140DF1A500D4A3AF /* CoreGraphics.framework in Frameworks */,
@@ -322,11 +286,20 @@
 			path = xcconfigs;
 			sourceTree = "<group>";
 		};
-		2E99FBF8140E08C800E59548 /* Products */ = {
+		2E99FC1E140E09D500E59548 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2E99FC00140E08C800E59548 /* libJuceAmalgamMac.a */,
-				2E99FC02140E08C800E59548 /* libJuceAmalgamiOS.a */,
+				2E99FC23140E09D500E59548 /* libDSPFiltersMacOS.a */,
+				2E99FC25140E09D500E59548 /* libDSPFiltersiOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2E99FC41140E0A2400E59548 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2E99FC46140E0A2400E59548 /* libJuceAmalgamMac.a */,
+				2E99FC48140E0A2400E59548 /* libJuceAmalgamiOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -349,15 +322,6 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
-		2EB9E039140E02E500604805 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				2EB9E041140E02E600604805 /* libDSPFiltersMacOS.a */,
-				2EB9E043140E02E600604805 /* libDSPFiltersiOS.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		2ED29FAA13FCC0F900750A4E = {
 			isa = PBXGroup;
 			children = (
@@ -366,8 +330,8 @@
 				2E4C101B140DE20A0050ABF8 /* MacOS */,
 				2EA084AD13FCDE920051A437 /* iOS */,
 				2ED29FB613FCC0FA00750A4E /* Products */,
-				2EB9E038140E02E500604805 /* DSPFilters.xcodeproj */,
-				2E99FBF7140E08C800E59548 /* JuceAmalgam.xcodeproj */,
+				2E99FC18140E09C500E59548 /* DSPFilters.xcodeproj */,
+				2E99FC26140E09DF00E59548 /* JuceAmalgam.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
@@ -450,8 +414,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				2E99FC05140E090D00E59548 /* PBXTargetDependency */,
-				2EB9E045140E02F800604805 /* PBXTargetDependency */,
 			);
 			name = "DSP Filters Demo Mac";
 			productName = "DspFilters Demo";
@@ -469,8 +431,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				2E99FC07140E091100E59548 /* PBXTargetDependency */,
-				2EB9E047140E02FC00604805 /* PBXTargetDependency */,
 			);
 			name = "DSP Filters Demo iOS";
 			productName = "DspFilters Demo iOS";
@@ -498,12 +458,12 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 2EB9E039140E02E500604805 /* Products */;
-					ProjectRef = 2EB9E038140E02E500604805 /* DSPFilters.xcodeproj */;
+					ProductGroup = 2E99FC1E140E09D500E59548 /* Products */;
+					ProjectRef = 2E99FC18140E09C500E59548 /* DSPFilters.xcodeproj */;
 				},
 				{
-					ProductGroup = 2E99FBF8140E08C800E59548 /* Products */;
-					ProjectRef = 2E99FBF7140E08C800E59548 /* JuceAmalgam.xcodeproj */;
+					ProductGroup = 2E99FC41140E0A2400E59548 /* Products */;
+					ProjectRef = 2E99FC26140E09DF00E59548 /* JuceAmalgam.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -515,32 +475,32 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		2E99FC00140E08C800E59548 /* libJuceAmalgamMac.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libJuceAmalgamMac.a;
-			remoteRef = 2E99FBFF140E08C800E59548 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2E99FC02140E08C800E59548 /* libJuceAmalgamiOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libJuceAmalgamiOS.a;
-			remoteRef = 2E99FC01140E08C800E59548 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2EB9E041140E02E600604805 /* libDSPFiltersMacOS.a */ = {
+		2E99FC23140E09D500E59548 /* libDSPFiltersMacOS.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libDSPFiltersMacOS.a;
-			remoteRef = 2EB9E040140E02E600604805 /* PBXContainerItemProxy */;
+			remoteRef = 2E99FC22140E09D500E59548 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		2EB9E043140E02E600604805 /* libDSPFiltersiOS.a */ = {
+		2E99FC25140E09D500E59548 /* libDSPFiltersiOS.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libDSPFiltersiOS.a;
-			remoteRef = 2EB9E042140E02E600604805 /* PBXContainerItemProxy */;
+			remoteRef = 2E99FC24140E09D500E59548 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E99FC46140E0A2400E59548 /* libJuceAmalgamMac.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libJuceAmalgamMac.a;
+			remoteRef = 2E99FC45140E0A2400E59548 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E99FC48140E0A2400E59548 /* libJuceAmalgamiOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libJuceAmalgamiOS.a;
+			remoteRef = 2E99FC47140E0A2400E59548 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -630,29 +590,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		2E99FC05140E090D00E59548 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "Juce Amalgam Mac";
-			targetProxy = 2E99FC04140E090D00E59548 /* PBXContainerItemProxy */;
-		};
-		2E99FC07140E091100E59548 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "Juce Amalgam iOS";
-			targetProxy = 2E99FC06140E091100E59548 /* PBXContainerItemProxy */;
-		};
-		2EB9E045140E02F800604805 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = DSPFiltersMacOS;
-			targetProxy = 2EB9E044140E02F800604805 /* PBXContainerItemProxy */;
-		};
-		2EB9E047140E02FC00604805 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = DSPFiltersiOS;
-			targetProxy = 2EB9E046140E02FC00604805 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		2ED29FD113FCC0FA00750A4E /* Debug */ = {
