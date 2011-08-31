@@ -1,8 +1,0 @@
----------------------------------
-CHANGELOG (From Newest to Oldest)
----------------------------------
-
-2/19/2011
-
-- Fixed the signs for calculating Legendre / Optimum-L filters when
-  converting from H(w^2) to H(s^2) (where w^2 = -s^2)
