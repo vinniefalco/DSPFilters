@@ -15,6 +15,8 @@
 		2E71C277140071AD00643CF1 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E71C270140071AD00643CF1 /* Icon.png */; };
 		2E71C278140071AD00643CF1 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E71C271140071AD00643CF1 /* Icon@2x.png */; };
 		2E71C279140071AD00643CF1 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E71C272140071AD00643CF1 /* iTunesArtwork.png */; };
+		2E7DB5BA140DFE03009FE107 /* libDSPFilters.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7DB521140DFC0C009FE107 /* libDSPFilters.a */; };
+		2E7DB5BD140DFE14009FE107 /* libDSPFiltersiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7DB5B7140DFDC3009FE107 /* libDSPFiltersiOS.a */; };
 		2E8BDA02140DF0AE00D4A3AF /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8BDA00140DF0A400D4A3AF /* AudioToolbox.framework */; };
 		2E8BDA03140DF0AE00D4A3AF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8BD9FE140DF09E00D4A3AF /* Cocoa.framework */; };
 		2E8BDA04140DF0AE00D4A3AF /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8BD9FC140DF09900D4A3AF /* CoreAudio.framework */; };
@@ -73,40 +75,6 @@
 		2EA085E713FDADB10051A437 /* StepResponseChart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA085BA13FDADB10051A437 /* StepResponseChart.cpp */; };
 		2EA085E813FDADB10051A437 /* ThreadQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA085BC13FDADB10051A437 /* ThreadQueue.cpp */; };
 		2EA085E913FDADB10051A437 /* ThreadQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA085BC13FDADB10051A437 /* ThreadQueue.cpp */; };
-		2EA0862013FDAE070051A437 /* Bessel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0860F13FDAE070051A437 /* Bessel.cpp */; };
-		2EA0862113FDAE070051A437 /* Bessel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0860F13FDAE070051A437 /* Bessel.cpp */; };
-		2EA0862213FDAE070051A437 /* Biquad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861013FDAE070051A437 /* Biquad.cpp */; };
-		2EA0862313FDAE070051A437 /* Biquad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861013FDAE070051A437 /* Biquad.cpp */; };
-		2EA0862413FDAE070051A437 /* Butterworth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861113FDAE070051A437 /* Butterworth.cpp */; };
-		2EA0862513FDAE070051A437 /* Butterworth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861113FDAE070051A437 /* Butterworth.cpp */; };
-		2EA0862613FDAE070051A437 /* Cascade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861213FDAE070051A437 /* Cascade.cpp */; };
-		2EA0862713FDAE070051A437 /* Cascade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861213FDAE070051A437 /* Cascade.cpp */; };
-		2EA0862813FDAE070051A437 /* ChebyshevI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861313FDAE070051A437 /* ChebyshevI.cpp */; };
-		2EA0862913FDAE070051A437 /* ChebyshevI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861313FDAE070051A437 /* ChebyshevI.cpp */; };
-		2EA0862A13FDAE070051A437 /* ChebyshevII.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861413FDAE070051A437 /* ChebyshevII.cpp */; };
-		2EA0862B13FDAE070051A437 /* ChebyshevII.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861413FDAE070051A437 /* ChebyshevII.cpp */; };
-		2EA0862C13FDAE070051A437 /* Custom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861513FDAE070051A437 /* Custom.cpp */; };
-		2EA0862D13FDAE070051A437 /* Custom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861513FDAE070051A437 /* Custom.cpp */; };
-		2EA0862E13FDAE070051A437 /* Design.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861613FDAE070051A437 /* Design.cpp */; };
-		2EA0862F13FDAE070051A437 /* Design.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861613FDAE070051A437 /* Design.cpp */; };
-		2EA0863013FDAE070051A437 /* Documentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861713FDAE070051A437 /* Documentation.cpp */; };
-		2EA0863113FDAE070051A437 /* Documentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861713FDAE070051A437 /* Documentation.cpp */; };
-		2EA0863213FDAE070051A437 /* Elliptic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861813FDAE070051A437 /* Elliptic.cpp */; };
-		2EA0863313FDAE070051A437 /* Elliptic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861813FDAE070051A437 /* Elliptic.cpp */; };
-		2EA0863413FDAE070051A437 /* Filter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861913FDAE070051A437 /* Filter.cpp */; };
-		2EA0863513FDAE070051A437 /* Filter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861913FDAE070051A437 /* Filter.cpp */; };
-		2EA0863613FDAE070051A437 /* Legendre.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861A13FDAE070051A437 /* Legendre.cpp */; };
-		2EA0863713FDAE070051A437 /* Legendre.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861A13FDAE070051A437 /* Legendre.cpp */; };
-		2EA0863813FDAE070051A437 /* Param.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861B13FDAE070051A437 /* Param.cpp */; };
-		2EA0863913FDAE070051A437 /* Param.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861B13FDAE070051A437 /* Param.cpp */; };
-		2EA0863A13FDAE070051A437 /* PoleFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861C13FDAE070051A437 /* PoleFilter.cpp */; };
-		2EA0863B13FDAE070051A437 /* PoleFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861C13FDAE070051A437 /* PoleFilter.cpp */; };
-		2EA0863C13FDAE070051A437 /* RBJ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861D13FDAE070051A437 /* RBJ.cpp */; };
-		2EA0863D13FDAE070051A437 /* RBJ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861D13FDAE070051A437 /* RBJ.cpp */; };
-		2EA0863E13FDAE070051A437 /* RootFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861E13FDAE070051A437 /* RootFinder.cpp */; };
-		2EA0863F13FDAE070051A437 /* RootFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861E13FDAE070051A437 /* RootFinder.cpp */; };
-		2EA0864013FDAE070051A437 /* State.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861F13FDAE070051A437 /* State.cpp */; };
-		2EA0864113FDAE070051A437 /* State.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861F13FDAE070051A437 /* State.cpp */; };
 		2EBD8D9F140DC77D00D7059C /* libJuceAmalgamiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EBD8D39140DC5F700D7059C /* libJuceAmalgamiOS.a */; };
 		2EBD8DA5140DC81300D7059C /* libJuceAmalgamMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EBD8D37140DC5F700D7059C /* libJuceAmalgamMac.a */; };
 /* End PBXBuildFile section */
@@ -126,6 +94,34 @@
 			remoteGlobalIDString = 2EAB695213FE29B00001C68F;
 			remoteInfo = "Juce Amalgam iOS";
 		};
+		2E7DB520140DFC0C009FE107 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2E7DB519140DFC0C009FE107 /* DSPFilters.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2E7DB503140DFBDF009FE107;
+			remoteInfo = DSPFilters;
+		};
+		2E7DB5B6140DFDC3009FE107 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2E7DB519140DFC0C009FE107 /* DSPFilters.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2E7DB526140DFC22009FE107;
+			remoteInfo = DSPFiltersiOS;
+		};
+		2E7DB5B8140DFDFD009FE107 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2E7DB519140DFC0C009FE107 /* DSPFilters.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 2E7DB502140DFBDF009FE107;
+			remoteInfo = DSPFiltersMacOS;
+		};
+		2E7DB5BB140DFE09009FE107 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2E7DB519140DFC0C009FE107 /* DSPFilters.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 2E7DB525140DFC22009FE107;
+			remoteInfo = DSPFiltersiOS;
+		};
 		2EBD8D36140DC5F700D7059C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2E12A8601401667D00A67805 /* JuceAmalgam.xcodeproj */;
@@ -144,12 +140,6 @@
 
 /* Begin PBXFileReference section */
 		2E12A8601401667D00A67805 /* JuceAmalgam.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = JuceAmalgam.xcodeproj; path = ../../../Volumes/Code/Dev/repos/dspfilterscpp/Juce/Builds/XCode4/JuceAmalgam.xcodeproj; sourceTree = SDKROOT; };
-		2E4C0FF8140DD2D20050ABF8 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Shared.xcconfig; sourceTree = "<group>"; };
-		2E4C0FF9140DD2D20050ABF8 /* SharedDebug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedDebug.xcconfig; sourceTree = "<group>"; };
-		2E4C0FFA140DD2D20050ABF8 /* SharedRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedRelease.xcconfig; sourceTree = "<group>"; };
-		2E4C0FFB140DD2D20050ABF8 /* SharedMacOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedMacOS.xcconfig; sourceTree = "<group>"; };
-		2E4C0FFC140DD2D20050ABF8 /* SharediOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharediOS.xcconfig; sourceTree = "<group>"; };
-		2E4C1001140DD7F70050ABF8 /* SharedReleaseApp.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedReleaseApp.xcconfig; sourceTree = "<group>"; };
 		2E60CAD013FF63650088FA2C /* Mac.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Mac.icns; path = ../../../Builds/XCode4/Mac.icns; sourceTree = "<group>"; };
 		2E71C26C140071AD00643CF1 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "iOS Icons/Icon-72.png"; sourceTree = "<group>"; };
 		2E71C26D140071AD00643CF1 /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small-50.png"; path = "iOS Icons/Icon-Small-50.png"; sourceTree = "<group>"; };
@@ -158,6 +148,13 @@
 		2E71C270140071AD00643CF1 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = "iOS Icons/Icon.png"; sourceTree = "<group>"; };
 		2E71C271140071AD00643CF1 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "iOS Icons/Icon@2x.png"; sourceTree = "<group>"; };
 		2E71C272140071AD00643CF1 /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iTunesArtwork.png; path = "iOS Icons/iTunesArtwork.png"; sourceTree = "<group>"; };
+		2E7DB4F2140DFB83009FE107 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Shared.xcconfig; sourceTree = "<group>"; };
+		2E7DB4F3140DFB83009FE107 /* SharedDebug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedDebug.xcconfig; sourceTree = "<group>"; };
+		2E7DB4F4140DFB83009FE107 /* SharediOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharediOS.xcconfig; sourceTree = "<group>"; };
+		2E7DB4F5140DFB83009FE107 /* SharedMacOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedMacOS.xcconfig; sourceTree = "<group>"; };
+		2E7DB4F6140DFB83009FE107 /* SharedRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedRelease.xcconfig; sourceTree = "<group>"; };
+		2E7DB4F7140DFB83009FE107 /* SharedReleaseApp.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedReleaseApp.xcconfig; sourceTree = "<group>"; };
+		2E7DB519140DFC0C009FE107 /* DSPFilters.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DSPFilters.xcodeproj; path = ../../DSPFilters/Builds/XCode4/DSPFilters.xcodeproj; sourceTree = "<group>"; };
 		2E8BD9E6140DF02F00D4A3AF /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		2E8BD9E8140DF03600D4A3AF /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = System/Library/Frameworks/QuickTime.framework; sourceTree = SDKROOT; };
 		2E8BD9EA140DF03C00D4A3AF /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -227,46 +224,6 @@
 		2EA085BB13FDADB10051A437 /* StepResponseChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StepResponseChart.h; path = ../../demo/StepResponseChart.h; sourceTree = "<group>"; };
 		2EA085BC13FDADB10051A437 /* ThreadQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ThreadQueue.cpp; path = ../../demo/ThreadQueue.cpp; sourceTree = "<group>"; };
 		2EA085BD13FDADB10051A437 /* ThreadQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ThreadQueue.h; path = ../../demo/ThreadQueue.h; sourceTree = "<group>"; };
-		2EA085F813FDADFC0051A437 /* Bessel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bessel.h; path = ../../include/DspFilters/Bessel.h; sourceTree = "<group>"; };
-		2EA085F913FDADFC0051A437 /* Biquad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Biquad.h; path = ../../include/DspFilters/Biquad.h; sourceTree = "<group>"; };
-		2EA085FA13FDADFC0051A437 /* Butterworth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Butterworth.h; path = ../../include/DspFilters/Butterworth.h; sourceTree = "<group>"; };
-		2EA085FB13FDADFC0051A437 /* Cascade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cascade.h; path = ../../include/DspFilters/Cascade.h; sourceTree = "<group>"; };
-		2EA085FC13FDADFC0051A437 /* ChebyshevI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChebyshevI.h; path = ../../include/DspFilters/ChebyshevI.h; sourceTree = "<group>"; };
-		2EA085FD13FDADFC0051A437 /* ChebyshevII.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChebyshevII.h; path = ../../include/DspFilters/ChebyshevII.h; sourceTree = "<group>"; };
-		2EA085FE13FDADFC0051A437 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Common.h; path = ../../include/DspFilters/Common.h; sourceTree = "<group>"; };
-		2EA085FF13FDADFC0051A437 /* Custom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Custom.h; path = ../../include/DspFilters/Custom.h; sourceTree = "<group>"; };
-		2EA0860013FDADFC0051A437 /* Design.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Design.h; path = ../../include/DspFilters/Design.h; sourceTree = "<group>"; };
-		2EA0860113FDADFC0051A437 /* Dsp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Dsp.h; path = ../../include/DspFilters/Dsp.h; sourceTree = "<group>"; };
-		2EA0860213FDADFC0051A437 /* Elliptic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Elliptic.h; path = ../../include/DspFilters/Elliptic.h; sourceTree = "<group>"; };
-		2EA0860313FDADFC0051A437 /* Filter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Filter.h; path = ../../include/DspFilters/Filter.h; sourceTree = "<group>"; };
-		2EA0860413FDADFC0051A437 /* Layout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Layout.h; path = ../../include/DspFilters/Layout.h; sourceTree = "<group>"; };
-		2EA0860513FDADFC0051A437 /* Legendre.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Legendre.h; path = ../../include/DspFilters/Legendre.h; sourceTree = "<group>"; };
-		2EA0860613FDADFC0051A437 /* MathSupplement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MathSupplement.h; path = ../../include/DspFilters/MathSupplement.h; sourceTree = "<group>"; };
-		2EA0860713FDADFC0051A437 /* Params.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Params.h; path = ../../include/DspFilters/Params.h; sourceTree = "<group>"; };
-		2EA0860813FDADFC0051A437 /* PoleFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PoleFilter.h; path = ../../include/DspFilters/PoleFilter.h; sourceTree = "<group>"; };
-		2EA0860913FDADFC0051A437 /* RBJ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RBJ.h; path = ../../include/DspFilters/RBJ.h; sourceTree = "<group>"; };
-		2EA0860A13FDADFC0051A437 /* RootFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RootFinder.h; path = ../../include/DspFilters/RootFinder.h; sourceTree = "<group>"; };
-		2EA0860B13FDADFC0051A437 /* SmoothedFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmoothedFilter.h; path = ../../include/DspFilters/SmoothedFilter.h; sourceTree = "<group>"; };
-		2EA0860C13FDADFC0051A437 /* State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = State.h; path = ../../include/DspFilters/State.h; sourceTree = "<group>"; };
-		2EA0860D13FDADFC0051A437 /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Types.h; path = ../../include/DspFilters/Types.h; sourceTree = "<group>"; };
-		2EA0860E13FDADFC0051A437 /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../include/DspFilters/Utilities.h; sourceTree = "<group>"; };
-		2EA0860F13FDAE070051A437 /* Bessel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Bessel.cpp; path = ../../source/Bessel.cpp; sourceTree = "<group>"; };
-		2EA0861013FDAE070051A437 /* Biquad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Biquad.cpp; path = ../../source/Biquad.cpp; sourceTree = "<group>"; };
-		2EA0861113FDAE070051A437 /* Butterworth.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Butterworth.cpp; path = ../../source/Butterworth.cpp; sourceTree = "<group>"; };
-		2EA0861213FDAE070051A437 /* Cascade.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Cascade.cpp; path = ../../source/Cascade.cpp; sourceTree = "<group>"; };
-		2EA0861313FDAE070051A437 /* ChebyshevI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChebyshevI.cpp; path = ../../source/ChebyshevI.cpp; sourceTree = "<group>"; };
-		2EA0861413FDAE070051A437 /* ChebyshevII.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChebyshevII.cpp; path = ../../source/ChebyshevII.cpp; sourceTree = "<group>"; };
-		2EA0861513FDAE070051A437 /* Custom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Custom.cpp; path = ../../source/Custom.cpp; sourceTree = "<group>"; };
-		2EA0861613FDAE070051A437 /* Design.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Design.cpp; path = ../../source/Design.cpp; sourceTree = "<group>"; };
-		2EA0861713FDAE070051A437 /* Documentation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Documentation.cpp; path = ../../source/Documentation.cpp; sourceTree = "<group>"; };
-		2EA0861813FDAE070051A437 /* Elliptic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Elliptic.cpp; path = ../../source/Elliptic.cpp; sourceTree = "<group>"; };
-		2EA0861913FDAE070051A437 /* Filter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Filter.cpp; path = ../../source/Filter.cpp; sourceTree = "<group>"; };
-		2EA0861A13FDAE070051A437 /* Legendre.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Legendre.cpp; path = ../../source/Legendre.cpp; sourceTree = "<group>"; };
-		2EA0861B13FDAE070051A437 /* Param.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Param.cpp; path = ../../source/Param.cpp; sourceTree = "<group>"; };
-		2EA0861C13FDAE070051A437 /* PoleFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PoleFilter.cpp; path = ../../source/PoleFilter.cpp; sourceTree = "<group>"; };
-		2EA0861D13FDAE070051A437 /* RBJ.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RBJ.cpp; path = ../../source/RBJ.cpp; sourceTree = "<group>"; };
-		2EA0861E13FDAE070051A437 /* RootFinder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RootFinder.cpp; path = ../../source/RootFinder.cpp; sourceTree = "<group>"; };
-		2EA0861F13FDAE070051A437 /* State.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = State.cpp; path = ../../source/State.cpp; sourceTree = "<group>"; };
 		2EA256B713FF048C00285FA2 /* iOSInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = iOSInfo.plist; sourceTree = "<group>"; };
 		2EA256B913FF049400285FA2 /* MacInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = MacInfo.plist; path = ../../../Builds/XCode4/MacInfo.plist; sourceTree = "<group>"; };
 		2ED29FB513FCC0FA00750A4E /* DSP Filters.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "DSP Filters.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -278,6 +235,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E7DB5BA140DFE03009FE107 /* libDSPFilters.a in Frameworks */,
 				2EBD8DA5140DC81300D7059C /* libJuceAmalgamMac.a in Frameworks */,
 				2E8BDA02140DF0AE00D4A3AF /* AudioToolbox.framework in Frameworks */,
 				2E8BDA03140DF0AE00D4A3AF /* Cocoa.framework in Frameworks */,
@@ -291,6 +249,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E7DB5BD140DFE14009FE107 /* libDSPFiltersiOS.a in Frameworks */,
 				2EBD8D9F140DC77D00D7059C /* libJuceAmalgamiOS.a in Frameworks */,
 				2E8BDA18140DF1B100D4A3AF /* AudioToolbox.framework in Frameworks */,
 				2E8BDA16140DF1AA00D4A3AF /* CoreAudio.framework in Frameworks */,
@@ -307,20 +266,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2E4C0FF7140DD2D20050ABF8 /* .xcconfig */ = {
-			isa = PBXGroup;
-			children = (
-				2E4C0FF8140DD2D20050ABF8 /* Shared.xcconfig */,
-				2E4C0FF9140DD2D20050ABF8 /* SharedDebug.xcconfig */,
-				2E4C0FFA140DD2D20050ABF8 /* SharedRelease.xcconfig */,
-				2E4C1001140DD7F70050ABF8 /* SharedReleaseApp.xcconfig */,
-				2E4C0FFB140DD2D20050ABF8 /* SharedMacOS.xcconfig */,
-				2E4C0FFC140DD2D20050ABF8 /* SharediOS.xcconfig */,
-			);
-			name = .xcconfig;
-			path = ../../Juce/Builds/XCode4;
-			sourceTree = "<group>";
-		};
 		2E4C101B140DE20A0050ABF8 /* MacOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -364,6 +309,28 @@
 			name = Icons;
 			sourceTree = "<group>";
 		};
+		2E7DB4F1140DFB83009FE107 /* xcconfigs */ = {
+			isa = PBXGroup;
+			children = (
+				2E7DB4F2140DFB83009FE107 /* Shared.xcconfig */,
+				2E7DB4F3140DFB83009FE107 /* SharedDebug.xcconfig */,
+				2E7DB4F4140DFB83009FE107 /* SharediOS.xcconfig */,
+				2E7DB4F5140DFB83009FE107 /* SharedMacOS.xcconfig */,
+				2E7DB4F6140DFB83009FE107 /* SharedRelease.xcconfig */,
+				2E7DB4F7140DFB83009FE107 /* SharedReleaseApp.xcconfig */,
+			);
+			path = xcconfigs;
+			sourceTree = "<group>";
+		};
+		2E7DB51A140DFC0C009FE107 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2E7DB521140DFC0C009FE107 /* libDSPFilters.a */,
+				2E7DB5B7140DFDC3009FE107 /* libDSPFiltersiOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		2EA084AD13FCDE920051A437 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -394,12 +361,12 @@
 		2ED29FAA13FCC0F900750A4E = {
 			isa = PBXGroup;
 			children = (
-				2E4C0FF7140DD2D20050ABF8 /* .xcconfig */,
-				2ED29FDC13FCC27400750A4E /* Demo */,
-				2ED29FDB13FCC27200750A4E /* DspFilters */,
+				2ED29FDC13FCC27400750A4E /* source */,
+				2E7DB4F1140DFB83009FE107 /* xcconfigs */,
 				2E4C101B140DE20A0050ABF8 /* MacOS */,
 				2EA084AD13FCDE920051A437 /* iOS */,
 				2ED29FB613FCC0FA00750A4E /* Products */,
+				2E7DB519140DFC0C009FE107 /* DSPFilters.xcodeproj */,
 				2E12A8601401667D00A67805 /* JuceAmalgam.xcodeproj */,
 			);
 			sourceTree = "<group>";
@@ -413,16 +380,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		2ED29FDB13FCC27200750A4E /* DspFilters */ = {
-			isa = PBXGroup;
-			children = (
-				2ED29FDE13FCC29D00750A4E /* source */,
-				2ED29FDD13FCC28D00750A4E /* include */,
-			);
-			name = DspFilters;
-			sourceTree = "<group>";
-		};
-		2ED29FDC13FCC27400750A4E /* Demo */ = {
+		2ED29FDC13FCC27400750A4E /* source */ = {
 			isa = PBXGroup;
 			children = (
 				2EA0858D13FDADB10051A437 /* AudioOutput.cpp */,
@@ -475,60 +433,6 @@
 				2EA085BC13FDADB10051A437 /* ThreadQueue.cpp */,
 				2EA085BD13FDADB10051A437 /* ThreadQueue.h */,
 			);
-			name = Demo;
-			sourceTree = "<group>";
-		};
-		2ED29FDD13FCC28D00750A4E /* include */ = {
-			isa = PBXGroup;
-			children = (
-				2EA085F813FDADFC0051A437 /* Bessel.h */,
-				2EA085F913FDADFC0051A437 /* Biquad.h */,
-				2EA085FA13FDADFC0051A437 /* Butterworth.h */,
-				2EA085FB13FDADFC0051A437 /* Cascade.h */,
-				2EA085FC13FDADFC0051A437 /* ChebyshevI.h */,
-				2EA085FD13FDADFC0051A437 /* ChebyshevII.h */,
-				2EA085FE13FDADFC0051A437 /* Common.h */,
-				2EA085FF13FDADFC0051A437 /* Custom.h */,
-				2EA0860013FDADFC0051A437 /* Design.h */,
-				2EA0860113FDADFC0051A437 /* Dsp.h */,
-				2EA0860213FDADFC0051A437 /* Elliptic.h */,
-				2EA0860313FDADFC0051A437 /* Filter.h */,
-				2EA0860413FDADFC0051A437 /* Layout.h */,
-				2EA0860513FDADFC0051A437 /* Legendre.h */,
-				2EA0860613FDADFC0051A437 /* MathSupplement.h */,
-				2EA0860713FDADFC0051A437 /* Params.h */,
-				2EA0860813FDADFC0051A437 /* PoleFilter.h */,
-				2EA0860913FDADFC0051A437 /* RBJ.h */,
-				2EA0860A13FDADFC0051A437 /* RootFinder.h */,
-				2EA0860B13FDADFC0051A437 /* SmoothedFilter.h */,
-				2EA0860C13FDADFC0051A437 /* State.h */,
-				2EA0860D13FDADFC0051A437 /* Types.h */,
-				2EA0860E13FDADFC0051A437 /* Utilities.h */,
-			);
-			name = include;
-			sourceTree = "<group>";
-		};
-		2ED29FDE13FCC29D00750A4E /* source */ = {
-			isa = PBXGroup;
-			children = (
-				2EA0860F13FDAE070051A437 /* Bessel.cpp */,
-				2EA0861013FDAE070051A437 /* Biquad.cpp */,
-				2EA0861113FDAE070051A437 /* Butterworth.cpp */,
-				2EA0861213FDAE070051A437 /* Cascade.cpp */,
-				2EA0861313FDAE070051A437 /* ChebyshevI.cpp */,
-				2EA0861413FDAE070051A437 /* ChebyshevII.cpp */,
-				2EA0861513FDAE070051A437 /* Custom.cpp */,
-				2EA0861613FDAE070051A437 /* Design.cpp */,
-				2EA0861713FDAE070051A437 /* Documentation.cpp */,
-				2EA0861813FDAE070051A437 /* Elliptic.cpp */,
-				2EA0861913FDAE070051A437 /* Filter.cpp */,
-				2EA0861A13FDAE070051A437 /* Legendre.cpp */,
-				2EA0861B13FDAE070051A437 /* Param.cpp */,
-				2EA0861C13FDAE070051A437 /* PoleFilter.cpp */,
-				2EA0861D13FDAE070051A437 /* RBJ.cpp */,
-				2EA0861E13FDAE070051A437 /* RootFinder.cpp */,
-				2EA0861F13FDAE070051A437 /* State.cpp */,
-			);
 			name = source;
 			sourceTree = "<group>";
 		};
@@ -546,6 +450,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				2E7DB5B9140DFDFD009FE107 /* PBXTargetDependency */,
 				2E4C0FFE140DD6B40050ABF8 /* PBXTargetDependency */,
 			);
 			name = "DSP Filters Demo Mac";
@@ -564,6 +469,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				2E7DB5BC140DFE09009FE107 /* PBXTargetDependency */,
 				2E4C1000140DD6B90050ABF8 /* PBXTargetDependency */,
 			);
 			name = "DSP Filters Demo iOS";
@@ -592,6 +498,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 2E7DB51A140DFC0C009FE107 /* Products */;
+					ProjectRef = 2E7DB519140DFC0C009FE107 /* DSPFilters.xcodeproj */;
+				},
+				{
 					ProductGroup = 2EBD8D32140DC5F700D7059C /* Products */;
 					ProjectRef = 2E12A8601401667D00A67805 /* JuceAmalgam.xcodeproj */;
 				},
@@ -605,6 +515,20 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		2E7DB521140DFC0C009FE107 /* libDSPFilters.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libDSPFilters.a;
+			remoteRef = 2E7DB520140DFC0C009FE107 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E7DB5B7140DFDC3009FE107 /* libDSPFiltersiOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libDSPFiltersiOS.a;
+			remoteRef = 2E7DB5B6140DFDC3009FE107 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		2EBD8D37140DC5F700D7059C /* libJuceAmalgamMac.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -673,23 +597,6 @@
 				2EA085E413FDADB10051A437 /* SliderGroup.cpp in Sources */,
 				2EA085E613FDADB10051A437 /* StepResponseChart.cpp in Sources */,
 				2EA085E813FDADB10051A437 /* ThreadQueue.cpp in Sources */,
-				2EA0862013FDAE070051A437 /* Bessel.cpp in Sources */,
-				2EA0862213FDAE070051A437 /* Biquad.cpp in Sources */,
-				2EA0862413FDAE070051A437 /* Butterworth.cpp in Sources */,
-				2EA0862613FDAE070051A437 /* Cascade.cpp in Sources */,
-				2EA0862813FDAE070051A437 /* ChebyshevI.cpp in Sources */,
-				2EA0862A13FDAE070051A437 /* ChebyshevII.cpp in Sources */,
-				2EA0862C13FDAE070051A437 /* Custom.cpp in Sources */,
-				2EA0862E13FDAE070051A437 /* Design.cpp in Sources */,
-				2EA0863013FDAE070051A437 /* Documentation.cpp in Sources */,
-				2EA0863213FDAE070051A437 /* Elliptic.cpp in Sources */,
-				2EA0863413FDAE070051A437 /* Filter.cpp in Sources */,
-				2EA0863613FDAE070051A437 /* Legendre.cpp in Sources */,
-				2EA0863813FDAE070051A437 /* Param.cpp in Sources */,
-				2EA0863A13FDAE070051A437 /* PoleFilter.cpp in Sources */,
-				2EA0863C13FDAE070051A437 /* RBJ.cpp in Sources */,
-				2EA0863E13FDAE070051A437 /* RootFinder.cpp in Sources */,
-				2EA0864013FDAE070051A437 /* State.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -719,23 +626,6 @@
 				2EA085E513FDADB10051A437 /* SliderGroup.cpp in Sources */,
 				2EA085E713FDADB10051A437 /* StepResponseChart.cpp in Sources */,
 				2EA085E913FDADB10051A437 /* ThreadQueue.cpp in Sources */,
-				2EA0862113FDAE070051A437 /* Bessel.cpp in Sources */,
-				2EA0862313FDAE070051A437 /* Biquad.cpp in Sources */,
-				2EA0862513FDAE070051A437 /* Butterworth.cpp in Sources */,
-				2EA0862713FDAE070051A437 /* Cascade.cpp in Sources */,
-				2EA0862913FDAE070051A437 /* ChebyshevI.cpp in Sources */,
-				2EA0862B13FDAE070051A437 /* ChebyshevII.cpp in Sources */,
-				2EA0862D13FDAE070051A437 /* Custom.cpp in Sources */,
-				2EA0862F13FDAE070051A437 /* Design.cpp in Sources */,
-				2EA0863113FDAE070051A437 /* Documentation.cpp in Sources */,
-				2EA0863313FDAE070051A437 /* Elliptic.cpp in Sources */,
-				2EA0863513FDAE070051A437 /* Filter.cpp in Sources */,
-				2EA0863713FDAE070051A437 /* Legendre.cpp in Sources */,
-				2EA0863913FDAE070051A437 /* Param.cpp in Sources */,
-				2EA0863B13FDAE070051A437 /* PoleFilter.cpp in Sources */,
-				2EA0863D13FDAE070051A437 /* RBJ.cpp in Sources */,
-				2EA0863F13FDAE070051A437 /* RootFinder.cpp in Sources */,
-				2EA0864113FDAE070051A437 /* State.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -752,12 +642,22 @@
 			name = "Juce Amalgam iOS";
 			targetProxy = 2E4C0FFF140DD6B90050ABF8 /* PBXContainerItemProxy */;
 		};
+		2E7DB5B9140DFDFD009FE107 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = DSPFiltersMacOS;
+			targetProxy = 2E7DB5B8140DFDFD009FE107 /* PBXContainerItemProxy */;
+		};
+		2E7DB5BC140DFE09009FE107 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = DSPFiltersiOS;
+			targetProxy = 2E7DB5BB140DFE09009FE107 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		2ED29FD113FCC0FA00750A4E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2E4C0FF9140DD2D20050ABF8 /* SharedDebug.xcconfig */;
+			baseConfigurationReference = 2E7DB4F3140DFB83009FE107 /* SharedDebug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				EXECUTABLE_PREFIX = app;
@@ -781,7 +681,7 @@
 		};
 		2ED29FD213FCC0FA00750A4E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2E4C1001140DD7F70050ABF8 /* SharedReleaseApp.xcconfig */;
+			baseConfigurationReference = 2E7DB4F6140DFB83009FE107 /* SharedRelease.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				EXECUTABLE_PREFIX = app;
@@ -804,7 +704,7 @@
 		};
 		2ED29FD413FCC0FA00750A4E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2E4C0FFB140DD2D20050ABF8 /* SharedMacOS.xcconfig */;
+			baseConfigurationReference = 2E7DB4F5140DFB83009FE107 /* SharedMacOS.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				INFOPLIST_FILE = MacInfo.plist;
@@ -813,7 +713,7 @@
 		};
 		2ED29FD513FCC0FA00750A4E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2E4C0FFB140DD2D20050ABF8 /* SharedMacOS.xcconfig */;
+			baseConfigurationReference = 2E7DB4F5140DFB83009FE107 /* SharedMacOS.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				INFOPLIST_FILE = MacInfo.plist;
@@ -822,7 +722,7 @@
 		};
 		2ED2A0A913FCD1FC00750A4E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2E4C0FFC140DD2D20050ABF8 /* SharediOS.xcconfig */;
+			baseConfigurationReference = 2E7DB4F4140DFB83009FE107 /* SharediOS.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -836,7 +736,7 @@
 		};
 		2ED2A0AA13FCD1FC00750A4E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2E4C0FFC140DD2D20050ABF8 /* SharediOS.xcconfig */;
+			baseConfigurationReference = 2E7DB4F4140DFB83009FE107 /* SharediOS.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				FRAMEWORK_SEARCH_PATHS = (

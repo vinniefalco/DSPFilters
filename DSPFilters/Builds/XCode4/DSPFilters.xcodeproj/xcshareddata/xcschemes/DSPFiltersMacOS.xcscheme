@@ -6,17 +6,17 @@
       buildImplicitDependencies = "YES">
       <BuildActionEntries>
          <BuildActionEntry
-            buildForTesting = "NO"
+            buildForTesting = "YES"
             buildForRunning = "YES"
             buildForProfiling = "YES"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2EAB695213FE29B00001C68F"
-               BuildableName = "libJuceAmalgamiOS.a"
-               BlueprintName = "Juce Amalgam iOS"
-               ReferencedContainer = "container:JuceAmalgam.xcodeproj">
+               BlueprintIdentifier = "2E7DB502140DFBDF009FE107"
+               BuildableName = "libDSPFiltersMacOS.a"
+               BlueprintName = "DSPFiltersMacOS"
+               ReferencedContainer = "container:DSPFilters.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -49,6 +49,6 @@
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"
-      revealArchiveInOrganizer = "NO">
+      revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

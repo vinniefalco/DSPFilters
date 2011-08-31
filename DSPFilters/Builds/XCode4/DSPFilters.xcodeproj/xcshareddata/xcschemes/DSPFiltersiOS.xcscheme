@@ -13,10 +13,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2E8CA87013FE087400A86A48"
-               BuildableName = "libJuceAmalgamMac.a"
-               BlueprintName = "Juce Amalgam Mac"
-               ReferencedContainer = "container:JuceAmalgam.xcodeproj">
+               BlueprintIdentifier = "2E7DB525140DFC22009FE107"
+               BuildableName = "libDSPFiltersiOS.a"
+               BlueprintName = "DSPFiltersiOS"
+               ReferencedContainer = "container:DSPFilters.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

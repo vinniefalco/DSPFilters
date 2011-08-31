@@ -1,0 +1,512 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2E7DB565140DFCA9009FE107 /* Bessel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB53D140DFCA9009FE107 /* Bessel.cpp */; };
+		2E7DB566140DFCA9009FE107 /* Bessel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB53D140DFCA9009FE107 /* Bessel.cpp */; };
+		2E7DB567140DFCA9009FE107 /* Biquad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB53E140DFCA9009FE107 /* Biquad.cpp */; };
+		2E7DB568140DFCA9009FE107 /* Biquad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB53E140DFCA9009FE107 /* Biquad.cpp */; };
+		2E7DB569140DFCA9009FE107 /* Butterworth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB53F140DFCA9009FE107 /* Butterworth.cpp */; };
+		2E7DB56A140DFCA9009FE107 /* Butterworth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB53F140DFCA9009FE107 /* Butterworth.cpp */; };
+		2E7DB56B140DFCA9009FE107 /* Cascade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB540140DFCA9009FE107 /* Cascade.cpp */; };
+		2E7DB56C140DFCA9009FE107 /* Cascade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB540140DFCA9009FE107 /* Cascade.cpp */; };
+		2E7DB56D140DFCA9009FE107 /* ChebyshevI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB541140DFCA9009FE107 /* ChebyshevI.cpp */; };
+		2E7DB56E140DFCA9009FE107 /* ChebyshevI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB541140DFCA9009FE107 /* ChebyshevI.cpp */; };
+		2E7DB56F140DFCA9009FE107 /* ChebyshevII.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB542140DFCA9009FE107 /* ChebyshevII.cpp */; };
+		2E7DB570140DFCA9009FE107 /* ChebyshevII.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB542140DFCA9009FE107 /* ChebyshevII.cpp */; };
+		2E7DB571140DFCA9009FE107 /* Custom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB543140DFCA9009FE107 /* Custom.cpp */; };
+		2E7DB572140DFCA9009FE107 /* Custom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB543140DFCA9009FE107 /* Custom.cpp */; };
+		2E7DB573140DFCA9009FE107 /* Design.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB544140DFCA9009FE107 /* Design.cpp */; };
+		2E7DB574140DFCA9009FE107 /* Design.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB544140DFCA9009FE107 /* Design.cpp */; };
+		2E7DB575140DFCA9009FE107 /* Documentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB545140DFCA9009FE107 /* Documentation.cpp */; };
+		2E7DB576140DFCA9009FE107 /* Documentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB545140DFCA9009FE107 /* Documentation.cpp */; };
+		2E7DB577140DFCA9009FE107 /* Elliptic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB546140DFCA9009FE107 /* Elliptic.cpp */; };
+		2E7DB578140DFCA9009FE107 /* Elliptic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB546140DFCA9009FE107 /* Elliptic.cpp */; };
+		2E7DB579140DFCA9009FE107 /* Filter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB547140DFCA9009FE107 /* Filter.cpp */; };
+		2E7DB57A140DFCA9009FE107 /* Filter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB547140DFCA9009FE107 /* Filter.cpp */; };
+		2E7DB57B140DFCA9009FE107 /* Legendre.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB548140DFCA9009FE107 /* Legendre.cpp */; };
+		2E7DB57C140DFCA9009FE107 /* Legendre.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB548140DFCA9009FE107 /* Legendre.cpp */; };
+		2E7DB57D140DFCA9009FE107 /* Param.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB549140DFCA9009FE107 /* Param.cpp */; };
+		2E7DB57E140DFCA9009FE107 /* Param.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB549140DFCA9009FE107 /* Param.cpp */; };
+		2E7DB57F140DFCA9009FE107 /* PoleFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB54A140DFCA9009FE107 /* PoleFilter.cpp */; };
+		2E7DB580140DFCA9009FE107 /* PoleFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB54A140DFCA9009FE107 /* PoleFilter.cpp */; };
+		2E7DB581140DFCA9009FE107 /* RBJ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB54B140DFCA9009FE107 /* RBJ.cpp */; };
+		2E7DB582140DFCA9009FE107 /* RBJ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB54B140DFCA9009FE107 /* RBJ.cpp */; };
+		2E7DB583140DFCA9009FE107 /* RootFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB54C140DFCA9009FE107 /* RootFinder.cpp */; };
+		2E7DB584140DFCA9009FE107 /* RootFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB54C140DFCA9009FE107 /* RootFinder.cpp */; };
+		2E7DB585140DFCA9009FE107 /* State.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB54D140DFCA9009FE107 /* State.cpp */; };
+		2E7DB586140DFCA9009FE107 /* State.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DB54D140DFCA9009FE107 /* State.cpp */; };
+		2E7DB587140DFCA9009FE107 /* Bessel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB54E140DFCA9009FE107 /* Bessel.h */; };
+		2E7DB588140DFCA9009FE107 /* Bessel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB54E140DFCA9009FE107 /* Bessel.h */; };
+		2E7DB589140DFCA9009FE107 /* Biquad.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB54F140DFCA9009FE107 /* Biquad.h */; };
+		2E7DB58A140DFCA9009FE107 /* Biquad.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB54F140DFCA9009FE107 /* Biquad.h */; };
+		2E7DB58B140DFCA9009FE107 /* Butterworth.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB550140DFCA9009FE107 /* Butterworth.h */; };
+		2E7DB58C140DFCA9009FE107 /* Butterworth.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB550140DFCA9009FE107 /* Butterworth.h */; };
+		2E7DB58D140DFCA9009FE107 /* Cascade.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB551140DFCA9009FE107 /* Cascade.h */; };
+		2E7DB58E140DFCA9009FE107 /* Cascade.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB551140DFCA9009FE107 /* Cascade.h */; };
+		2E7DB58F140DFCA9009FE107 /* ChebyshevI.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB552140DFCA9009FE107 /* ChebyshevI.h */; };
+		2E7DB590140DFCA9009FE107 /* ChebyshevI.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB552140DFCA9009FE107 /* ChebyshevI.h */; };
+		2E7DB591140DFCA9009FE107 /* ChebyshevII.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB553140DFCA9009FE107 /* ChebyshevII.h */; };
+		2E7DB592140DFCA9009FE107 /* ChebyshevII.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB553140DFCA9009FE107 /* ChebyshevII.h */; };
+		2E7DB593140DFCA9009FE107 /* Common.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB554140DFCA9009FE107 /* Common.h */; };
+		2E7DB594140DFCA9009FE107 /* Common.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB554140DFCA9009FE107 /* Common.h */; };
+		2E7DB595140DFCA9009FE107 /* Custom.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB555140DFCA9009FE107 /* Custom.h */; };
+		2E7DB596140DFCA9009FE107 /* Custom.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB555140DFCA9009FE107 /* Custom.h */; };
+		2E7DB597140DFCA9009FE107 /* Design.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB556140DFCA9009FE107 /* Design.h */; };
+		2E7DB598140DFCA9009FE107 /* Design.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB556140DFCA9009FE107 /* Design.h */; };
+		2E7DB599140DFCA9009FE107 /* Dsp.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB557140DFCA9009FE107 /* Dsp.h */; };
+		2E7DB59A140DFCA9009FE107 /* Dsp.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB557140DFCA9009FE107 /* Dsp.h */; };
+		2E7DB59B140DFCA9009FE107 /* Elliptic.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB558140DFCA9009FE107 /* Elliptic.h */; };
+		2E7DB59C140DFCA9009FE107 /* Elliptic.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB558140DFCA9009FE107 /* Elliptic.h */; };
+		2E7DB59D140DFCA9009FE107 /* Filter.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB559140DFCA9009FE107 /* Filter.h */; };
+		2E7DB59E140DFCA9009FE107 /* Filter.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB559140DFCA9009FE107 /* Filter.h */; };
+		2E7DB59F140DFCA9009FE107 /* Layout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB55A140DFCA9009FE107 /* Layout.h */; };
+		2E7DB5A0140DFCA9009FE107 /* Layout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB55A140DFCA9009FE107 /* Layout.h */; };
+		2E7DB5A1140DFCA9009FE107 /* Legendre.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB55B140DFCA9009FE107 /* Legendre.h */; };
+		2E7DB5A2140DFCA9009FE107 /* Legendre.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB55B140DFCA9009FE107 /* Legendre.h */; };
+		2E7DB5A3140DFCA9009FE107 /* MathSupplement.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB55C140DFCA9009FE107 /* MathSupplement.h */; };
+		2E7DB5A4140DFCA9009FE107 /* MathSupplement.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB55C140DFCA9009FE107 /* MathSupplement.h */; };
+		2E7DB5A5140DFCA9009FE107 /* Params.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB55D140DFCA9009FE107 /* Params.h */; };
+		2E7DB5A6140DFCA9009FE107 /* Params.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB55D140DFCA9009FE107 /* Params.h */; };
+		2E7DB5A7140DFCA9009FE107 /* PoleFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB55E140DFCA9009FE107 /* PoleFilter.h */; };
+		2E7DB5A8140DFCA9009FE107 /* PoleFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB55E140DFCA9009FE107 /* PoleFilter.h */; };
+		2E7DB5A9140DFCA9009FE107 /* RBJ.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB55F140DFCA9009FE107 /* RBJ.h */; };
+		2E7DB5AA140DFCA9009FE107 /* RBJ.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB55F140DFCA9009FE107 /* RBJ.h */; };
+		2E7DB5AB140DFCA9009FE107 /* RootFinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB560140DFCA9009FE107 /* RootFinder.h */; };
+		2E7DB5AC140DFCA9009FE107 /* RootFinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB560140DFCA9009FE107 /* RootFinder.h */; };
+		2E7DB5AD140DFCA9009FE107 /* SmoothedFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB561140DFCA9009FE107 /* SmoothedFilter.h */; };
+		2E7DB5AE140DFCA9009FE107 /* SmoothedFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB561140DFCA9009FE107 /* SmoothedFilter.h */; };
+		2E7DB5AF140DFCA9009FE107 /* State.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB562140DFCA9009FE107 /* State.h */; };
+		2E7DB5B0140DFCA9009FE107 /* State.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB562140DFCA9009FE107 /* State.h */; };
+		2E7DB5B1140DFCA9009FE107 /* Types.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB563140DFCA9009FE107 /* Types.h */; };
+		2E7DB5B2140DFCA9009FE107 /* Types.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB563140DFCA9009FE107 /* Types.h */; };
+		2E7DB5B3140DFCA9009FE107 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB564140DFCA9009FE107 /* Utilities.h */; };
+		2E7DB5B4140DFCA9009FE107 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7DB564140DFCA9009FE107 /* Utilities.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2E7DB503140DFBDF009FE107 /* libDSPFiltersMacOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDSPFiltersMacOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E7DB526140DFC22009FE107 /* libDSPFiltersiOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDSPFiltersiOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E7DB535140DFC44009FE107 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Shared.xcconfig; sourceTree = "<group>"; };
+		2E7DB536140DFC44009FE107 /* SharedDebug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedDebug.xcconfig; sourceTree = "<group>"; };
+		2E7DB537140DFC44009FE107 /* SharediOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharediOS.xcconfig; sourceTree = "<group>"; };
+		2E7DB538140DFC44009FE107 /* SharedMacOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedMacOS.xcconfig; sourceTree = "<group>"; };
+		2E7DB539140DFC44009FE107 /* SharedRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedRelease.xcconfig; sourceTree = "<group>"; };
+		2E7DB53A140DFC44009FE107 /* SharedReleaseApp.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedReleaseApp.xcconfig; sourceTree = "<group>"; };
+		2E7DB53D140DFCA9009FE107 /* Bessel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Bessel.cpp; path = ../../source/Bessel.cpp; sourceTree = "<group>"; };
+		2E7DB53E140DFCA9009FE107 /* Biquad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Biquad.cpp; path = ../../source/Biquad.cpp; sourceTree = "<group>"; };
+		2E7DB53F140DFCA9009FE107 /* Butterworth.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Butterworth.cpp; path = ../../source/Butterworth.cpp; sourceTree = "<group>"; };
+		2E7DB540140DFCA9009FE107 /* Cascade.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Cascade.cpp; path = ../../source/Cascade.cpp; sourceTree = "<group>"; };
+		2E7DB541140DFCA9009FE107 /* ChebyshevI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChebyshevI.cpp; path = ../../source/ChebyshevI.cpp; sourceTree = "<group>"; };
+		2E7DB542140DFCA9009FE107 /* ChebyshevII.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChebyshevII.cpp; path = ../../source/ChebyshevII.cpp; sourceTree = "<group>"; };
+		2E7DB543140DFCA9009FE107 /* Custom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Custom.cpp; path = ../../source/Custom.cpp; sourceTree = "<group>"; };
+		2E7DB544140DFCA9009FE107 /* Design.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Design.cpp; path = ../../source/Design.cpp; sourceTree = "<group>"; };
+		2E7DB545140DFCA9009FE107 /* Documentation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Documentation.cpp; path = ../../source/Documentation.cpp; sourceTree = "<group>"; };
+		2E7DB546140DFCA9009FE107 /* Elliptic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Elliptic.cpp; path = ../../source/Elliptic.cpp; sourceTree = "<group>"; };
+		2E7DB547140DFCA9009FE107 /* Filter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Filter.cpp; path = ../../source/Filter.cpp; sourceTree = "<group>"; };
+		2E7DB548140DFCA9009FE107 /* Legendre.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Legendre.cpp; path = ../../source/Legendre.cpp; sourceTree = "<group>"; };
+		2E7DB549140DFCA9009FE107 /* Param.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Param.cpp; path = ../../source/Param.cpp; sourceTree = "<group>"; };
+		2E7DB54A140DFCA9009FE107 /* PoleFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PoleFilter.cpp; path = ../../source/PoleFilter.cpp; sourceTree = "<group>"; };
+		2E7DB54B140DFCA9009FE107 /* RBJ.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RBJ.cpp; path = ../../source/RBJ.cpp; sourceTree = "<group>"; };
+		2E7DB54C140DFCA9009FE107 /* RootFinder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RootFinder.cpp; path = ../../source/RootFinder.cpp; sourceTree = "<group>"; };
+		2E7DB54D140DFCA9009FE107 /* State.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = State.cpp; path = ../../source/State.cpp; sourceTree = "<group>"; };
+		2E7DB54E140DFCA9009FE107 /* Bessel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bessel.h; path = ../../include/DspFilters/Bessel.h; sourceTree = "<group>"; };
+		2E7DB54F140DFCA9009FE107 /* Biquad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Biquad.h; path = ../../include/DspFilters/Biquad.h; sourceTree = "<group>"; };
+		2E7DB550140DFCA9009FE107 /* Butterworth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Butterworth.h; path = ../../include/DspFilters/Butterworth.h; sourceTree = "<group>"; };
+		2E7DB551140DFCA9009FE107 /* Cascade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cascade.h; path = ../../include/DspFilters/Cascade.h; sourceTree = "<group>"; };
+		2E7DB552140DFCA9009FE107 /* ChebyshevI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChebyshevI.h; path = ../../include/DspFilters/ChebyshevI.h; sourceTree = "<group>"; };
+		2E7DB553140DFCA9009FE107 /* ChebyshevII.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChebyshevII.h; path = ../../include/DspFilters/ChebyshevII.h; sourceTree = "<group>"; };
+		2E7DB554140DFCA9009FE107 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Common.h; path = ../../include/DspFilters/Common.h; sourceTree = "<group>"; };
+		2E7DB555140DFCA9009FE107 /* Custom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Custom.h; path = ../../include/DspFilters/Custom.h; sourceTree = "<group>"; };
+		2E7DB556140DFCA9009FE107 /* Design.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Design.h; path = ../../include/DspFilters/Design.h; sourceTree = "<group>"; };
+		2E7DB557140DFCA9009FE107 /* Dsp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Dsp.h; path = ../../include/DspFilters/Dsp.h; sourceTree = "<group>"; };
+		2E7DB558140DFCA9009FE107 /* Elliptic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Elliptic.h; path = ../../include/DspFilters/Elliptic.h; sourceTree = "<group>"; };
+		2E7DB559140DFCA9009FE107 /* Filter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Filter.h; path = ../../include/DspFilters/Filter.h; sourceTree = "<group>"; };
+		2E7DB55A140DFCA9009FE107 /* Layout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Layout.h; path = ../../include/DspFilters/Layout.h; sourceTree = "<group>"; };
+		2E7DB55B140DFCA9009FE107 /* Legendre.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Legendre.h; path = ../../include/DspFilters/Legendre.h; sourceTree = "<group>"; };
+		2E7DB55C140DFCA9009FE107 /* MathSupplement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MathSupplement.h; path = ../../include/DspFilters/MathSupplement.h; sourceTree = "<group>"; };
+		2E7DB55D140DFCA9009FE107 /* Params.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Params.h; path = ../../include/DspFilters/Params.h; sourceTree = "<group>"; };
+		2E7DB55E140DFCA9009FE107 /* PoleFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PoleFilter.h; path = ../../include/DspFilters/PoleFilter.h; sourceTree = "<group>"; };
+		2E7DB55F140DFCA9009FE107 /* RBJ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RBJ.h; path = ../../include/DspFilters/RBJ.h; sourceTree = "<group>"; };
+		2E7DB560140DFCA9009FE107 /* RootFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RootFinder.h; path = ../../include/DspFilters/RootFinder.h; sourceTree = "<group>"; };
+		2E7DB561140DFCA9009FE107 /* SmoothedFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmoothedFilter.h; path = ../../include/DspFilters/SmoothedFilter.h; sourceTree = "<group>"; };
+		2E7DB562140DFCA9009FE107 /* State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = State.h; path = ../../include/DspFilters/State.h; sourceTree = "<group>"; };
+		2E7DB563140DFCA9009FE107 /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Types.h; path = ../../include/DspFilters/Types.h; sourceTree = "<group>"; };
+		2E7DB564140DFCA9009FE107 /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../include/DspFilters/Utilities.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2E7DB500140DFBDF009FE107 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E7DB523140DFC22009FE107 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2E7DB4F8140DFBDF009FE107 = {
+			isa = PBXGroup;
+			children = (
+				2E7DB53C140DFCA9009FE107 /* include */,
+				2E7DB53B140DFCA9009FE107 /* source */,
+				2E7DB534140DFC44009FE107 /* xcconfigs */,
+				2E7DB504140DFBDF009FE107 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2E7DB504140DFBDF009FE107 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2E7DB503140DFBDF009FE107 /* libDSPFiltersMacOS.a */,
+				2E7DB526140DFC22009FE107 /* libDSPFiltersiOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2E7DB534140DFC44009FE107 /* xcconfigs */ = {
+			isa = PBXGroup;
+			children = (
+				2E7DB535140DFC44009FE107 /* Shared.xcconfig */,
+				2E7DB536140DFC44009FE107 /* SharedDebug.xcconfig */,
+				2E7DB537140DFC44009FE107 /* SharediOS.xcconfig */,
+				2E7DB538140DFC44009FE107 /* SharedMacOS.xcconfig */,
+				2E7DB539140DFC44009FE107 /* SharedRelease.xcconfig */,
+				2E7DB53A140DFC44009FE107 /* SharedReleaseApp.xcconfig */,
+			);
+			name = xcconfigs;
+			path = ../../../Builds/XCode4/xcconfigs;
+			sourceTree = "<group>";
+		};
+		2E7DB53B140DFCA9009FE107 /* source */ = {
+			isa = PBXGroup;
+			children = (
+				2E7DB53D140DFCA9009FE107 /* Bessel.cpp */,
+				2E7DB53E140DFCA9009FE107 /* Biquad.cpp */,
+				2E7DB53F140DFCA9009FE107 /* Butterworth.cpp */,
+				2E7DB540140DFCA9009FE107 /* Cascade.cpp */,
+				2E7DB541140DFCA9009FE107 /* ChebyshevI.cpp */,
+				2E7DB542140DFCA9009FE107 /* ChebyshevII.cpp */,
+				2E7DB543140DFCA9009FE107 /* Custom.cpp */,
+				2E7DB544140DFCA9009FE107 /* Design.cpp */,
+				2E7DB545140DFCA9009FE107 /* Documentation.cpp */,
+				2E7DB546140DFCA9009FE107 /* Elliptic.cpp */,
+				2E7DB547140DFCA9009FE107 /* Filter.cpp */,
+				2E7DB548140DFCA9009FE107 /* Legendre.cpp */,
+				2E7DB549140DFCA9009FE107 /* Param.cpp */,
+				2E7DB54A140DFCA9009FE107 /* PoleFilter.cpp */,
+				2E7DB54B140DFCA9009FE107 /* RBJ.cpp */,
+				2E7DB54C140DFCA9009FE107 /* RootFinder.cpp */,
+				2E7DB54D140DFCA9009FE107 /* State.cpp */,
+			);
+			name = source;
+			path = ../../../Builds/XCode4;
+			sourceTree = "<group>";
+		};
+		2E7DB53C140DFCA9009FE107 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				2E7DB54E140DFCA9009FE107 /* Bessel.h */,
+				2E7DB54F140DFCA9009FE107 /* Biquad.h */,
+				2E7DB550140DFCA9009FE107 /* Butterworth.h */,
+				2E7DB551140DFCA9009FE107 /* Cascade.h */,
+				2E7DB552140DFCA9009FE107 /* ChebyshevI.h */,
+				2E7DB553140DFCA9009FE107 /* ChebyshevII.h */,
+				2E7DB554140DFCA9009FE107 /* Common.h */,
+				2E7DB555140DFCA9009FE107 /* Custom.h */,
+				2E7DB556140DFCA9009FE107 /* Design.h */,
+				2E7DB557140DFCA9009FE107 /* Dsp.h */,
+				2E7DB558140DFCA9009FE107 /* Elliptic.h */,
+				2E7DB559140DFCA9009FE107 /* Filter.h */,
+				2E7DB55A140DFCA9009FE107 /* Layout.h */,
+				2E7DB55B140DFCA9009FE107 /* Legendre.h */,
+				2E7DB55C140DFCA9009FE107 /* MathSupplement.h */,
+				2E7DB55D140DFCA9009FE107 /* Params.h */,
+				2E7DB55E140DFCA9009FE107 /* PoleFilter.h */,
+				2E7DB55F140DFCA9009FE107 /* RBJ.h */,
+				2E7DB560140DFCA9009FE107 /* RootFinder.h */,
+				2E7DB561140DFCA9009FE107 /* SmoothedFilter.h */,
+				2E7DB562140DFCA9009FE107 /* State.h */,
+				2E7DB563140DFCA9009FE107 /* Types.h */,
+				2E7DB564140DFCA9009FE107 /* Utilities.h */,
+			);
+			name = include;
+			path = ../../../Builds/XCode4;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		2E7DB501140DFBDF009FE107 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E7DB587140DFCA9009FE107 /* Bessel.h in Headers */,
+				2E7DB589140DFCA9009FE107 /* Biquad.h in Headers */,
+				2E7DB58B140DFCA9009FE107 /* Butterworth.h in Headers */,
+				2E7DB58D140DFCA9009FE107 /* Cascade.h in Headers */,
+				2E7DB58F140DFCA9009FE107 /* ChebyshevI.h in Headers */,
+				2E7DB591140DFCA9009FE107 /* ChebyshevII.h in Headers */,
+				2E7DB593140DFCA9009FE107 /* Common.h in Headers */,
+				2E7DB595140DFCA9009FE107 /* Custom.h in Headers */,
+				2E7DB597140DFCA9009FE107 /* Design.h in Headers */,
+				2E7DB599140DFCA9009FE107 /* Dsp.h in Headers */,
+				2E7DB59B140DFCA9009FE107 /* Elliptic.h in Headers */,
+				2E7DB59D140DFCA9009FE107 /* Filter.h in Headers */,
+				2E7DB59F140DFCA9009FE107 /* Layout.h in Headers */,
+				2E7DB5A1140DFCA9009FE107 /* Legendre.h in Headers */,
+				2E7DB5A3140DFCA9009FE107 /* MathSupplement.h in Headers */,
+				2E7DB5A5140DFCA9009FE107 /* Params.h in Headers */,
+				2E7DB5A7140DFCA9009FE107 /* PoleFilter.h in Headers */,
+				2E7DB5A9140DFCA9009FE107 /* RBJ.h in Headers */,
+				2E7DB5AB140DFCA9009FE107 /* RootFinder.h in Headers */,
+				2E7DB5AD140DFCA9009FE107 /* SmoothedFilter.h in Headers */,
+				2E7DB5AF140DFCA9009FE107 /* State.h in Headers */,
+				2E7DB5B1140DFCA9009FE107 /* Types.h in Headers */,
+				2E7DB5B3140DFCA9009FE107 /* Utilities.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E7DB524140DFC22009FE107 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E7DB588140DFCA9009FE107 /* Bessel.h in Headers */,
+				2E7DB58A140DFCA9009FE107 /* Biquad.h in Headers */,
+				2E7DB58C140DFCA9009FE107 /* Butterworth.h in Headers */,
+				2E7DB58E140DFCA9009FE107 /* Cascade.h in Headers */,
+				2E7DB590140DFCA9009FE107 /* ChebyshevI.h in Headers */,
+				2E7DB592140DFCA9009FE107 /* ChebyshevII.h in Headers */,
+				2E7DB594140DFCA9009FE107 /* Common.h in Headers */,
+				2E7DB596140DFCA9009FE107 /* Custom.h in Headers */,
+				2E7DB598140DFCA9009FE107 /* Design.h in Headers */,
+				2E7DB59A140DFCA9009FE107 /* Dsp.h in Headers */,
+				2E7DB59C140DFCA9009FE107 /* Elliptic.h in Headers */,
+				2E7DB59E140DFCA9009FE107 /* Filter.h in Headers */,
+				2E7DB5A0140DFCA9009FE107 /* Layout.h in Headers */,
+				2E7DB5A2140DFCA9009FE107 /* Legendre.h in Headers */,
+				2E7DB5A4140DFCA9009FE107 /* MathSupplement.h in Headers */,
+				2E7DB5A6140DFCA9009FE107 /* Params.h in Headers */,
+				2E7DB5A8140DFCA9009FE107 /* PoleFilter.h in Headers */,
+				2E7DB5AA140DFCA9009FE107 /* RBJ.h in Headers */,
+				2E7DB5AC140DFCA9009FE107 /* RootFinder.h in Headers */,
+				2E7DB5AE140DFCA9009FE107 /* SmoothedFilter.h in Headers */,
+				2E7DB5B0140DFCA9009FE107 /* State.h in Headers */,
+				2E7DB5B2140DFCA9009FE107 /* Types.h in Headers */,
+				2E7DB5B4140DFCA9009FE107 /* Utilities.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		2E7DB502140DFBDF009FE107 /* DSPFiltersMacOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2E7DB507140DFBDF009FE107 /* Build configuration list for PBXNativeTarget "DSPFiltersMacOS" */;
+			buildPhases = (
+				2E7DB4FF140DFBDF009FE107 /* Sources */,
+				2E7DB500140DFBDF009FE107 /* Frameworks */,
+				2E7DB501140DFBDF009FE107 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DSPFiltersMacOS;
+			productName = DSPFilters;
+			productReference = 2E7DB503140DFBDF009FE107 /* libDSPFiltersMacOS.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		2E7DB525140DFC22009FE107 /* DSPFiltersiOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2E7DB532140DFC22009FE107 /* Build configuration list for PBXNativeTarget "DSPFiltersiOS" */;
+			buildPhases = (
+				2E7DB522140DFC22009FE107 /* Sources */,
+				2E7DB523140DFC22009FE107 /* Frameworks */,
+				2E7DB524140DFC22009FE107 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DSPFiltersiOS;
+			productName = DSPFiltersiOS;
+			productReference = 2E7DB526140DFC22009FE107 /* libDSPFiltersiOS.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2E7DB4FA140DFBDF009FE107 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				ORGANIZATIONNAME = "One Guy Group, Inc.";
+			};
+			buildConfigurationList = 2E7DB4FD140DFBDF009FE107 /* Build configuration list for PBXProject "DSPFilters" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 2E7DB4F8140DFBDF009FE107;
+			productRefGroup = 2E7DB504140DFBDF009FE107 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2E7DB502140DFBDF009FE107 /* DSPFiltersMacOS */,
+				2E7DB525140DFC22009FE107 /* DSPFiltersiOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2E7DB4FF140DFBDF009FE107 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E7DB565140DFCA9009FE107 /* Bessel.cpp in Sources */,
+				2E7DB567140DFCA9009FE107 /* Biquad.cpp in Sources */,
+				2E7DB569140DFCA9009FE107 /* Butterworth.cpp in Sources */,
+				2E7DB56B140DFCA9009FE107 /* Cascade.cpp in Sources */,
+				2E7DB56D140DFCA9009FE107 /* ChebyshevI.cpp in Sources */,
+				2E7DB56F140DFCA9009FE107 /* ChebyshevII.cpp in Sources */,
+				2E7DB571140DFCA9009FE107 /* Custom.cpp in Sources */,
+				2E7DB573140DFCA9009FE107 /* Design.cpp in Sources */,
+				2E7DB575140DFCA9009FE107 /* Documentation.cpp in Sources */,
+				2E7DB577140DFCA9009FE107 /* Elliptic.cpp in Sources */,
+				2E7DB579140DFCA9009FE107 /* Filter.cpp in Sources */,
+				2E7DB57B140DFCA9009FE107 /* Legendre.cpp in Sources */,
+				2E7DB57D140DFCA9009FE107 /* Param.cpp in Sources */,
+				2E7DB57F140DFCA9009FE107 /* PoleFilter.cpp in Sources */,
+				2E7DB581140DFCA9009FE107 /* RBJ.cpp in Sources */,
+				2E7DB583140DFCA9009FE107 /* RootFinder.cpp in Sources */,
+				2E7DB585140DFCA9009FE107 /* State.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E7DB522140DFC22009FE107 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E7DB566140DFCA9009FE107 /* Bessel.cpp in Sources */,
+				2E7DB568140DFCA9009FE107 /* Biquad.cpp in Sources */,
+				2E7DB56A140DFCA9009FE107 /* Butterworth.cpp in Sources */,
+				2E7DB56C140DFCA9009FE107 /* Cascade.cpp in Sources */,
+				2E7DB56E140DFCA9009FE107 /* ChebyshevI.cpp in Sources */,
+				2E7DB570140DFCA9009FE107 /* ChebyshevII.cpp in Sources */,
+				2E7DB572140DFCA9009FE107 /* Custom.cpp in Sources */,
+				2E7DB574140DFCA9009FE107 /* Design.cpp in Sources */,
+				2E7DB576140DFCA9009FE107 /* Documentation.cpp in Sources */,
+				2E7DB578140DFCA9009FE107 /* Elliptic.cpp in Sources */,
+				2E7DB57A140DFCA9009FE107 /* Filter.cpp in Sources */,
+				2E7DB57C140DFCA9009FE107 /* Legendre.cpp in Sources */,
+				2E7DB57E140DFCA9009FE107 /* Param.cpp in Sources */,
+				2E7DB580140DFCA9009FE107 /* PoleFilter.cpp in Sources */,
+				2E7DB582140DFCA9009FE107 /* RBJ.cpp in Sources */,
+				2E7DB584140DFCA9009FE107 /* RootFinder.cpp in Sources */,
+				2E7DB586140DFCA9009FE107 /* State.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2E7DB505140DFBDF009FE107 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2E7DB536140DFC44009FE107 /* SharedDebug.xcconfig */;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = ../../../include;
+			};
+			name = Debug;
+		};
+		2E7DB506140DFBDF009FE107 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2E7DB539140DFC44009FE107 /* SharedRelease.xcconfig */;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = ../../../include;
+			};
+			name = Release;
+		};
+		2E7DB508140DFBDF009FE107 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2E7DB538140DFC44009FE107 /* SharedMacOS.xcconfig */;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2E7DB509140DFBDF009FE107 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2E7DB538140DFC44009FE107 /* SharedMacOS.xcconfig */;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		2E7DB530140DFC22009FE107 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2E7DB537140DFC44009FE107 /* SharediOS.xcconfig */;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		2E7DB531140DFC22009FE107 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2E7DB537140DFC44009FE107 /* SharediOS.xcconfig */;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2E7DB4FD140DFBDF009FE107 /* Build configuration list for PBXProject "DSPFilters" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E7DB505140DFBDF009FE107 /* Debug */,
+				2E7DB506140DFBDF009FE107 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2E7DB507140DFBDF009FE107 /* Build configuration list for PBXNativeTarget "DSPFiltersMacOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E7DB508140DFBDF009FE107 /* Debug */,
+				2E7DB509140DFBDF009FE107 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2E7DB532140DFC22009FE107 /* Build configuration list for PBXNativeTarget "DSPFiltersiOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E7DB530140DFC22009FE107 /* Debug */,
+				2E7DB531140DFC22009FE107 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2E7DB4FA140DFBDF009FE107 /* Project object */;
+}
