@@ -10,7 +10,8 @@ ARCHS = $(ARCHS_STANDARD_32_64_BIT)
 //SDKROOT = 10.6 // This breaks "Relative to SDK" framework references
 
 // Code Signing
-CODE_SIGN_IDENTITY = 3rd Party Mac Developer Application
+//CODE_SIGN_IDENTITY = 3rd Party Mac Developer Application // Fails if there's no certificate
+OTHER_CODE_SIGN_FLAGS = --all-architectures
 
 // Deployment
 MACOSX_DEPLOYMENT_TARGET = 10.4

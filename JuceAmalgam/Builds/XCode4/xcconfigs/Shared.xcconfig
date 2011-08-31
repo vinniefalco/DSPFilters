@@ -46,7 +46,8 @@ DEBUG_INFORMATION_FORMAT = dwarf                                // Debug Informa
 //CODE_SIGN_ENTITLEMENTS =
 //CODE_SIGN_IDENTITY =
 //CODE_SIGN_RESOURCE_RULES_PATH =
-//THER_CODE_SIGN_FLAGS =
+//OTHER_CODE_SIGN_FLAGS =
+OTHER_CODE_SIGN_FLAGS = --all-architectures --options=kill,hard
 
 //
 // Deployment
