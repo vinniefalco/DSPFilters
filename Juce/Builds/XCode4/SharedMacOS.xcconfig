@@ -1,0 +1,15 @@
+// Copyright (c) 2009-2011 by Vincent Falco, One Guy Group, Inc.
+// License: MIT License (http://www.opensource.org/licenses/mit-license.php)
+
+//
+// For all MacOS targets
+//
+
+// Architectures
+ARCHS = $(ARCHS_STANDARD_32_64_BIT)
+//SDKROOT = macosx10.6
+
+// Deployment
+//MACOSX_DEPLOYMENT_TARGET = 
+MACOSX_DEPLOYMENT_TARGET[arch=x86_64] = 10.5
+MACOSX_DEPLOYMENT_TARGET[arch=i386] = 10.4

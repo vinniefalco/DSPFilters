@@ -39,6 +39,8 @@
 		2EBD8CC0140DA44A00D7059C /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Shared.xcconfig; sourceTree = "<group>"; };
 		2EBD8CC1140DA44A00D7059C /* SharedDebug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedDebug.xcconfig; sourceTree = "<group>"; };
 		2EBD8CC2140DA44A00D7059C /* SharedRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedRelease.xcconfig; sourceTree = "<group>"; };
+		2EBD8CD1140DA84400D7059C /* SharedMacOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedMacOS.xcconfig; sourceTree = "<group>"; };
+		2EBD8CD2140DA84400D7059C /* SharediOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharediOS.xcconfig; sourceTree = "<group>"; };
 		2ED2A10413FCD38B00750A4E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		2ED2A10613FCD39100750A4E /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		2ED2A10813FCD3AF00750A4E /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = ../../Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
@@ -160,6 +162,8 @@
 				2EBD8CC0140DA44A00D7059C /* Shared.xcconfig */,
 				2EBD8CC1140DA44A00D7059C /* SharedDebug.xcconfig */,
 				2EBD8CC2140DA44A00D7059C /* SharedRelease.xcconfig */,
+				2EBD8CD1140DA84400D7059C /* SharedMacOS.xcconfig */,
+				2EBD8CD2140DA84400D7059C /* SharediOS.xcconfig */,
 			);
 			name = .xcconfig;
 			sourceTree = "<group>";
@@ -309,6 +313,7 @@
 /* Begin XCBuildConfiguration section */
 		2E8CA87313FE087400A86A48 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2EBD8CD1140DA84400D7059C /* SharedMacOS.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = JuceAmalgamMac;
 			};
@@ -316,6 +321,7 @@
 		};
 		2E8CA87413FE087400A86A48 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2EBD8CD1140DA84400D7059C /* SharedMacOS.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = JuceAmalgamMac;
 			};
@@ -323,8 +329,8 @@
 		};
 		2EAB695E13FE29B00001C68F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2EBD8CD2140DA84400D7059C /* SharediOS.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				PRODUCT_NAME = JuceAmalgamiOS;
 				SDKROOT = iphoneos4.3;
 			};
@@ -332,8 +338,8 @@
 		};
 		2EAB695F13FE29B00001C68F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2EBD8CD2140DA84400D7059C /* SharediOS.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				PRODUCT_NAME = JuceAmalgamiOS;
 				SDKROOT = iphoneos4.3;
 			};
@@ -341,15 +347,12 @@
 		};
 		2ED29FD113FCC0FA00750A4E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2EBD8CC1140DA44A00D7059C /* SharedDebug.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
 				);
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"_DEBUG=1",
@@ -357,65 +360,31 @@
 					"JUCE_UNIT_TESTS=1",
 					"$(inherited)",
 				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = "";
-				"MACOSX_DEPLOYMENT_TARGET[arch=i386]" = 10.4;
-				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = 10.5;
 				"MACOSX_DEPLOYMENT_TARGET[sdk=iphoneos*][arch=*]" = "";
 				"MACOSX_DEPLOYMENT_TARGET[sdk=iphonesimulator*][arch=*]" = "";
-				ONLY_ACTIVE_ARCH = NO;
-				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
-				PRODUCT_NAME = JuceAmalgam;
 				SDKROOT = macosx10.6;
-				SKIP_INSTALL = YES;
-				STRIP_INSTALLED_PRODUCT = NO;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WARNING_CFLAGS = "-Wreorder";
 			};
 			name = Debug;
 		};
 		2ED29FD213FCC0FA00750A4E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2EBD8CC2140DA44A00D7059C /* SharedRelease.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				COPY_PHASE_STRIP = NO;
-				DEAD_CODE_STRIPPING = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
 				);
-				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"NDEBUG=1",
 					"_NDEBUG=1",
 					"JUCE_ObjCExtraSuffix=",
 					"$(inherited)",
 				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = "";
-				"MACOSX_DEPLOYMENT_TARGET[arch=*]" = "";
-				"MACOSX_DEPLOYMENT_TARGET[arch=i386]" = 10.4;
-				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = 10.5;
 				"MACOSX_DEPLOYMENT_TARGET[sdk=iphoneos*][arch=*]" = "";
-				ONLY_ACTIVE_ARCH = NO;
-				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
-				PRODUCT_NAME = JuceAmalgam;
+				"MACOSX_DEPLOYMENT_TARGET[sdk=iphonesimulator*][arch=*]" = "";
 				SDKROOT = macosx10.6;
-				SKIP_INSTALL = YES;
-				STRIP_INSTALLED_PRODUCT = NO;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WARNING_CFLAGS = "-Wreorder";
 			};
 			name = Release;
 		};

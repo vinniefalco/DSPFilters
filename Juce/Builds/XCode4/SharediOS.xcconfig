@@ -1,0 +1,13 @@
+// Copyright (c) 2009-2011 by Vincent Falco, One Guy Group, Inc.
+// License: MIT License (http://www.opensource.org/licenses/mit-license.php)
+
+//
+// For all iOS targets
+//
+
+// Architectures
+ARCHS = $(ARCHS_STANDARD_32_BIT)
+//SDKROOT = iphoneos4.3
+
+// Deployment
+TARGETED_DEVICE_FAMILY = 1,2

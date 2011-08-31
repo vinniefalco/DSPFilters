@@ -69,8 +69,8 @@ DEBUG_INFORMATION_FORMAT = dwarf                                // Debug Informa
 SKIP_INSTALL = YES
 COPY_PHASE_STRIP = NO
 STRIP_INSTALLED_PRODUCT = NO
-STRIP_STYLE =
-SEPARATE_STRIP = NO
+//STRIP_STYLE =
+//SEPARATE_STRIP =
 
 //
 // Kernel Module
