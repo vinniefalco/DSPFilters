@@ -15,11 +15,6 @@
 		2E71C277140071AD00643CF1 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E71C270140071AD00643CF1 /* Icon.png */; };
 		2E71C278140071AD00643CF1 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E71C271140071AD00643CF1 /* Icon@2x.png */; };
 		2E71C279140071AD00643CF1 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E71C272140071AD00643CF1 /* iTunesArtwork.png */; };
-		2E8CDF9114016132004F9664 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E85DB7F13FFF70A00BDF580 /* AudioToolbox.framework */; };
-		2E8CDF9214016132004F9664 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E85DB8313FFF72700BDF580 /* Cocoa.framework */; };
-		2E8CDF9314016132004F9664 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E85DB8513FFF72E00BDF580 /* CoreAudio.framework */; };
-		2E8CDF9414016132004F9664 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E85DB8713FFF73700BDF580 /* CoreMIDI.framework */; };
-		2E8CDF9514016132004F9664 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8CDF8114015F2F004F9664 /* QuartzCore.framework */; };
 		2EA0858513FDA9E30051A437 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA0858413FDA9E30051A437 /* CoreText.framework */; };
 		2EA085BE13FDADB10051A437 /* AudioOutput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0858D13FDADB10051A437 /* AudioOutput.cpp */; };
 		2EA085BF13FDADB10051A437 /* AudioOutput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0858D13FDADB10051A437 /* AudioOutput.cpp */; };
@@ -99,6 +94,13 @@
 		2EA0863F13FDAE070051A437 /* RootFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861E13FDAE070051A437 /* RootFinder.cpp */; };
 		2EA0864013FDAE070051A437 /* State.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861F13FDAE070051A437 /* State.cpp */; };
 		2EA0864113FDAE070051A437 /* State.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0861F13FDAE070051A437 /* State.cpp */; };
+		2EBD8D9F140DC77D00D7059C /* libJuceAmalgamiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EBD8D39140DC5F700D7059C /* libJuceAmalgamiOS.a */; };
+		2EBD8DA5140DC81300D7059C /* libJuceAmalgamMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EBD8D37140DC5F700D7059C /* libJuceAmalgamMac.a */; };
+		2EBD8DBA140DC96000D7059C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E85DB7F13FFF70A00BDF580 /* AudioToolbox.framework */; };
+		2EBD8DBB140DC96000D7059C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E85DB8313FFF72700BDF580 /* Cocoa.framework */; };
+		2EBD8DBC140DC96000D7059C /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E85DB8513FFF72E00BDF580 /* CoreAudio.framework */; };
+		2EBD8DBD140DC96000D7059C /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E85DB8713FFF73700BDF580 /* CoreMIDI.framework */; };
+		2EBD8DBE140DC96000D7059C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8CDF8114015F2F004F9664 /* QuartzCore.framework */; };
 		2ED2A10513FCD38B00750A4E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED2A10413FCD38B00750A4E /* QuartzCore.framework */; };
 		2ED2A10713FCD39100750A4E /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED2A10613FCD39100750A4E /* OpenGLES.framework */; };
 		2ED2A10913FCD3AF00750A4E /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED2A10813FCD3AF00750A4E /* CoreMIDI.framework */; };
@@ -107,43 +109,27 @@
 		2ED2A11113FCD51800750A4E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED2A11013FCD51700750A4E /* Foundation.framework */; };
 		2ED2A11313FCD51F00750A4E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED2A11213FCD51F00750A4E /* CoreGraphics.framework */; };
 		2ED2A11913FCD60100750A4E /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED2A11813FCD60100750A4E /* AudioToolbox.framework */; };
-		2EF9D3921401F2CC0047B433 /* libJuceAmalgamMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EFDB5461401F0AC00399F13 /* libJuceAmalgamMac.a */; };
-		2EF9D3931401F2CE0047B433 /* libJuceAmalgamiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EFDB5481401F0AC00399F13 /* libJuceAmalgamiOS.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		2EFDB5451401F0AC00399F13 /* PBXContainerItemProxy */ = {
+		2EBD8D36140DC5F700D7059C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2E12A8601401667D00A67805 /* JuceAmalgam.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 2E8CA87113FE087400A86A48;
 			remoteInfo = "Juce Amalgam Mac";
 		};
-		2EFDB5471401F0AC00399F13 /* PBXContainerItemProxy */ = {
+		2EBD8D38140DC5F700D7059C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2E12A8601401667D00A67805 /* JuceAmalgam.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 2EAB695313FE29B00001C68F;
 			remoteInfo = "Juce Amalgam iOS";
 		};
-		2EFDB5561401F2A900399F13 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2E12A8601401667D00A67805 /* JuceAmalgam.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 2E8CA87013FE087400A86A48;
-			remoteInfo = "Juce Amalgam Mac";
-		};
-		2EFDB5581401F2AD00399F13 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2E12A8601401667D00A67805 /* JuceAmalgam.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 2EAB695213FE29B00001C68F;
-			remoteInfo = "Juce Amalgam iOS";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2E12A8601401667D00A67805 /* JuceAmalgam.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = JuceAmalgam.xcodeproj; path = ../../Juce/Builds/XCode4/JuceAmalgam.xcodeproj; sourceTree = "<group>"; };
+		2E12A8601401667D00A67805 /* JuceAmalgam.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = JuceAmalgam.xcodeproj; path = ../../../Volumes/Code/Dev/repos/dspfilterscpp/Juce/Builds/XCode4/JuceAmalgam.xcodeproj; sourceTree = SDKROOT; };
 		2E60CAD013FF63650088FA2C /* Mac.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Mac.icns; sourceTree = "<group>"; };
 		2E71C26C140071AD00643CF1 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "iOS Icons/Icon-72.png"; sourceTree = "<group>"; };
 		2E71C26D140071AD00643CF1 /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small-50.png"; path = "iOS Icons/Icon-Small-50.png"; sourceTree = "<group>"; };
@@ -272,12 +258,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EF9D3921401F2CC0047B433 /* libJuceAmalgamMac.a in Frameworks */,
-				2E8CDF9114016132004F9664 /* AudioToolbox.framework in Frameworks */,
-				2E8CDF9214016132004F9664 /* Cocoa.framework in Frameworks */,
-				2E8CDF9314016132004F9664 /* CoreAudio.framework in Frameworks */,
-				2E8CDF9414016132004F9664 /* CoreMIDI.framework in Frameworks */,
-				2E8CDF9514016132004F9664 /* QuartzCore.framework in Frameworks */,
+				2EBD8DA5140DC81300D7059C /* libJuceAmalgamMac.a in Frameworks */,
+				2EBD8DBA140DC96000D7059C /* AudioToolbox.framework in Frameworks */,
+				2EBD8DBB140DC96000D7059C /* Cocoa.framework in Frameworks */,
+				2EBD8DBC140DC96000D7059C /* CoreAudio.framework in Frameworks */,
+				2EBD8DBD140DC96000D7059C /* CoreMIDI.framework in Frameworks */,
+				2EBD8DBE140DC96000D7059C /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,7 +271,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EF9D3931401F2CE0047B433 /* libJuceAmalgamiOS.a in Frameworks */,
+				2EBD8D9F140DC77D00D7059C /* libJuceAmalgamiOS.a in Frameworks */,
 				2EA0858513FDA9E30051A437 /* CoreText.framework in Frameworks */,
 				2ED2A11913FCD60100750A4E /* AudioToolbox.framework in Frameworks */,
 				2ED2A11313FCD51F00750A4E /* CoreGraphics.framework in Frameworks */,
@@ -359,6 +345,15 @@
 				2ED2A11213FCD51F00750A4E /* CoreGraphics.framework */,
 			);
 			name = iOS;
+			sourceTree = "<group>";
+		};
+		2EBD8D32140DC5F700D7059C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2EBD8D37140DC5F700D7059C /* libJuceAmalgamMac.a */,
+				2EBD8D39140DC5F700D7059C /* libJuceAmalgamiOS.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		2ED29FAA13FCC0F900750A4E = {
@@ -501,15 +496,6 @@
 			name = source;
 			sourceTree = "<group>";
 		};
-		2EFDB5411401F0AC00399F13 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				2EFDB5461401F0AC00399F13 /* libJuceAmalgamMac.a */,
-				2EFDB5481401F0AC00399F13 /* libJuceAmalgamiOS.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -524,7 +510,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				2EFDB5571401F2A900399F13 /* PBXTargetDependency */,
 			);
 			name = "DSP Filters Demo Mac";
 			productName = "DspFilters Demo";
@@ -542,7 +527,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				2EFDB5591401F2AD00399F13 /* PBXTargetDependency */,
 			);
 			name = "DSP Filters Demo iOS";
 			productName = "DspFilters Demo iOS";
@@ -570,7 +554,7 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 2EFDB5411401F0AC00399F13 /* Products */;
+					ProductGroup = 2EBD8D32140DC5F700D7059C /* Products */;
 					ProjectRef = 2E12A8601401667D00A67805 /* JuceAmalgam.xcodeproj */;
 				},
 			);
@@ -583,18 +567,18 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		2EFDB5461401F0AC00399F13 /* libJuceAmalgamMac.a */ = {
+		2EBD8D37140DC5F700D7059C /* libJuceAmalgamMac.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libJuceAmalgamMac.a;
-			remoteRef = 2EFDB5451401F0AC00399F13 /* PBXContainerItemProxy */;
+			remoteRef = 2EBD8D36140DC5F700D7059C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		2EFDB5481401F0AC00399F13 /* libJuceAmalgamiOS.a */ = {
+		2EBD8D39140DC5F700D7059C /* libJuceAmalgamiOS.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libJuceAmalgamiOS.a;
-			remoteRef = 2EFDB5471401F0AC00399F13 /* PBXContainerItemProxy */;
+			remoteRef = 2EBD8D38140DC5F700D7059C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -719,26 +703,13 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		2EFDB5571401F2A900399F13 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "Juce Amalgam Mac";
-			targetProxy = 2EFDB5561401F2A900399F13 /* PBXContainerItemProxy */;
-		};
-		2EFDB5591401F2AD00399F13 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "Juce Amalgam iOS";
-			targetProxy = 2EFDB5581401F2AD00399F13 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin XCBuildConfiguration section */
 		2ED29FD113FCC0FA00750A4E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Vincent Falco (945CEYZ684)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				EXECUTABLE_PREFIX = app;
@@ -756,7 +727,7 @@
 					"JUCE_UNIT_TESTS=1",
 					"$(inherited)",
 				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_THREADSAFE_STATICS = NO;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -770,8 +741,10 @@
 				MACOSX_DEPLOYMENT_TARGET = "";
 				"MACOSX_DEPLOYMENT_TARGET[arch=i386]" = 10.4;
 				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = 10.5;
+				OTHER_LDFLAGS = "-ObjC";
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				PRODUCT_NAME = "DSP Filters";
+				PROVISIONING_PROFILE = "71F2438B-C93E-4754-813F-995529DDE3B2";
 				SDKROOT = macosx10.6;
 				STRIP_INSTALLED_PRODUCT = NO;
 				WARNING_CFLAGS = "-Wreorder";
@@ -783,7 +756,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Vincent Falco (945CEYZ684)";
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -802,7 +775,7 @@
 					"JUCE_ObjCExtraSuffix=",
 					"$(inherited)",
 				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_THREADSAFE_STATICS = NO;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -816,8 +789,10 @@
 				MACOSX_DEPLOYMENT_TARGET = "";
 				"MACOSX_DEPLOYMENT_TARGET[arch=i386]" = 10.4;
 				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = 10.5;
+				OTHER_LDFLAGS = "-ObjC";
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				PRODUCT_NAME = "DSP Filters";
+				PROVISIONING_PROFILE = "71F2438B-C93E-4754-813F-995529DDE3B2";
 				SDKROOT = macosx10.6;
 				SEPARATE_STRIP = YES;
 				STRIP_INSTALLED_PRODUCT = YES;
@@ -828,14 +803,30 @@
 		2ED29FD413FCC0FA00750A4E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)/../MacOSX10.6.sdk/System/Library/Frameworks\"",
+				);
 				INFOPLIST_FILE = MacInfo.plist;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../../../XCode4Data/DerivedData/DspFilters-bmeubrbrrslcslapurczyzfjspxh/Build/Products/Debug\"",
+				);
 			};
 			name = Debug;
 		};
 		2ED29FD513FCC0FA00750A4E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)/../MacOSX10.6.sdk/System/Library/Frameworks\"",
+				);
 				INFOPLIST_FILE = MacInfo.plist;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../../../XCode4Data/DerivedData/DspFilters-bmeubrbrrslcslapurczyzfjspxh/Build/Products/Debug\"",
+				);
 			};
 			name = Release;
 		};
