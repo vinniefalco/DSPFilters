@@ -15,7 +15,7 @@
 		2E71C277140071AD00643CF1 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E71C270140071AD00643CF1 /* Icon.png */; };
 		2E71C278140071AD00643CF1 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E71C271140071AD00643CF1 /* Icon@2x.png */; };
 		2E71C279140071AD00643CF1 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E71C272140071AD00643CF1 /* iTunesArtwork.png */; };
-		2E7DB5BA140DFE03009FE107 /* libDSPFilters.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7DB521140DFC0C009FE107 /* libDSPFilters.a */; };
+		2E7DB5BA140DFE03009FE107 /* libDSPFiltersMacOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7DB521140DFC0C009FE107 /* libDSPFiltersMacOS.a */; };
 		2E7DB5BD140DFE14009FE107 /* libDSPFiltersiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7DB5B7140DFDC3009FE107 /* libDSPFiltersiOS.a */; };
 		2E8BDA02140DF0AE00D4A3AF /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8BDA00140DF0A400D4A3AF /* AudioToolbox.framework */; };
 		2E8BDA03140DF0AE00D4A3AF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8BD9FE140DF09E00D4A3AF /* Cocoa.framework */; };
@@ -235,7 +235,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2E7DB5BA140DFE03009FE107 /* libDSPFilters.a in Frameworks */,
+				2E7DB5BA140DFE03009FE107 /* libDSPFiltersMacOS.a in Frameworks */,
 				2EBD8DA5140DC81300D7059C /* libJuceAmalgamMac.a in Frameworks */,
 				2E8BDA02140DF0AE00D4A3AF /* AudioToolbox.framework in Frameworks */,
 				2E8BDA03140DF0AE00D4A3AF /* Cocoa.framework in Frameworks */,
@@ -325,7 +325,7 @@
 		2E7DB51A140DFC0C009FE107 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2E7DB521140DFC0C009FE107 /* libDSPFilters.a */,
+				2E7DB521140DFC0C009FE107 /* libDSPFiltersMacOS.a */,
 				2E7DB5B7140DFDC3009FE107 /* libDSPFiltersiOS.a */,
 			);
 			name = Products;
@@ -515,10 +515,10 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		2E7DB521140DFC0C009FE107 /* libDSPFilters.a */ = {
+		2E7DB521140DFC0C009FE107 /* libDSPFiltersMacOS.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = libDSPFilters.a;
+			path = libDSPFiltersMacOS.a;
 			remoteRef = 2E7DB520140DFC0C009FE107 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -672,7 +672,7 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					../../Juce,
-					"../../include/**",
+					../../DSPFilters/include,
 				);
 				PRODUCT_NAME = "DSP Filters";
 				SDKROOT = macosx10.6;
@@ -695,7 +695,7 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					../../Juce,
-					"../../include/**",
+					../../DSPFilters/include,
 				);
 				PRODUCT_NAME = "DSP Filters";
 				SDKROOT = macosx10.6;

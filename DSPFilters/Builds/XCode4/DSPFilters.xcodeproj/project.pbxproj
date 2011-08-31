@@ -98,46 +98,46 @@
 		2E7DB538140DFC44009FE107 /* SharedMacOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedMacOS.xcconfig; sourceTree = "<group>"; };
 		2E7DB539140DFC44009FE107 /* SharedRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedRelease.xcconfig; sourceTree = "<group>"; };
 		2E7DB53A140DFC44009FE107 /* SharedReleaseApp.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SharedReleaseApp.xcconfig; sourceTree = "<group>"; };
-		2E7DB53D140DFCA9009FE107 /* Bessel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Bessel.cpp; path = ../../source/Bessel.cpp; sourceTree = "<group>"; };
-		2E7DB53E140DFCA9009FE107 /* Biquad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Biquad.cpp; path = ../../source/Biquad.cpp; sourceTree = "<group>"; };
-		2E7DB53F140DFCA9009FE107 /* Butterworth.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Butterworth.cpp; path = ../../source/Butterworth.cpp; sourceTree = "<group>"; };
-		2E7DB540140DFCA9009FE107 /* Cascade.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Cascade.cpp; path = ../../source/Cascade.cpp; sourceTree = "<group>"; };
-		2E7DB541140DFCA9009FE107 /* ChebyshevI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChebyshevI.cpp; path = ../../source/ChebyshevI.cpp; sourceTree = "<group>"; };
-		2E7DB542140DFCA9009FE107 /* ChebyshevII.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChebyshevII.cpp; path = ../../source/ChebyshevII.cpp; sourceTree = "<group>"; };
-		2E7DB543140DFCA9009FE107 /* Custom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Custom.cpp; path = ../../source/Custom.cpp; sourceTree = "<group>"; };
-		2E7DB544140DFCA9009FE107 /* Design.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Design.cpp; path = ../../source/Design.cpp; sourceTree = "<group>"; };
-		2E7DB545140DFCA9009FE107 /* Documentation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Documentation.cpp; path = ../../source/Documentation.cpp; sourceTree = "<group>"; };
-		2E7DB546140DFCA9009FE107 /* Elliptic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Elliptic.cpp; path = ../../source/Elliptic.cpp; sourceTree = "<group>"; };
-		2E7DB547140DFCA9009FE107 /* Filter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Filter.cpp; path = ../../source/Filter.cpp; sourceTree = "<group>"; };
-		2E7DB548140DFCA9009FE107 /* Legendre.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Legendre.cpp; path = ../../source/Legendre.cpp; sourceTree = "<group>"; };
-		2E7DB549140DFCA9009FE107 /* Param.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Param.cpp; path = ../../source/Param.cpp; sourceTree = "<group>"; };
-		2E7DB54A140DFCA9009FE107 /* PoleFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PoleFilter.cpp; path = ../../source/PoleFilter.cpp; sourceTree = "<group>"; };
-		2E7DB54B140DFCA9009FE107 /* RBJ.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RBJ.cpp; path = ../../source/RBJ.cpp; sourceTree = "<group>"; };
-		2E7DB54C140DFCA9009FE107 /* RootFinder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RootFinder.cpp; path = ../../source/RootFinder.cpp; sourceTree = "<group>"; };
-		2E7DB54D140DFCA9009FE107 /* State.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = State.cpp; path = ../../source/State.cpp; sourceTree = "<group>"; };
-		2E7DB54E140DFCA9009FE107 /* Bessel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bessel.h; path = ../../include/DspFilters/Bessel.h; sourceTree = "<group>"; };
-		2E7DB54F140DFCA9009FE107 /* Biquad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Biquad.h; path = ../../include/DspFilters/Biquad.h; sourceTree = "<group>"; };
-		2E7DB550140DFCA9009FE107 /* Butterworth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Butterworth.h; path = ../../include/DspFilters/Butterworth.h; sourceTree = "<group>"; };
-		2E7DB551140DFCA9009FE107 /* Cascade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cascade.h; path = ../../include/DspFilters/Cascade.h; sourceTree = "<group>"; };
-		2E7DB552140DFCA9009FE107 /* ChebyshevI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChebyshevI.h; path = ../../include/DspFilters/ChebyshevI.h; sourceTree = "<group>"; };
-		2E7DB553140DFCA9009FE107 /* ChebyshevII.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChebyshevII.h; path = ../../include/DspFilters/ChebyshevII.h; sourceTree = "<group>"; };
-		2E7DB554140DFCA9009FE107 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Common.h; path = ../../include/DspFilters/Common.h; sourceTree = "<group>"; };
-		2E7DB555140DFCA9009FE107 /* Custom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Custom.h; path = ../../include/DspFilters/Custom.h; sourceTree = "<group>"; };
-		2E7DB556140DFCA9009FE107 /* Design.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Design.h; path = ../../include/DspFilters/Design.h; sourceTree = "<group>"; };
-		2E7DB557140DFCA9009FE107 /* Dsp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Dsp.h; path = ../../include/DspFilters/Dsp.h; sourceTree = "<group>"; };
-		2E7DB558140DFCA9009FE107 /* Elliptic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Elliptic.h; path = ../../include/DspFilters/Elliptic.h; sourceTree = "<group>"; };
-		2E7DB559140DFCA9009FE107 /* Filter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Filter.h; path = ../../include/DspFilters/Filter.h; sourceTree = "<group>"; };
-		2E7DB55A140DFCA9009FE107 /* Layout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Layout.h; path = ../../include/DspFilters/Layout.h; sourceTree = "<group>"; };
-		2E7DB55B140DFCA9009FE107 /* Legendre.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Legendre.h; path = ../../include/DspFilters/Legendre.h; sourceTree = "<group>"; };
-		2E7DB55C140DFCA9009FE107 /* MathSupplement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MathSupplement.h; path = ../../include/DspFilters/MathSupplement.h; sourceTree = "<group>"; };
-		2E7DB55D140DFCA9009FE107 /* Params.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Params.h; path = ../../include/DspFilters/Params.h; sourceTree = "<group>"; };
-		2E7DB55E140DFCA9009FE107 /* PoleFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PoleFilter.h; path = ../../include/DspFilters/PoleFilter.h; sourceTree = "<group>"; };
-		2E7DB55F140DFCA9009FE107 /* RBJ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RBJ.h; path = ../../include/DspFilters/RBJ.h; sourceTree = "<group>"; };
-		2E7DB560140DFCA9009FE107 /* RootFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RootFinder.h; path = ../../include/DspFilters/RootFinder.h; sourceTree = "<group>"; };
-		2E7DB561140DFCA9009FE107 /* SmoothedFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmoothedFilter.h; path = ../../include/DspFilters/SmoothedFilter.h; sourceTree = "<group>"; };
-		2E7DB562140DFCA9009FE107 /* State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = State.h; path = ../../include/DspFilters/State.h; sourceTree = "<group>"; };
-		2E7DB563140DFCA9009FE107 /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Types.h; path = ../../include/DspFilters/Types.h; sourceTree = "<group>"; };
-		2E7DB564140DFCA9009FE107 /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../include/DspFilters/Utilities.h; sourceTree = "<group>"; };
+		2E7DB53D140DFCA9009FE107 /* Bessel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Bessel.cpp; path = ../../DSPFilters/source/Bessel.cpp; sourceTree = "<group>"; };
+		2E7DB53E140DFCA9009FE107 /* Biquad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Biquad.cpp; sourceTree = "<group>"; };
+		2E7DB53F140DFCA9009FE107 /* Butterworth.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Butterworth.cpp; sourceTree = "<group>"; };
+		2E7DB540140DFCA9009FE107 /* Cascade.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cascade.cpp; sourceTree = "<group>"; };
+		2E7DB541140DFCA9009FE107 /* ChebyshevI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChebyshevI.cpp; sourceTree = "<group>"; };
+		2E7DB542140DFCA9009FE107 /* ChebyshevII.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChebyshevII.cpp; sourceTree = "<group>"; };
+		2E7DB543140DFCA9009FE107 /* Custom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Custom.cpp; sourceTree = "<group>"; };
+		2E7DB544140DFCA9009FE107 /* Design.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Design.cpp; sourceTree = "<group>"; };
+		2E7DB545140DFCA9009FE107 /* Documentation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Documentation.cpp; sourceTree = "<group>"; };
+		2E7DB546140DFCA9009FE107 /* Elliptic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Elliptic.cpp; sourceTree = "<group>"; };
+		2E7DB547140DFCA9009FE107 /* Filter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Filter.cpp; sourceTree = "<group>"; };
+		2E7DB548140DFCA9009FE107 /* Legendre.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Legendre.cpp; sourceTree = "<group>"; };
+		2E7DB549140DFCA9009FE107 /* Param.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Param.cpp; sourceTree = "<group>"; };
+		2E7DB54A140DFCA9009FE107 /* PoleFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PoleFilter.cpp; sourceTree = "<group>"; };
+		2E7DB54B140DFCA9009FE107 /* RBJ.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RBJ.cpp; sourceTree = "<group>"; };
+		2E7DB54C140DFCA9009FE107 /* RootFinder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RootFinder.cpp; sourceTree = "<group>"; };
+		2E7DB54D140DFCA9009FE107 /* State.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = State.cpp; sourceTree = "<group>"; };
+		2E7DB54E140DFCA9009FE107 /* Bessel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bessel.h; path = ../../DSPFilters/include/DspFilters/Bessel.h; sourceTree = "<group>"; };
+		2E7DB54F140DFCA9009FE107 /* Biquad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Biquad.h; path = ../../DSPFilters/include/DspFilters/Biquad.h; sourceTree = "<group>"; };
+		2E7DB550140DFCA9009FE107 /* Butterworth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Butterworth.h; path = ../../DSPFilters/include/DspFilters/Butterworth.h; sourceTree = "<group>"; };
+		2E7DB551140DFCA9009FE107 /* Cascade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cascade.h; path = ../../DSPFilters/include/DspFilters/Cascade.h; sourceTree = "<group>"; };
+		2E7DB552140DFCA9009FE107 /* ChebyshevI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChebyshevI.h; path = ../../DSPFilters/include/DspFilters/ChebyshevI.h; sourceTree = "<group>"; };
+		2E7DB553140DFCA9009FE107 /* ChebyshevII.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChebyshevII.h; path = ../../DSPFilters/include/DspFilters/ChebyshevII.h; sourceTree = "<group>"; };
+		2E7DB554140DFCA9009FE107 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Common.h; path = ../../DSPFilters/include/DspFilters/Common.h; sourceTree = "<group>"; };
+		2E7DB555140DFCA9009FE107 /* Custom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Custom.h; path = ../../DSPFilters/include/DspFilters/Custom.h; sourceTree = "<group>"; };
+		2E7DB556140DFCA9009FE107 /* Design.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Design.h; path = ../../DSPFilters/include/DspFilters/Design.h; sourceTree = "<group>"; };
+		2E7DB557140DFCA9009FE107 /* Dsp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Dsp.h; path = ../../DSPFilters/include/DspFilters/Dsp.h; sourceTree = "<group>"; };
+		2E7DB558140DFCA9009FE107 /* Elliptic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Elliptic.h; path = ../../DSPFilters/include/DspFilters/Elliptic.h; sourceTree = "<group>"; };
+		2E7DB559140DFCA9009FE107 /* Filter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Filter.h; path = ../../DSPFilters/include/DspFilters/Filter.h; sourceTree = "<group>"; };
+		2E7DB55A140DFCA9009FE107 /* Layout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Layout.h; path = ../../DSPFilters/include/DspFilters/Layout.h; sourceTree = "<group>"; };
+		2E7DB55B140DFCA9009FE107 /* Legendre.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Legendre.h; path = ../../DSPFilters/include/DspFilters/Legendre.h; sourceTree = "<group>"; };
+		2E7DB55C140DFCA9009FE107 /* MathSupplement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MathSupplement.h; path = ../../DSPFilters/include/DspFilters/MathSupplement.h; sourceTree = "<group>"; };
+		2E7DB55D140DFCA9009FE107 /* Params.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Params.h; path = ../../DSPFilters/include/DspFilters/Params.h; sourceTree = "<group>"; };
+		2E7DB55E140DFCA9009FE107 /* PoleFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PoleFilter.h; path = ../../DSPFilters/include/DspFilters/PoleFilter.h; sourceTree = "<group>"; };
+		2E7DB55F140DFCA9009FE107 /* RBJ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RBJ.h; path = ../../DSPFilters/include/DspFilters/RBJ.h; sourceTree = "<group>"; };
+		2E7DB560140DFCA9009FE107 /* RootFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RootFinder.h; path = ../../DSPFilters/include/DspFilters/RootFinder.h; sourceTree = "<group>"; };
+		2E7DB561140DFCA9009FE107 /* SmoothedFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmoothedFilter.h; path = ../../DSPFilters/include/DspFilters/SmoothedFilter.h; sourceTree = "<group>"; };
+		2E7DB562140DFCA9009FE107 /* State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = State.h; path = ../../DSPFilters/include/DspFilters/State.h; sourceTree = "<group>"; };
+		2E7DB563140DFCA9009FE107 /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Types.h; path = ../../DSPFilters/include/DspFilters/Types.h; sourceTree = "<group>"; };
+		2E7DB564140DFCA9009FE107 /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../DSPFilters/include/DspFilters/Utilities.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -213,7 +213,7 @@
 				2E7DB54D140DFCA9009FE107 /* State.cpp */,
 			);
 			name = source;
-			path = ../../../Builds/XCode4;
+			path = ../../source;
 			sourceTree = "<group>";
 		};
 		2E7DB53C140DFCA9009FE107 /* include */ = {
@@ -429,7 +429,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2E7DB536140DFC44009FE107 /* SharedDebug.xcconfig */;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = ../../../include;
+				HEADER_SEARCH_PATHS = ../../include;
 			};
 			name = Debug;
 		};
@@ -437,7 +437,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2E7DB539140DFC44009FE107 /* SharedRelease.xcconfig */;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = ../../../include;
+				HEADER_SEARCH_PATHS = ../../include;
 			};
 			name = Release;
 		};
@@ -505,6 +505,7 @@
 				2E7DB531140DFC22009FE107 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
