@@ -1,0 +1,17 @@
+// Copyright (c) 2009-2011 by Vincent Falco, One Guy Group, Inc.
+// License: MIT License (http://www.opensource.org/licenses/mit-license.php)
+
+//
+// For all iOS targets
+//
+
+// Architectures
+ARCHS = $(ARCHS_STANDARD_32_BIT)
+//SDKROOT = iphoneos4.3 // This breaks "Relative to SDK" framework references
+
+// Deployment
+//MACOSX_DEPLOYMENT_TARGET[sdk=iphonesimulator*][arch=*] = 10.7
+TARGETED_DEVICE_FAMILY = 1,2
+
+// LLVM GCC 4.2 - Code Generation
+GCC_THUMB_SUPPORT = NO
