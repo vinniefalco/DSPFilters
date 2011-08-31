@@ -203,35 +203,13 @@ cat << EOF > "${JUCE}${LIBN}4.cpp";
 EOF
 fi
 
-# first sync the juce amalgamation
+# first sync the juce amalgamation to produce juce_amalgamated.h
 amalgamator "${JUCE}"
 
-# move the juce file aside and do a split template instead
-mv "${JUCE}${AMAL}${NAME}_template.cpp" "${JUCE}${AMAL}${NAME}_orig.cpp"
-
-# amalgamate split sources
-
-sed "s/_template/_orig/" "${JUCE}${AMAL}${NAME}1.cpp" > "${JUCE}${AMAL}${NAME}_template.cpp"
-amalgamator "${JUCE}"
-mv "${JUCE}${NAME}.cpp" "${JUCE}${NAME}1.cpp"
-
-sed "s/_template/_orig/" "${JUCE}${AMAL}${NAME}2.cpp" > "${JUCE}${AMAL}${NAME}_template.cpp"
-amalgamator "${JUCE}"
-mv "${JUCE}${NAME}.cpp" "${JUCE}${NAME}2.cpp"
-
-sed "s/_template/_orig/" "${JUCE}${AMAL}${NAME}3.cpp" > "${JUCE}${AMAL}${NAME}_template.cpp"
-amalgamator "${JUCE}"
-mv "${JUCE}${NAME}.cpp" "${JUCE}${NAME}3.cpp"
-
-sed "s/_template/_orig/" "${JUCE}${AMAL}${NAME}4.cpp" > "${JUCE}${AMAL}${NAME}_template.cpp"
-amalgamator "${JUCE}"
-mv "${JUCE}${NAME}.cpp" "${JUCE}${NAME}4.cpp"
-
-# put the juce file back
-rm -rf "${JUCE}${NAME}_template.cpp"
-mv "${JUCE}${AMAL}${NAME}_orig.cpp" "${JUCE}${AMAL}${NAME}_template.cpp"
-
-# re-create the original juce amalgamation
-amalgamator "${JUCE}"
+# Now produce a split amalgamation
+amalgamator "${JUCE}${AMAL}${NAME}_template.h" "${JUCE}${AMAL}${NAME}1.cpp" "${JUCE}${NAME}1.cpp" -d
+amalgamator "${JUCE}${AMAL}${NAME}_template.h" "${JUCE}${AMAL}${NAME}2.cpp" "${JUCE}${NAME}2.cpp" -d
+amalgamator "${JUCE}${AMAL}${NAME}_template.h" "${JUCE}${AMAL}${NAME}3.cpp" "${JUCE}${NAME}3.cpp" -d
+amalgamator "${JUCE}${AMAL}${NAME}_template.h" "${JUCE}${AMAL}${NAME}4.cpp" "${JUCE}${NAME}4.cpp" -d
 
 # done
