@@ -13,6 +13,9 @@
     <Filter Include="source">
       <UniqueIdentifier>{d91f486e-13ac-45e0-85e3-2f68f2606006}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_props %28shared project settings%29">
+      <UniqueIdentifier>{6ae11444-9f43-4612-8a34-a7be1213cc65}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\AudioOutput.cpp">
@@ -172,5 +175,16 @@
     <ClInclude Include="..\..\source\Common.h">
       <Filter>_precompile</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\user\settings\VisualStudio2010\Shared.props">
+      <Filter>_props %28shared project settings%29</Filter>
+    </None>
+    <None Include="..\..\..\..\user\settings\VisualStudio2010\SharedRelease.props">
+      <Filter>_props %28shared project settings%29</Filter>
+    </None>
+    <None Include="..\..\..\..\user\settings\VisualStudio2010\SharedDebug.props">
+      <Filter>_props %28shared project settings%29</Filter>
+    </None>
   </ItemGroup>
 </Project>

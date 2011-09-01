@@ -282,6 +282,17 @@
     <ClInclude Include="..\..\source\StepResponseChart.h" />
     <ClInclude Include="..\..\source\ThreadQueue.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\user\settings\VisualStudio2010\Shared.props">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\..\..\user\settings\VisualStudio2010\SharedDebug.props">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\..\..\user\settings\VisualStudio2010\SharedRelease.props">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{AC67FAA8-EFEF-4253-A6BB-C8F4FC9FA1C9}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -309,23 +320,23 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\JuceAmalgam\Builds\VisualStudio2010\Shared.props" />
-    <Import Project="..\..\..\JuceAmalgam\Builds\VisualStudio2010\SharedDebug.props" />
+    <Import Project="../../../../user/settings/VisualStudio2010/Shared.props" />
+    <Import Project="../../../../user/settings/VisualStudio2010/SharedDebug.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\JuceAmalgam\Builds\VisualStudio2010\Shared.props" />
-    <Import Project="..\..\..\JuceAmalgam\Builds\VisualStudio2010\SharedDebug.props" />
+    <Import Project="../../../../user/settings/VisualStudio2010/Shared.props" />
+    <Import Project="../../../../user/settings/VisualStudio2010/SharedDebug.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\JuceAmalgam\Builds\VisualStudio2010\Shared.props" />
-    <Import Project="..\..\..\JuceAmalgam\Builds\VisualStudio2010\SharedRelease.props" />
+    <Import Project="../../../../user/settings/VisualStudio2010/Shared.props" />
+    <Import Project="../../../../user/settings/VisualStudio2010/SharedRelease.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\JuceAmalgam\Builds\VisualStudio2010\Shared.props" />
-    <Import Project="..\..\..\JuceAmalgam\Builds\VisualStudio2010\SharedRelease.props" />
+    <Import Project="../../../../user/settings/VisualStudio2010/Shared.props" />
+    <Import Project="../../../../user/settings/VisualStudio2010/SharedRelease.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
