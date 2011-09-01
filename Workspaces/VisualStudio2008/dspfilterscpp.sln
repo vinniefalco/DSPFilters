@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DSPFilters", "..\..\DSPFilters\Builds\VisualStudio2008\DSPFilters.vcproj", "{7A2D3B5F-F3DC-47C5-A8FC-B9C93BC4C9C3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JuceAmalgam", "..\..\JuceAmalgam\Builds\VisualStudio2008\JuceAmalgam.vcproj", "{2969E55E-9E0C-4FB4-8A8F-4EFE43545A7F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DSPFiltersDemo", "..\..\DSPFiltersDemo\Builds\VisualStudio2008\DSPFiltersDemo.vcproj", "{37D09807-6674-47B5-AEF5-9D043466C4C5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2969E55E-9E0C-4FB4-8A8F-4EFE43545A7F} = {2969E55E-9E0C-4FB4-8A8F-4EFE43545A7F}
+		{7A2D3B5F-F3DC-47C5-A8FC-B9C93BC4C9C3} = {7A2D3B5F-F3DC-47C5-A8FC-B9C93BC4C9C3}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7A2D3B5F-F3DC-47C5-A8FC-B9C93BC4C9C3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7A2D3B5F-F3DC-47C5-A8FC-B9C93BC4C9C3}.Debug|Win32.Build.0 = Debug|Win32
+		{7A2D3B5F-F3DC-47C5-A8FC-B9C93BC4C9C3}.Release|Win32.ActiveCfg = Release|Win32
+		{7A2D3B5F-F3DC-47C5-A8FC-B9C93BC4C9C3}.Release|Win32.Build.0 = Release|Win32
+		{2969E55E-9E0C-4FB4-8A8F-4EFE43545A7F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2969E55E-9E0C-4FB4-8A8F-4EFE43545A7F}.Debug|Win32.Build.0 = Debug|Win32
+		{2969E55E-9E0C-4FB4-8A8F-4EFE43545A7F}.Release|Win32.ActiveCfg = Release|Win32
+		{2969E55E-9E0C-4FB4-8A8F-4EFE43545A7F}.Release|Win32.Build.0 = Release|Win32
+		{37D09807-6674-47B5-AEF5-9D043466C4C5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{37D09807-6674-47B5-AEF5-9D043466C4C5}.Debug|Win32.Build.0 = Debug|Win32
+		{37D09807-6674-47B5-AEF5-9D043466C4C5}.Release|Win32.ActiveCfg = Release|Win32
+		{37D09807-6674-47B5-AEF5-9D043466C4C5}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

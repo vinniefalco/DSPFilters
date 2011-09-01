@@ -1,0 +1,22 @@
+Note that Visual Studio 2010 has a bug with "Link library dependencies":
+
+https://connect.microsoft.com/VisualStudio/feedback/details/576146/link-library-dependencies-for-c-does-not-work-with-batch-build
+
+http://qualapps.blogspot.com/2010/04/static-library-dependencies-in-visual.html
+
+http://www.google.com/search?q=visual+studio+2010+%22link+library+dependencies%22+bug&ie=utf-8&oe=utf-8&aq=t&rls=org.mozilla:en-US:official&client=firefox-a
+
+In theory, making DSPFiltersDemo dependent on DSPFilters and JuceAmalgam
+projects should automatically link in the relevant outputs (with the right
+setting for "Additional Library Directories").
+
+Unfortunately, this bug prevents it from working. Therefore, the
+DSPFiltersDemo project has this setting for all targets
+
+Linker->General->Input->Additional Dependencies:
+  $(OutDir)JuceAmalgam.lib
+  $(OutDir)DSPFilters.lib
+
+The use of $(OutDir) makes sure that the lib corresponding to the
+current Target and Platform is used. Shared.props has a pair of User Macros
+under Common Properties that set up the paths to the output directory.

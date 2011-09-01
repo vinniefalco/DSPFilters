@@ -3,13 +3,14 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
     <OutputsDir>$(SolutionDir)$(SolutionName)-Output\</OutputsDir>
-    <BuildsDir>$(OutputsDir)Builds\</BuildsDir>
+    <ProductsDir>$(OutputsDir)Products\</ProductsDir>
   </PropertyGroup>
   <PropertyGroup>
-    <OutDir>$(BuildsDir)$(Platform)$(Configuration)\</OutDir>
+    <OutDir>$(ProductsDir)$(Platform)$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup>
     <IntDir>$(OutputsDir)Intermediates\$(ProjectName)-$(Platform)$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -20,14 +21,15 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProductsDir)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <BuildMacro Include="OutputsDir">
       <Value>$(OutputsDir)</Value>
     </BuildMacro>
-    <BuildMacro Include="BuildsDir">
-      <Value>$(BuildsDir)</Value>
+    <BuildMacro Include="ProductsDir">
+      <Value>$(ProductsDir)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>

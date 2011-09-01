@@ -282,9 +282,6 @@
     <ClInclude Include="..\..\source\StepResponseChart.h" />
     <ClInclude Include="..\..\source\ThreadQueue.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\JuceAmalgam\Builds\VisualStudio2010\JuceAmalgam.vcxproj" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{AC67FAA8-EFEF-4253-A6BB-C8F4FC9FA1C9}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -331,15 +328,11 @@
     <Import Project="..\..\..\JuceAmalgam\Builds\VisualStudio2010\SharedRelease.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
-  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
@@ -353,7 +346,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>$(BuildsDir)$(Platform)$(Configuration)\JuceAmalgam.lib;$(BuildsDir)$(Platform)$(Configuration)\DSPFilters.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(OutDir)JuceAmalgam.lib;$(OutDir)DSPFilters.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -365,7 +358,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>$(BuildsDir)$(Platform)$(Configuration)\JuceAmalgam.lib;$(BuildsDir)$(Platform)$(Configuration)\DSPFilters.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(OutDir)JuceAmalgam.lib;$(OutDir)DSPFilters.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -381,7 +374,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>$(BuildsDir)$(Platform)$(Configuration)\JuceAmalgam.lib;$(BuildsDir)$(Platform)$(Configuration)\DSPFilters.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(OutDir)JuceAmalgam.lib;$(OutDir)DSPFilters.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -397,7 +390,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>$(BuildsDir)$(Platform)$(Configuration)\JuceAmalgam.lib;$(BuildsDir)$(Platform)$(Configuration)\DSPFilters.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(OutDir)JuceAmalgam.lib;$(OutDir)DSPFilters.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

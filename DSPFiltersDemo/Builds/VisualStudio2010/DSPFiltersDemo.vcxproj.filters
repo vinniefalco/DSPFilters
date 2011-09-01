@@ -173,7 +173,4 @@
       <Filter>_precompile</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\JuceAmalgam\Builds\VisualStudio2010\JuceAmalgam.vcxproj" />
-  </ItemGroup>
 </Project>
