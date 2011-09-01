@@ -147,12 +147,6 @@
 		2E71C270140071AD00643CF1 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = "iOS Icons/Icon.png"; sourceTree = SOURCE_ROOT; };
 		2E71C271140071AD00643CF1 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "iOS Icons/Icon@2x.png"; sourceTree = SOURCE_ROOT; };
 		2E71C272140071AD00643CF1 /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iTunesArtwork.png; path = "iOS Icons/iTunesArtwork.png"; sourceTree = SOURCE_ROOT; };
-		2E7DB4F2140DFB83009FE107 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Shared.xcconfig; path = ../../../JuceAmalgam/Builds/XCode4/xcconfigs/Shared.xcconfig; sourceTree = SOURCE_ROOT; };
-		2E7DB4F3140DFB83009FE107 /* SharedDebug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharedDebug.xcconfig; path = ../../../JuceAmalgam/Builds/XCode4/xcconfigs/SharedDebug.xcconfig; sourceTree = SOURCE_ROOT; };
-		2E7DB4F4140DFB83009FE107 /* SharediOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharediOS.xcconfig; path = ../../../JuceAmalgam/Builds/XCode4/xcconfigs/SharediOS.xcconfig; sourceTree = SOURCE_ROOT; };
-		2E7DB4F5140DFB83009FE107 /* SharedMacOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharedMacOS.xcconfig; path = ../../../JuceAmalgam/Builds/XCode4/xcconfigs/SharedMacOS.xcconfig; sourceTree = SOURCE_ROOT; };
-		2E7DB4F6140DFB83009FE107 /* SharedRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharedRelease.xcconfig; path = ../../../JuceAmalgam/Builds/XCode4/xcconfigs/SharedRelease.xcconfig; sourceTree = SOURCE_ROOT; };
-		2E7DB4F7140DFB83009FE107 /* SharedReleaseApp.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharedReleaseApp.xcconfig; path = ../../../JuceAmalgam/Builds/XCode4/xcconfigs/SharedReleaseApp.xcconfig; sourceTree = SOURCE_ROOT; };
 		2E8BD9E6140DF02F00D4A3AF /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		2E8BD9E8140DF03600D4A3AF /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = System/Library/Frameworks/QuickTime.framework; sourceTree = SDKROOT; };
 		2E8BD9EA140DF03C00D4A3AF /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -228,6 +222,12 @@
 		2EA256B913FF049400285FA2 /* MacInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = MacInfo.plist; sourceTree = SOURCE_ROOT; };
 		2ED29FB513FCC0FA00750A4E /* DSP Filters.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "DSP Filters.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2ED2A08613FCD1FC00750A4E /* DSP Filters.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "DSP Filters.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2EF3B47D140F5095002CE947 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Shared.xcconfig; path = ../../../../user/settings/XCode4/Shared.xcconfig; sourceTree = SOURCE_ROOT; };
+		2EF3B47E140F5095002CE947 /* SharedDebug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharedDebug.xcconfig; path = ../../../../user/settings/XCode4/SharedDebug.xcconfig; sourceTree = SOURCE_ROOT; };
+		2EF3B47F140F5095002CE947 /* SharediOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharediOS.xcconfig; path = ../../../../user/settings/XCode4/SharediOS.xcconfig; sourceTree = SOURCE_ROOT; };
+		2EF3B480140F5095002CE947 /* SharedMacOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharedMacOS.xcconfig; path = ../../../../user/settings/XCode4/SharedMacOS.xcconfig; sourceTree = SOURCE_ROOT; };
+		2EF3B481140F5095002CE947 /* SharedRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharedRelease.xcconfig; path = ../../../../user/settings/XCode4/SharedRelease.xcconfig; sourceTree = SOURCE_ROOT; };
+		2EF3B482140F5095002CE947 /* SharedReleaseApp.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharedReleaseApp.xcconfig; path = ../../../../user/settings/XCode4/SharedReleaseApp.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -309,19 +309,6 @@
 			name = Icons;
 			sourceTree = "<group>";
 		};
-		2E7DB4F1140DFB83009FE107 /* xcconfigs */ = {
-			isa = PBXGroup;
-			children = (
-				2E7DB4F2140DFB83009FE107 /* Shared.xcconfig */,
-				2E7DB4F3140DFB83009FE107 /* SharedDebug.xcconfig */,
-				2E7DB4F4140DFB83009FE107 /* SharediOS.xcconfig */,
-				2E7DB4F5140DFB83009FE107 /* SharedMacOS.xcconfig */,
-				2E7DB4F6140DFB83009FE107 /* SharedRelease.xcconfig */,
-				2E7DB4F7140DFB83009FE107 /* SharedReleaseApp.xcconfig */,
-			);
-			path = xcconfigs;
-			sourceTree = "<group>";
-		};
 		2E99FC1E140E09D500E59548 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -362,10 +349,10 @@
 			isa = PBXGroup;
 			children = (
 				2ED29FDC13FCC27400750A4E /* source */,
-				2E7DB4F1140DFB83009FE107 /* xcconfigs */,
 				2E4C101B140DE20A0050ABF8 /* MacOS */,
 				2EA084AD13FCDE920051A437 /* iOS */,
 				2ED29FB613FCC0FA00750A4E /* Products */,
+				2EF3B47C140F5095002CE947 /* xcconfigs (shared build settings) */,
 				2E99FC18140E09C500E59548 /* DSPFilters.xcodeproj */,
 				2E99FCCF140E8CD600E59548 /* JuceAmalgam.xcodeproj */,
 			);
@@ -435,6 +422,20 @@
 			);
 			name = source;
 			sourceTree = "<group>";
+		};
+		2EF3B47C140F5095002CE947 /* xcconfigs (shared build settings) */ = {
+			isa = PBXGroup;
+			children = (
+				2EF3B47D140F5095002CE947 /* Shared.xcconfig */,
+				2EF3B47E140F5095002CE947 /* SharedDebug.xcconfig */,
+				2EF3B47F140F5095002CE947 /* SharediOS.xcconfig */,
+				2EF3B480140F5095002CE947 /* SharedMacOS.xcconfig */,
+				2EF3B481140F5095002CE947 /* SharedRelease.xcconfig */,
+				2EF3B482140F5095002CE947 /* SharedReleaseApp.xcconfig */,
+			);
+			name = "xcconfigs (shared build settings)";
+			path = ../../../Builds/XCode4/xcconfigs;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -657,7 +658,7 @@
 /* Begin XCBuildConfiguration section */
 		2ED29FD113FCC0FA00750A4E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2E7DB4F3140DFB83009FE107 /* SharedDebug.xcconfig */;
+			baseConfigurationReference = 2EF3B47E140F5095002CE947 /* SharedDebug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				EXECUTABLE_PREFIX = app;
@@ -681,7 +682,7 @@
 		};
 		2ED29FD213FCC0FA00750A4E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2E7DB4F7140DFB83009FE107 /* SharedReleaseApp.xcconfig */;
+			baseConfigurationReference = 2EF3B481140F5095002CE947 /* SharedRelease.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				EXECUTABLE_PREFIX = app;
@@ -704,7 +705,7 @@
 		};
 		2ED29FD413FCC0FA00750A4E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2E7DB4F5140DFB83009FE107 /* SharedMacOS.xcconfig */;
+			baseConfigurationReference = 2EF3B480140F5095002CE947 /* SharedMacOS.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = MacInfo.plist;
 			};
@@ -712,7 +713,7 @@
 		};
 		2ED29FD513FCC0FA00750A4E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2E7DB4F5140DFB83009FE107 /* SharedMacOS.xcconfig */;
+			baseConfigurationReference = 2EF3B480140F5095002CE947 /* SharedMacOS.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = MacInfo.plist;
 			};
@@ -720,7 +721,7 @@
 		};
 		2ED2A0A913FCD1FC00750A4E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2E7DB4F4140DFB83009FE107 /* SharediOS.xcconfig */;
+			baseConfigurationReference = 2EF3B47F140F5095002CE947 /* SharediOS.xcconfig */;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -734,7 +735,7 @@
 		};
 		2ED2A0AA13FCD1FC00750A4E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2E7DB4F4140DFB83009FE107 /* SharediOS.xcconfig */;
+			baseConfigurationReference = 2EF3B47F140F5095002CE947 /* SharediOS.xcconfig */;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
