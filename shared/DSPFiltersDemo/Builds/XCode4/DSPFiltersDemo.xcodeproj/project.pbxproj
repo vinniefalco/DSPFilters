@@ -682,7 +682,7 @@
 		};
 		2ED29FD213FCC0FA00750A4E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2EF3B481140F5095002CE947 /* SharedRelease.xcconfig */;
+			baseConfigurationReference = 2EF3B482140F5095002CE947 /* SharedReleaseApp.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				EXECUTABLE_PREFIX = app;
