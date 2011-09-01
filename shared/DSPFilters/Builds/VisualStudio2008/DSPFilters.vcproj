@@ -19,8 +19,9 @@
 		<Configuration
 			Name="Debug|Win32"
 			ConfigurationType="4"
-			InheritedPropertySheets="..\..\..\JuceAmalgam\Builds\VisualStudio2008\SharedDebug.vsprops"
+			InheritedPropertySheets="..\..\..\..\user\settings\VisualStudio2008\SharedDebug.vsprops"
 			CharacterSet="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -74,9 +75,9 @@
 		<Configuration
 			Name="Release|Win32"
 			ConfigurationType="4"
-			InheritedPropertySheets="..\..\..\JuceAmalgam\Builds\VisualStudio2008\SharedRelease.vsprops"
+			InheritedPropertySheets="..\..\..\..\user\settings\VisualStudio2008\SharedRelease.vsprops"
 			CharacterSet="1"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -275,10 +276,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\JuceAmalgam\Builds\VisualStudio2008\JuceAmalgam.vcproj"
-				>
-			</File>
-			<File
 				RelativePath="..\..\source\Legendre.cpp"
 				>
 			</File>
@@ -300,6 +297,22 @@
 			</File>
 			<File
 				RelativePath="..\..\source\State.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="_vsprops (shared project settings)"
+			>
+			<File
+				RelativePath="..\..\..\..\user\settings\VisualStudio2008\Shared.vsprops"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\user\settings\VisualStudio2008\SharedDebug.vsprops"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\user\settings\VisualStudio2008\SharedRelease.vsprops"
 				>
 			</File>
 		</Filter>

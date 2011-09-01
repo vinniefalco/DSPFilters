@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="Shared"
-	OutputDirectory="$(ProductsDir)$(ConfigurationName)\"
+	OutputDirectory="$(ProductsDir)$(ConfigurationName)"
 	IntermediateDirectory="$(OutputsDir)Intermediates\$(ProjectName)-$(ConfigurationName)\"
 	>
 	<Tool

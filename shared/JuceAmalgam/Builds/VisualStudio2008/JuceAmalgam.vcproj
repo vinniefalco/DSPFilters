@@ -19,8 +19,9 @@
 		<Configuration
 			Name="Debug|Win32"
 			ConfigurationType="4"
-			InheritedPropertySheets=".\SharedDebug.vsprops"
+			InheritedPropertySheets="..\..\..\..\user\settings\VisualStudio2008\SharedDebug.vsprops"
 			CharacterSet="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -73,9 +74,9 @@
 		<Configuration
 			Name="Release|Win32"
 			ConfigurationType="4"
-			InheritedPropertySheets=".\SharedRelease.vsprops"
+			InheritedPropertySheets="..\..\..\..\user\settings\VisualStudio2008\SharedRelease.vsprops"
 			CharacterSet="1"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -133,15 +134,15 @@
 			Name="_vsprops (shared project settings)"
 			>
 			<File
-				RelativePath=".\Shared.vsprops"
+				RelativePath="..\..\..\..\user\settings\VisualStudio2008\Shared.vsprops"
 				>
 			</File>
 			<File
-				RelativePath=".\SharedDebug.vsprops"
+				RelativePath="..\..\..\..\user\settings\VisualStudio2008\SharedDebug.vsprops"
 				>
 			</File>
 			<File
-				RelativePath=".\SharedRelease.vsprops"
+				RelativePath="..\..\..\..\user\settings\VisualStudio2008\SharedRelease.vsprops"
 				>
 			</File>
 		</Filter>
