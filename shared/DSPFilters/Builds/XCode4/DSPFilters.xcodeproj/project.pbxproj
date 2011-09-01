@@ -163,8 +163,8 @@
 			children = (
 				2E7DB53C140DFCA9009FE107 /* include */,
 				2E7DB53B140DFCA9009FE107 /* source */,
-				2E7DB504140DFBDF009FE107 /* Products */,
 				2EF3B475140F5059002CE947 /* xcconfigs (shared build settings) */,
+				2E7DB504140DFBDF009FE107 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
