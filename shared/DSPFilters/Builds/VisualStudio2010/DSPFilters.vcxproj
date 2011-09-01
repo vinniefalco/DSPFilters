@@ -181,6 +181,7 @@
     <None Include="..\..\..\..\user\settings\VisualStudio2010\SharedRelease.props">
       <FileType>Document</FileType>
     </None>
+    <None Include="..\..\..\DSPFiltersDemo\Builds\VisualStudio2010\DSPFiltersDemo.vcxproj" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

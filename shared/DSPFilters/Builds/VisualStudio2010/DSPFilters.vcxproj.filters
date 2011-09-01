@@ -147,5 +147,6 @@
     <None Include="..\..\..\..\user\settings\VisualStudio2010\SharedDebug.props">
       <Filter>_props %28shared project settings%29</Filter>
     </None>
+    <None Include="..\..\..\DSPFiltersDemo\Builds\VisualStudio2010\DSPFiltersDemo.vcxproj" />
   </ItemGroup>
 </Project>
