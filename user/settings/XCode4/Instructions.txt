@@ -1,0 +1,66 @@
+Instructions for copying .xcconfig files to share build settings:
+
+XCode 4.1 is very finicky when you copy a group reference (yellow folder icon in a project)
+into another project. Most of the time the group and its children lose their Location settings.
+Therefore, if you want to copy the xcconfigs group reference into another project you must
+follow these instructions:
+
+How to copy the xcconfigs group reference into another project safely:
+
+1) With the Utilities Panel open (pane on the right of the workspace), select the xcconfigs
+     group folder you want to copy and observe that Location is "Relative to Project." If not,
+     change it to "Relative to Project".
+
+2) Now, select all of the children (files with .xcconfig extensions) in the xcconfigs group you
+     want to copy and make sure the Location in the Utilities panel is set to "Relative to Project."
+     If not, change it to "Relative to Project" and make sure each file is properly located by
+     its displayed Full Path.
+
+3) Once you have confirmed that the group and its children are all "Relative to Project", drag
+     the group reference only, into the destination project. When the dialog appears, choose
+     "Create groups for any added folders" and uncheck all the boxes for "Add to targets."
+
+4) The group reference will appear in the destination, but you need to repeat steps 1 and 2
+     in the newly copied group reference to make sure that all of the Location settings are on
+     "Relative to Project." If you don't do this, then if you copy that group in the future the
+     references will become absolute paths and eventually break someone's build.
+
+5) Select your project in the Navigator (left panel), and choose the project under Projects to
+     display the settings. On the Info tab, expand everything under Configurations, set everything
+     "None" if it is not already on None.
+
+6) For each Configuration, choose the appropriate xcconfig file:
+
+     Debug: SharedDebug.xcconfig
+     iOS Target: SharediOS.xcconfig
+     MacOS Target: SharedMacOS.xcconfig
+
+     If your project is a static library then choose
+     Release: SharedRelease.xcconfig
+
+     If your target is an application then choose
+     Release: SharedReleaseApp.xcconfig
+
+The SharedReleaseApp.xcconfig settings will strip debug symbols from the resulting binary
+while preserving the dSYM file in case you need to debug a release build later. You will need
+to manually delete the dSYM from your final distribution .app, unless you want to fool with
+adding another target just to do that (I don't recommend it).
+
+For some reason, XCode tends to change these settings when a group is copied. I've tried
+all combinations of Location settings and copy options but nothing seems to preserve the
+"Relative to Project" Location property when copying a group reference to another project.
+
+If anyone can provide information on this, it would be great. I think its a bug in XCode 4.1.
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+To use your own copy of the .xcconfig files instead of the ones that come with DSPFilters,
+first make a copy of the directory containing the .xcconfig files. Then, instead of checking out
+the trunk of dspfilterscpp, check out trunk/shared. In the directory containing this working
+copy, create a directory called "user" and replicate the directory structure of the "trunk/user"
+directory in the dspfilterscpp repo, except that your copy is either not source controlled, or
+checked into your own repo. Now you can change the .xcconfig files to suit your needs, and
+DSPFilters, JuceAmalgam, and DSPFiltersDemo will use your files instead.
+
+To get maximum effect, you will want to change your own projects to use these new shared
+build settings.
