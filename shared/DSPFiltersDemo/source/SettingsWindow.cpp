@@ -65,7 +65,6 @@ SettingsWindow::SettingsWindow ()
 
 SettingsWindow::~SettingsWindow()
 {
-  deleteAllChildren ();
 }
 
 void SettingsWindow::closeButtonPressed()
