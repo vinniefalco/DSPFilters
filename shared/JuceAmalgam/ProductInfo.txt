@@ -1,0 +1,5 @@
+This Product builds the Juce application framework using an amalgamation.
+The amalgamation is all of the Juce source files concatenated together
+intelligently and broken up into multiple files to be compile-friendly.
+
+Juce is licensed separately, please see the accompanying file License.txt
