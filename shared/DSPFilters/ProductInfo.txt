@@ -1,0 +1,2 @@
+This product provides the DSPFilters library and class templates, a
+collection of classes that implement digital signal filters.
