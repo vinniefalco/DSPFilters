@@ -1,0 +1,1 @@
+#include "juce_data_structures_amalgam.cpp"

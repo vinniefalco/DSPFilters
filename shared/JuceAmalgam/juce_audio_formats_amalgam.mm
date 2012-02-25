@@ -1,0 +1,1 @@
+#include "juce_audio_formats_amalgam.cpp"

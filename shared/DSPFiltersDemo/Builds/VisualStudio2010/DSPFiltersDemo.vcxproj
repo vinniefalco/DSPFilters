@@ -357,7 +357,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>$(OutDir)JuceAmalgam.lib;$(OutDir)DSPFilters.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(OutDir)JuceAmalgam.lib;$(OutDir)DSPFilters.lib;ws2_32.lib;winmm.lib;wininet.lib;vfw32.lib;imm32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -385,7 +385,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>$(OutDir)JuceAmalgam.lib;$(OutDir)DSPFilters.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(OutDir)JuceAmalgam.lib;$(OutDir)DSPFilters.lib;ws2_32.lib;winmm.lib;wininet.lib;vfw32.lib;imm32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

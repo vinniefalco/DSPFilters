@@ -97,39 +97,24 @@
     <ClCompile />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\JuceLibraryCode1.cpp" />
-    <ClCompile Include="..\..\JuceLibraryCode2.cpp" />
-    <ClCompile Include="..\..\JuceLibraryCode3.cpp" />
-    <ClCompile Include="..\..\JuceLibraryCode4.cpp" />
-    <ClCompile Include="..\..\juce_amalgamated1.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\juce_amalgamated2.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\juce_amalgamated3.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\juce_amalgamated4.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\juce_audio_basics_amalgam.cpp" />
+    <ClCompile Include="..\..\juce_audio_devices_amalgam.cpp" />
+    <ClCompile Include="..\..\juce_audio_formats_amalgam.cpp" />
+    <ClCompile Include="..\..\juce_audio_processors_amalgam.cpp" />
+    <ClCompile Include="..\..\juce_audio_utils_amalgam.cpp" />
+    <ClCompile Include="..\..\juce_core_amalgam.cpp" />
+    <ClCompile Include="..\..\juce_cryptography_amalgam.cpp" />
+    <ClCompile Include="..\..\juce_data_structures_amalgam.cpp" />
+    <ClCompile Include="..\..\juce_events_amalgam.cpp" />
+    <ClCompile Include="..\..\juce_graphics_amalgam.cpp" />
+    <ClCompile Include="..\..\juce_gui_basics_amalgam.cpp" />
+    <ClCompile Include="..\..\juce_gui_extra_amalgam.cpp" />
+    <ClCompile Include="..\..\juce_opengl_amalgam.cpp" />
+    <ClCompile Include="..\..\juce_video_amalgam.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\AppConfig.h" />
     <ClInclude Include="..\..\JuceHeader.h" />
-    <ClInclude Include="..\..\juce_amalgamated.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="../../../../user/settings/VisualStudio2010/Shared.props" />

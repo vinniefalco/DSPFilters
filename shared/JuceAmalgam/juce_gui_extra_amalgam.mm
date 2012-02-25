@@ -1,0 +1,1 @@
+#include "juce_gui_extra_amalgam.cpp"
