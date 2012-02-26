@@ -1,11 +1,11 @@
 /* bypass certain compile time usage checks */
-#define JUCE_AMALGAMATED_INCLUDE
+#define JUCE_AMALGAMATED_INCLUDE 1
 
 #include "AppConfig.h"
 
 
 /*** Start of inlined file: juce_cryptography.cpp ***/
-#if defined (__JUCE_CRYPTOGRAPHY_JUCEHEADER__) && ! defined(JUCE_AMALGAMATED_INCLUDE)
+#if defined (__JUCE_CRYPTOGRAPHY_JUCEHEADER__) && ! JUCE_AMALGAMATED_INCLUDE
  /* When you add this cpp file to your project, you mustn't include it in a file where you've
 	already included any other headers - just put it inside a file on its own, possibly with your config
 	flags preceding it, but don't include anything else. That also includes avoiding any automatic prefix
@@ -18695,6 +18695,8 @@ public:
 		e.g. calling "withParameter ("amount", "some fish") for the url "www.fish.com"
 		would produce a new url whose toString(true) method would return
 		"www.fish.com?amount=some+fish".
+
+		@see getParameterNames, getParameterValues
 	*/
 	URL withParameter (const String& parameterName,
 					   const String& parameterValue) const;
@@ -18711,16 +18713,31 @@ public:
 						  const File& fileToUpload,
 						  const String& mimeType) const;
 
-	/** Returns a set of all the parameters encoded into the url.
+	/** Returns an array of the names of all the URL's parameters.
 
 		E.g. for the url "www.fish.com?type=haddock&amount=some+fish", this array would
-		contain two pairs: "type" => "haddock" and "amount" => "some fish".
+		contain two items: "type" and "haddock".
+
+		You can call getParameterValues() to get the corresponding value of each
+		parameter. Note that the list can contain multiple parameters with the same name.
+
+		@see getParameterValues, withParameter
+	*/
+	const StringArray& getParameterNames() const noexcept       { return parameterNames; }
+
+	/** Returns an array of the values of all the URL's parameters.
+
+		E.g. for the url "www.fish.com?type=haddock&amount=some+fish", this array would
+		contain two items: "haddock" and "some fish".
 
 		The values returned will have been cleaned up to remove any escape characters.
 
-		@see getNamedParameter, withParameter
+		You can call getParameterNames() to get the corresponding name of each
+		parameter. Note that the list can contain multiple parameters with the same name.
+
+		@see getParameterNames, withParameter
 	*/
-	const StringPairArray& getParameters() const;
+	const StringArray& getParameterValues() const noexcept      { return parameterValues; }
 
 	/** Returns the set of files that should be uploaded as part of a POST operation.
 
@@ -18747,9 +18764,8 @@ public:
 	*/
 	URL withPOSTData (const String& postData) const;
 
-	/** Returns the data that was set using withPOSTData().
-	*/
-	String getPostData() const                            { return postData; }
+	/** Returns the data that was set using withPOSTData(). */
+	const String& getPostData() const noexcept                  { return postData; }
 
 	/** Tries to launch the system's default browser to open the URL.
 
@@ -18875,7 +18891,10 @@ public:
 private:
 
 	String url, postData;
-	StringPairArray parameters, filesToUpload, mimeTypes;
+	StringArray parameterNames, parameterValues;
+	StringPairArray filesToUpload, mimeTypes;
+
+	void addParameter (const String&, const String&);
 
 	static InputStream* createNativeStream (const String& address, bool isPost, const MemoryBlock& postData,
 											OpenStreamProgressCallback* progressCallback,

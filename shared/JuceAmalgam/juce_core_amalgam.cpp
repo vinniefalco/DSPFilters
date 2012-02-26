@@ -1,11 +1,11 @@
 /* bypass certain compile time usage checks */
-#define JUCE_AMALGAMATED_INCLUDE
+#define JUCE_AMALGAMATED_INCLUDE 1
 
 #include "AppConfig.h"
 
 
 /*** Start of inlined file: juce_core.cpp ***/
-#if defined (__JUCE_CORE_JUCEHEADER__) && ! defined(JUCE_AMALGAMATED_INCLUDE)
+#if defined (__JUCE_CORE_JUCEHEADER__) && ! JUCE_AMALGAMATED_INCLUDE
  /* When you add this cpp file to your project, you mustn't include it in a file where you've
 	already included any other headers - just put it inside a file on its own, possibly with your config
 	flags preceding it, but don't include anything else. That also includes avoiding any automatic prefix
@@ -18876,6 +18876,8 @@ public:
 		e.g. calling "withParameter ("amount", "some fish") for the url "www.fish.com"
 		would produce a new url whose toString(true) method would return
 		"www.fish.com?amount=some+fish".
+
+		@see getParameterNames, getParameterValues
 	*/
 	URL withParameter (const String& parameterName,
 					   const String& parameterValue) const;
@@ -18892,16 +18894,31 @@ public:
 						  const File& fileToUpload,
 						  const String& mimeType) const;
 
-	/** Returns a set of all the parameters encoded into the url.
+	/** Returns an array of the names of all the URL's parameters.
 
 		E.g. for the url "www.fish.com?type=haddock&amount=some+fish", this array would
-		contain two pairs: "type" => "haddock" and "amount" => "some fish".
+		contain two items: "type" and "haddock".
+
+		You can call getParameterValues() to get the corresponding value of each
+		parameter. Note that the list can contain multiple parameters with the same name.
+
+		@see getParameterValues, withParameter
+	*/
+	const StringArray& getParameterNames() const noexcept       { return parameterNames; }
+
+	/** Returns an array of the values of all the URL's parameters.
+
+		E.g. for the url "www.fish.com?type=haddock&amount=some+fish", this array would
+		contain two items: "haddock" and "some fish".
 
 		The values returned will have been cleaned up to remove any escape characters.
 
-		@see getNamedParameter, withParameter
+		You can call getParameterNames() to get the corresponding name of each
+		parameter. Note that the list can contain multiple parameters with the same name.
+
+		@see getParameterNames, withParameter
 	*/
-	const StringPairArray& getParameters() const;
+	const StringArray& getParameterValues() const noexcept      { return parameterValues; }
 
 	/** Returns the set of files that should be uploaded as part of a POST operation.
 
@@ -18928,9 +18945,8 @@ public:
 	*/
 	URL withPOSTData (const String& postData) const;
 
-	/** Returns the data that was set using withPOSTData().
-	*/
-	String getPostData() const                            { return postData; }
+	/** Returns the data that was set using withPOSTData(). */
+	const String& getPostData() const noexcept                  { return postData; }
 
 	/** Tries to launch the system's default browser to open the URL.
 
@@ -19056,7 +19072,10 @@ public:
 private:
 
 	String url, postData;
-	StringPairArray parameters, filesToUpload, mimeTypes;
+	StringArray parameterNames, parameterValues;
+	StringPairArray filesToUpload, mimeTypes;
+
+	void addParameter (const String&, const String&);
 
 	static InputStream* createNativeStream (const String& address, bool isPost, const MemoryBlock& postData,
 											OpenStreamProgressCallback* progressCallback,
@@ -29508,13 +29527,13 @@ URL::URL (const String& url_)
 			{
 				if (nextAmp < 0)
 				{
-					parameters.set (removeEscapeChars (url.substring (i + 1, equalsPos)),
-									removeEscapeChars (url.substring (equalsPos + 1)));
+					addParameter (removeEscapeChars (url.substring (i + 1, equalsPos)),
+								  removeEscapeChars (url.substring (equalsPos + 1)));
 				}
 				else if (nextAmp > 0 && equalsPos < nextAmp)
 				{
-					parameters.set (removeEscapeChars (url.substring (i + 1, equalsPos)),
-									removeEscapeChars (url.substring (equalsPos + 1, nextAmp)));
+					addParameter (removeEscapeChars (url.substring (i + 1, equalsPos)),
+								  removeEscapeChars (url.substring (equalsPos + 1, nextAmp)));
 				}
 			}
 
@@ -29529,7 +29548,8 @@ URL::URL (const String& url_)
 URL::URL (const URL& other)
 	: url (other.url),
 	  postData (other.postData),
-	  parameters (other.parameters),
+	  parameterNames (other.parameterNames),
+	  parameterValues (other.parameterValues),
 	  filesToUpload (other.filesToUpload),
 	  mimeTypes (other.mimeTypes)
 {
@@ -29539,7 +29559,8 @@ URL& URL::operator= (const URL& other)
 {
 	url = other.url;
 	postData = other.postData;
-	parameters = other.parameters;
+	parameterNames = other.parameterNames;
+	parameterValues = other.parameterValues;
 	filesToUpload = other.filesToUpload;
 	mimeTypes = other.mimeTypes;
 
@@ -29550,7 +29571,8 @@ bool URL::operator== (const URL& other) const
 {
 	return url == other.url
 		&& postData == other.postData
-		&& parameters == other.parameters
+		&& parameterNames == other.parameterNames
+		&& parameterValues == other.parameterValues
 		&& filesToUpload == other.filesToUpload
 		&& mimeTypes == other.mimeTypes;
 }
@@ -29566,18 +29588,19 @@ URL::~URL()
 
 namespace URLHelpers
 {
-	String getMangledParameters (const StringPairArray& parameters)
+	String getMangledParameters (const URL& url)
 	{
+		jassert (url.getParameterNames().size() == url.getParameterValues().size());
 		String p;
 
-		for (int i = 0; i < parameters.size(); ++i)
+		for (int i = 0; i < url.getParameterNames().size(); ++i)
 		{
 			if (i > 0)
 				p << '&';
 
-			p << URL::addEscapeChars (parameters.getAllKeys() [i], true)
+			p << URL::addEscapeChars (url.getParameterNames()[i], true)
 			  << '='
-			  << URL::addEscapeChars (parameters.getAllValues() [i], true);
+			  << URL::addEscapeChars (url.getParameterValues()[i], true);
 		}
 
 		return p;
@@ -29622,12 +29645,12 @@ namespace URLHelpers
 			data << "--" << boundary;
 
 			int i;
-			for (i = 0; i < url.getParameters().size(); ++i)
+			for (i = 0; i < url.getParameterNames().size(); ++i)
 			{
 				data << "\r\nContent-Disposition: form-data; name=\""
-					 << url.getParameters().getAllKeys() [i]
+					 << url.getParameterNames() [i]
 					 << "\"\r\n\r\n"
-					 << url.getParameters().getAllValues() [i]
+					 << url.getParameterValues() [i]
 					 << "\r\n--"
 					 << boundary;
 			}
@@ -29654,7 +29677,8 @@ namespace URLHelpers
 		}
 		else
 		{
-			data << getMangledParameters (url.getParameters()) << url.getPostData();
+			data << getMangledParameters (url)
+				 << url.getPostData();
 
 			// just a short text attachment, so use simple url encoding..
 			headers << "Content-Type: application/x-www-form-urlencoded\r\nContent-length: "
@@ -29674,10 +29698,16 @@ namespace URLHelpers
 	}
 }
 
+void URL::addParameter (const String& name, const String& value)
+{
+	parameterNames.add (name);
+	parameterValues.add (value);
+}
+
 String URL::toString (const bool includeGetParameters) const
 {
-	if (includeGetParameters && parameters.size() > 0)
-		return url + "?" + URLHelpers::getMangledParameters (parameters);
+	if (includeGetParameters && parameterNames.size() > 0)
+		return url + "?" + URLHelpers::getMangledParameters (*this);
 	else
 		return url;
 }
@@ -29823,7 +29853,7 @@ URL URL::withParameter (const String& parameterName,
 						const String& parameterValue) const
 {
 	URL u (*this);
-	u.parameters.set (parameterName, parameterValue);
+	u.addParameter (parameterName, parameterValue);
 	return u;
 }
 
@@ -29844,11 +29874,6 @@ URL URL::withPOSTData (const String& postData_) const
 	URL u (*this);
 	u.postData = postData_;
 	return u;
-}
-
-const StringPairArray& URL::getParameters() const
-{
-	return parameters;
 }
 
 const StringPairArray& URL::getFilesToUpload() const
