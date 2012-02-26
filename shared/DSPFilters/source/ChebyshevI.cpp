@@ -116,8 +116,8 @@ void AnalogLowShelf::design (int numPoles,
 
     gainDb = -gainDb;
 
-    if (rippleDb >= abs(gainDb))
-      rippleDb = abs (gainDb);
+    if (rippleDb >= fabs(gainDb))
+      rippleDb = fabs (gainDb);
     if (gainDb<0)
       rippleDb = -rippleDb;
 

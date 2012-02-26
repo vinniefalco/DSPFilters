@@ -7,14 +7,32 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2EF3093913FE4F670032484F /* JuceLibraryCode4.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2EF308DB13FE327C0032484F /* JuceLibraryCode4.mm */; };
-		2EF3093C13FE4FC70032484F /* JuceLibraryCode4.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2EF308DB13FE327C0032484F /* JuceLibraryCode4.mm */; };
-		2EF3093D13FE4FF20032484F /* JuceLibraryCode2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2EF308D913FE327C0032484F /* JuceLibraryCode2.mm */; };
-		2EF3093E13FE50930032484F /* JuceLibraryCode2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2EF308D913FE327C0032484F /* JuceLibraryCode2.mm */; };
-		2EF3093F13FE50F50032484F /* JuceLibraryCode1.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2EF308D813FE327C0032484F /* JuceLibraryCode1.mm */; };
-		2EF3094013FE50F50032484F /* JuceLibraryCode3.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2EF308DA13FE327C0032484F /* JuceLibraryCode3.mm */; };
-		2EF3094113FE50F50032484F /* JuceLibraryCode1.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2EF308D813FE327C0032484F /* JuceLibraryCode1.mm */; };
-		2EF3094213FE50F50032484F /* JuceLibraryCode3.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2EF308DA13FE327C0032484F /* JuceLibraryCode3.mm */; };
+		2ED75A9014F9DC8100224863 /* juce_audio_basics_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8314F9DC8100224863 /* juce_audio_basics_amalgam.mm */; };
+		2ED75A9114F9DC8100224863 /* juce_audio_basics_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8314F9DC8100224863 /* juce_audio_basics_amalgam.mm */; };
+		2ED75A9214F9DC8100224863 /* juce_audio_devices_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8414F9DC8100224863 /* juce_audio_devices_amalgam.mm */; };
+		2ED75A9314F9DC8100224863 /* juce_audio_devices_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8414F9DC8100224863 /* juce_audio_devices_amalgam.mm */; };
+		2ED75A9414F9DC8100224863 /* juce_audio_formats_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8514F9DC8100224863 /* juce_audio_formats_amalgam.mm */; };
+		2ED75A9514F9DC8100224863 /* juce_audio_formats_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8514F9DC8100224863 /* juce_audio_formats_amalgam.mm */; };
+		2ED75A9614F9DC8100224863 /* juce_audio_processors_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8614F9DC8100224863 /* juce_audio_processors_amalgam.mm */; };
+		2ED75A9714F9DC8100224863 /* juce_audio_processors_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8614F9DC8100224863 /* juce_audio_processors_amalgam.mm */; };
+		2ED75A9814F9DC8100224863 /* juce_audio_utils_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8714F9DC8100224863 /* juce_audio_utils_amalgam.mm */; };
+		2ED75A9914F9DC8100224863 /* juce_audio_utils_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8714F9DC8100224863 /* juce_audio_utils_amalgam.mm */; };
+		2ED75A9A14F9DC8100224863 /* juce_core_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8814F9DC8100224863 /* juce_core_amalgam.mm */; };
+		2ED75A9B14F9DC8100224863 /* juce_core_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8814F9DC8100224863 /* juce_core_amalgam.mm */; };
+		2ED75A9C14F9DC8100224863 /* juce_cryptography_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8914F9DC8100224863 /* juce_cryptography_amalgam.mm */; };
+		2ED75A9D14F9DC8100224863 /* juce_cryptography_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8914F9DC8100224863 /* juce_cryptography_amalgam.mm */; };
+		2ED75A9E14F9DC8100224863 /* juce_data_structures_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8A14F9DC8100224863 /* juce_data_structures_amalgam.mm */; };
+		2ED75A9F14F9DC8100224863 /* juce_data_structures_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8A14F9DC8100224863 /* juce_data_structures_amalgam.mm */; };
+		2ED75AA014F9DC8100224863 /* juce_events_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8B14F9DC8100224863 /* juce_events_amalgam.mm */; };
+		2ED75AA114F9DC8100224863 /* juce_events_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8B14F9DC8100224863 /* juce_events_amalgam.mm */; };
+		2ED75AA214F9DC8100224863 /* juce_graphics_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8C14F9DC8100224863 /* juce_graphics_amalgam.mm */; };
+		2ED75AA314F9DC8100224863 /* juce_graphics_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8C14F9DC8100224863 /* juce_graphics_amalgam.mm */; };
+		2ED75AA414F9DC8100224863 /* juce_gui_basics_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8D14F9DC8100224863 /* juce_gui_basics_amalgam.mm */; };
+		2ED75AA514F9DC8100224863 /* juce_gui_basics_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75A8D14F9DC8100224863 /* juce_gui_basics_amalgam.mm */; };
+		2ED75ABE14F9DDA300224863 /* juce_opengl_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75ABA14F9DDA300224863 /* juce_opengl_amalgam.mm */; };
+		2ED75ABF14F9DDA300224863 /* juce_opengl_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75ABA14F9DDA300224863 /* juce_opengl_amalgam.mm */; };
+		2ED75AC014F9DDA300224863 /* juce_video_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75ABB14F9DDA300224863 /* juce_video_amalgam.mm */; };
+		2ED75AC114F9DDA300224863 /* juce_video_amalgam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2ED75ABB14F9DDA300224863 /* juce_video_amalgam.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,15 +42,19 @@
 		2EA0869E13FDDCE40051A437 /* AppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppConfig.h; path = ../../AppConfig.h; sourceTree = "<group>"; };
 		2EAB695313FE29B00001C68F /* libJuceAmalgamiOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libJuceAmalgamiOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EB95D971401E41500C9AD72 /* JuceAmalgamator.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = JuceAmalgamator.sh; path = ../../JuceAmalgamator.sh; sourceTree = "<group>"; };
-		2EF308D813FE327C0032484F /* JuceLibraryCode1.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = JuceLibraryCode1.mm; path = ../../JuceLibraryCode1.mm; sourceTree = "<group>"; };
-		2EF308D913FE327C0032484F /* JuceLibraryCode2.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = JuceLibraryCode2.mm; path = ../../JuceLibraryCode2.mm; sourceTree = "<group>"; };
-		2EF308DA13FE327C0032484F /* JuceLibraryCode3.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = JuceLibraryCode3.mm; path = ../../JuceLibraryCode3.mm; sourceTree = "<group>"; };
-		2EF308DB13FE327C0032484F /* JuceLibraryCode4.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = JuceLibraryCode4.mm; path = ../../JuceLibraryCode4.mm; sourceTree = "<group>"; };
-		2EF3090213FE3B400032484F /* juce_amalgamated1.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_amalgamated1.cpp; path = ../../juce_amalgamated1.cpp; sourceTree = "<group>"; };
-		2EF3090313FE3B400032484F /* juce_amalgamated2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_amalgamated2.cpp; path = ../../juce_amalgamated2.cpp; sourceTree = "<group>"; };
-		2EF3090413FE3B400032484F /* juce_amalgamated3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_amalgamated3.cpp; path = ../../juce_amalgamated3.cpp; sourceTree = "<group>"; };
-		2EF3090513FE3B400032484F /* juce_amalgamated4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_amalgamated4.cpp; path = ../../juce_amalgamated4.cpp; sourceTree = "<group>"; };
-		2EF3091813FE3E190032484F /* juce_amalgamated.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_amalgamated.h; path = ../../juce_amalgamated.h; sourceTree = "<group>"; };
+		2ED75A8314F9DC8100224863 /* juce_audio_basics_amalgam.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_audio_basics_amalgam.mm; path = ../../juce_audio_basics_amalgam.mm; sourceTree = "<group>"; };
+		2ED75A8414F9DC8100224863 /* juce_audio_devices_amalgam.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_audio_devices_amalgam.mm; path = ../../juce_audio_devices_amalgam.mm; sourceTree = "<group>"; };
+		2ED75A8514F9DC8100224863 /* juce_audio_formats_amalgam.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_audio_formats_amalgam.mm; path = ../../juce_audio_formats_amalgam.mm; sourceTree = "<group>"; };
+		2ED75A8614F9DC8100224863 /* juce_audio_processors_amalgam.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_audio_processors_amalgam.mm; path = ../../juce_audio_processors_amalgam.mm; sourceTree = "<group>"; };
+		2ED75A8714F9DC8100224863 /* juce_audio_utils_amalgam.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_audio_utils_amalgam.mm; path = ../../juce_audio_utils_amalgam.mm; sourceTree = "<group>"; };
+		2ED75A8814F9DC8100224863 /* juce_core_amalgam.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_core_amalgam.mm; path = ../../juce_core_amalgam.mm; sourceTree = "<group>"; };
+		2ED75A8914F9DC8100224863 /* juce_cryptography_amalgam.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_cryptography_amalgam.mm; path = ../../juce_cryptography_amalgam.mm; sourceTree = "<group>"; };
+		2ED75A8A14F9DC8100224863 /* juce_data_structures_amalgam.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_data_structures_amalgam.mm; path = ../../juce_data_structures_amalgam.mm; sourceTree = "<group>"; };
+		2ED75A8B14F9DC8100224863 /* juce_events_amalgam.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_events_amalgam.mm; path = ../../juce_events_amalgam.mm; sourceTree = "<group>"; };
+		2ED75A8C14F9DC8100224863 /* juce_graphics_amalgam.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_graphics_amalgam.mm; path = ../../juce_graphics_amalgam.mm; sourceTree = "<group>"; };
+		2ED75A8D14F9DC8100224863 /* juce_gui_basics_amalgam.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_gui_basics_amalgam.mm; path = ../../juce_gui_basics_amalgam.mm; sourceTree = "<group>"; };
+		2ED75ABA14F9DDA300224863 /* juce_opengl_amalgam.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_opengl_amalgam.mm; path = ../../juce_opengl_amalgam.mm; sourceTree = "<group>"; };
+		2ED75ABB14F9DDA300224863 /* juce_video_amalgam.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_video_amalgam.mm; path = ../../juce_video_amalgam.mm; sourceTree = "<group>"; };
 		2EF3B445140F4E10002CE947 /* Instructions.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = Instructions.txt; path = ../../../../user/settings/XCode4/Instructions.txt; sourceTree = SOURCE_ROOT; };
 		2EF3B4BB140F6646002CE947 /* Instructions.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = Instructions.txt; path = ../../../../user/settings/XCode4/Instructions.txt; sourceTree = "<group>"; };
 		2EF3B4BC140F6646002CE947 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Shared.xcconfig; path = ../../../../user/settings/XCode4/Shared.xcconfig; sourceTree = "<group>"; };
@@ -64,11 +86,6 @@
 		2E8CA87813FE091E00A86A48 /* Sources (for reference) */ = {
 			isa = PBXGroup;
 			children = (
-				2EF3091813FE3E190032484F /* juce_amalgamated.h */,
-				2EF3090213FE3B400032484F /* juce_amalgamated1.cpp */,
-				2EF3090313FE3B400032484F /* juce_amalgamated2.cpp */,
-				2EF3090413FE3B400032484F /* juce_amalgamated3.cpp */,
-				2EF3090513FE3B400032484F /* juce_amalgamated4.cpp */,
 			);
 			name = "Sources (for reference)";
 			sourceTree = "<group>";
@@ -123,10 +140,19 @@
 		2ED2A06613FCC3CF00750A4E /* Juce */ = {
 			isa = PBXGroup;
 			children = (
-				2EF308D813FE327C0032484F /* JuceLibraryCode1.mm */,
-				2EF308D913FE327C0032484F /* JuceLibraryCode2.mm */,
-				2EF308DA13FE327C0032484F /* JuceLibraryCode3.mm */,
-				2EF308DB13FE327C0032484F /* JuceLibraryCode4.mm */,
+				2ED75A8314F9DC8100224863 /* juce_audio_basics_amalgam.mm */,
+				2ED75ABA14F9DDA300224863 /* juce_opengl_amalgam.mm */,
+				2ED75ABB14F9DDA300224863 /* juce_video_amalgam.mm */,
+				2ED75A8414F9DC8100224863 /* juce_audio_devices_amalgam.mm */,
+				2ED75A8514F9DC8100224863 /* juce_audio_formats_amalgam.mm */,
+				2ED75A8614F9DC8100224863 /* juce_audio_processors_amalgam.mm */,
+				2ED75A8714F9DC8100224863 /* juce_audio_utils_amalgam.mm */,
+				2ED75A8814F9DC8100224863 /* juce_core_amalgam.mm */,
+				2ED75A8914F9DC8100224863 /* juce_cryptography_amalgam.mm */,
+				2ED75A8A14F9DC8100224863 /* juce_data_structures_amalgam.mm */,
+				2ED75A8B14F9DC8100224863 /* juce_events_amalgam.mm */,
+				2ED75A8C14F9DC8100224863 /* juce_graphics_amalgam.mm */,
+				2ED75A8D14F9DC8100224863 /* juce_gui_basics_amalgam.mm */,
 				2E8CA87813FE091E00A86A48 /* Sources (for reference) */,
 			);
 			name = Juce;
@@ -233,10 +259,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EF3093913FE4F670032484F /* JuceLibraryCode4.mm in Sources */,
-				2EF3093D13FE4FF20032484F /* JuceLibraryCode2.mm in Sources */,
-				2EF3094113FE50F50032484F /* JuceLibraryCode1.mm in Sources */,
-				2EF3094213FE50F50032484F /* JuceLibraryCode3.mm in Sources */,
+				2ED75A9014F9DC8100224863 /* juce_audio_basics_amalgam.mm in Sources */,
+				2ED75A9214F9DC8100224863 /* juce_audio_devices_amalgam.mm in Sources */,
+				2ED75A9414F9DC8100224863 /* juce_audio_formats_amalgam.mm in Sources */,
+				2ED75A9614F9DC8100224863 /* juce_audio_processors_amalgam.mm in Sources */,
+				2ED75A9814F9DC8100224863 /* juce_audio_utils_amalgam.mm in Sources */,
+				2ED75A9A14F9DC8100224863 /* juce_core_amalgam.mm in Sources */,
+				2ED75A9C14F9DC8100224863 /* juce_cryptography_amalgam.mm in Sources */,
+				2ED75A9E14F9DC8100224863 /* juce_data_structures_amalgam.mm in Sources */,
+				2ED75AA014F9DC8100224863 /* juce_events_amalgam.mm in Sources */,
+				2ED75AA214F9DC8100224863 /* juce_graphics_amalgam.mm in Sources */,
+				2ED75AA414F9DC8100224863 /* juce_gui_basics_amalgam.mm in Sources */,
+				2ED75ABE14F9DDA300224863 /* juce_opengl_amalgam.mm in Sources */,
+				2ED75AC014F9DDA300224863 /* juce_video_amalgam.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,10 +279,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EF3093C13FE4FC70032484F /* JuceLibraryCode4.mm in Sources */,
-				2EF3093E13FE50930032484F /* JuceLibraryCode2.mm in Sources */,
-				2EF3093F13FE50F50032484F /* JuceLibraryCode1.mm in Sources */,
-				2EF3094013FE50F50032484F /* JuceLibraryCode3.mm in Sources */,
+				2ED75A9114F9DC8100224863 /* juce_audio_basics_amalgam.mm in Sources */,
+				2ED75A9314F9DC8100224863 /* juce_audio_devices_amalgam.mm in Sources */,
+				2ED75A9514F9DC8100224863 /* juce_audio_formats_amalgam.mm in Sources */,
+				2ED75A9714F9DC8100224863 /* juce_audio_processors_amalgam.mm in Sources */,
+				2ED75A9914F9DC8100224863 /* juce_audio_utils_amalgam.mm in Sources */,
+				2ED75A9B14F9DC8100224863 /* juce_core_amalgam.mm in Sources */,
+				2ED75A9D14F9DC8100224863 /* juce_cryptography_amalgam.mm in Sources */,
+				2ED75A9F14F9DC8100224863 /* juce_data_structures_amalgam.mm in Sources */,
+				2ED75AA114F9DC8100224863 /* juce_events_amalgam.mm in Sources */,
+				2ED75AA314F9DC8100224863 /* juce_graphics_amalgam.mm in Sources */,
+				2ED75AA514F9DC8100224863 /* juce_gui_basics_amalgam.mm in Sources */,
+				2ED75ABF14F9DDA300224863 /* juce_opengl_amalgam.mm in Sources */,
+				2ED75AC114F9DDA300224863 /* juce_video_amalgam.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
