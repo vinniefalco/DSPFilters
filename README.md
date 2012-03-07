@@ -39,15 +39,15 @@ need will get linked into your application. Here's a list of features:
 
 Using these filters is easy:
 
-  // Create a Chebyshev type I Band Stop filter of order 3
-  // with state for processing 2 channels of audio.
-  Dsp::SimpleFilter <Dsp::ChebyshevI::BandStop <3>, 2> f;
-  f.setup (3,    // order
-           44100,// sample rate
-           4000, // center frequency
-           880,  // band width
-           1);   // ripple dB
-  f.process (numSamples, arrayOfChannels);
+    // Create a Chebyshev type I Band Stop filter of order 3
+    // with state for processing 2 channels of audio.
+    Dsp::SimpleFilter <Dsp::ChebyshevI::BandStop <3>, 2> f;
+    f.setup (3,    // order
+             44100,// sample rate
+             4000, // center frequency
+             880,  // band width
+             1);   // ripple dB
+    f.process (numSamples, arrayOfChannels);
 
 An accompanying demonstration program that works on most popular
 platforms by using the separately licensed Juce application framework
@@ -68,10 +68,8 @@ C++ Classes for Digital Signal Processing" might have something for you!
 
 ### Terms and Conditions
 DSP Filter library and DSP Demo application Copyright (c) 2009 by Vinnie Falco<br>
-
 Source code is provided under the
-[MIT License][http://www.opensource.org/licenses/mit-license.php]<br>
-
-The [Juce application framework][http://www.rawmaterialsoftware.com] is licensed
-separately, please visit [Raw Material Software][http://rawmaterialsoftware.com]
+[MIT License](http://www.opensource.org/licenses/mit-license.php]<br>)
+The [Juce application framework](http://www.rawmaterialsoftware.com) is licensed
+separately, please visit [Raw Material Software](http://rawmaterialsoftware.com)
 for details.
