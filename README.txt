@@ -1,4 +1,4 @@
-A Collection of Useful C++ Classes for Digital Signal Processing
+# A Collection of Useful C++ Classes for Digital Signal Processing
 
 "Techniques for digital signal processing are well guarded and held close to the chest, as they have valuable applications for multimedia content. The black art of Infinite Impulse Response ("IIR") filtering has remained veiled in secrecy with little publicly available source code...until now."
 
