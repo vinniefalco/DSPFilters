@@ -10,8 +10,8 @@
 
 Building on the work of cherished luminaries such as Sophocles Orfanidis,
 Andreas Antoniou, Martin Holters, and Udo Zolzer, this library harnesses
-the power of C++ templates to solve a useful problem in digital signal
-processing: the realization of multichannel IIR filters of arbitrary order
+the power of C++ templates to solve a useful problem in Digital Signal
+Processing: the realization of multichannel IIR filters of arbitrary order
 and prescribed specifications with various properties such as Butterworth,
 Chebyshev, Elliptic, and Optimum-L (Legendre) responses. The library is
 provided under the MIT license and is therefore fully compatible with
@@ -67,9 +67,9 @@ of audio plugins, or even a VST synthesizer coder, "A Collection of Useful
 C++ Classes for Digital Signal Processing" might have something for you!
 
 ### Terms and Conditions
-DSP Filter library and DSP Demo application Copyright (c) 2009 by Vinnie Falco<br>
+DSP Filters Library and DSP Demo Application Copyright (c) 2009 by
+[Vinnie Falco](http://github.com/vinniefalco)<br>
 Source code is provided under the
-[MIT License](http://www.opensource.org/licenses/mit-license.php]<br>)
-The [Juce application framework](http://www.rawmaterialsoftware.com) is licensed
-separately, please visit [Raw Material Software](http://rawmaterialsoftware.com)
-for details.
+[MIT License](http://www.opensource.org/licenses/mit-license.php])<br>
+The [Juce Library](http://www.rawmaterialsoftware.com) is licensed
+separately, from [Raw Material Software](http://rawmaterialsoftware.com).
