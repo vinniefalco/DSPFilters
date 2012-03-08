@@ -1,3 +1,12 @@
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
 ## A Collection of Useful C++ Classes for Digital Signal Processing
 
 > "Techniques for digital signal processing are well guarded and held
@@ -9,6 +18,8 @@
 <a href="https://github.com/downloads/vinniefalco/DSPFilters/DSPFiltersComplete.zip">
 <img src="https://github.com/vinniefalco/vinniefalco.github.com/raw/master/images/DownloadNow.png">
 </a>
+
+<div class="fb-like" data-href="https://github.com/vinniefalco" data-send="false" data-layout="box_count" data-width="450" data-show-faces="true"></div>
 
 ### What is this?
 
