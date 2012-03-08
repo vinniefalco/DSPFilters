@@ -60,6 +60,12 @@ these features:
 - Charts to show magnitude, phase response and pole/zero placement
 - Thread safety "best practices" for audio applications 
 
+This is the provided DSP Filters Demo application, which demonstrates the
+features of the library and uses the Juce application framework to run on
+all popular platforms:
+
+<img src="https://github.com/vinniefalco/DSPFilters/raw/gh-pages/images/DSPFiltersScreenshot.png">
+
 If you've been searching in futility on the Internet for some source code
 for implementing high order filters, then look no further because this is
 it! Whether you are a student of C++ or digital signal processing, a writer
