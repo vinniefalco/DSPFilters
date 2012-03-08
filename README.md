@@ -6,6 +6,10 @@
 > has remained veiled in secrecy with little publicly available source
 > code...until now."
 
+<a href="https://github.com/downloads/vinniefalco/DSPFilters/DSPFiltersComplete.zip">
+<img src="https://github.com/vinniefalco/vinniefalco.github.com/raw/master/images/DownloadNow.png">
+</a>
+
 ### What is this?
 
 Building on the work of cherished luminaries such as Sophocles Orfanidis,
