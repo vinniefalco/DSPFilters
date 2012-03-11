@@ -76,6 +76,20 @@ it! Whether you are a student of C++ or digital signal processing, a writer
 of audio plugins, or even a VST synthesizer coder, "A Collection of Useful
 C++ Classes for Digital Signal Processing" might have something for you!
 
+### DSP Filters on the Web
+
+DSP Filters Official Discussion Forum
+http://www.kvraudio.com/forum/viewtopic.php?t=249926
+
+DSP and Audio Plugin Discussion Forum
+http://www.kvraudio.com/forum/viewforum.php?f=33
+
+Juce Official Discussion Forum
+http://www.rawmaterialsoftware.com/index.php
+
+Juce Official Site
+http://www.rawmaterialsoftware.com
+
 ### Terms and Conditions
 DSP Filters Library and DSP Demo Application Copyright (c) 2009 by
 [Vinnie Falco](http://github.com/vinniefalco)<br>
