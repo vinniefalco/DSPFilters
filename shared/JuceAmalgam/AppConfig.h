@@ -112,8 +112,8 @@
  //#define JUCE_USE_COREIMAGE_LOADER
 #endif
 
-#ifndef    JUCE_USE_DIRECTWRITE
- //#define JUCE_USE_DIRECTWRITE
+#ifndef JUCE_USE_DIRECTWRITE
+#define JUCE_USE_DIRECTWRITE 0
 #endif
 
 //==============================================================================
