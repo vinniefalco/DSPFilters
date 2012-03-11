@@ -78,16 +78,16 @@ C++ Classes for Digital Signal Processing" might have something for you!
 
 ### DSP Filters on the Web
 
-DSP Filters Official Discussion Forum
+DSP Filters Official Discussion Forum<br>
 http://www.kvraudio.com/forum/viewtopic.php?t=249926
 
-DSP and Audio Plugin Discussion Forum
+DSP and Audio Plugin Discussion Forum<br>
 http://www.kvraudio.com/forum/viewforum.php?f=33
 
-Juce Official Discussion Forum
+Juce Official Discussion Forum<br>
 http://www.rawmaterialsoftware.com/index.php
 
-Juce Official Site
+Juce Official Site<br>
 http://www.rawmaterialsoftware.com
 
 ### Terms and Conditions
