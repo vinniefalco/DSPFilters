@@ -94,6 +94,6 @@ http://www.rawmaterialsoftware.com
 DSP Filters Library and DSP Demo Application Copyright (c) 2009 by
 [Vinnie Falco](http://github.com/vinniefalco)<br>
 Source code is provided under the
-[MIT License](http://www.opensource.org/licenses/mit-license.php])<br>
+[MIT License](http://www.opensource.org/licenses/mit-license.php)<br>
 The [Juce Library](http://www.rawmaterialsoftware.com) is licensed
 separately, from [Raw Material Software](http://rawmaterialsoftware.com).
