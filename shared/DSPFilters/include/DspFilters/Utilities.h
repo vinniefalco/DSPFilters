@@ -708,7 +708,7 @@ public:
       double e = m_env[i];
       for (int n = samples; n; n--)
       {
-        double v = ::fabs(*cur++);
+        double v = std::abs(*cur++);
         if (v > e)
           e = m_a * (e - v) + v;
         else
