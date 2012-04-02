@@ -732,7 +732,7 @@ template <int Channels=2, typename Value=float>
 class SlopeDetector
 {
 public:
-  SlopeDetector () : m_firstTime = true
+  SlopeDetector () : m_firstTime(true)
   {
 	for (int i = 0; i < Channels; ++i)
 	  m_slope [i] = 0;
