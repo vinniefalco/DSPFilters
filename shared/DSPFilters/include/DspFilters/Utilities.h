@@ -725,6 +725,56 @@ protected:
   double m_r;
 };
 
+//------------------------------------------------------------------------------
+
+// Helpful for discovering discontinuities in buffers
+template <int Channels=2, typename Value=float>
+class SlopeDetector
+{
+public:
+  SlopeDetector () : m_firstTime = true
+  {
+	for (int i = 0; i < Channels; ++i)
+	  m_slope [i] = 0;
+  }
+
+  Value getSlope (int channel) const
+  {
+	return m_slope [channel];
+  }
+
+  void process (size_t numSamples, const Value** input)
+  {
+	for (int i = 0; i < Channels; ++i)
+	{
+	  const Value* src = input [i];
+	  int n = numSamples;
+
+	  if (m_firstTime)
+	  {
+		m_prev[i] = *src++;
+		--n;
+	  }
+
+	  while (n > 0)
+	  {
+		n--;
+		Value cur = *src++;
+		Value diff = std::abs (cur - m_prev[i]);
+		m_slope [i] = std::max (diff, m_slope[i]);
+		m_prev [i] = cur;
+	  }
+	}
+
+	m_firstTime = false;
+  }
+
+private:
+  bool m_firstTime;
+  Value m_slope [Channels];
+  Value m_prev [Channels];
+};
+
 }
 
 #endif
