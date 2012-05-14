@@ -1,4 +1,4 @@
-build
+/shared/DSPFilters/Builds/GNULinux/out
 .waf*
 .lock*
 .*.sw*
