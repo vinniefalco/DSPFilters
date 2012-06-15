@@ -33,10 +33,6 @@ THE SOFTWARE.
 
 *******************************************************************************/
 
-#include "DspFilters/Common.h"
-#include "DspFilters/Bessel.h"
-#include "DspFilters/RootFinder.h"
-
 namespace Dsp {
 
 namespace Bessel {

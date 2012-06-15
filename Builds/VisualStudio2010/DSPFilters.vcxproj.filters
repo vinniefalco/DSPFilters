@@ -87,16 +87,10 @@
     <ClInclude Include="..\..\modules\dsp_filters\filters\ChebyshevII.h">
       <Filter>DSPFilters\filters</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\modules\dsp_filters\filters\Common.h">
-      <Filter>DSPFilters\filters</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\modules\dsp_filters\filters\Custom.h">
       <Filter>DSPFilters\filters</Filter>
     </ClInclude>
     <ClInclude Include="..\..\modules\dsp_filters\filters\Design.h">
-      <Filter>DSPFilters\filters</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\modules\dsp_filters\filters\Dsp.h">
       <Filter>DSPFilters\filters</Filter>
     </ClInclude>
     <ClInclude Include="..\..\modules\dsp_filters\filters\Elliptic.h">
@@ -147,10 +141,5 @@
     <ClInclude Include="..\Jucer\JuceLibraryCode\JuceHeader.h">
       <Filter>Juce Library Code</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include=".\resources.rc">
-      <Filter>Juce Library Code</Filter>
-    </ResourceCompile>
   </ItemGroup>
 </Project>

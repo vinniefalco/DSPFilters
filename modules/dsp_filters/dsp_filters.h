@@ -36,5 +36,60 @@ THE SOFTWARE.
 #ifndef DSPFILTERS_DSP_FILTERS_HEADER
 #define DSPFILTERS_DSP_FILTERS_HEADER
 
+#include <stdlib.h>
+
+#include <cassert>
+#include <cfloat>
+#include <cmath>
+#include <complex>
+#include <cstring>
+#include <iomanip>
+#include <iostream>
+#include <limits>
+#include <sstream>
+#include <stdexcept>
+#include <string>
+#include <vector>
+
+#ifdef _MSC_VER
+namespace tr1 = std::tr1;
+#else
+namespace tr1 = std;
+#endif
+
+#ifdef _MSC_VER
+#pragma warning (push)
+#pragma warning (disable: 4100) // unreferenced formal parameter
+#endif
+
+#include "filters/MathSupplement.h"
+#include "filters/RootFinder.h"
+#include "filters/Types.h"
+#include "filters/Utilities.h"
+
+#include "filters/Biquad.h"
+#include "filters/Layout.h"
+#include "filters/Cascade.h"
+#include "filters/PoleFilter.h"
+#include "filters/Params.h"
+#include "filters/Design.h"
+#include "filters/State.h"
+
+#include "filters/Bessel.h"
+#include "filters/Butterworth.h"
+#include "filters/ChebyshevI.h"
+#include "filters/ChebyshevII.h"
+#include "filters/Custom.h"
+#include "filters/Elliptic.h"
+#include "filters/Legendre.h"
+#include "filters/RBJ.h"
+
+#include "filters/Filter.h"
+#include "filters/SmoothedFilter.h"
+
+#ifdef _MSC_VER
+#pragma warning (pop)
+#endif
+
 #endif
 

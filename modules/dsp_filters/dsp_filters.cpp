@@ -33,3 +33,31 @@ THE SOFTWARE.
 
 *******************************************************************************/
 
+#include "dsp_filters.h"
+
+#ifdef _MSC_VER
+#pragma warning (push)
+#pragma warning (disable: 4702) // unreachable code
+#endif
+
+#include "filters/Bessel.cpp"
+#include "filters/Biquad.cpp"
+#include "filters/Butterworth.cpp"
+#include "filters/Cascade.cpp"
+#include "filters/ChebyshevI.cpp"
+#include "filters/ChebyshevII.cpp"
+#include "filters/Custom.cpp"
+#include "filters/Design.cpp"
+#include "filters/Documentation.cpp"
+#include "filters/Elliptic.cpp"
+#include "filters/Filter.cpp"
+#include "filters/Legendre.cpp"
+#include "filters/Param.cpp"
+#include "filters/PoleFilter.cpp"
+#include "filters/RBJ.cpp"
+#include "filters/RootFinder.cpp"
+#include "filters/State.cpp"
+
+#ifdef _MSC_VER
+#pragma warning (pop)
+#endif

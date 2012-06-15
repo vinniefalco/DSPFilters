@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="wrRTO9" name="DSPFilters" projectType="guiapp" version="1.0.0"
+<JUCERPROJECT id="wrRTO9" name="DSPFilters" projectType="library" version="1.0.0"
               jucerVersion="3.0.0">
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="../MacOSX" juceFolder="">
@@ -41,14 +41,12 @@
       <FILE id="Aiehq7" name="ChebyshevI.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/ChebyshevI.h"/>
       <FILE id="FiyFPj" name="ChebyshevII.cpp" compile="0" resource="0" file="../../modules/dsp_filters/filters/ChebyshevII.cpp"/>
       <FILE id="VK9ZYA" name="ChebyshevII.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/ChebyshevII.h"/>
-      <FILE id="F0raIA" name="Common.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/Common.h"/>
       <FILE id="Txksgt" name="Custom.cpp" compile="0" resource="0" file="../../modules/dsp_filters/filters/Custom.cpp"/>
       <FILE id="qioZdU" name="Custom.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/Custom.h"/>
       <FILE id="bPQ6rB" name="Design.cpp" compile="0" resource="0" file="../../modules/dsp_filters/filters/Design.cpp"/>
       <FILE id="zUcodf" name="Design.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/Design.h"/>
       <FILE id="YcnmmH" name="Documentation.cpp" compile="0" resource="0"
             file="../../modules/dsp_filters/filters/Documentation.cpp"/>
-      <FILE id="QnCwCb" name="Dsp.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/Dsp.h"/>
       <FILE id="iNew50" name="Elliptic.cpp" compile="0" resource="0" file="../../modules/dsp_filters/filters/Elliptic.cpp"/>
       <FILE id="v9gnbS" name="Elliptic.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/Elliptic.h"/>
       <FILE id="VS0J52" name="Filter.cpp" compile="0" resource="0" file="../../modules/dsp_filters/filters/Filter.cpp"/>

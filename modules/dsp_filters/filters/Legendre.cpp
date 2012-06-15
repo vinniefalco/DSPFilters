@@ -33,14 +33,6 @@ THE SOFTWARE.
 
 *******************************************************************************/
 
-#include "DspFilters/Common.h"
-#include "DspFilters/Legendre.h"
-#include "DspFilters/RootFinder.h"
-
-#include <sstream>
-#include <iostream>
-#include <iomanip>
-
 namespace Dsp {
 
 namespace Legendre {

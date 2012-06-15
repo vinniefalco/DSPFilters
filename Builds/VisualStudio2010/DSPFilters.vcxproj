@@ -16,12 +16,12 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -56,7 +56,7 @@
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <AdditionalIncludeDirectories>..\Jucer\JuceLibraryCode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;DEBUG;_DEBUG;JUCER_VS2010_2B5CCFA2=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_LIB;WIN32;_WINDOWS;DEBUG;_DEBUG;JUCER_VS2010_2B5CCFA2=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader/>
@@ -71,7 +71,7 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <OutputFile>$(OutDir)\DSPFilters.exe</OutputFile>
+      <OutputFile>$(OutDir)\DSPFilters.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>libcmt.lib; msvcrt.lib;;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -95,7 +95,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <AdditionalIncludeDirectories>..\Jucer\JuceLibraryCode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;JUCER_VS2010_2B5CCFA2=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_LIB;WIN32;_WINDOWS;NDEBUG;JUCER_VS2010_2B5CCFA2=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader/>
@@ -110,7 +110,7 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <OutputFile>$(OutDir)\DSPFilters.exe</OutputFile>
+      <OutputFile>$(OutDir)\DSPFilters.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -186,10 +186,8 @@
     <ClInclude Include="..\..\modules\dsp_filters\filters\Cascade.h"/>
     <ClInclude Include="..\..\modules\dsp_filters\filters\ChebyshevI.h"/>
     <ClInclude Include="..\..\modules\dsp_filters\filters\ChebyshevII.h"/>
-    <ClInclude Include="..\..\modules\dsp_filters\filters\Common.h"/>
     <ClInclude Include="..\..\modules\dsp_filters\filters\Custom.h"/>
     <ClInclude Include="..\..\modules\dsp_filters\filters\Design.h"/>
-    <ClInclude Include="..\..\modules\dsp_filters\filters\Dsp.h"/>
     <ClInclude Include="..\..\modules\dsp_filters\filters\Elliptic.h"/>
     <ClInclude Include="..\..\modules\dsp_filters\filters\Filter.h"/>
     <ClInclude Include="..\..\modules\dsp_filters\filters\Layout.h"/>
@@ -206,9 +204,6 @@
     <ClInclude Include="..\..\modules\dsp_filters\filters\Bessel.h"/>
     <ClInclude Include="..\Jucer\JuceLibraryCode\AppConfig.h"/>
     <ClInclude Include="..\Jucer\JuceLibraryCode\JuceHeader.h"/>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include=".\resources.rc"/>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
   <ImportGroup Label="ExtensionTargets"/>

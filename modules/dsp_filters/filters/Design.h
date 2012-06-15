@@ -36,9 +36,6 @@ THE SOFTWARE.
 #ifndef DSPFILTERS_DESIGN_H
 #define DSPFILTERS_DESIGN_H
 
-#include "DspFilters/Common.h"
-#include "DspFilters/Params.h"
-
 namespace Dsp {
 
 struct DesignBase

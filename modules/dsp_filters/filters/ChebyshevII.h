@@ -36,12 +36,6 @@ THE SOFTWARE.
 #ifndef DSPFILTERS_CHEBYSHEVII_H
 #define DSPFILTERS_CHEBYSHEVII_H
 
-#include "DspFilters/Common.h"
-#include "DspFilters/Cascade.h"
-#include "DspFilters/Design.h"
-#include "DspFilters/Filter.h"
-#include "DspFilters/PoleFilter.h"
-
 namespace Dsp {
 
 /*

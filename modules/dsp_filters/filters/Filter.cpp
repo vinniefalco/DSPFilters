@@ -33,9 +33,6 @@ THE SOFTWARE.
 
 *******************************************************************************/
 
-#include "DspFilters/Common.h"
-#include "DspFilters/Filter.h"
-
 namespace Dsp {
 
 Params Filter::getDefaultParams() const

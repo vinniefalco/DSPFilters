@@ -33,14 +33,6 @@ THE SOFTWARE.
 
 *******************************************************************************/
 
-#include "DspFilters/Common.h"
-#include "DspFilters/Design.h"
-
-#include <stdexcept>
-#include <sstream>
-#include <iostream>
-#include <iomanip>
-
 namespace Dsp {
 
 ParamInfo::ParamInfo ()

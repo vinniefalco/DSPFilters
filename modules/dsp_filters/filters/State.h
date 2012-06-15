@@ -36,11 +36,6 @@ THE SOFTWARE.
 #ifndef DSPFILTERS_STATE_H
 #define DSPFILTERS_STATE_H
 
-#include "DspFilters/Common.h"
-#include "DspFilters/Biquad.h"
-
-#include <stdexcept>
-
 namespace Dsp {
 
 /*

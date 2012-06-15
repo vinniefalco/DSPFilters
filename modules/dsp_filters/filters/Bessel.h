@@ -36,13 +36,6 @@ THE SOFTWARE.
 #ifndef DSPFILTERS_BESSEL_H
 #define DSPFILTERS_BESSEL_H
 
-#include "DspFilters/Common.h"
-#include "DspFilters/Cascade.h"
-#include "DspFilters/Design.h"
-#include "DspFilters/Filter.h"
-#include "DspFilters/PoleFilter.h"
-#include "DspFilters/RootFinder.h"
-
 namespace Dsp {
 
 /*

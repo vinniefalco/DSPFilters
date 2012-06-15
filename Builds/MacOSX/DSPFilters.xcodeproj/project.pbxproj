@@ -17,7 +17,7 @@
 		0B7BBF715FFEB029C8C40793 = { isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ChebyshevII.cpp; path = "../../modules/dsp_filters/filters/ChebyshevII.cpp"; sourceTree = "SOURCE_ROOT"; };
 		125E3A89CBC1A9CDFD0A001C = { isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Custom.cpp; path = "../../modules/dsp_filters/filters/Custom.cpp"; sourceTree = "SOURCE_ROOT"; };
 		16DC5CD2953D6B92D2D204CE = { isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Bessel.h; path = "../../modules/dsp_filters/filters/Bessel.h"; sourceTree = "SOURCE_ROOT"; };
-		1AFBB984FFDFBE62BB433DA9 = { isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DSPFilters.app; sourceTree = "BUILT_PRODUCTS_DIR"; };
+		1AFBB984FFDFBE62BB433DA9 = { isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDSPFilters.a; sourceTree = "BUILT_PRODUCTS_DIR"; };
 		29152CD9C27A0A57721A0C39 = { isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Layout.h; path = "../../modules/dsp_filters/filters/Layout.h"; sourceTree = "SOURCE_ROOT"; };
 		2D1F94DB87D657B6172FEA06 = { isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = JuceHeader.h; path = ../Jucer/JuceLibraryCode/JuceHeader.h; sourceTree = "SOURCE_ROOT"; };
 		2F28EB021E8DB23FA06B453D = { isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "dsp_filters.h"; path = "../../modules/dsp_filters/dsp_filters.h"; sourceTree = "SOURCE_ROOT"; };
@@ -33,12 +33,10 @@
 		608ADF1BC6B61F9FF3624587 = { isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = State.h; path = "../../modules/dsp_filters/filters/State.h"; sourceTree = "SOURCE_ROOT"; };
 		64B8A21C590498BAD43C51CF = { isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RootFinder.h; path = "../../modules/dsp_filters/filters/RootFinder.h"; sourceTree = "SOURCE_ROOT"; };
 		68C14CF9265BE3277DEF2649 = { isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PoleFilter.h; path = "../../modules/dsp_filters/filters/PoleFilter.h"; sourceTree = "SOURCE_ROOT"; };
-		6B47BA686C1C29BC5A84D647 = { isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Dsp.h; path = "../../modules/dsp_filters/filters/Dsp.h"; sourceTree = "SOURCE_ROOT"; };
 		6DC765519E866568174993AF = { isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = State.cpp; path = "../../modules/dsp_filters/filters/State.cpp"; sourceTree = "SOURCE_ROOT"; };
 		6FD557ACA0352FE4BF9BF47F = { isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = "../../modules/dsp_filters/filters/Utilities.h"; sourceTree = "SOURCE_ROOT"; };
 		72826C69191532FFB29B222D = { isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Types.h; path = "../../modules/dsp_filters/filters/Types.h"; sourceTree = "SOURCE_ROOT"; };
 		865C16E905E2597D857B516F = { isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PoleFilter.cpp; path = "../../modules/dsp_filters/filters/PoleFilter.cpp"; sourceTree = "SOURCE_ROOT"; };
-		A1708E4DAD389CD623522157 = { isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Common.h; path = "../../modules/dsp_filters/filters/Common.h"; sourceTree = "SOURCE_ROOT"; };
 		A6239C09FB5CEB1FC10E77AA = { isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SmoothedFilter.h; path = "../../modules/dsp_filters/filters/SmoothedFilter.h"; sourceTree = "SOURCE_ROOT"; };
 		A9BBD1E764E8E3A72CD89413 = { isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ChebyshevI.cpp; path = "../../modules/dsp_filters/filters/ChebyshevI.cpp"; sourceTree = "SOURCE_ROOT"; };
 		B27A359B9028B18DC2BBBE26 = { isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ChebyshevII.h; path = "../../modules/dsp_filters/filters/ChebyshevII.h"; sourceTree = "SOURCE_ROOT"; };
@@ -47,7 +45,6 @@
 		C590E12A94AA5997AE8D5358 = { isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppConfig.h; path = ../Jucer/JuceLibraryCode/AppConfig.h; sourceTree = "SOURCE_ROOT"; };
 		CEA510575C538E3E9639079C = { isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Filter.cpp; path = "../../modules/dsp_filters/filters/Filter.cpp"; sourceTree = "SOURCE_ROOT"; };
 		E725F089E72576397F14AF3B = { isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Butterworth.h; path = "../../modules/dsp_filters/filters/Butterworth.h"; sourceTree = "SOURCE_ROOT"; };
-		EA4FC8DCBC54BE4CDEF3AA55 = { isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Info.plist; sourceTree = "SOURCE_ROOT"; };
 		EE35D5E427FE5CF0D3120C64 = { isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Biquad.h; path = "../../modules/dsp_filters/filters/Biquad.h"; sourceTree = "SOURCE_ROOT"; };
 		F68D253D90E7BFD4949C5C33 = { isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Custom.h; path = "../../modules/dsp_filters/filters/Custom.h"; sourceTree = "SOURCE_ROOT"; };
 		F93264AF294DF154A9CF4BAF = { isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Params.h; path = "../../modules/dsp_filters/filters/Params.h"; sourceTree = "SOURCE_ROOT"; };
@@ -63,13 +60,11 @@
 				3E1B8BC14CFC16E95C611CE5,
 				0B7BBF715FFEB029C8C40793,
 				B27A359B9028B18DC2BBBE26,
-				A1708E4DAD389CD623522157,
 				125E3A89CBC1A9CDFD0A001C,
 				F68D253D90E7BFD4949C5C33,
 				0171543F8B24F05F2D7DC992,
 				04745E8A956CFA8DA9A495A7,
 				FA398EA3A7982AB58E9CBB32,
-				6B47BA686C1C29BC5A84D647,
 				5868273A01ED7C43FCFE4246,
 				07E58477DEB339F6C49891B9,
 				CEA510575C538E3E9639079C,
@@ -101,8 +96,7 @@
 		639ECC0B8BF58ADF9A42CA26 = { isa = PBXGroup; children = (
 				C590E12A94AA5997AE8D5358,
 				2D1F94DB87D657B6172FEA06 ); name = "Juce Library Code"; sourceTree = "<group>"; };
-		6CBB3CA2D759FD65D20858CF = { isa = PBXGroup; children = (
-				EA4FC8DCBC54BE4CDEF3AA55 ); name = Resources; sourceTree = "<group>"; };
+		6CBB3CA2D759FD65D20858CF = { isa = PBXGroup; children = (  ); name = Resources; sourceTree = "<group>"; };
 		64B618A201864E77976BFFF8 = { isa = PBXGroup; children = (  ); name = Frameworks; sourceTree = "<group>"; };
 		08805494E88C2533DE643EC3 = { isa = PBXGroup; children = (
 				1AFBB984FFDFBE62BB433DA9 ); name = Products; sourceTree = "<group>"; };
@@ -117,7 +111,8 @@
 				HEADER_SEARCH_PATHS = "../Jucer/JuceLibraryCode $(inherited)";
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
+				DEPLOYMENT_LOCATION = YES;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				SDKROOT_ppc = macosx10.5;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -134,7 +129,8 @@
 				HEADER_SEARCH_PATHS = "../Jucer/JuceLibraryCode $(inherited)";
 				GCC_OPTIMIZATION_LEVEL = s;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
+				DEPLOYMENT_LOCATION = YES;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				SDKROOT_ppc = macosx10.5;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -156,7 +152,8 @@
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				WARNING_CFLAGS = -Wreorder;
 				GCC_MODEL_TUNING = G5;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				ZERO_LINK = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf";
 				PRODUCT_NAME = "DSPFilters"; }; name = Debug; };
@@ -171,7 +168,8 @@
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				WARNING_CFLAGS = -Wreorder;
 				GCC_MODEL_TUNING = G5;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				ZERO_LINK = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf";
 				PRODUCT_NAME = "DSPFilters"; }; name = Release; };
@@ -188,7 +186,7 @@
 		D2B64534FF8AE41DA8C2D5F2 = { isa = PBXNativeTarget; buildConfigurationList = 63AC112A52D4968E694F5E7A; buildPhases = (
 				D15BCBD98154230AA259D6B0,
 				0C9131D55D77A2B43BDFC6C7,
-				67AE5C9C0E0A37029B618C63 ); buildRules = ( ); dependencies = ( ); name = DSPFilters; productName = DSPFilters; productReference = 1AFBB984FFDFBE62BB433DA9; productInstallPath = "$(HOME)/Applications"; productType = "com.apple.product-type.application"; };
+				67AE5C9C0E0A37029B618C63 ); buildRules = ( ); dependencies = ( ); name = DSPFilters; productName = DSPFilters; productReference = 1AFBB984FFDFBE62BB433DA9; productType = "com.apple.product-type.library.static"; };
 		338F955B92618B1B0D392360 = { isa = PBXProject; buildConfigurationList = 271336A27C1AA72FE7CEF3E1; compatibilityVersion = "Xcode 3.2"; hasScannedForEncodings = 0; mainGroup = CAA2FEABCD43834D018D3D7D; projectDirPath = ""; projectRoot = ""; targets = ( D2B64534FF8AE41DA8C2D5F2 ); };
 	};
 	rootObject = 338F955B92618B1B0D392360;

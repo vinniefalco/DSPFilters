@@ -36,8 +36,6 @@ THE SOFTWARE.
 #ifndef DSPFILTERS_MATHSUPPLEMENT_H
 #define DSPFILTERS_MATHSUPPLEMENT_H
 
-#include "DspFilters/Common.h"
-
 namespace Dsp {
 
 const double doublePi		=3.1415926535897932384626433832795028841971;

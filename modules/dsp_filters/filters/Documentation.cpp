@@ -289,13 +289,6 @@ Filter family namespaces
 // This shows you how to operate the filters
 //
 
-// This is the only include you need
-#include "DspFilters/Dsp.h"
-
-#include <sstream>
-#include <iostream>
-#include <iomanip>
-
 namespace {
 
 void UsageExamples ()

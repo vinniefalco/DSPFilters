@@ -36,9 +36,6 @@ THE SOFTWARE.
 #ifndef DSPFILTERS_TYPES_H
 #define DSPFILTERS_TYPES_H
 
-#include "DspFilters/Common.h"
-#include "DspFilters/MathSupplement.h"
-
 namespace Dsp {
 
 // A conjugate or real pair

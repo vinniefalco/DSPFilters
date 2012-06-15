@@ -33,10 +33,6 @@ THE SOFTWARE.
 
 *******************************************************************************/
 
-#include "DspFilters/Common.h"
-#include "DspFilters/MathSupplement.h"
-#include "DspFilters/Biquad.h"
-
 namespace Dsp {
 
 BiquadPoleState::BiquadPoleState (const BiquadBase& s)

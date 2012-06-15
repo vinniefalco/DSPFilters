@@ -36,12 +36,6 @@ THE SOFTWARE.
 #ifndef DSPFILTERS_ELLIPTIC_H
 #define DSPFILTERS_ELLIPTIC_H
 
-#include "DspFilters/Common.h"
-#include "DspFilters/Cascade.h"
-#include "DspFilters/Design.h"
-#include "DspFilters/Filter.h"
-#include "DspFilters/PoleFilter.h"
-
 namespace Dsp {
 
 /*

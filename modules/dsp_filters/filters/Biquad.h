@@ -36,10 +36,6 @@ THE SOFTWARE.
 #ifndef DSPFILTERS_BIQUAD_H
 #define DSPFILTERS_BIQUAD_H
 
-#include "DspFilters/Common.h"
-#include "DspFilters/MathSupplement.h"
-#include "DspFilters/Types.h"
-
 namespace Dsp {
 
 struct BiquadPoleState;
