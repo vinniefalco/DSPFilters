@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="wrRTO9" name="DSPFilters" projectType="guiapp" version="1.0.0"
+              jucerVersion="3.0.0">
+  <EXPORTFORMATS>
+    <XCODE_MAC targetFolder="../MacOSX" juceFolder="">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="DSPFilters"
+                       osxSDK="default" osxCompatibility="default" osxArchitecture="default"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="2" targetName="DSPFilters"
+                       osxSDK="default" osxCompatibility="default" osxArchitecture="default"/>
+      </CONFIGURATIONS>
+    </XCODE_MAC>
+    <VS2010 targetFolder="../VisualStudio2010" libraryType="1" juceFolder="">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="1" optimisation="1" targetName="DSPFilters"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="0" optimisation="2" targetName="DSPFilters"/>
+      </CONFIGURATIONS>
+    </VS2010>
+    <LINUX_MAKE targetFolder="../Linux" juceFolder="">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
+                       targetName="DSPFilters"/>
+        <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="2"
+                       targetName="DSPFilters"/>
+      </CONFIGURATIONS>
+    </LINUX_MAKE>
+  </EXPORTFORMATS>
+  <MAINGROUP id="oYjCyF" name="DSPFilters">
+    <FILE id="cyYQhz" name="dsp_filters.cpp" compile="1" resource="0" file="../../modules/dsp_filters/dsp_filters.cpp"/>
+    <FILE id="tRJGWj" name="dsp_filters.h" compile="0" resource="0" file="../../modules/dsp_filters/dsp_filters.h"/>
+    <GROUP id="{B66AA0BC-A6D2-1BB9-ED86-99DC0F6954CF}" name="filters">
+      <FILE id="KdmhSb" name="Biquad.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/Biquad.h"/>
+      <FILE id="TrANI5" name="Butterworth.cpp" compile="0" resource="0" file="../../modules/dsp_filters/filters/Butterworth.cpp"/>
+      <FILE id="BnlTEa" name="Butterworth.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/Butterworth.h"/>
+      <FILE id="eZr5in" name="Cascade.cpp" compile="0" resource="0" file="../../modules/dsp_filters/filters/Cascade.cpp"/>
+      <FILE id="fQIiuE" name="Cascade.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/Cascade.h"/>
+      <FILE id="EPFtP7" name="ChebyshevI.cpp" compile="0" resource="0" file="../../modules/dsp_filters/filters/ChebyshevI.cpp"/>
+      <FILE id="Aiehq7" name="ChebyshevI.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/ChebyshevI.h"/>
+      <FILE id="FiyFPj" name="ChebyshevII.cpp" compile="0" resource="0" file="../../modules/dsp_filters/filters/ChebyshevII.cpp"/>
+      <FILE id="VK9ZYA" name="ChebyshevII.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/ChebyshevII.h"/>
+      <FILE id="F0raIA" name="Common.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/Common.h"/>
+      <FILE id="Txksgt" name="Custom.cpp" compile="0" resource="0" file="../../modules/dsp_filters/filters/Custom.cpp"/>
+      <FILE id="qioZdU" name="Custom.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/Custom.h"/>
+      <FILE id="bPQ6rB" name="Design.cpp" compile="0" resource="0" file="../../modules/dsp_filters/filters/Design.cpp"/>
+      <FILE id="zUcodf" name="Design.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/Design.h"/>
+      <FILE id="YcnmmH" name="Documentation.cpp" compile="0" resource="0"
+            file="../../modules/dsp_filters/filters/Documentation.cpp"/>
+      <FILE id="QnCwCb" name="Dsp.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/Dsp.h"/>
+      <FILE id="iNew50" name="Elliptic.cpp" compile="0" resource="0" file="../../modules/dsp_filters/filters/Elliptic.cpp"/>
+      <FILE id="v9gnbS" name="Elliptic.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/Elliptic.h"/>
+      <FILE id="VS0J52" name="Filter.cpp" compile="0" resource="0" file="../../modules/dsp_filters/filters/Filter.cpp"/>
+      <FILE id="BsOS4R" name="Filter.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/Filter.h"/>
+      <FILE id="sOPqRO" name="Layout.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/Layout.h"/>
+      <FILE id="HvVdDc" name="Legendre.cpp" compile="0" resource="0" file="../../modules/dsp_filters/filters/Legendre.cpp"/>
+      <FILE id="H4TNu7" name="Legendre.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/Legendre.h"/>
+      <FILE id="S9zw2a" name="MathSupplement.h" compile="0" resource="0"
+            file="../../modules/dsp_filters/filters/MathSupplement.h"/>
+      <FILE id="zPHEA7" name="Param.cpp" compile="0" resource="0" file="../../modules/dsp_filters/filters/Param.cpp"/>
+      <FILE id="dDzCoT" name="Params.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/Params.h"/>
+      <FILE id="vAhBVG" name="PoleFilter.cpp" compile="0" resource="0" file="../../modules/dsp_filters/filters/PoleFilter.cpp"/>
+      <FILE id="oC50bK" name="PoleFilter.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/PoleFilter.h"/>
+      <FILE id="gQ5w5c" name="RBJ.cpp" compile="0" resource="0" file="../../modules/dsp_filters/filters/RBJ.cpp"/>
+      <FILE id="qqTIaP" name="RBJ.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/RBJ.h"/>
+      <FILE id="DwwuBR" name="RootFinder.cpp" compile="0" resource="0" file="../../modules/dsp_filters/filters/RootFinder.cpp"/>
+      <FILE id="oOzoSM" name="RootFinder.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/RootFinder.h"/>
+      <FILE id="jdC6V0" name="SmoothedFilter.h" compile="0" resource="0"
+            file="../../modules/dsp_filters/filters/SmoothedFilter.h"/>
+      <FILE id="chNns0" name="State.cpp" compile="0" resource="0" file="../../modules/dsp_filters/filters/State.cpp"/>
+      <FILE id="E2VUSU" name="State.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/State.h"/>
+      <FILE id="CvOFwX" name="Types.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/Types.h"/>
+      <FILE id="N1Si76" name="Utilities.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/Utilities.h"/>
+      <FILE id="AckqJK" name="Bessel.cpp" compile="0" resource="0" file="../../modules/dsp_filters/filters/Bessel.cpp"/>
+      <FILE id="qy5WYb" name="Bessel.h" compile="0" resource="0" file="../../modules/dsp_filters/filters/Bessel.h"/>
+      <FILE id="rRgdqx" name="Biquad.cpp" compile="0" resource="0" file="../../modules/dsp_filters/filters/Biquad.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <MODULES>
+    <MODULE id="juce_gui_audio" showAllCode="1" useLocalCopy="1"/>
+  </MODULES>
+  <JUCEOPTIONS/>
+</JUCERPROJECT>

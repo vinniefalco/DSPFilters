@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{C4EB1036-73BF-DB7F-E3EC-59D6529D0FF6}") = "DSPFilters", "DSPFilters.vcxproj", "{D807139A-0737-D251-167F-991754FD7F07}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D807139A-0737-D251-167F-991754FD7F07}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D807139A-0737-D251-167F-991754FD7F07}.Debug|Win32.Build.0 = Debug|Win32
+		{D807139A-0737-D251-167F-991754FD7F07}.Release|Win32.ActiveCfg = Release|Win32
+		{D807139A-0737-D251-167F-991754FD7F07}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
