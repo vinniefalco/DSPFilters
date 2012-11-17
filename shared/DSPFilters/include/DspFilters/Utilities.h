@@ -64,7 +64,7 @@ void add (int samples,
     ++destSkip;
     while (--samples >= 0)
     {
-      *dest = static_cast<Td>(*src);
+      *dest += static_cast<Td>(*src);
       dest += destSkip;
       src += srcSkip;
     }
