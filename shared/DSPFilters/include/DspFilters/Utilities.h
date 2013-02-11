@@ -274,7 +274,8 @@ void fade (int samples,
 
   while (--samples >= 0)
   {
-    *dest++ = static_cast<Td>(*dest + t * (*src++ - *dest));
+    *dest = static_cast<Td>(*dest + t * (*src++ - *dest));
+    dest++;
     t += dt;
   }
 }
@@ -384,8 +385,10 @@ void multiply (int samples,
   }
   else
   {
-    while (--samples >= 0)
-      *dest++ = static_cast<Td>(*dest * factor);
+    while (--samples >= 0) {
+      *dest = static_cast<Td>(*dest * factor);
+      dest++;
+    }
   }
 }
 
