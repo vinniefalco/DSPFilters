@@ -36,6 +36,13 @@ THE SOFTWARE.
 #ifndef DSPFILTERS_CASCADE_H
 #define DSPFILTERS_CASCADE_H
 
+#ifdef __SSE3__
+#include <pmmintrin.h>
+#elif defined(__ARM_NEON__)
+#include <arm_neon.h>
+#endif
+
+#include <type_traits>
 #include "DspFilters/Common.h"
 #include "DspFilters/Biquad.h"
 #include "DspFilters/Filter.h"
@@ -53,23 +60,59 @@ namespace Dsp {
 class Cascade
 {
 public:
-  template <class StateType>
+  template <class StateType, bool Simd = StateType::HasSimd>
   class StateBase : private DenormalPrevention
   {
   public:
     template <typename Sample>
-    inline Sample process (const Sample in, const Cascade& c)
+    inline typename std::enable_if<Simd, Sample>::type
+    process (const Sample in, const Cascade& c)
     {
-      double out = in;
       StateType* state = m_stateArray;
-      Biquad const* stage = c.m_stageArray;
-      const double vsa = ac();
-      int i = c.m_numStages - 1;
-        out = (state++)->process1 (out, *stage++, vsa);
-      for (; --i >= 0;)
+      const Biquad* stage = c.m_stageArray;
+#ifdef __SSE3__
+      const __m128 vsa = _mm_set1_ps(ac());
+      __m128 out = _mm_set1_ps(in);
+      out = (state++)->process1Simd (out, *stage++, vsa);
+#elif defined(__ARM_NEON__)
+      const float32x2_t vsa = vdup_n_f32(ac());
+      float32x2_t out = vdup_n_f32(in);
+      out = (state++)->process1Simd (out, *stage++, vsa);
+#else
+      const typename StateType::FPType vsa = ac();
+      typename StateType::FPType out = in;
+      out = (state++)->process1 (out, *stage++, vsa);
+#endif
+      for (int i = 0; i < c.m_numStages - 1; i++) {
+#ifdef __SSE3__
+        out = (state++)->process1Simd (out, *stage++, _mm_setzero_ps());
+#elif defined(__ARM_NEON__)
+        out = (state++)->process1Simd (out, *stage++, vdup_n_f32(0));
+#else
         out = (state++)->process1 (out, *stage++, 0);
-      //for (int i = c.m_numStages; --i >= 0; ++state, ++stage)
-      //  out = state->process1 (out, *stage, vsa);
+#endif
+      }
+#ifdef __SSE3__
+      return static_cast<Sample> (out[0]);
+#elif defined(__ARM_NEON__)
+      return static_cast<Sample> (vget_lane_f32(out, 0));
+#else
+      return static_cast<Sample> (out);
+#endif
+    }
+
+    template <typename Sample>
+    inline typename std::enable_if<!Simd, Sample>::type
+    process (const Sample in, const Cascade& c)
+    {
+      StateType* state = m_stateArray;
+      const Biquad* stage = c.m_stageArray;
+      const typename StateType::FPType vsa = ac();
+      typename StateType::FPType out = in;
+      out = (state++)->process1 (out, *stage++, vsa);
+      for (int i = 0; i < c.m_numStages - 1; i++) {
+        out = (state++)->process1 (out, *stage++, 0);
+      }
       return static_cast<Sample> (out);
     }
 

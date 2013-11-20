@@ -128,6 +128,18 @@ void BiquadBase::setCoefficients (double a0, double a1, double a2,
   m_b0 = b0/a0;
   m_b1 = b1/a0;
   m_b2 = b2/a0;
+#ifdef __SSE__
+  m_va0 = _mm_set1_ps(m_a0);
+  m_vb0 = _mm_set1_ps(m_b0);
+  m_vab12 = _mm_set_ps(m_b2, m_b1, m_a2, m_a1);
+#elif defined(__ARM_NEON__)
+  m_va0 = vdup_n_f32(m_a0);
+  m_vb0 = vdup_n_f32(m_b0);
+  vsetq_lane_f32(m_a1, m_vab12, 0);
+  vsetq_lane_f32(m_b1, m_vab12, 1);
+  vsetq_lane_f32(m_a2, m_vab12, 2);
+  vsetq_lane_f32(m_b2, m_vab12, 3);
+#endif
 }
 
 void BiquadBase::setOnePole (complex_t pole, complex_t zero)
@@ -214,9 +226,7 @@ void BiquadBase::setIdentity ()
 
 void BiquadBase::applyScale (double scale)
 {
-  m_b0 *= scale;
-  m_b1 *= scale;
-  m_b2 *= scale;
+  setCoefficients(m_a0, m_a1, m_a2, m_b0 * scale, m_b1 * scale, m_b2 * scale);
 }
 
 //------------------------------------------------------------------------------
