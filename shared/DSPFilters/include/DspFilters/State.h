@@ -38,6 +38,15 @@ THE SOFTWARE.
 
 #ifdef __SSE3__
 #include <pmmintrin.h>
+#if (__GNUC__ == 4 && __GNUC_MINOR__ < 8)
+#ifndef __m128_buggy_gxx_up_to_4_7_type
+#define __m128_buggy_gxx_up_to_4_7_type
+union __m128_buggy_gxx_up_to_4_7 {
+    __m128 v;
+    float e[4];
+};
+#endif
+#endif
 #elif defined(__ARM_NEON__)
 #include <arm_neon.h>
 #endif
@@ -114,7 +123,15 @@ public:
     tmp = _mm_hadd_ps(tmp, tmp);
     __m128 out = _mm_add_ps(in, vsa);
     out = _mm_add_ps(out, tmp);
+#if (__GNUC__ == 4 && __GNUC_MINOR__ < 8)
+    __m128_buggy_gxx_up_to_4_7 m_xy_e, in_e, out_e;
+    m_xy_e.v = m_xy;
+    in_e.v = in;
+    out_e.v = out;
+    m_xy = _mm_set_ps(m_xy_e.e[2], in_e.e[0], m_xy_e.e[0], out_e.e[0] * s.m_b0);
+#else
     m_xy = _mm_set_ps(m_xy[2], in[0], m_xy[0], out[0] * s.m_b0);
+#endif
     return out;
 #elif defined(__ARM_NEON__)
     const float32x4_t neg = { 1, -1, 1, -1 };

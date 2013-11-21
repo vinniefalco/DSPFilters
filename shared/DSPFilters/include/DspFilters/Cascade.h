@@ -38,6 +38,15 @@ THE SOFTWARE.
 
 #ifdef __SSE3__
 #include <pmmintrin.h>
+#if (__GNUC__ == 4 && __GNUC_MINOR__ < 8)
+#ifndef __m128_buggy_gxx_up_to_4_7_type
+#define __m128_buggy_gxx_up_to_4_7_type
+union __m128_buggy_gxx_up_to_4_7 {
+    __m128 v;
+    float e[4];
+};
+#endif
+#endif
 #elif defined(__ARM_NEON__)
 #include <arm_neon.h>
 #endif
@@ -93,7 +102,13 @@ public:
 #endif
       }
 #ifdef __SSE3__
+#if (__GNUC__ == 4 && __GNUC_MINOR__ < 8)
+      __m128_buggy_gxx_up_to_4_7 out_e;
+      out_e.v = out;
+      return out_e.e[0];
+#else
       return static_cast<Sample> (out[0]);
+#endif
 #elif defined(__ARM_NEON__)
       return static_cast<Sample> (vget_lane_f32(out, 0));
 #else
