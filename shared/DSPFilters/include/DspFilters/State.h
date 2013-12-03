@@ -74,12 +74,12 @@ namespace Dsp {
  *  y[n] = (b0/a0)*x[n] + (b1/a0)*x[n-1] + (b2/a0)*x[n-2]
  *                      - (a1/a0)*y[n-1] - (a2/a0)*y[n-2]  
  */
-template <class FP>
+template <class FP, bool Simd = true>
 class DirectFormI
 {
 public:
   typedef FP FPType;
-  static constexpr bool HasSimd = true;
+  static constexpr bool HasSimd = Simd;
 
   DirectFormI ()
   {
@@ -121,16 +121,17 @@ public:
     tmp = _mm_mul_ps(tmp, neg);
     tmp = _mm_hadd_ps(tmp, tmp);
     tmp = _mm_hadd_ps(tmp, tmp);
-    __m128 out = _mm_add_ps(in, vsa);
+    tmp = _mm_add_ps(tmp, vsa);
+    __m128 out = _mm_mul_ps(in, s.m_vb0);
     out = _mm_add_ps(out, tmp);
 #if (__GNUC__ == 4 && __GNUC_MINOR__ < 8)
     __m128_buggy_gxx_up_to_4_7 m_xy_e, in_e, out_e;
     m_xy_e.v = m_xy;
     in_e.v = in;
     out_e.v = out;
-    m_xy = _mm_set_ps(m_xy_e.e[2], in_e.e[0], m_xy_e.e[0], out_e.e[0] * s.m_b0);
+    m_xy = _mm_set_ps(m_xy_e.e[2], in_e.e[0], m_xy_e.e[0], out_e.e[0]);
 #else
-    m_xy = _mm_set_ps(m_xy[2], in[0], m_xy[0], out[0] * s.m_b0);
+    m_xy = _mm_set_ps(m_xy[2], in[0], m_xy[0], out[0]);
 #endif
     return out;
 #elif defined(__ARM_NEON__)
@@ -154,8 +155,8 @@ public:
                       const FP vsa) // very small amount
   {
     FP out = s.m_b0*in + s.m_b1*m_x1 + s.m_b2*m_x2
-                          - s.m_a1*m_y1 - s.m_a2*m_y2
-                          + vsa;
+                       - s.m_a1*m_y1 - s.m_a2*m_y2
+             + vsa;
     m_x2 = m_x1;
     m_y2 = m_y1;
     m_x1 = in;
