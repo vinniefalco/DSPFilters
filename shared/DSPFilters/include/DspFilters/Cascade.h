@@ -169,6 +169,8 @@ public:
   }
 
 public:
+  virtual ~Cascade() {}
+
   // Calculate filter response at the given normalized frequency.
   complex_t response (double normalizedFrequency) const;
 
@@ -189,7 +191,7 @@ protected:
 
   void setCascadeStorage (const Storage& storage);
 
-  void applyScale (double scale);
+  virtual void applyScale (double scale);
   void setLayout (const LayoutBase& proto);
 
 private:
