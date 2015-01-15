@@ -87,8 +87,10 @@ public:
   template <class StateType, typename Sample>
   void process (int numSamples, Sample* dest, StateType& state) const
   {
-    while (--numSamples >= 0)
-      *dest++ = state.process (*dest, *this);
+    while (--numSamples >= 0) {
+      *dest = state.process (*dest, *this);
+      dest++;
+    }
   }
 
 protected:
@@ -186,7 +188,8 @@ public:
       sectionPrev.m_b1 += db1;
       sectionPrev.m_b2 += db2;
 
-      *dest++ = state.process (*dest, sectionPrev);
+      *dest = state.process (*dest, sectionPrev);
+      dest++;
     }
   }
 
@@ -215,7 +218,8 @@ public:
       zPrev.zeros.second += dz1;
       zPrev.gain += dg;
 
-      *dest++ = state.process (*dest, Biquad (zPrev));
+      *dest = state.process (*dest, Biquad (zPrev));
+      dest++;
     }
   }
 
