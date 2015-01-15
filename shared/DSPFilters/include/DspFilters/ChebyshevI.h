@@ -87,7 +87,7 @@ private:
 
 // Factored implementations to reduce template instantiations
 
-struct LowPassBase : PoleFilterBase <AnalogLowPass>
+struct LowPassBase : AnalogPoleFilterBase <AnalogLowPass>
 {
   void setup (int order,
               double sampleRate,
@@ -95,7 +95,7 @@ struct LowPassBase : PoleFilterBase <AnalogLowPass>
               double rippleDb);
 };
 
-struct HighPassBase : PoleFilterBase <AnalogLowPass>
+struct HighPassBase : AnalogPoleFilterBase <AnalogLowPass>
 {
   void setup (int order,
               double sampleRate,
@@ -103,7 +103,7 @@ struct HighPassBase : PoleFilterBase <AnalogLowPass>
               double rippleDb);
 };
 
-struct BandPassBase : PoleFilterBase <AnalogLowPass>
+struct BandPassBase : AnalogPoleFilterBase <AnalogLowPass>
 {
   void setup (int order,
               double sampleRate,
@@ -112,7 +112,7 @@ struct BandPassBase : PoleFilterBase <AnalogLowPass>
               double rippleDb);
 };
 
-struct BandStopBase : PoleFilterBase <AnalogLowPass>
+struct BandStopBase : AnalogPoleFilterBase <AnalogLowPass>
 {
   void setup (int order,
               double sampleRate,
@@ -121,7 +121,7 @@ struct BandStopBase : PoleFilterBase <AnalogLowPass>
               double rippleDb);
 };
 
-struct LowShelfBase : PoleFilterBase <AnalogLowShelf>
+struct LowShelfBase : AnalogPoleFilterBase <AnalogLowShelf>
 {
   void setup (int order,
               double sampleRate,
@@ -130,7 +130,7 @@ struct LowShelfBase : PoleFilterBase <AnalogLowShelf>
               double rippleDb);
 };
 
-struct HighShelfBase : PoleFilterBase <AnalogLowShelf>
+struct HighShelfBase : AnalogPoleFilterBase <AnalogLowShelf>
 {
   void setup (int order,
               double sampleRate,
@@ -139,7 +139,7 @@ struct HighShelfBase : PoleFilterBase <AnalogLowShelf>
               double rippleDb);
 };
 
-struct BandShelfBase : PoleFilterBase <AnalogLowShelf>
+struct BandShelfBase : AnalogPoleFilterBase <AnalogLowShelf>
 {
   void setup (int order,
               double sampleRate,

@@ -54,7 +54,8 @@ namespace Dsp {
 
 // Factored implementations to reduce template instantiations
 
-class PoleFilterBase2 : public Cascade
+template <class DigitalPrototype = LayoutBase>
+class DigitalPoleFilterBase : public Cascade
 {
 public:
   // This gets the poles/zeros directly from the digital
@@ -80,13 +81,13 @@ public:
 #endif
 
 protected:
-  LayoutBase m_digitalProto;
+  DigitalPrototype m_digitalProto;
 };
 
 // Serves a container to hold the analog prototype
 // and the digital pole/zero layout.
 template <class AnalogPrototype>
-class PoleFilterBase : public PoleFilterBase2
+class AnalogPoleFilterBase : public DigitalPoleFilterBase<>
 {
 protected:
   void setPrototypeStorage (const LayoutBase& analogStorage,
