@@ -74,7 +74,13 @@ namespace Dsp {
  *  y[n] = (b0/a0)*x[n] + (b1/a0)*x[n-1] + (b2/a0)*x[n-2]
  *                      - (a1/a0)*y[n-1] - (a2/a0)*y[n-2]  
  */
-template <class FP, bool Simd = true>
+template <class FP, bool Simd =
+#ifdef __ARM_NEON__
+    true
+#else
+    false
+#endif
+    >
 class DirectFormI
 {
 public:
