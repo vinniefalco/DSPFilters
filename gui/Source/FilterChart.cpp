@@ -59,8 +59,8 @@ FilterChart::~FilterChart()
 
 void FilterChart::paint (Graphics& g)
 {
-  const Rectangle<int> bounds = getLocalBounds ();
-	const Rectangle<int> r = bounds;
+  const Rectangle<int> b = getLocalBounds ();
+	const Rectangle<int> r = b;
 
   g.setColour (m_cBack);
 	g.fillRect (r.reduced (1, 1));
@@ -119,11 +119,11 @@ void FilterChart::drawText (Graphics &g,
 
 void FilterChart::paintName (Graphics& g)
 {
-	const Rectangle<int> bounds = getLocalBounds ();
+	const Rectangle<int> b = getLocalBounds ();
   const String name = getName ();
 
   g.setColour (m_cText);
-  drawText (g, Point<int> (bounds.getRight() - 4, bounds.getY() + 4),
+  drawText (g, Point<int> (b.getRight() - 4, b.getY() + 4),
     name, Justification::topRight);
 }
 
@@ -140,8 +140,8 @@ FrequencyChart::~FrequencyChart ()
 
 void FrequencyChart::paintOverChildren (Graphics& g)
 {
-  const Rectangle<int>& bounds = getLocalBounds();
-  Rectangle <int> r = bounds.reduced (1, 1);
+  const Rectangle<int>& b = getLocalBounds();
+  Rectangle <int> r = b.reduced (1, 1);
 
   g.setColour (Colour::fromRGBA (0, 0, 0, 32));
 #if 0

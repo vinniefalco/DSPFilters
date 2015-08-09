@@ -47,50 +47,50 @@ THE SOFTWARE.
  *
  */
 class AudioOutput
-  : private AudioIODeviceCallback
+    : private AudioIODeviceCallback
 {
 public:
-  AudioOutput ();
-  ~AudioOutput ();
+    AudioOutput();
+    ~AudioOutput();
 
-  AudioDeviceManager& getAudioDeviceManager();
+    AudioDeviceManager& getAudioDeviceManager();
 
-  void setGain (float gainDb);
-  void setTempo (float tempo);
-  void setSource (AudioSource* source);
-  void setFilter (Dsp::Filter* filter);
-  void setFilterParameters (Dsp::Params parameters);
-  void resetFilter ();
+    void setGain(float gainDb);
+    void setTempo(float tempo);
+    void setSource(AudioSource* source);
+    void setFilter(Dsp::Filter* filter);
+    void setFilterParameters(Dsp::Params parameters);
+    void resetFilter();
 
 protected:
-  void doSetGain (float gain);
-  void doSetTempo (float tempo);
-  void doSetSource (ResamplingAudioSource* source);
-  void doSetFilter (Dsp::Filter* filter);
-  void doSetFilterParameters (Dsp::Params parameters);
-  void doResetFilter ();
+    void doSetGain(float gain);
+    void doSetTempo(float tempo);
+    void doSetSource(ResamplingAudioSource* source);
+    void doSetFilter(Dsp::Filter* filter);
+    void doSetFilterParameters(Dsp::Params parameters);
+    void doResetFilter();
 
-  void audioDeviceAboutToStart (AudioIODevice* device);
+    void audioDeviceAboutToStart(AudioIODevice* device);
 
-  void audioDeviceIOCallback (const float** inputChannelData,
-                              int numInputChannels,
-                              float** outputChannelData,
-                              int numOutputChannels,
-                              int numSamples);
+    void audioDeviceIOCallback(const float** inputChannelData,
+        int numInputChannels,
+        float** outputChannelData,
+        int numOutputChannels,
+        int numSamples);
 
-  void audioDeviceStopped ();
+    void audioDeviceStopped();
 
 private:
-  ScopedPointer<AudioDeviceManager> m_audioDeviceManager;
-  ThreadQueue m_queue;
-  AudioIODevice* m_device;
-  ScopedPointer<FilteringAudioSource> m_filteringAudioSource;
-  ResamplingAudioSource* m_resampler;
-  float m_gain;
-  float m_gainNext;
-  float m_tempo;
-  float m_tempoNext;
-  int m_tempoSamplesFade;
+    ScopedPointer<AudioDeviceManager> m_audioDeviceManager;
+    ThreadQueue m_queue;
+    AudioIODevice* m_device;
+    ScopedPointer<FilteringAudioSource> m_filteringAudioSource;
+    ResamplingAudioSource* m_resampler;
+    float m_gain;
+    float m_gainNext;
+    float m_tempo;
+    float m_tempoNext;
+    int m_tempoSamplesFade;
 };
 
 #endif

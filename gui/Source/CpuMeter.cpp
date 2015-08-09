@@ -62,8 +62,8 @@ CpuMeter::~CpuMeter()
 
 void CpuMeter::paint (Graphics& g)
 {
-  const Rectangle<int> bounds = getLocalBounds();
-  Rectangle<int> r = bounds;
+  const Rectangle<int> b = getLocalBounds();
+  Rectangle<int> r = b;
   r.setLeft (m_label->getRight() + 4);
 
   // fill

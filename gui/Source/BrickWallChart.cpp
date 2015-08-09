@@ -98,8 +98,8 @@ void BrickWallChart::update ()
   {
     m_isDefined = true;
 
-    const Rectangle<int> bounds = getLocalBounds ();
-    const Rectangle<int> r = bounds.reduced (4, 4);
+    const Rectangle<int> b = getLocalBounds ();
+    const Rectangle<int> r = b.reduced (4, 4);
 
     for (int xi = 0; xi < r.getWidth(); ++xi )
     {
@@ -136,8 +136,8 @@ void BrickWallChart::update ()
 
 AffineTransform BrickWallChart::calcTransform ()
 {
-  const Rectangle<int> bounds = getLocalBounds ();
-  const Rectangle<int> r = bounds.reduced (4, 4);
+  const Rectangle<int> b = getLocalBounds ();
+  const Rectangle<int> r = b.reduced (4, 4);
 
   AffineTransform t;
 
