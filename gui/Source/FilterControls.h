@@ -47,34 +47,34 @@ THE SOFTWARE.
  *
  */
 class FilterControls
-  : public Component
-  , public FilterListener
+    : public Component
+    , public FilterListener
 {
 public:
-  FilterControls (ListenerList<FilterListener>& listeners);
-  ~FilterControls ();
+    FilterControls(ListenerList<FilterListener>& listeners);
+    ~FilterControls();
 
-  void paint (Graphics& g);
+    void paint(Graphics& g);
 
-  void onFilterChanged (Dsp::Filter* newFilter);
+    void onFilterChanged(Dsp::Filter* newFilter);
 
 protected:
-  void clear ();
+    void clear();
 
 private:
-  struct Item
-  {
-    Item ()
+    struct Item
     {
-      group = 0;
-    }
+        Item()
+        {
+            group = 0;
+        }
 
-    SliderGroup* group;
-  };
+        SliderGroup* group;
+    };
 
-  ListenerList<FilterListener>& m_listeners;
-  Array<Item> m_items;
-  Dsp::Filter* m_filter;
+    ListenerList<FilterListener>& m_listeners;
+    Array<Item> m_items;
+    Dsp::Filter* m_filter;
 };
 
 #endif

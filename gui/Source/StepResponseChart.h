@@ -45,22 +45,22 @@ THE SOFTWARE.
 class StepResponseChart : public FilterChart
 {
 public:
-  StepResponseChart (FilterListeners& listeners);
+    StepResponseChart(FilterListeners& listeners);
 
-  const String getName () const;
+    const String getName() const;
 
-  int yToScreen (float y);
+    int yToScreen(float y);
 
-  void paintContents (Graphics& g);
-
-private:
-  void update ();
-  AffineTransform calcTransform ();
+    void paintContents(Graphics& g);
 
 private:
-  bool m_isDefined;
-  Path m_path;
-  float m_ymax;
+    void update();
+    AffineTransform calcTransform();
+
+private:
+    bool m_isDefined;
+    Path m_path;
+    float m_ymax;
 };
 
 #endif

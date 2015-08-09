@@ -39,8 +39,8 @@ THE SOFTWARE.
 class SettingsPanel : public Component
 {
 public:
-  SettingsPanel ();
-  ~SettingsPanel ();
+    SettingsPanel();
+    ~SettingsPanel();
 };
 
 #endif

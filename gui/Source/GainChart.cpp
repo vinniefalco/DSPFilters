@@ -38,51 +38,51 @@ THE SOFTWARE.
 
 //------------------------------------------------------------------------------
 
-GainChart::GainChart (FilterListeners& listeners)
-  : FrequencyChart (listeners)
-  , m_maxDb (0)
+GainChart::GainChart(FilterListeners& listeners)
+    : FrequencyChart(listeners)
+    , m_maxDb(0)
 {
 }
 
-const String GainChart::getName () const
+const String GainChart::getName() const
 {
-  return "Gain (dB)";
+    return "Gain (dB)";
 }
 
-int GainChart::yToScreen (float y)
+int GainChart::yToScreen(float y)
 {
-  AffineTransform t = calcTransform();
-  Point<float> p (0, y);
-  return int(p.transformedBy (t).getY());
+    AffineTransform t = calcTransform();
+    Point<float> p(0, y);
+    return int(p.transformedBy(t).getY());
 }
 
-void GainChart::paintContents (Graphics& g)
+void GainChart::paintContents(Graphics& g)
 {
-  AffineTransform t = calcTransform();
+    AffineTransform t = calcTransform();
 
-  g.setColour (Colours::black);
-  drawDbLine (g, 0, false);
+    g.setColour(Colours::black);
+    drawDbLine(g, 0, false);
 
-  g.setColour (m_cAxisMinor);
-  drawDbLine (g, -3, false);
+    g.setColour(m_cAxisMinor);
+    drawDbLine(g, -3, false);
 
-  int skip = 6;
-  if (getHeight() < 240)
-    skip = 12;
+    int skip = 6;
+    if(getHeight() < 240)
+        skip = 12;
 
-  g.setColour (m_cAxis);
+    g.setColour(m_cAxis);
 
-  for (int i = -skip; true; i -= skip)
-    if (!drawDbLine (g, i))
-      break;
+    for(int i = -skip; true; i -= skip)
+        if(!drawDbLine(g, i))
+            break;
 
-  for (int i = skip; true; i += skip)
-    if (!drawDbLine (g, i))
-      break;
+    for(int i = skip; true; i += skip)
+        if(!drawDbLine(g, i))
+            break;
 
-  // path
-  g.setColour (Colours::blue);
-  g.strokePath (m_path, PathStrokeType(1), t);
+    // path
+    g.setColour(Colours::blue);
+    g.strokePath(m_path, PathStrokeType(1), t);
 }
 
 /*
@@ -91,103 +91,101 @@ void GainChart::paintContents (Graphics& g)
  * the y coordinates will be in gain dB
  *
  */
-void GainChart::update ()
+void GainChart::update()
 {
-  m_isDefined = false;
-  m_path.clear();
+    m_isDefined = false;
+    m_path.clear();
 
-  if (m_filter)
-  {
-    m_isDefined = true;
-
-    const Rectangle<int> bounds = getLocalBounds ();
-    const Rectangle<int> r = bounds.reduced (4, 4);
-
-    for (int xi = 0; xi < r.getWidth(); ++xi )
+    if(m_filter)
     {
-      float x = xi / float(r.getWidth());
-      float f = xToF (x);
-      Dsp::complex_t c = m_filter->response (f/2.f);
-      float y = float(std::abs(c));
-      if (y < 1e-5f)
-          y = 1e-5f;
-      y = 20 * log10 (y);
+        m_isDefined = true;
 
-      if (!Dsp::is_nan (y))
-      {
-        if (xi == 0)
-          m_path.startNewSubPath (x, y);
-        else
-          m_path.lineTo (x, y);
-      }
-      else
-      {
-        m_path.clear ();
-        m_isDefined = false;
-        break;
-      }
+        const Rectangle<int> bounds = getLocalBounds();
+        const Rectangle<int> r = bounds.reduced(4, 4);
+
+        for(int xi = 0; xi < r.getWidth(); ++xi)
+        {
+            float x = xi / float(r.getWidth());
+            float f = xToF(x);
+            Dsp::complex_t c = m_filter->response(f / 2.f);
+            float y = float(std::abs(c));
+            if(y < 1e-5f)
+                y = 1e-5f;
+            y = 20 * log10(y);
+
+            if(!Dsp::is_nan(y))
+            {
+                if(xi == 0)
+                    m_path.startNewSubPath(x, y);
+                else
+                    m_path.lineTo(x, y);
+            } else
+            {
+                m_path.clear();
+                m_isDefined = false;
+                break;
+            }
+        }
+
+        if(m_isDefined)
+            m_path.startNewSubPath(0, 0);
     }
 
-    if (m_isDefined)
-      m_path.startNewSubPath (0, 0);
-  }
+    m_maxDb = float(floor(m_path.getBounds().getBottom() + 0.5));
 
-  m_maxDb = float(floor(m_path.getBounds().getBottom()+0.5));
-
-  repaint();
+    repaint();
 }
 
-bool GainChart::drawDbLine (Graphics& g, int db, bool drawLabel)
+bool GainChart::drawDbLine(Graphics& g, int db, bool drawLabel)
 {
-  bool onScreen = true;
+    bool onScreen = true;
 
-  const Rectangle<int> bounds = getLocalBounds ();
-  const Rectangle<int> r = bounds;
-  const int y = yToScreen (float(db));
+    const Rectangle<int> bounds = getLocalBounds();
+    const Rectangle<int> r = bounds;
+    const int y = yToScreen(float(db));
 
-  if (y >= r.getY() && y < r.getBottom())
-  {
-    g.fillRect (r.getX(), y, r.getWidth(), 1);
-
-    if (drawLabel)
+    if(y >= r.getY() && y < r.getBottom())
     {
-      if (db >= 0)
-        drawText (g, Point<int> (r.getX()+6, y-2), String(db));
-      else
-        drawText (g, Point<int> (r.getX()+6, y+2), String(db), Justification::topLeft);
-    }
-  }
-  else
-  {
-    onScreen = false;
-  }
+        g.fillRect(r.getX(), y, r.getWidth(), 1);
 
-  return onScreen;
+        if(drawLabel)
+        {
+            if(db >= 0)
+                drawText(g, Point<int>(r.getX() + 6, y - 2), String(db));
+            else
+                drawText(g, Point<int>(r.getX() + 6, y + 2), String(db), Justification::topLeft);
+        }
+    } else
+    {
+        onScreen = false;
+    }
+
+    return onScreen;
 }
 
-AffineTransform GainChart::calcTransform ()
+AffineTransform GainChart::calcTransform()
 {
-  const Rectangle<int> bounds = getLocalBounds ();
-  const Rectangle<int> r = bounds.reduced (4, 4);
+    const Rectangle<int> bounds = getLocalBounds();
+    const Rectangle<int> r = bounds.reduced(4, 4);
 
-  float maxDb = jmax (m_maxDb, float(kMaxDb));
+    float maxDb = jmax(m_maxDb, float(kMaxDb));
 
-  AffineTransform t;
+    AffineTransform t;
 
-  // scale x from 0..1 to 0..getWidth(), and flip vertical
-  t = AffineTransform::scale (float(r.getWidth()), -1.f);
+    // scale x from 0..1 to 0..getWidth(), and flip vertical
+    t = AffineTransform::scale(float(r.getWidth()), -1.f);
 
-  // move y down so maxDb is at the top
-  t = t.translated (0, maxDb);
+    // move y down so maxDb is at the top
+    t = t.translated(0, maxDb);
 
-  // scale y from gain to 0..1 bounds in r
-  t = t.scaled (1.f, 1.f/(maxDb - kMinDb));
+    // scale y from gain to 0..1 bounds in r
+    t = t.scaled(1.f, 1.f / (maxDb - kMinDb));
 
-  // scale y from 0..1 to getHeight()
-  t = t.scaled (1.f, float(r.getHeight()));
+    // scale y from 0..1 to getHeight()
+    t = t.scaled(1.f, float(r.getHeight()));
 
-  // translate
-  t = t.translated (float(r.getX()), float(r.getY()));
+    // translate
+    t = t.translated(float(r.getX()), float(r.getY()));
 
-  return t;
+    return t;
 }

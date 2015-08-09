@@ -41,59 +41,59 @@ THE SOFTWARE.
 #include "FilterListener.h"
 
 class MainPanel :
-	public Component,
-  public MenuBarModel,
-	public ButtonListener,
-  public SliderListener,
-	public ComboBoxListener,
-  public TopLevelResizableLayout,
-  public FilterListener
+    public Component,
+    public MenuBarModel,
+    public ButtonListener,
+    public SliderListener,
+    public ComboBoxListener,
+    public TopLevelResizableLayout,
+    public FilterListener
 {
 public:
-  MainPanel();
-  ~MainPanel();
+    MainPanel();
+    ~MainPanel();
 
-  void createCharts (const Rectangle<int>& r);
-  void buildFamilyMenu (ComboBox* comboBox);
-  void buildTypeMenu (ComboBox* comboBox);
+    void createCharts(const Rectangle<int>& r);
+    void buildFamilyMenu(ComboBox* comboBox);
+    void buildTypeMenu(ComboBox* comboBox);
 
-  void paint (Graphics& g);
+    void paint(Graphics& g);
 
-  void setAudio (int audioId);
+    void setAudio(int audioId);
 
-  void buttonClicked (Button *ctrl);
-  void sliderValueChanged (Slider* ctrl);
-  void comboBoxChanged (ComboBox* ctrl);
+    void buttonClicked(Button *ctrl);
+    void sliderValueChanged(Slider* ctrl);
+    void comboBoxChanged(ComboBox* ctrl);
 
-  void onFilterParameters ();
+    void onFilterParameters();
 
-  StringArray getMenuBarNames();
-  PopupMenu getMenuForIndex (int topLevelMenuIndex, const String& menuName);
-  void menuItemSelected (int menuItemID, int topLevelMenuIndex);
-
-private:
-  template <class DesignType, class StateType>
-  void createFilterDesign (Dsp::Filter** pFilter, Dsp::Filter** pAudioFilter);
-
-  template <class DesignType>
-  void createFilterState (Dsp::Filter** pFilter, Dsp::Filter** pAudioFilter);
-
-  void createFilter ();
+    StringArray getMenuBarNames();
+    PopupMenu getMenuForIndex(int topLevelMenuIndex, const String& menuName);
+    void menuItemSelected(int menuItemID, int topLevelMenuIndex);
 
 private:
-  ListenerList<FilterListener> m_listeners;
-  ComboBox* m_menuFamily;
-  ComboBox* m_menuType;
-  ComboBox* m_menuAudio;
-  ComboBox* m_menuStateType;
-  ComboBox* m_menuSmoothing;
-  Button* m_resetButton;
-  Slider* m_volumeSlider;
-  Slider* m_tempoSlider;
+    template <class DesignType, class StateType>
+    void createFilterDesign(Dsp::Filter** pFilter, Dsp::Filter** pAudioFilter);
 
-  int m_lastTypeId;
+    template <class DesignType>
+    void createFilterState(Dsp::Filter** pFilter, Dsp::Filter** pAudioFilter);
 
-  ScopedPointer<Dsp::Filter> m_filter;
+    void createFilter();
+
+private:
+    ListenerList<FilterListener> m_listeners;
+    ComboBox* m_menuFamily;
+    ComboBox* m_menuType;
+    ComboBox* m_menuAudio;
+    ComboBox* m_menuStateType;
+    ComboBox* m_menuSmoothing;
+    Button* m_resetButton;
+    Slider* m_volumeSlider;
+    Slider* m_tempoSlider;
+
+    int m_lastTypeId;
+
+    ScopedPointer<Dsp::Filter> m_filter;
 };
 
 #endif

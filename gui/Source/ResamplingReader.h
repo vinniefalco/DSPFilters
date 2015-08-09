@@ -46,21 +46,21 @@ THE SOFTWARE.
 class ResamplingReader : public AudioSource
 {
 public:
-  ResamplingReader (AudioFormatReader* reader);
+    ResamplingReader(AudioFormatReader* reader);
 
-  ~ResamplingReader ();
+    ~ResamplingReader();
 
-  void prepareToPlay (int samplesPerBlockExpected,
-                      double sampleRate);
+    void prepareToPlay(int samplesPerBlockExpected,
+        double sampleRate);
 
-  void releaseResources();
+    void releaseResources();
 
-  void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill);
+    void getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill);
 
 private:
-  ScopedPointer<AudioFormatReader> m_reader;
-  ScopedPointer<AudioFormatReaderSource> m_source;
-  ScopedPointer<ResamplingAudioSource> m_resampler;
+    ScopedPointer<AudioFormatReader> m_reader;
+    ScopedPointer<AudioFormatReaderSource> m_source;
+    ScopedPointer<ResamplingAudioSource> m_resampler;
 };
 
 #endif

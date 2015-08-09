@@ -49,53 +49,53 @@ namespace Dsp {
  *
  */
 
-//------------------------------------------------------------------------------
+ //------------------------------------------------------------------------------
 
-/*
- * State for applying a second order section to a sample using Direct Form I
- *
- * Difference equation:
- *
- *  y[n] = (b0/a0)*x[n] + (b1/a0)*x[n-1] + (b2/a0)*x[n-2]
- *                      - (a1/a0)*y[n-1] - (a2/a0)*y[n-2]  
- */
+ /*
+  * State for applying a second order section to a sample using Direct Form I
+  *
+  * Difference equation:
+  *
+  *  y[n] = (b0/a0)*x[n] + (b1/a0)*x[n-1] + (b2/a0)*x[n-2]
+  *                      - (a1/a0)*y[n-1] - (a2/a0)*y[n-2]
+  */
 class DirectFormI
 {
 public:
-  DirectFormI ()
-  {
-    reset();
-  }
+    DirectFormI()
+    {
+        reset();
+    }
 
-  void reset ()
-  {
-    m_x1 = 0;
-    m_x2 = 0;
-    m_y1 = 0;
-    m_y2 = 0;
-  }
+    void reset()
+    {
+        m_x1 = 0;
+        m_x2 = 0;
+        m_y1 = 0;
+        m_y2 = 0;
+    }
 
-  template <typename Sample>
-  inline Sample process1 (const Sample in,
-                          const BiquadBase& s,
-                          const double vsa) // very small amount
-  {
-    double out = s.m_b0*in + s.m_b1*m_x1 + s.m_b2*m_x2
-                           - s.m_a1*m_y1 - s.m_a2*m_y2
-                           + vsa;
-    m_x2 = m_x1;
-    m_y2 = m_y1;
-    m_x1 = in;
-    m_y1 = out;
+    template <typename Sample>
+    inline Sample process1(const Sample in,
+        const BiquadBase& s,
+        const double vsa) // very small amount
+    {
+        double out = s.m_b0*in + s.m_b1*m_x1 + s.m_b2*m_x2
+            - s.m_a1*m_y1 - s.m_a2*m_y2
+            + vsa;
+        m_x2 = m_x1;
+        m_y2 = m_y1;
+        m_x1 = in;
+        m_y1 = out;
 
-    return static_cast<Sample> (out);
-  }
+        return static_cast<Sample> (out);
+    }
 
 protected:
-  double m_x2; // x[n-2]
-  double m_y2; // y[n-2]
-  double m_x1; // x[n-1]
-  double m_y1; // y[n-1]
+    double m_x2; // x[n-2]
+    double m_y2; // y[n-2]
+    double m_x1; // x[n-1]
+    double m_y1; // y[n-1]
 };
 
 //------------------------------------------------------------------------------
@@ -112,34 +112,34 @@ protected:
 class DirectFormII
 {
 public:
-  DirectFormII ()
-  {
-    reset ();
-  }
+    DirectFormII()
+    {
+        reset();
+    }
 
-  void reset ()
-  {
-    m_v1 = 0;
-    m_v2 = 0;
-  }
+    void reset()
+    {
+        m_v1 = 0;
+        m_v2 = 0;
+    }
 
-  template <typename Sample>
-  Sample process1 (const Sample in,
-                   const BiquadBase& s,
-                   const double vsa)
-  {
-    double w   = in - s.m_a1*m_v1 - s.m_a2*m_v2 + vsa;
-    double out =      s.m_b0*w    + s.m_b1*m_v1 + s.m_b2*m_v2;
+    template <typename Sample>
+    Sample process1(const Sample in,
+        const BiquadBase& s,
+        const double vsa)
+    {
+        double w = in - s.m_a1*m_v1 - s.m_a2*m_v2 + vsa;
+        double out = s.m_b0*w + s.m_b1*m_v1 + s.m_b2*m_v2;
 
-    m_v2 = m_v1;
-    m_v1 = w;
+        m_v2 = m_v1;
+        m_v1 = w;
 
-    return static_cast<Sample> (out);
-  }
+        return static_cast<Sample> (out);
+    }
 
 private:
-  double m_v1; // v[-1]
-  double m_v2; // v[-2]
+    double m_v1; // v[-1]
+    double m_v2; // v[-2]
 };
 
 //------------------------------------------------------------------------------
@@ -153,61 +153,61 @@ private:
  *
  */
 
-// I think this one is broken
+ // I think this one is broken
 class TransposedDirectFormI
 {
 public:
-  TransposedDirectFormI ()
-  {
-    reset ();
-  }
+    TransposedDirectFormI()
+    {
+        reset();
+    }
 
-  void reset ()
-  {
-    m_v = 0;
-    m_s1 = 0;
-    m_s1_1 = 0;
-    m_s2 = 0;
-    m_s2_1 = 0;
-    m_s3 = 0;
-    m_s3_1 = 0;
-    m_s4 = 0;
-    m_s4_1 = 0;
-  }
+    void reset()
+    {
+        m_v = 0;
+        m_s1 = 0;
+        m_s1_1 = 0;
+        m_s2 = 0;
+        m_s2_1 = 0;
+        m_s3 = 0;
+        m_s3_1 = 0;
+        m_s4 = 0;
+        m_s4_1 = 0;
+    }
 
-  template <typename Sample>
-  inline Sample process1 (const Sample in,
-                          const BiquadBase& s,
-                          const double vsa)
-  {
-    double out;
+    template <typename Sample>
+    inline Sample process1(const Sample in,
+        const BiquadBase& s,
+        const double vsa)
+    {
+        double out;
 
-    // can be: in += m_s1_1;
-    m_v = in + m_s1_1;
-    out = s.m_b0*m_v + m_s3_1;
-    m_s1 = m_s2_1 - s.m_a1*m_v;
-    m_s2 = -s.m_a2*m_v;
-    m_s3 = s.m_b1*m_v + m_s4_1;
-    m_s4 = s.m_b2*m_v; 
+        // can be: in += m_s1_1;
+        m_v = in + m_s1_1;
+        out = s.m_b0*m_v + m_s3_1;
+        m_s1 = m_s2_1 - s.m_a1*m_v;
+        m_s2 = -s.m_a2*m_v;
+        m_s3 = s.m_b1*m_v + m_s4_1;
+        m_s4 = s.m_b2*m_v;
 
-    m_s4_1 = m_s4;
-    m_s3_1 = m_s3;
-    m_s2_1 = m_s2;
-    m_s1_1 = m_s1;
+        m_s4_1 = m_s4;
+        m_s3_1 = m_s3;
+        m_s2_1 = m_s2;
+        m_s1_1 = m_s1;
 
-    return static_cast<Sample> (out);
-  }
+        return static_cast<Sample> (out);
+    }
 
 private:
-  double m_v;
-  double m_s1;
-  double m_s1_1;
-  double m_s2;
-  double m_s2_1;
-  double m_s3;
-  double m_s3_1;
-  double m_s4;
-  double m_s4_1;
+    double m_v;
+    double m_s1;
+    double m_s1_1;
+    double m_s2;
+    double m_s2_1;
+    double m_s3;
+    double m_s3_1;
+    double m_s4;
+    double m_s4_1;
 };
 
 //------------------------------------------------------------------------------
@@ -215,40 +215,40 @@ private:
 class TransposedDirectFormII
 {
 public:
-  TransposedDirectFormII ()
-  {
-    reset ();
-  }
+    TransposedDirectFormII()
+    {
+        reset();
+    }
 
-  void reset ()
-  {
-    m_s1 = 0;
-    m_s1_1 = 0;
-    m_s2 = 0;
-    m_s2_1 = 0;
-  }
+    void reset()
+    {
+        m_s1 = 0;
+        m_s1_1 = 0;
+        m_s2 = 0;
+        m_s2_1 = 0;
+    }
 
-  template <typename Sample>
-  inline Sample process1 (const Sample in,
-                          const BiquadBase& s,
-                          const double vsa)
-  {
-    double out;
+    template <typename Sample>
+    inline Sample process1(const Sample in,
+        const BiquadBase& s,
+        const double vsa)
+    {
+        double out;
 
-    out = m_s1_1 + s.m_b0*in + vsa;
-    m_s1 = m_s2_1 + s.m_b1*in - s.m_a1*out;
-    m_s2 = s.m_b2*in - s.m_a2*out;
-    m_s1_1 = m_s1;
-    m_s2_1 = m_s2;
+        out = m_s1_1 + s.m_b0*in + vsa;
+        m_s1 = m_s2_1 + s.m_b1*in - s.m_a1*out;
+        m_s2 = s.m_b2*in - s.m_a2*out;
+        m_s1_1 = m_s1;
+        m_s2_1 = m_s2;
 
-    return static_cast<Sample> (out);
-  }
+        return static_cast<Sample> (out);
+    }
 
 private:
-  double m_s1;
-  double m_s1_1;
-  double m_s2;
-  double m_s2_1;
+    double m_s1;
+    double m_s1_1;
+    double m_s2;
+    double m_s2_1;
 };
 
 //------------------------------------------------------------------------------
@@ -258,38 +258,38 @@ template <int Channels, class StateType>
 class ChannelsState
 {
 public:
-  ChannelsState ()
-  {
-  }
+    ChannelsState()
+    {
+    }
 
-  const int getNumChannels() const
-  {
-    return Channels;
-  }
+    const int getNumChannels() const
+    {
+        return Channels;
+    }
 
-  void reset ()
-  {
-    for (int i = 0; i < Channels; ++i)
-      m_state[i].reset();
-  }
+    void reset()
+    {
+        for(int i = 0; i < Channels; ++i)
+            m_state[i].reset();
+    }
 
-  StateType& operator[] (int index)
-  {
-    assert (index >= 0 && index < Channels);
-    return m_state[index];
-  }
+    StateType& operator[] (int index)
+    {
+        assert(index >= 0 && index < Channels);
+        return m_state[index];
+    }
 
-  template <class Filter, typename Sample>
-  void process (int numSamples,
-                Sample* const* arrayOfChannels,
-                Filter& filter)
-  {
-    for (int i = 0; i < Channels; ++i)
-      filter.process (numSamples, arrayOfChannels[i], m_state[i]);
-  }
+    template <class Filter, typename Sample>
+    void process(int numSamples,
+        Sample* const* arrayOfChannels,
+        Filter& filter)
+    {
+        for(int i = 0; i < Channels; ++i)
+            filter.process(numSamples, arrayOfChannels[i], m_state[i]);
+    }
 
 private:
-  StateType m_state[Channels];
+    StateType m_state[Channels];
 };
 
 // Empty state, can't process anything
@@ -297,23 +297,23 @@ template <class StateType>
 class ChannelsState <0, StateType>
 {
 public:
-  const int getNumChannels() const
-  {
-    return 0;
-  }
+    const int getNumChannels() const
+    {
+        return 0;
+    }
 
-  void reset ()
-  {
-    throw std::logic_error ("attempt to reset empty ChannelState");
-  }
+    void reset()
+    {
+        throw std::logic_error("attempt to reset empty ChannelState");
+    }
 
-  template <class FilterDesign, typename Sample>
-  void process (int numSamples,
-                Sample* const* arrayOfChannels,
-                FilterDesign& filter)
-  {
-    throw std::logic_error ("attempt to process empty ChannelState");
-  }
+    template <class FilterDesign, typename Sample>
+    void process(int numSamples,
+        Sample* const* arrayOfChannels,
+        FilterDesign& filter)
+    {
+        throw std::logic_error("attempt to process empty ChannelState");
+    }
 };
 
 //------------------------------------------------------------------------------

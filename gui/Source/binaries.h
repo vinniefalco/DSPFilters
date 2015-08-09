@@ -5,8 +5,8 @@
 
 namespace binaries
 {
-    extern const char*  amenbreakloop_wav;
-    const int           amenbreakloop_wavSize = 1234164;
+extern const char*  amenbreakloop_wav;
+const int           amenbreakloop_wavSize = 1234164;
 
 };
 

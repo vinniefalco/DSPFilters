@@ -45,20 +45,20 @@ THE SOFTWARE.
 class PoleZeroChart : public FilterChart
 {
 public:
-  PoleZeroChart (FilterListeners& listeners);
+    PoleZeroChart(FilterListeners& listeners);
 
-  const String getName () const;
+    const String getName() const;
 
-	void paintContents (Graphics& g);
-
-private:
-  void clear ();
-  void update ();
-  void addPoleZeros (const std::vector<Dsp::PoleZeroPair>& vpz);
+    void paintContents(Graphics& g);
 
 private:
-  double m_max;
-  std::vector<Dsp::PoleZeroPair> m_vpz;
+    void clear();
+    void update();
+    void addPoleZeros(const std::vector<Dsp::PoleZeroPair>& vpz);
+
+private:
+    double m_max;
+    std::vector<Dsp::PoleZeroPair> m_vpz;
 };
 
 #endif

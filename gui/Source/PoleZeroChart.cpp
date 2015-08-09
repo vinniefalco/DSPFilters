@@ -36,136 +36,136 @@ THE SOFTWARE.
 #include "Common.h"
 #include "PoleZeroChart.h"
 
-PoleZeroChart::PoleZeroChart (FilterListeners& listeners)
-  : FilterChart (listeners)
+PoleZeroChart::PoleZeroChart(FilterListeners& listeners)
+    : FilterChart(listeners)
 {
 }
 
-const String PoleZeroChart::getName () const
+const String PoleZeroChart::getName() const
 {
-  return "Pole/Zero";
+    return "Pole/Zero";
 }
 
-void PoleZeroChart::paintContents (Graphics& g)
+void PoleZeroChart::paintContents(Graphics& g)
 {
-	Colour cPole (0xd0ff0000);
-	Colour cZero (0xd02020ff);
-	
-	Rectangle<int> bounds = getLocalBounds();
+    Colour cPole(0xd0ff0000);
+    Colour cZero(0xd02020ff);
 
-	short size = (jmin (getWidth(), getHeight()) + 2) / 3;
+    Rectangle<int> bounds = getLocalBounds();
 
-  // scale the graph down if the pole/zeroes lie outside the unit disc
-  AffineTransform t = AffineTransform::identity;
+    short size = (jmin(getWidth(), getHeight()) + 2) / 3;
 
-  {
-    float margin = 0.2f;
-    if (m_max > 1 + margin)
+    // scale the graph down if the pole/zeroes lie outside the unit disc
+    AffineTransform t = AffineTransform::identity;
+
     {
-      t = t.scaled (float(1/(m_max-margin)), float(1/(m_max-margin)));
-    }
-  }
-
-  t = t.scaled (float(size), -float(size));
-  t = t.translated (float(bounds.getCentreX()), float(bounds.getCentreY()));
-
-	g.setColour (m_cAxis);
-  {
-    Point<float> p = Point<float>(100000, 0).transformedBy (t);
-    g.drawLine (-p.getX(), p.getY(), p.getX(), p.getY(), 1);
-  }
-  {
-    Point<float> p = Point<float>(0, 100000).transformedBy (t);
-    g.drawLine (p.getX(), -p.getY(), p.getX(), p.getY(), 1);
-  }
-  {
-    Point<float> p0 = Point<float>(-1, -1).transformedBy (t);
-    Point<float> p1 = Point<float>( 1,  1).transformedBy (t);
-    g.drawEllipse (p0.getX(), p0.getY(),
-                   p1.getX()-p0.getX(), p1.getY()-p0.getY(), 1);
-  }
-
-  const float r = 3.5f;
-
-  for (size_t i = 0; i < m_vpz.size(); ++i)
-  {
-    const Dsp::PoleZeroPair& pzp = m_vpz[i];
-
-    if (!pzp.is_nan())
-    {
-      {
-        Point<float> p (float(pzp.poles.first.real()),
-                        float(pzp.poles.first.imag()));
-        p = p.transformedBy (t);
-        g.setColour (cPole);
-        g.drawLine (p.getX()-r, p.getY()-r, p.getX()+r, p.getY()+r);
-        g.drawLine (p.getX()+r, p.getY()-r, p.getX()-r, p.getY()+r);
-      }
-
-      {
-        Point<float> p (float(pzp.zeros.first.real()),
-                        float(pzp.zeros.first.imag()));
-        p = p.transformedBy (t);
-        g.setColour (cZero);
-    	  g.drawEllipse (p.getX()-r, p.getY()-r, 2*r, 2*r, 1);
-      }
-
-      if (!pzp.isSinglePole())
-      {
+        float margin = 0.2f;
+        if(m_max > 1 + margin)
         {
-          Point<float> p (float(pzp.poles.second.real()),
-                          float(pzp.poles.second.imag()));
-          p = p.transformedBy (t);
-          g.setColour (cPole);
-          g.drawLine (p.getX()-r, p.getY()-r, p.getX()+r, p.getY()+r);
-          g.drawLine (p.getX()+r, p.getY()-r, p.getX()-r, p.getY()+r);
+            t = t.scaled(float(1 / (m_max - margin)), float(1 / (m_max - margin)));
         }
-
-        {
-          Point<float> p (float(pzp.zeros.second.real()),
-                          float(pzp.zeros.second.imag()));
-          p = p.transformedBy (t);
-          g.setColour (cZero);
-    	    g.drawEllipse (p.getX()-r, p.getY()-r, 2*r, 2*r, 1);
-        }
-      }
     }
-  }
-}
 
-void PoleZeroChart::clear ()
-{
-  m_max = 0;
-  m_vpz.clear();
-}
+    t = t.scaled(float(size), -float(size));
+    t = t.translated(float(bounds.getCentreX()), float(bounds.getCentreY()));
 
-void PoleZeroChart::update ()
-{
-  clear ();
-
-  if (m_filter)
-    addPoleZeros (m_filter->getPoleZeros());
-
-  repaint ();
-}
-
-void PoleZeroChart::addPoleZeros (const std::vector<Dsp::PoleZeroPair>& vpz)
-{
-  for (size_t i = 0; i < vpz.size(); ++i)
-  {
-    const Dsp::PoleZeroPair& pzp = vpz[i];
-    m_vpz.push_back (pzp);
-
-    m_max = jmax (m_max, fabs(pzp.poles.first.real()));
-    m_max = jmax (m_max, fabs(pzp.poles.first.imag()));
-    m_max = jmax (m_max, fabs(pzp.zeros.first.real()));
-    m_max = jmax (m_max, fabs(pzp.zeros.first.imag()));
-    if (!pzp.isSinglePole())
+    g.setColour(m_cAxis);
     {
-      m_max = jmax (m_max, fabs(pzp.poles.second.real()));
-      m_max = jmax (m_max, fabs(pzp.poles.second.imag()));
-      m_max = jmax (m_max, fabs(pzp.zeros.second.real()));
-      m_max = jmax (m_max, fabs(pzp.zeros.second.imag()));
+        Point<float> p = Point<float>(100000, 0).transformedBy(t);
+        g.drawLine(-p.getX(), p.getY(), p.getX(), p.getY(), 1);
     }
-  }
+    {
+        Point<float> p = Point<float>(0, 100000).transformedBy(t);
+        g.drawLine(p.getX(), -p.getY(), p.getX(), p.getY(), 1);
+    }
+    {
+        Point<float> p0 = Point<float>(-1, -1).transformedBy(t);
+        Point<float> p1 = Point<float>(1, 1).transformedBy(t);
+        g.drawEllipse(p0.getX(), p0.getY(),
+            p1.getX() - p0.getX(), p1.getY() - p0.getY(), 1);
+    }
+
+    const float r = 3.5f;
+
+    for(size_t i = 0; i < m_vpz.size(); ++i)
+    {
+        const Dsp::PoleZeroPair& pzp = m_vpz[i];
+
+        if(!pzp.is_nan())
+        {
+            {
+                Point<float> p(float(pzp.poles.first.real()),
+                    float(pzp.poles.first.imag()));
+                p = p.transformedBy(t);
+                g.setColour(cPole);
+                g.drawLine(p.getX() - r, p.getY() - r, p.getX() + r, p.getY() + r);
+                g.drawLine(p.getX() + r, p.getY() - r, p.getX() - r, p.getY() + r);
+            }
+
+            {
+                Point<float> p(float(pzp.zeros.first.real()),
+                    float(pzp.zeros.first.imag()));
+                p = p.transformedBy(t);
+                g.setColour(cZero);
+                g.drawEllipse(p.getX() - r, p.getY() - r, 2 * r, 2 * r, 1);
+            }
+
+            if(!pzp.isSinglePole())
+            {
+                {
+                    Point<float> p(float(pzp.poles.second.real()),
+                        float(pzp.poles.second.imag()));
+                    p = p.transformedBy(t);
+                    g.setColour(cPole);
+                    g.drawLine(p.getX() - r, p.getY() - r, p.getX() + r, p.getY() + r);
+                    g.drawLine(p.getX() + r, p.getY() - r, p.getX() - r, p.getY() + r);
+                }
+
+                {
+                    Point<float> p(float(pzp.zeros.second.real()),
+                        float(pzp.zeros.second.imag()));
+                    p = p.transformedBy(t);
+                    g.setColour(cZero);
+                    g.drawEllipse(p.getX() - r, p.getY() - r, 2 * r, 2 * r, 1);
+                }
+            }
+        }
+    }
+}
+
+void PoleZeroChart::clear()
+{
+    m_max = 0;
+    m_vpz.clear();
+}
+
+void PoleZeroChart::update()
+{
+    clear();
+
+    if(m_filter)
+        addPoleZeros(m_filter->getPoleZeros());
+
+    repaint();
+}
+
+void PoleZeroChart::addPoleZeros(const std::vector<Dsp::PoleZeroPair>& vpz)
+{
+    for(size_t i = 0; i < vpz.size(); ++i)
+    {
+        const Dsp::PoleZeroPair& pzp = vpz[i];
+        m_vpz.push_back(pzp);
+
+        m_max = jmax(m_max, fabs(pzp.poles.first.real()));
+        m_max = jmax(m_max, fabs(pzp.poles.first.imag()));
+        m_max = jmax(m_max, fabs(pzp.zeros.first.real()));
+        m_max = jmax(m_max, fabs(pzp.zeros.first.imag()));
+        if(!pzp.isSinglePole())
+        {
+            m_max = jmax(m_max, fabs(pzp.poles.second.real()));
+            m_max = jmax(m_max, fabs(pzp.poles.second.imag()));
+            m_max = jmax(m_max, fabs(pzp.zeros.second.real()));
+            m_max = jmax(m_max, fabs(pzp.zeros.second.imag()));
+        }
+    }
 }

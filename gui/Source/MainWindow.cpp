@@ -38,22 +38,22 @@ THE SOFTWARE.
 #include "MainWindow.h"
 #include "MainPanel.h"
 
-MainWindow::MainWindow () 
-  : DocumentWindow (TRANS("DSP Filters"),
-                    Colours::lightgrey, 
-                    DocumentWindow::allButtons,
-                    true)
+MainWindow::MainWindow()
+    : DocumentWindow(TRANS("DSP Filters"),
+        Colours::lightgrey,
+        DocumentWindow::allButtons,
+        true)
 {
-  setResizable (true, false);
-  
-  MainPanel* contentComponent = new MainPanel;
-  setMenuBar (contentComponent);
-  setContentOwned (contentComponent, true);
-  contentComponent->setAsConstrainerFor (this);
-  ContentComponentConstrainer::attachTo (this);
+    setResizable(true, false);
 
-  centreWithSize (getWidth(), getHeight());
-  setVisible (true);
+    MainPanel* contentComponent = new MainPanel;
+    setMenuBar(contentComponent);
+    setContentOwned(contentComponent, true);
+    contentComponent->setAsConstrainerFor(this);
+    ContentComponentConstrainer::attachTo(this);
+
+    centreWithSize(getWidth(), getHeight());
+    setVisible(true);
 }
 
 MainWindow::~MainWindow()
@@ -62,5 +62,5 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeButtonPressed()
 {
-  JUCEApplication::quit();
+    JUCEApplication::quit();
 }

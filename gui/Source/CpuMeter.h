@@ -45,23 +45,23 @@ THE SOFTWARE.
  *
  */
 class CpuMeter
-  : public Component
-  , public Timer
-  , public ResizableLayout
+    : public Component
+    , public Timer
+    , public ResizableLayout
 {
 public:
-  CpuMeter (AudioDeviceManager& audioDeviceManager);
-  ~CpuMeter ();
+    CpuMeter(AudioDeviceManager& audioDeviceManager);
+    ~CpuMeter();
 
-  void paint (Graphics& g);
-
-private:
-  void timerCallback ();
+    void paint(Graphics& g);
 
 private:
-  ScopedPointer<Label> m_label;
-  AudioDeviceManager& m_audioDeviceManager;
-  double m_value;
+    void timerCallback();
+
+private:
+    ScopedPointer<Label> m_label;
+    AudioDeviceManager& m_audioDeviceManager;
+    double m_value;
 };
 
 #endif

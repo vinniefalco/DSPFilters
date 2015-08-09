@@ -41,10 +41,10 @@ THE SOFTWARE.
 class MainWindow : public DocumentWindow
 {
 public:
-  MainWindow ();
-  ~MainWindow ();
+    MainWindow();
+    ~MainWindow();
 
-  void closeButtonPressed ();
+    void closeButtonPressed();
 };
 
 #endif

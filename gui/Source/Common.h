@@ -45,9 +45,9 @@ THE SOFTWARE.
 #  pragma warning (disable: 4355)
 #endif
 
-inline Rectangle<int> tlbr (int top, int left, int bottom, int right)
+inline Rectangle<int> tlbr(int top, int left, int bottom, int right)
 {
-  return Rectangle<int> (left, top, right-left, bottom-top);
+    return Rectangle<int>(left, top, right - left, bottom - top);
 }
 
 #endif

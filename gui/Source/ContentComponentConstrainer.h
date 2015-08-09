@@ -52,106 +52,106 @@ THE SOFTWARE.
 // just call ContentComponentConstrainer::attachTo (yourResizableWindow).
 // It will take care of deleting itself and handle everything for you.
 class ContentComponentConstrainer
-  : private ComponentBoundsConstrainer
-  , private ComponentListener
+    : private ComponentBoundsConstrainer
+    , private ComponentListener
 {
 public:
-  // we can attach to anything with ResizableWindow as a base
-  static void attachTo (ResizableWindow* resizableWindow)
-  {
-    ContentComponentConstrainer* contentConstrainer =
-      new ContentComponentConstrainer (resizableWindow);
-    resizableWindow->addComponentListener (contentConstrainer);
-  }
+    // we can attach to anything with ResizableWindow as a base
+    static void attachTo(ResizableWindow* resizableWindow)
+    {
+        ContentComponentConstrainer* contentConstrainer =
+            new ContentComponentConstrainer(resizableWindow);
+        resizableWindow->addComponentListener(contentConstrainer);
+    }
 
 private:
-  ContentComponentConstrainer (ResizableWindow* resizableWindow)
-   : m_resizableWindow (resizableWindow)
-   , m_originalConstrainer (0)
-  {
-    // if you aren't using a custom constrainer, then at least put a
-    // constraint on your ResizableWindow using ResizableWindow::setResizeLimits
-    // so that it gets the defaultConstrainer.
-    m_originalConstrainer = m_resizableWindow->getConstrainer();
-    jassert (m_originalConstrainer); // must exist
+    ContentComponentConstrainer(ResizableWindow* resizableWindow)
+        : m_resizableWindow(resizableWindow)
+        , m_originalConstrainer(0)
+    {
+        // if you aren't using a custom constrainer, then at least put a
+        // constraint on your ResizableWindow using ResizableWindow::setResizeLimits
+        // so that it gets the defaultConstrainer.
+        m_originalConstrainer = m_resizableWindow->getConstrainer();
+        jassert(m_originalConstrainer); // must exist
 
-    m_resizableWindow->setConstrainer (this);
-    m_resizableWindow->addComponentListener (this);
-  }
+        m_resizableWindow->setConstrainer(this);
+        m_resizableWindow->addComponentListener(this);
+    }
 
-  void resizeStart()
-  {
-    m_originalConstrainer->resizeStart();
-    copyConstraints (*m_originalConstrainer);
-    adjustConstraints();
-  }
+    void resizeStart()
+    {
+        m_originalConstrainer->resizeStart();
+        copyConstraints(*m_originalConstrainer);
+        adjustConstraints();
+    }
 
-  void resizeEnd()
-  {
-    m_originalConstrainer->resizeEnd();
-  }
+    void resizeEnd()
+    {
+        m_originalConstrainer->resizeEnd();
+    }
 
-  void applyBoundsToComponent (Component* component,
-                               const Rectangle<int>& bounds)
-  {
-    m_originalConstrainer->applyBoundsToComponent (component, bounds);
-  }
+    void applyBoundsToComponent(Component* component,
+        const Rectangle<int>& bounds)
+    {
+        m_originalConstrainer->applyBoundsToComponent(component, bounds);
+    }
 
-  void copyConstraints (ComponentBoundsConstrainer& from)
-  {
-    setMinimumWidth (from.getMinimumWidth());
-    setMaximumWidth (from.getMaximumWidth());
-    setMinimumHeight (from.getMinimumHeight());
-    setMaximumHeight (from.getMaximumHeight());
-    setFixedAspectRatio (from.getFixedAspectRatio());
+    void copyConstraints(ComponentBoundsConstrainer& from)
+    {
+        setMinimumWidth(from.getMinimumWidth());
+        setMaximumWidth(from.getMaximumWidth());
+        setMinimumHeight(from.getMinimumHeight());
+        setMaximumHeight(from.getMaximumHeight());
+        setFixedAspectRatio(from.getFixedAspectRatio());
 
-    int minimumWhenOffTheTop;
-    int minimumWhenOffTheLeft;
-    int minimumWhenOffTheBottom;
-    int minimumWhenOffTheRight;
+        int minimumWhenOffTheTop;
+        int minimumWhenOffTheLeft;
+        int minimumWhenOffTheBottom;
+        int minimumWhenOffTheRight;
 
-    minimumWhenOffTheTop = from.getMinimumWhenOffTheTop();
-    minimumWhenOffTheLeft = from.getMinimumWhenOffTheLeft();
-    minimumWhenOffTheBottom = from.getMinimumWhenOffTheBottom();
-    minimumWhenOffTheRight = from.getMinimumWhenOffTheRight();
+        minimumWhenOffTheTop = from.getMinimumWhenOffTheTop();
+        minimumWhenOffTheLeft = from.getMinimumWhenOffTheLeft();
+        minimumWhenOffTheBottom = from.getMinimumWhenOffTheBottom();
+        minimumWhenOffTheRight = from.getMinimumWhenOffTheRight();
 
-    setMinimumOnscreenAmounts (minimumWhenOffTheTop,
-                               minimumWhenOffTheLeft,
-                               minimumWhenOffTheBottom,
-                               minimumWhenOffTheRight);
-  }
+        setMinimumOnscreenAmounts(minimumWhenOffTheTop,
+            minimumWhenOffTheLeft,
+            minimumWhenOffTheBottom,
+            minimumWhenOffTheRight);
+    }
 
-  static int addWithoutOverflow (int a, int b)
-  {
-    if (a < (0x7ffffff-b))
-      return a+b;
-    else
-      return 0x7fffffff;
-  }
+    static int addWithoutOverflow(int a, int b)
+    {
+        if(a < (0x7ffffff - b))
+            return a + b;
+        else
+            return 0x7fffffff;
+    }
 
-  // adjusts the current constraints to take into account decorations
-  void adjustConstraints()
-  {
-    BorderSize<int> peerFrameBorder = m_resizableWindow->getPeer()->getFrameSize();
-    BorderSize<int> contentCompBorder = m_resizableWindow->getContentComponentBorder();
-    
-    int extraWidth = peerFrameBorder.getLeftAndRight() + contentCompBorder.getLeftAndRight();
-    int extraHeight = peerFrameBorder.getTopAndBottom() + contentCompBorder.getTopAndBottom();
+    // adjusts the current constraints to take into account decorations
+    void adjustConstraints()
+    {
+        BorderSize<int> peerFrameBorder = m_resizableWindow->getPeer()->getFrameSize();
+        BorderSize<int> contentCompBorder = m_resizableWindow->getContentComponentBorder();
 
-    setMinimumHeight (m_originalConstrainer->getMinimumHeight() + extraHeight);
-    setMaximumHeight (addWithoutOverflow (m_originalConstrainer->getMaximumHeight(), extraHeight));
-    setMinimumWidth (m_originalConstrainer->getMinimumWidth() + extraWidth);
-    setMaximumWidth (addWithoutOverflow (m_originalConstrainer->getMaximumWidth(), extraWidth));
-  }
+        int extraWidth = peerFrameBorder.getLeftAndRight() + contentCompBorder.getLeftAndRight();
+        int extraHeight = peerFrameBorder.getTopAndBottom() + contentCompBorder.getTopAndBottom();
 
-  void componentBeingDeleted (Component& component)
-  {
-    delete this;
-  }
+        setMinimumHeight(m_originalConstrainer->getMinimumHeight() + extraHeight);
+        setMaximumHeight(addWithoutOverflow(m_originalConstrainer->getMaximumHeight(), extraHeight));
+        setMinimumWidth(m_originalConstrainer->getMinimumWidth() + extraWidth);
+        setMaximumWidth(addWithoutOverflow(m_originalConstrainer->getMaximumWidth(), extraWidth));
+    }
+
+    void componentBeingDeleted(Component& component)
+    {
+        delete this;
+    }
 
 private:
-  ResizableWindow* m_resizableWindow;
-  ComponentBoundsConstrainer* m_originalConstrainer;
+    ResizableWindow* m_resizableWindow;
+    ComponentBoundsConstrainer* m_originalConstrainer;
 };
 
 #endif

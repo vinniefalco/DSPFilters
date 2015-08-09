@@ -37,30 +37,30 @@ THE SOFTWARE.
 #include "SettingsPanel.h"
 #include "SettingsWindow.h"
 
-SettingsWindow::SettingsWindow ()
-: DialogWindow (TRANS("Settings"),
-                Colour (192,192,192),
-                true,
-                false) // do not add to desktop yet
+SettingsWindow::SettingsWindow()
+    : DialogWindow(TRANS("Settings"),
+        Colour(192, 192, 192),
+        true,
+        false) // do not add to desktop yet
 {
-  SettingsPanel* contentComp = new SettingsPanel;
+    SettingsPanel* contentComp = new SettingsPanel;
 
-  setOpaque (true);
-  //setDropShadowEnabled (false);
+    setOpaque(true);
+    //setDropShadowEnabled (false);
 
-  // iOS doesn't have a native title bar
-  //setUsingNativeTitleBar (true);
+    // iOS doesn't have a native title bar
+    //setUsingNativeTitleBar (true);
 
-  // must happen AFTER setUsingNativeTitleBar()
-  Component::addToDesktop (getDesktopWindowStyleFlags());
+    // must happen AFTER setUsingNativeTitleBar()
+    Component::addToDesktop(getDesktopWindowStyleFlags());
 
-  // must happen after addToDesktop()
-  setContentOwned (contentComp, true);
+    // must happen after addToDesktop()
+    setContentOwned(contentComp, true);
 
-  centreWithSize (getWidth(), getHeight());
-  setVisible (true);
+    centreWithSize(getWidth(), getHeight());
+    setVisible(true);
 
-  enterModalState ();
+    enterModalState();
 }
 
 SettingsWindow::~SettingsWindow()
@@ -69,5 +69,5 @@ SettingsWindow::~SettingsWindow()
 
 void SettingsWindow::closeButtonPressed()
 {
-  delete this;
+    delete this;
 }

@@ -45,28 +45,28 @@ THE SOFTWARE.
 class GainChart : public FrequencyChart
 {
 public:
-  enum
-  {
-    kMaxDb = 17,
-    kMinDb = -65
-  };
+    enum
+    {
+        kMaxDb = 17,
+        kMinDb = -65
+    };
 
-  GainChart (FilterListeners& listeners);
+    GainChart(FilterListeners& listeners);
 
-  const String getName () const;
+    const String getName() const;
 
-  int yToScreen (float y);
+    int yToScreen(float y);
 
-  void paintContents (Graphics& g);
-
-private:
-  void update ();
-  bool drawDbLine (Graphics& g, int db, bool drawLabel = true);
-  AffineTransform calcTransform ();
+    void paintContents(Graphics& g);
 
 private:
-  float m_maxDb;
-  Path m_path;
+    void update();
+    bool drawDbLine(Graphics& g, int db, bool drawLabel = true);
+    AffineTransform calcTransform();
+
+private:
+    float m_maxDb;
+    Path m_path;
 };
 
 #endif

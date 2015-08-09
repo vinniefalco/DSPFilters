@@ -43,11 +43,11 @@ THE SOFTWARE.
 class FilterListener
 {
 public:
-  // Sent when a new Filter object is created
-  virtual void onFilterChanged (Dsp::Filter* newFilter) { }
+    // Sent when a new Filter object is created
+    virtual void onFilterChanged(Dsp::Filter* newFilter) { }
 
-  // Called when the current Filter object parameters change
-  virtual void onFilterParameters () { }
+    // Called when the current Filter object parameters change
+    virtual void onFilterParameters() { }
 };
 
 typedef ListenerList<FilterListener> FilterListeners;

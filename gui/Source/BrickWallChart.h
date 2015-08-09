@@ -46,21 +46,21 @@ THE SOFTWARE.
 class BrickWallChart : public FrequencyChart
 {
 public:
-  BrickWallChart (FilterListeners& listeners);
+    BrickWallChart(FilterListeners& listeners);
 
-  const String getName () const;
+    const String getName() const;
 
-  int yToScreen (float y);
+    int yToScreen(float y);
 
-  void paintContents (Graphics& g);
-
-private:
-  void update ();
-  AffineTransform calcTransform ();
+    void paintContents(Graphics& g);
 
 private:
-  float m_scale_y;
-  Path m_path;
+    void update();
+    AffineTransform calcTransform();
+
+private:
+    float m_scale_y;
+    Path m_path;
 };
 
 #endif

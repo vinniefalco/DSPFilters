@@ -41,10 +41,10 @@ THE SOFTWARE.
 class SettingsWindow : public DialogWindow
 {
 public:
-  SettingsWindow ();
-  ~SettingsWindow();
+    SettingsWindow();
+    ~SettingsWindow();
 
-  void closeButtonPressed();
+    void closeButtonPressed();
 };
 
 #endif

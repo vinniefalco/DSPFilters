@@ -44,43 +44,43 @@ THE SOFTWARE.
  *
  */
 class FilterChart
-  : public Component
-  , public FilterListener
+    : public Component
+    , public FilterListener
 {
 public:
-  FilterChart (FilterListeners& listeners);
-  ~FilterChart ();
+    FilterChart(FilterListeners& listeners);
+    ~FilterChart();
 
-  void paint (Graphics& g);
+    void paint(Graphics& g);
 
-  void resized ();
+    void resized();
 
-  void onFilterChanged (Dsp::Filter* newFilter);
-  void onFilterParameters ();
+    void onFilterChanged(Dsp::Filter* newFilter);
+    void onFilterParameters();
 
-  virtual const String getName() const;
-  virtual void paintContents (Graphics& g) = 0;
-  virtual void update () = 0;
+    virtual const String getName() const;
+    virtual void paintContents(Graphics& g) = 0;
+    virtual void update() = 0;
 
-  static void drawText (Graphics &g,
-                        const Point<int> ptOrigin,
-                        const String text,
-                        Justification just = Justification::bottomLeft);
+    static void drawText(Graphics &g,
+        const Point<int> ptOrigin,
+        const String text,
+        Justification just = Justification::bottomLeft);
 
 private:
-  void paintName (Graphics& g);
+    void paintName(Graphics& g);
 
 protected:
-  FilterListeners& m_listeners;
-  Dsp::Filter* m_filter;
-  bool m_isDefined;
-  Path m_path;
+    FilterListeners& m_listeners;
+    Dsp::Filter* m_filter;
+    bool m_isDefined;
+    Path m_path;
 
-  Colour m_cBack;
-  Colour m_cFrame;
-  Colour m_cAxis;
-  Colour m_cAxisMinor;
-  Colour m_cText;
+    Colour m_cBack;
+    Colour m_cFrame;
+    Colour m_cAxis;
+    Colour m_cAxisMinor;
+    Colour m_cText;
 };
 
 /*
@@ -90,13 +90,13 @@ protected:
 class FrequencyChart : public FilterChart
 {
 public:
-  FrequencyChart (FilterListeners& listeners);
-  ~FrequencyChart ();
+    FrequencyChart(FilterListeners& listeners);
+    ~FrequencyChart();
 
-  void paintOverChildren (Graphics& g);
+    void paintOverChildren(Graphics& g);
 
-  // map x=[0..1] to unit frequency F=[0..1]
-  float xToF (float x);
+    // map x=[0..1] to unit frequency F=[0..1]
+    float xToF(float x);
 };
 
 #endif

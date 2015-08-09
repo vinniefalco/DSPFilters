@@ -45,27 +45,27 @@ THE SOFTWARE.
 class PhaseChart : public FilterChart
 {
 public:
-  enum
-  {
-    // this is so there is some room on the top and bottom
-    maxPhase = 120
-  };
+    enum
+    {
+        // this is so there is some room on the top and bottom
+        maxPhase = 120
+    };
 
-  PhaseChart (FilterListeners& listeners);
+    PhaseChart(FilterListeners& listeners);
 
-  const String getName () const;
+    const String getName() const;
 
-  int yToScreen (float y);
+    int yToScreen(float y);
 
-  void paintContents (Graphics& g);
-
-private:
-  void update ();
-  bool drawPhaseLine (Graphics& g, int degrees, bool drawLabel = true);
-  AffineTransform calcTransform ();
+    void paintContents(Graphics& g);
 
 private:
-  Path m_path;
+    void update();
+    bool drawPhaseLine(Graphics& g, int degrees, bool drawLabel = true);
+    AffineTransform calcTransform();
+
+private:
+    Path m_path;
 };
 
 #endif

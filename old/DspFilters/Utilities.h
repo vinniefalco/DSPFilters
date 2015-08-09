@@ -47,45 +47,44 @@ namespace Dsp {
  *
  */
 
-//------------------------------------------------------------------------------
+ //------------------------------------------------------------------------------
 
-// Add src samples to dest, without clip or overflow checking.
+ // Add src samples to dest, without clip or overflow checking.
 template <class Td,
-          class Ts>
-void add (int samples,
-          Td* dest,
-          Ts const* src,
-          int destSkip = 0,
-          int srcSkip = 0)
+class Ts>
+    void add(int samples,
+        Td* dest,
+        Ts const* src,
+        int destSkip = 0,
+        int srcSkip = 0)
 {
-  if (srcSkip !=0 || destSkip != 0)
-  {
-    ++srcSkip;
-    ++destSkip;
-    while (--samples >= 0)
+    if(srcSkip != 0 || destSkip != 0)
     {
-      *dest += static_cast<Td>(*src);
-      dest += destSkip;
-      src += srcSkip;
+        ++srcSkip;
+        ++destSkip;
+        while(--samples >= 0)
+        {
+            *dest += static_cast<Td>(*src);
+            dest += destSkip;
+            src += srcSkip;
+        }
+    } else
+    {
+        while(--samples >= 0)
+            *dest++ += static_cast<Td>(*src++);
     }
-  }
-  else
-  {
-    while (--samples >= 0)
-      *dest++ += static_cast<Td>(*src++);
-  }
 }
 
 // Multichannel add
 template <typename Td,
-          typename Ts>
-void add (int channels,
-          int samples,
-          Td* const* dest,
-          Ts const* const* src)
+    typename Ts>
+    void add(int channels,
+        int samples,
+        Td* const* dest,
+        Ts const* const* src)
 {
-  for (int i = channels; --i >= 0;)
-    add (samples, dest[i], src[i]);
+    for(int i = channels; --i >= 0;)
+        add(samples, dest[i], src[i]);
 }
 
 //--------------------------------------------------------------------------
@@ -93,205 +92,202 @@ void add (int channels,
 // Copy samples from src to dest, which may not overlap. Performs an implicit
 // type conversion if Ts and Td are different (for example, float to double).
 template <typename Td,
-          typename Ts>
-void copy (int samples,
-           Td* dest,
-           Ts const* src,
-           int destSkip = 0,
-           int srcSkip = 0)
+    typename Ts>
+    void copy(int samples,
+        Td* dest,
+        Ts const* src,
+        int destSkip = 0,
+        int srcSkip = 0)
 {
-  if (srcSkip != 0)
-  {
-    if (destSkip != 0)
+    if(srcSkip != 0)
     {
-      ++srcSkip;
-      ++destSkip;
-      while (--samples >= 0)
-      {
-        *dest++ = *src++;
-        dest += destSkip;
-        src += srcSkip;
-      }
-    }
-    else
+        if(destSkip != 0)
+        {
+            ++srcSkip;
+            ++destSkip;
+            while(--samples >= 0)
+            {
+                *dest++ = *src++;
+                dest += destSkip;
+                src += srcSkip;
+            }
+        } else
+        {
+            ++srcSkip;
+            while(--samples >= 0)
+            {
+                *dest++ = *src++;
+                src += srcSkip;
+            }
+        }
+    } else if(destSkip != 0)
     {
-      ++srcSkip;
-      while (--samples >= 0)
-      {
-        *dest++ = *src++;
-        src += srcSkip;
-      }
-    }
-  }
-  else if (destSkip != 0)
-  {
-    ++destSkip;
-    while (--samples >= 0)
+        ++destSkip;
+        while(--samples >= 0)
+        {
+            *dest = *src++;
+            dest += destSkip;
+        }
+    } else
     {
-      *dest = *src++;
-      dest += destSkip;
+        while(--samples >= 0)
+            *dest++ = *src++;
     }
-  }
-  else
-  {
-    while (--samples >= 0)
-      *dest++ = *src++;
-  }
 }
 
 // Wrapper that uses memcpy if there is no skip and the types are the same
 template <typename Ty>
-void copy (int samples,
-           Ty* dest,
-           Ty const* src,
-           int destSkip = 0,
-           int srcSkip = 0)
+void copy(int samples,
+    Ty* dest,
+    Ty const* src,
+    int destSkip = 0,
+    int srcSkip = 0)
 {
-  if (destSkip != 0 || srcSkip != 0)
-    copy<Ty,Ty> (samples, dest, src, destSkip, srcSkip);
-  else
-    ::memcpy (dest, src, samples * sizeof(src[0]));
+    if(destSkip != 0 || srcSkip != 0)
+        copy<Ty, Ty>(samples, dest, src, destSkip, srcSkip);
+    else
+        ::memcpy(dest, src, samples * sizeof(src[0]));
 }
 
 // Copy a set of channels from src to dest, with implicit type conversion.
 template <typename Td,
-          typename Ts>
-void copy (int channels,
-           int samples,
-           Td* const* dest,
-           Ts const* const* src,
-           int destSkip = 0,
-           int srcSkip = 0)
+    typename Ts>
+    void copy(int channels,
+        int samples,
+        Td* const* dest,
+        Ts const* const* src,
+        int destSkip = 0,
+        int srcSkip = 0)
 {
-  for (int i = channels; --i >= 0;)
-    copy (samples, dest[i], src[i], destSkip, srcSkip);
+    for(int i = channels; --i >= 0;)
+        copy(samples, dest[i], src[i], destSkip, srcSkip);
 }
 
 //--------------------------------------------------------------------------
 
 // Deinterleave channels. Performs implicit type conversion.
 template <typename Td, typename Ts>
-void deinterleave (int channels,
-                   int samples,
-                   Td* const* dest,
-                   Ts const* src)
+void deinterleave(int channels,
+    int samples,
+    Td* const* dest,
+    Ts const* src)
 {
-  assert (channels > 1);
+    assert(channels > 1);
 
-  switch (channels)
-  {
-  case 2:
+    switch(channels)
     {
-      Td* l = dest[0];
-      Td* r = dest[1];
-	    int n = (samples + 7) / 8;
-	    switch (samples % 8)
-      {
-	    case 0: do
-              {	
-                *l++ = *src++; *r++ = *src++;
-	    case 7:		*l++ = *src++; *r++ = *src++;
-	    case 6:		*l++ = *src++; *r++ = *src++;
-	    case 5:		*l++ = *src++; *r++ = *src++;
-	    case 4:		*l++ = *src++; *r++ = *src++;
-	    case 3:		*l++ = *src++; *r++ = *src++;
-	    case 2:		*l++ = *src++; *r++ = *src++;
-	    case 1:		*l++ = *src++; *r++ = *src++;
-		          }
-              while (--n > 0);
-	    }
+    case 2:
+    {
+        Td* l = dest[0];
+        Td* r = dest[1];
+        int n = (samples + 7) / 8;
+        switch(samples % 8)
+        {
+        case 0: do
+        {
+            *l++ = *src++; *r++ = *src++;
+        case 7:		*l++ = *src++; *r++ = *src++;
+        case 6:		*l++ = *src++; *r++ = *src++;
+        case 5:		*l++ = *src++; *r++ = *src++;
+        case 4:		*l++ = *src++; *r++ = *src++;
+        case 3:		*l++ = *src++; *r++ = *src++;
+        case 2:		*l++ = *src++; *r++ = *src++;
+        case 1:		*l++ = *src++; *r++ = *src++;
+        }
+        while(--n > 0);
+        }
     }
     break;
 
-  default:
+    default:
     {
-      for (int i = channels; --i >= 0;)
-        copy (samples, dest[i], src + i, 0, channels - 1);
+        for(int i = channels; --i >= 0;)
+            copy(samples, dest[i], src + i, 0, channels - 1);
     }
     break;
-  };
+    };
 }
 
 // Convenience for a stereo pair of channels
 template <typename Td,
-          typename Ts>
-void deinterleave (int samples,
-                   Td* left,
-                   Td* right,
-                   Ts const* src)
+    typename Ts>
+    void deinterleave(int samples,
+        Td* left,
+        Td* right,
+        Ts const* src)
 {
-  Td* dest[2];
-  dest[0] = left;
-  dest[1] = right;
-  deinterleave (2, samples, dest, src);
+    Td* dest[2];
+    dest[0] = left;
+    dest[1] = right;
+    deinterleave(2, samples, dest, src);
 }
 
 //--------------------------------------------------------------------------
 
 // Fade dest
 template <typename Td,
-          typename Ty>
-void fade (int samples,
-           Td* dest,
-           Ty start = 0,
-           Ty end = 1)
+    typename Ty>
+    void fade(int samples,
+        Td* dest,
+        Ty start = 0,
+        Ty end = 1)
 {
-  Ty t = start;
-  Ty dt = (end - start) / samples;
+    Ty t = start;
+    Ty dt = (end - start) / samples;
 
-  while (--samples >= 0)
-  {
-    *dest++ *= t;
-    t += dt;
-  }
+    while(--samples >= 0)
+    {
+        *dest++ *= t;
+        t += dt;
+    }
 }
 
 // Fade dest cannels
 template <typename Td,
-          typename Ty>
-void fade (int channels,
-           int samples,
-           Td* const* dest,
-           Ty start = 0,
-           Ty end = 1)
+    typename Ty>
+    void fade(int channels,
+        int samples,
+        Td* const* dest,
+        Ty start = 0,
+        Ty end = 1)
 {
-  for (int i = channels; --i >= 0;)
-    fade (samples, dest[i], start, end);
+    for(int i = channels; --i >= 0;)
+        fade(samples, dest[i], start, end);
 }
 
 // Fade src into dest
 template <typename Td,
-          typename Ts,
-          typename Ty>
-void fade (int samples,
-           Td* dest,
-           Ts const* src,
-           Ty start = 0,
-           Ty end = 1)
+    typename Ts,
+    typename Ty>
+    void fade(int samples,
+        Td* dest,
+        Ts const* src,
+        Ty start = 0,
+        Ty end = 1)
 {
-  Ty t = start;
-  Ty dt = (end - start) / samples;
+    Ty t = start;
+    Ty dt = (end - start) / samples;
 
-  while (--samples >= 0)
-  {
-    *dest++ = static_cast<Td>(*dest + t * (*src++ - *dest));
-    t += dt;
-  }
+    while(--samples >= 0)
+    {
+        *dest++ = static_cast<Td>(*dest + t * (*src++ - *dest));
+        t += dt;
+    }
 }
 
 // Fade src channels into dest channels
 template <typename Td,
-          typename Ts,
-          typename Ty>
-void fade (int channels,
-           int samples,
-           Td* const* dest,
-           Ts const* const* src,
-           Ty start = 0,
-           Ty end = 1)
+    typename Ts,
+    typename Ty>
+    void fade(int channels,
+        int samples,
+        Td* const* dest,
+        Ts const* const* src,
+        Ty start = 0,
+        Ty end = 1)
 {
-  for (int i = channels; --i >= 0;)
-    fade (samples, dest[i], src[i], start, end);
+    for(int i = channels; --i >= 0;)
+        fade(samples, dest[i], src[i], start, end);
 }
 
 //--------------------------------------------------------------------------
@@ -300,106 +296,105 @@ void fade (int channels,
 // (Destination requires channels*frames samples of storage). Performs
 // implicit type conversion.
 template <typename Td,
-          typename Ts>
-void interleave (int channels,
-                 size_t samples,
-                 Td* dest,
-                 Ts const* const* src)
+    typename Ts>
+    void interleave(int channels,
+        size_t samples,
+        Td* dest,
+        Ts const* const* src)
 {
-  assert (channels>1);
+    assert(channels > 1);
 
-  if (samples==0)
-    return;
+    if(samples == 0)
+        return;
 
-  switch (channels)
-  {
-  case 2:
+    switch(channels)
     {
-      const Ts* l = src[0];
-      const Ts* r = src[1];
+    case 2:
+    {
+        const Ts* l = src[0];
+        const Ts* r = src[1];
 
-      // note that Duff's Device only works when samples>0
-      int n = (samples + 7) / 8;
-	    switch (samples % 8)
-      {
-	    case 0: do
-              {	
-                *dest++ = *l++; *dest++ = *r++;
-	    case 7:		*dest++ = *l++; *dest++ = *r++;
-	    case 6:		*dest++ = *l++; *dest++ = *r++;
-	    case 5:		*dest++ = *l++; *dest++ = *r++;
-	    case 4:		*dest++ = *l++; *dest++ = *r++;
-	    case 3:		*dest++ = *l++; *dest++ = *r++;
-	    case 2:		*dest++ = *l++; *dest++ = *r++;
-	    case 1:		*dest++ = *l++; *dest++ = *r++;
-		          }
-              while (--n > 0);
-	    }
+        // note that Duff's Device only works when samples>0
+        int n = (samples + 7) / 8;
+        switch(samples % 8)
+        {
+        case 0: do
+        {
+            *dest++ = *l++; *dest++ = *r++;
+        case 7:		*dest++ = *l++; *dest++ = *r++;
+        case 6:		*dest++ = *l++; *dest++ = *r++;
+        case 5:		*dest++ = *l++; *dest++ = *r++;
+        case 4:		*dest++ = *l++; *dest++ = *r++;
+        case 3:		*dest++ = *l++; *dest++ = *r++;
+        case 2:		*dest++ = *l++; *dest++ = *r++;
+        case 1:		*dest++ = *l++; *dest++ = *r++;
+        }
+        while(--n > 0);
+        }
     }
     break;
 
-  default:
+    default:
     {
-      for (int i = channels; --i >= 0;)
-        copy (samples, dest + i, src[i], channels - 1, 0);
+        for(int i = channels; --i >= 0;)
+            copy(samples, dest + i, src[i], channels - 1, 0);
     }
     break;
-  };
+    };
 }
 
 //--------------------------------------------------------------------------
 
 // Convenience for a stereo channel pair
 template <typename Td,
-          typename Ts>
-void interleave (int samples,
-                 Td* dest,
-                 Ts const* left,
-                 Ts const* right)
+    typename Ts>
+    void interleave(int samples,
+        Td* dest,
+        Ts const* left,
+        Ts const* right)
 {
-  const Ts* src[2];
-  src[0] = left;
-  src[1] = right;
-  interleave (2, samples, dest, src);
+    const Ts* src[2];
+    src[0] = left;
+    src[1] = right;
+    interleave(2, samples, dest, src);
 }
 
 //--------------------------------------------------------------------------
 
 // Multiply samples by a constant, without clip or overflow checking.
 template <typename Td,
-          typename Ty>
-void multiply (int samples,
-               Td* dest,
-               Ty factor,
-               int destSkip = 0)
+    typename Ty>
+    void multiply(int samples,
+        Td* dest,
+        Ty factor,
+        int destSkip = 0)
 {
-  if (destSkip != 0)
-  {
-    ++destSkip;
-    while (--samples >= 0)
+    if(destSkip != 0)
     {
-      *dest = static_cast<Td>(*dest * factor);
-      dest += destSkip;
+        ++destSkip;
+        while(--samples >= 0)
+        {
+            *dest = static_cast<Td>(*dest * factor);
+            dest += destSkip;
+        }
+    } else
+    {
+        while(--samples >= 0)
+            *dest++ = static_cast<Td>(*dest * factor);
     }
-  }
-  else
-  {
-    while (--samples >= 0)
-      *dest++ = static_cast<Td>(*dest * factor);
-  }
 }
 
 // Multiply a set of channels by a constant.
 template <typename Td,
-          typename Ty>
-void multiply (int channels,
-               int samples,
-               Td* const* dest,
-               Ty factor,
-               int destSkip = 0)
+    typename Ty>
+    void multiply(int channels,
+        int samples,
+        Td* const* dest,
+        Ty factor,
+        int destSkip = 0)
 {
-  for (int i = channels; --i >= 0;)
-    multiply (samples, dest[i], factor, destSkip);
+    for(int i = channels; --i >= 0;)
+        multiply(samples, dest[i], factor, destSkip);
 }
 
 //--------------------------------------------------------------------------
@@ -407,68 +402,67 @@ void multiply (int channels,
 // Copy samples from src to dest in reversed order. Performs implicit
 // type conversion. src and dest may not overlap.
 template <typename Td,
-          typename Ts>
-void reverse (int samples,
-              Td* dest,
-              Ts const* src,
-              int destSkip = 0,
-              int srcSkip = 0 )
+    typename Ts>
+    void reverse(int samples,
+        Td* dest,
+        Ts const* src,
+        int destSkip = 0,
+        int srcSkip = 0)
 {
-  src += (srcSkip + 1) * samples;
+    src += (srcSkip + 1) * samples;
 
-  if (srcSkip != 0 || destSkip == 0)
-  {
-    ++srcSkip;
-    ++destSkip;
-    while (--samples >= 0)
+    if(srcSkip != 0 || destSkip == 0)
     {
-      src -= srcSkip;
-      *dest = *src;
-      dest += destSkip;
+        ++srcSkip;
+        ++destSkip;
+        while(--samples >= 0)
+        {
+            src -= srcSkip;
+            *dest = *src;
+            dest += destSkip;
+        }
+    } else
+    {
+        while(--samples >= 0)
+            *dest++ = *--src;
     }
-  }
-  else
-  {
-    while (--samples >= 0)
-      *dest++ = *--src;
-  }
 }
 
 template <typename Td, typename Ts>
-void reverse (int channels, size_t frames, Td* const* dest, const Ts* const* src)
+void reverse(int channels, size_t frames, Td* const* dest, const Ts* const* src)
 {
-  for (int i = channels; --i >= 0;)
-    reverse (frames, dest[i], src[i]);
+    for(int i = channels; --i >= 0;)
+        reverse(frames, dest[i], src[i]);
 }
 
 //--------------------------------------------------------------------------
 
 template <typename Tn>
-void to_mono (int samples, Tn* dest, Tn const* left, Tn const* right)
+void to_mono(int samples, Tn* dest, Tn const* left, Tn const* right)
 {
 #if 1
-  while (samples-- > 0)
-    *dest++ = (*left++ + *right++) * Tn(0.70710678118654752440084436210485);
+    while(samples-- > 0)
+        *dest++ = (*left++ + *right++) * Tn(0.70710678118654752440084436210485);
 #else
-  while (samples-- > 0)
-    *dest++ = (*left++ + *right++) * Tn(0.5);
+    while(samples-- > 0)
+        *dest++ = (*left++ + *right++) * Tn(0.5);
 #endif
 }
 
 //--------------------------------------------------------------------------
 
 template <typename T>
-void validate (int numChannels, int numSamples, T const* const* src)
+void validate(int numChannels, int numSamples, T const* const* src)
 {
-  for (int i = 0; i < numChannels; ++i)
-  {
-    T const* p = src [i];
-    for (int j = numSamples; j > 0; --j)
+    for(int i = 0; i < numChannels; ++i)
     {
-      T v = *p++;
-      assert (v < 2 && v > -2);
+        T const* p = src[i];
+        for(int j = numSamples; j > 0; --j)
+        {
+            T v = *p++;
+            assert(v < 2 && v > -2);
+        }
     }
-  }
 }
 
 //--------------------------------------------------------------------------
@@ -481,87 +475,85 @@ void validate (int numChannels, int numSamples, T const* const* src)
 namespace detail {
 
 template <typename Ty,
-          bool isPod>
+    bool isPod>
 struct zero
 {
-  static void process (int samples,
-                       Ty* dest,
-                       int destSkip)
-  {
-    if (destSkip != 0)
+    static void process(int samples,
+        Ty* dest,
+        int destSkip)
     {
-      ++destSkip;
-      while (--samples >= 0)
-      {
-        *dest = Ty();
-        dest += destSkip;
-      }
+        if(destSkip != 0)
+        {
+            ++destSkip;
+            while(--samples >= 0)
+            {
+                *dest = Ty();
+                dest += destSkip;
+            }
+        } else
+        {
+            std::fill(dest, dest + samples, Ty());
+        }
     }
-    else
-    {
-      std::fill (dest, dest + samples, Ty());
-    }
-  }
 };
 
 template <typename Ty>
 struct zero<Ty, true>
 {
-  static void process (int samples,
-                       Ty* dest,
-                       int destSkip)
-  {
-    if (destSkip != 0)
-      zero<Ty,false>::process (samples, dest, destSkip);
-    else
-      ::memset (dest, 0, samples * sizeof(dest[0]));
-  }
+    static void process(int samples,
+        Ty* dest,
+        int destSkip)
+    {
+        if(destSkip != 0)
+            zero<Ty, false>::process(samples, dest, destSkip);
+        else
+            ::memset(dest, 0, samples * sizeof(dest[0]));
+    }
 };
 
 }
 
 // Fill a channel with zeros. This works even if Ty is not a basic type.
 template <typename Ty>
-void zero (int samples,
-           Ty* dest,
-           int destSkip = 0)
+void zero(int samples,
+    Ty* dest,
+    int destSkip = 0)
 {
-  detail::zero<Ty, tr1::is_pod<Ty>::value>::process (samples, dest, destSkip );
+    detail::zero<Ty, tr1::is_pod<Ty>::value>::process(samples, dest, destSkip);
 }
 
 #else
 // Fill a channel with zeros. This works even if Ty is not a basic type.
 template <typename Ty>
-void zero (int samples,
-           Ty* dest,
-           int destSkip = 0)
+void zero(int samples,
+    Ty* dest,
+    int destSkip = 0)
 {
-  if (destSkip != 0)
-  {
-    ++destSkip;
-    while (--samples >= 0)
+    if(destSkip != 0)
     {
-      *dest = Ty();
-      dest += destSkip;
+        ++destSkip;
+        while(--samples >= 0)
+        {
+            *dest = Ty();
+            dest += destSkip;
+        }
+    } else
+    {
+        std::fill(dest, dest + samples, Ty());
     }
-  }
-  else
-  {
-    std::fill (dest, dest + samples, Ty());
-  }
 }
 
 #endif
 
 // Fill a set of channels with zero.
 template <typename Ty>
-void zero (int channels,
-           int samples,
-           Ty* const* dest,
-           int destSkip = 0)
+void zero(int channels,
+    int samples,
+    Ty* const* dest,
+    int destSkip = 0)
 {
-  for (int i = channels; --i >= 0;)
-    zero (samples, dest[i], destSkip);
+    for(int i = channels; --i >= 0;)
+        zero(samples, dest[i], destSkip);
 }
 
 //------------------------------------------------------------------------------
@@ -579,200 +571,197 @@ void zero (int channels,
 template <class TFunction>
 double BrentMinimize
 (
-  TFunction& f,	// [in] objective function to minimize
-  double leftEnd,	// [in] smaller value of bracketing interval
-  double rightEnd,	// [in] larger value of bracketing interval
-  double epsilon,	// [in] stopping tolerance
-  double& minLoc	// [out] location of minimum
-)
+    TFunction& f,	// [in] objective function to minimize
+    double leftEnd,	// [in] smaller value of bracketing interval
+    double rightEnd,	// [in] larger value of bracketing interval
+    double epsilon,	// [in] stopping tolerance
+    double& minLoc	// [out] location of minimum
+    )
 {
-  double d, e, m, p, q, r, tol, t2, u, v, w, fu, fv, fw, fx;
-  static const double c = 0.5*(3.0 - ::std::sqrt(5.0));
-  static const double SQRT_DBL_EPSILON = ::std::sqrt(DBL_EPSILON);
+    double d, e, m, p, q, r, tol, t2, u, v, w, fu, fv, fw, fx;
+    static const double c = 0.5*(3.0 - ::std::sqrt(5.0));
+    static const double SQRT_DBL_EPSILON = ::std::sqrt(DBL_EPSILON);
 
-  double& a = leftEnd;
-  double& b = rightEnd;
-  double& x = minLoc;
+    double& a = leftEnd;
+    double& b = rightEnd;
+    double& x = minLoc;
 
-  v = w = x = a + c*(b - a);
-  d = e = 0.0;
-  fv = fw = fx = f(x);
-  int counter = 0;
+    v = w = x = a + c*(b - a);
+    d = e = 0.0;
+    fv = fw = fx = f(x);
+    int counter = 0;
 loop:
-  counter++;
-  m = 0.5*(a + b);
-  tol = SQRT_DBL_EPSILON*::fabs(x) + epsilon;
-  t2 = 2.0*tol;
-  // Check stopping criteria
-  if (::fabs(x - m) > t2 - 0.5*(b - a))
-  {
-    p = q = r = 0.0;
-    if (::fabs(e) > tol)
+    counter++;
+    m = 0.5*(a + b);
+    tol = SQRT_DBL_EPSILON*::fabs(x) + epsilon;
+    t2 = 2.0*tol;
+    // Check stopping criteria
+    if(::fabs(x - m) > t2 - 0.5*(b - a))
     {
-      // fit parabola
-      r = (x - w)*(fx - fv);
-      q = (x - v)*(fx - fw);
-      p = (x - v)*q - (x - w)*r;
-      q = 2.0*(q - r);
-      (q > 0.0) ? p = -p : q = -q;
-      r = e;
-      e = d;
+        p = q = r = 0.0;
+        if(::fabs(e) > tol)
+        {
+            // fit parabola
+            r = (x - w)*(fx - fv);
+            q = (x - v)*(fx - fw);
+            p = (x - v)*q - (x - w)*r;
+            q = 2.0*(q - r);
+            (q > 0.0) ? p = -p : q = -q;
+            r = e;
+            e = d;
+        }
+        if(::fabs(p) < ::fabs(0.5*q*r) && p < q*(a - x) && p < q*(b - x))
+        {
+            // A parabolic interpolation step
+            d = p / q;
+            u = x + d;
+            // f must not be evaluated too close to a or b
+            if(u - a < t2 || b - u < t2)
+                d = (x < m) ? tol : -tol;
+        } else
+        {
+            // A golden section step
+            e = (x < m) ? b : a;
+            e -= x;
+            d = c*e;
+        }
+        // f must not be evaluated too close to x
+        if(::fabs(d) >= tol)
+            u = x + d;
+        else if(d > 0.0)
+            u = x + tol;
+        else
+            u = x - tol;
+        fu = f(u);
+        // Update a, b, v, w, and x
+        if(fu <= fx)
+        {
+            (u < x) ? b = x : a = x;
+            v = w;
+            fv = fw;
+            w = x;
+            fw = fx;
+            x = u;
+            fx = fu;
+        } else
+        {
+            (u < x) ? a = u : b = u;
+            if(fu <= fw || w == x)
+            {
+                v = w;
+                fv = fw;
+                w = u;
+                fw = fu;
+            } else if(fu <= fv || v == x || v == w)
+            {
+                v = u;
+                fv = fu;
+            }
+        }
+        goto loop;  // Yes, the dreaded goto statement. But the code
+        // here is faithful to Brent's orginal pseudocode.
     }
-    if (::fabs(p) < ::fabs(0.5*q*r) && p < q*(a - x) && p < q*(b - x))
-    {
-      // A parabolic interpolation step
-      d = p/q;
-      u = x + d;
-      // f must not be evaluated too close to a or b
-      if (u - a < t2 || b - u < t2)
-        d = (x < m) ? tol : -tol;
-    }
-    else
-    {
-      // A golden section step
-      e = (x < m) ? b : a;
-      e -= x;
-      d = c*e;
-    }
-    // f must not be evaluated too close to x
-    if (::fabs(d) >= tol)
-      u = x + d;
-    else if (d > 0.0)
-      u = x + tol;
-    else
-      u = x - tol;
-    fu = f(u);
-    // Update a, b, v, w, and x
-    if (fu <= fx)
-    {
-      (u < x) ? b = x : a = x;
-      v = w;
-      fv = fw;
-      w = x;
-      fw = fx;
-      x = u;
-      fx = fu;
-    }
-    else
-    {
-      (u < x) ? a = u : b = u;
-      if (fu <= fw || w == x)
-      {
-        v = w;
-        fv = fw;
-        w = u;
-        fw = fu;
-      }
-      else if (fu <= fv || v == x || v == w)
-      {
-        v = u;
-        fv = fu;
-      }
-    }
-    goto loop;  // Yes, the dreaded goto statement. But the code
-    // here is faithful to Brent's orginal pseudocode.
-  }
-  return  fx;
+    return  fx;
 }
 
 //------------------------------------------------------------------------------
 
 // Tracks the peaks in the signal stream using the attack and release parameters
-template <int Channels=2, typename Value=float>
+template <int Channels = 2, typename Value = float>
 class EnvelopeFollower
 {
 public:
-  EnvelopeFollower()
-  {
-    for (int i = 0; i < Channels; i++)
-      m_env[i]=0;
-  }
-
-  Value operator[] (int channel) const
-  {
-    return m_env[channel];
-  }
-
-  void Setup (int sampleRate, double attackMs, double releaseMs)
-  {
-    m_a = pow (0.01, 1.0 / (attackMs * sampleRate * 0.001));
-    m_r = pow (0.01, 1.0 / (releaseMs * sampleRate * 0.001));
-  }
-
-  void Process (size_t samples, const Value** src)
-  {
-    for( int i=0; i<Channels; i++ )
+    EnvelopeFollower()
     {
-      const Value* cur = src[i];
-
-      double e = m_env[i];
-      for (int n = samples; n; n--)
-      {
-        double v = std::abs(*cur++);
-        if (v > e)
-          e = m_a * (e - v) + v;
-        else
-          e = m_r * (e - v) + v;
-      }
-      m_env[i]=e;
+        for(int i = 0; i < Channels; i++)
+            m_env[i] = 0;
     }
-  }
 
-  double m_env[Channels];
+    Value operator[] (int channel) const
+    {
+        return m_env[channel];
+    }
+
+    void Setup(int sampleRate, double attackMs, double releaseMs)
+    {
+        m_a = pow(0.01, 1.0 / (attackMs * sampleRate * 0.001));
+        m_r = pow(0.01, 1.0 / (releaseMs * sampleRate * 0.001));
+    }
+
+    void Process(size_t samples, const Value** src)
+    {
+        for(int i = 0; i < Channels; i++)
+        {
+            const Value* cur = src[i];
+
+            double e = m_env[i];
+            for(int n = samples; n; n--)
+            {
+                double v = std::abs(*cur++);
+                if(v > e)
+                    e = m_a * (e - v) + v;
+                else
+                    e = m_r * (e - v) + v;
+            }
+            m_env[i] = e;
+        }
+    }
+
+    double m_env[Channels];
 
 protected:
-  double m_a;
-  double m_r;
+    double m_a;
+    double m_r;
 };
 
 //------------------------------------------------------------------------------
 
 // Helpful for discovering discontinuities in buffers
-template <int Channels=2, typename Value=float>
+template <int Channels = 2, typename Value = float>
 class SlopeDetector
 {
 public:
-  SlopeDetector () : m_firstTime(true)
-  {
-	for (int i = 0; i < Channels; ++i)
-	  m_slope [i] = 0;
-  }
+    SlopeDetector() : m_firstTime(true)
+    {
+        for(int i = 0; i < Channels; ++i)
+            m_slope[i] = 0;
+    }
 
-  Value getSlope (int channel) const
-  {
-	return m_slope [channel];
-  }
+    Value getSlope(int channel) const
+    {
+        return m_slope[channel];
+    }
 
-  void process (size_t numSamples, const Value** input)
-  {
-	for (int i = 0; i < Channels; ++i)
-	{
-	  const Value* src = input [i];
-	  int n = numSamples;
+    void process(size_t numSamples, const Value** input)
+    {
+        for(int i = 0; i < Channels; ++i)
+        {
+            const Value* src = input[i];
+            int n = numSamples;
 
-	  if (m_firstTime)
-	  {
-		m_prev[i] = *src++;
-		--n;
-	  }
+            if(m_firstTime)
+            {
+                m_prev[i] = *src++;
+                --n;
+            }
 
-	  while (n > 0)
-	  {
-		n--;
-		Value cur = *src++;
-		Value diff = std::abs (cur - m_prev[i]);
-		m_slope [i] = std::max (diff, m_slope[i]);
-		m_prev [i] = cur;
-	  }
-	}
+            while(n > 0)
+            {
+                n--;
+                Value cur = *src++;
+                Value diff = std::abs(cur - m_prev[i]);
+                m_slope[i] = std::max(diff, m_slope[i]);
+                m_prev[i] = cur;
+            }
+        }
 
-	m_firstTime = false;
-  }
+        m_firstTime = false;
+    }
 
 private:
-  bool m_firstTime;
-  Value m_slope [Channels];
-  Value m_prev [Channels];
+    bool m_firstTime;
+    Value m_slope[Channels];
+    Value m_prev[Channels];
 };
 
 }

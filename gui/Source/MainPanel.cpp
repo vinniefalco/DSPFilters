@@ -73,21 +73,21 @@ public:
     }
 
     std::vector<Dsp::PoleZeroPair>
-    getPoleZeros() const override
+        getPoleZeros() const override
     {
-        return {};
+        return{};
     }
 
     Dsp::complex_t response(double normalizedFrequency) const override
     {
-        return {};
+        return{};
     }
 
     int getNumChannels() override
     {
         return 2;
     }
-    
+
     void reset() override
     {
     }

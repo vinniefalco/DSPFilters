@@ -38,36 +38,36 @@ THE SOFTWARE.
 
 //------------------------------------------------------------------------------
 
-GroupDelayChart::GroupDelayChart (FilterListeners& listeners)
-  : FilterChart (listeners)
+GroupDelayChart::GroupDelayChart(FilterListeners& listeners)
+    : FilterChart(listeners)
 {
 }
 
-const String GroupDelayChart::getName () const
+const String GroupDelayChart::getName() const
 {
-  return "Group Delay (s)";
+    return "Group Delay (s)";
 }
 
-int GroupDelayChart::yToScreen (float y)
+int GroupDelayChart::yToScreen(float y)
 {
-  AffineTransform t = calcTransform();
-  Point<float> p (0, y);
-  return int(p.transformedBy (t).getY());
+    AffineTransform t = calcTransform();
+    Point<float> p(0, y);
+    return int(p.transformedBy(t).getY());
 }
 
-void GroupDelayChart::paintContents (Graphics& g)
+void GroupDelayChart::paintContents(Graphics& g)
 {
-  AffineTransform t = calcTransform();
+    AffineTransform t = calcTransform();
 
-  g.setColour (Colours::black);
-  drawGroupDelayLine (g, 0.f, false);
+    g.setColour(Colours::black);
+    drawGroupDelayLine(g, 0.f, false);
 
-  g.setColour (m_cAxis);
-  drawGroupDelayLine (g, 1.f);
-  drawGroupDelayLine (g, -1.f);
+    g.setColour(m_cAxis);
+    drawGroupDelayLine(g, 1.f);
+    drawGroupDelayLine(g, -1.f);
 
-  g.setColour (Colours::blue);
-  g.strokePath (m_path, PathStrokeType(1), t);
+    g.setColour(Colours::blue);
+    g.strokePath(m_path, PathStrokeType(1), t);
 }
 
 /*
@@ -76,91 +76,89 @@ void GroupDelayChart::paintContents (Graphics& g)
  * the y coordinates will be in seconds
  *
  */
-void GroupDelayChart::update ()
+void GroupDelayChart::update()
 {
-  m_isDefined = false;
-  m_path.clear();
+    m_isDefined = false;
+    m_path.clear();
 
-  if (m_filter)
-  {
-    m_isDefined = true;
-
-    const Rectangle<int> bounds = getLocalBounds ();
-    const Rectangle<int> r = bounds.reduced (4, 4);
-
-    // start from 1 to prevent divide by 0
-    for (int xi = 1; xi < r.getWidth(); ++xi )
+    if(m_filter)
     {
-      const float x = xi / float(r.getWidth());
-      const float w = float (Dsp::doublePi * (x/2.));
-      const float y = float (-std::abs(m_filter->response (w)) / w);
+        m_isDefined = true;
 
-      if (!Dsp::is_nan (y))
-      {
-        if (xi == 1)
-          m_path.startNewSubPath (x, y);
-        else
-          m_path.lineTo (x, y);
-      }
-      else
-      {
-        m_path.clear ();
-        m_isDefined = false;
-        break;
-      }
+        const Rectangle<int> bounds = getLocalBounds();
+        const Rectangle<int> r = bounds.reduced(4, 4);
+
+        // start from 1 to prevent divide by 0
+        for(int xi = 1; xi < r.getWidth(); ++xi)
+        {
+            const float x = xi / float(r.getWidth());
+            const float w = float(Dsp::doublePi * (x / 2.));
+            const float y = float(-std::abs(m_filter->response(w)) / w);
+
+            if(!Dsp::is_nan(y))
+            {
+                if(xi == 1)
+                    m_path.startNewSubPath(x, y);
+                else
+                    m_path.lineTo(x, y);
+            } else
+            {
+                m_path.clear();
+                m_isDefined = false;
+                break;
+            }
+        }
+
+        if(m_isDefined)
+            m_path.startNewSubPath(0, 0);
     }
 
-    if (m_isDefined)
-      m_path.startNewSubPath (0, 0);
-  }
-
-  repaint();
+    repaint();
 }
 
-bool GroupDelayChart::drawGroupDelayLine (Graphics& g, float seconds, bool drawLabel)
+bool GroupDelayChart::drawGroupDelayLine(Graphics& g, float seconds, bool drawLabel)
 {
-  bool onScreen = true;
+    bool onScreen = true;
 
-  const Rectangle<int> bounds = getLocalBounds ();
-  const Rectangle<int> r = bounds;
-  const int y = yToScreen (seconds);
+    const Rectangle<int> bounds = getLocalBounds();
+    const Rectangle<int> r = bounds;
+    const int y = yToScreen(seconds);
 
-  if (y >= r.getY() && y < r.getBottom())
-  {
-    g.fillRect (r.getX(), y, r.getWidth(), 1);
-
-    if (drawLabel)
+    if(y >= r.getY() && y < r.getBottom())
     {
-      if (seconds >= 0)
-        drawText (g, Point<int> (r.getX()+6, y-2), String(seconds));
-      else
-        drawText (g, Point<int> (r.getX()+6, y+2), String(seconds), Justification::topLeft);
-    }
-  }
-  else
-  {
-    onScreen = false;
-  }
+        g.fillRect(r.getX(), y, r.getWidth(), 1);
 
-  return onScreen;
+        if(drawLabel)
+        {
+            if(seconds >= 0)
+                drawText(g, Point<int>(r.getX() + 6, y - 2), String(seconds));
+            else
+                drawText(g, Point<int>(r.getX() + 6, y + 2), String(seconds), Justification::topLeft);
+        }
+    } else
+    {
+        onScreen = false;
+    }
+
+    return onScreen;
 }
 
-AffineTransform GroupDelayChart::calcTransform ()
+AffineTransform GroupDelayChart::calcTransform()
 {
-  const Rectangle<int> bounds = getLocalBounds ();
-  const Rectangle<int> r = bounds.reduced (4, 4);
+    const Rectangle<int> bounds = getLocalBounds();
+    const Rectangle<int> r = bounds.reduced(4, 4);
 
-  AffineTransform t;
+    AffineTransform t;
 
-  // scale x from 0..1 to 0..getWidth(), and flip vertical
-  t = AffineTransform::scale (float(r.getWidth()), -1.f);
+    // scale x from 0..1 to 0..getWidth(), and flip vertical
+    t = AffineTransform::scale(float(r.getWidth()), -1.f);
 
-  // scale y from -h..h to getHeight()/2
-  const float h =3;
-  t = t.scaled (1, r.getHeight() / (2.f * h));
+    // scale y from -h..h to getHeight()/2
+    const float h = 3;
+    t = t.scaled(1, r.getHeight() / (2.f * h));
 
-  // translate to centre
-  t = t.translated (float(r.getX()), float(r.getCentreY()));
+    // translate to centre
+    t = t.translated(float(r.getX()), float(r.getCentreY()));
 
-  return t;
+    return t;
 }

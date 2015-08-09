@@ -41,16 +41,16 @@ THE SOFTWARE.
 class CustomSlider : public Slider
 {
 public:
-  CustomSlider (String name = String::empty)
-    : Slider (name)
-  {
-  }
+    CustomSlider(String name = String::empty)
+        : Slider(name)
+    {
+    }
 
-  void mouseDrag (const MouseEvent& e)
-  {
-    e.source.enableUnboundedMouseMovement (true, false);
-    Slider::mouseDrag (e);
-  }
+    void mouseDrag(const MouseEvent& e)
+    {
+        e.source.enableUnboundedMouseMovement(true, false);
+        Slider::mouseDrag(e);
+    }
 };
 
 #endif

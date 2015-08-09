@@ -47,28 +47,28 @@ THE SOFTWARE.
 class FilteringAudioSource : public AudioSource
 {
 public:
-  FilteringAudioSource ();
-  ~FilteringAudioSource ();
+    FilteringAudioSource();
+    ~FilteringAudioSource();
 
-  void setSource (AudioSource* source);
-  
-  void setFilter (Dsp::Filter* filter);
-  
-  void setFilterParameters (Dsp::Params parameters);
+    void setSource(AudioSource* source);
 
-  void reset ();
+    void setFilter(Dsp::Filter* filter);
 
-  void prepareToPlay (int samplesPerBlockExpected,
-                      double sampleRate);
+    void setFilterParameters(Dsp::Params parameters);
 
-  void releaseResources();
+    void reset();
 
-  void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill);
+    void prepareToPlay(int samplesPerBlockExpected,
+        double sampleRate);
+
+    void releaseResources();
+
+    void getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill);
 
 private:
-  double m_sampleRate;
-  ScopedPointer<AudioSource> m_source;
-  ScopedPointer<Dsp::Filter> m_filter;
+    double m_sampleRate;
+    ScopedPointer<AudioSource> m_source;
+    ScopedPointer<Dsp::Filter> m_filter;
 };
 
 #endif

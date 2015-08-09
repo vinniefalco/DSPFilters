@@ -45,18 +45,18 @@ THE SOFTWARE.
 class GroupDelayChart : public FilterChart
 {
 public:
-  GroupDelayChart (FilterListeners& listeners);
+    GroupDelayChart(FilterListeners& listeners);
 
-  const String getName () const;
+    const String getName() const;
 
-  int yToScreen (float y);
+    int yToScreen(float y);
 
-  void paintContents (Graphics& g);
+    void paintContents(Graphics& g);
 
 private:
-  void update ();
-  bool drawGroupDelayLine (Graphics& g, float seconds, bool drawLabel = true);
-  AffineTransform calcTransform ();
+    void update();
+    bool drawGroupDelayLine(Graphics& g, float seconds, bool drawLabel = true);
+    AffineTransform calcTransform();
 };
 
 #endif
