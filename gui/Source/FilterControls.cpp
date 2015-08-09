@@ -101,13 +101,13 @@ FilterControls::~FilterControls()
 
 void FilterControls::paint(Graphics& g)
 {
-    const Rectangle<int> bounds = getLocalBounds();
+    const Rectangle<int> b = getLocalBounds();
 
     g.setColour(Colour::fromRGBA(0, 0, 0, 64));
-    g.fillRect(bounds.reduced(1, 1));
+    g.fillRect(b.reduced(1, 1));
 
     g.setColour(Colour::fromRGBA(0, 0, 0, 128));
-    g.drawRect(bounds, 1);
+    g.drawRect(b, 1);
 }
 
 // Use introspection to build the list of controls
@@ -117,14 +117,14 @@ void FilterControls::onFilterChanged(Dsp::Filter* newFilter)
 
     clear();
 
-    const Rectangle<int> bounds = getLocalBounds();
+    const Rectangle<int> b = getLocalBounds();
 
     const int w = 70;
     const int ygap = 0;
-    const int h = bounds.getHeight() - 2 * ygap;
-    const int y = bounds.getY() + ygap;
+    const int h = b.getHeight() - 2 * ygap;
+    const int y = b.getY() + ygap;
 
-    int x = bounds.getX() + 2;
+    int x = b.getX() + 2;
     for(int i = 0; i < m_filter->getNumParams(); ++i)
     {
         const Dsp::ParamInfo info = m_filter->getParamInfo(i);

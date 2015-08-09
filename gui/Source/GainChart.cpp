@@ -100,8 +100,8 @@ void GainChart::update()
     {
         m_isDefined = true;
 
-        const Rectangle<int> bounds = getLocalBounds();
-        const Rectangle<int> r = bounds.reduced(4, 4);
+        const Rectangle<int> b = getLocalBounds();
+        const Rectangle<int> r = b.reduced(4, 4);
 
         for(int xi = 0; xi < r.getWidth(); ++xi)
         {
@@ -140,8 +140,8 @@ bool GainChart::drawDbLine(Graphics& g, int db, bool drawLabel)
 {
     bool onScreen = true;
 
-    const Rectangle<int> bounds = getLocalBounds();
-    const Rectangle<int> r = bounds;
+    const Rectangle<int> b = getLocalBounds();
+    const Rectangle<int> r = b;
     const int y = yToScreen(float(db));
 
     if(y >= r.getY() && y < r.getBottom())
@@ -165,8 +165,8 @@ bool GainChart::drawDbLine(Graphics& g, int db, bool drawLabel)
 
 AffineTransform GainChart::calcTransform()
 {
-    const Rectangle<int> bounds = getLocalBounds();
-    const Rectangle<int> r = bounds.reduced(4, 4);
+    const Rectangle<int> b = getLocalBounds();
+    const Rectangle<int> r = b.reduced(4, 4);
 
     float maxDb = jmax(m_maxDb, float(kMaxDb));
 
