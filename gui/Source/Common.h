@@ -38,7 +38,7 @@ THE SOFTWARE.
 
 #include "JuceHeader.h"
 
-#include "DspFilters/Dsp.h"
+#include "old/Dsp.h"
 
 #ifdef _MSC_VER
 #  pragma warning (disable: 4100)

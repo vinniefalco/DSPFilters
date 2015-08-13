@@ -55,7 +55,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;../../../old/;../../../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;../../../;../../../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;JUCER_VS2015_78A5022=1;JUCE_APP_VERSION=2.0.0;JUCE_APP_VERSION_HEX=0x20000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -96,7 +96,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Full</Optimization>
-      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;../../../old/;../../../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;../../../;../../../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;JUCER_VS2015_78A5022=1;JUCE_APP_VERSION=2.0.0;JUCE_APP_VERSION_HEX=0x20000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -152,23 +152,23 @@
     <ClCompile Include="..\..\Source\MainApp.cpp"/>
     <ClCompile Include="..\..\Source\MainPanel.cpp"/>
     <ClCompile Include="..\..\Source\MainWindow.cpp"/>
-    <ClCompile Include="..\..\..\old\DspFilters\Bessel.cpp"/>
-    <ClCompile Include="..\..\..\old\DspFilters\Biquad.cpp"/>
-    <ClCompile Include="..\..\..\old\DspFilters\Butterworth.cpp"/>
-    <ClCompile Include="..\..\..\old\DspFilters\Cascade.cpp"/>
-    <ClCompile Include="..\..\..\old\DspFilters\ChebyshevI.cpp"/>
-    <ClCompile Include="..\..\..\old\DspFilters\ChebyshevII.cpp"/>
-    <ClCompile Include="..\..\..\old\DspFilters\Custom.cpp"/>
-    <ClCompile Include="..\..\..\old\DspFilters\Design.cpp"/>
-    <ClCompile Include="..\..\..\old\DspFilters\Documentation.cpp"/>
-    <ClCompile Include="..\..\..\old\DspFilters\Elliptic.cpp"/>
-    <ClCompile Include="..\..\..\old\DspFilters\Filter.cpp"/>
-    <ClCompile Include="..\..\..\old\DspFilters\Legendre.cpp"/>
-    <ClCompile Include="..\..\..\old\DspFilters\Param.cpp"/>
-    <ClCompile Include="..\..\..\old\DspFilters\PoleFilter.cpp"/>
-    <ClCompile Include="..\..\..\old\DspFilters\RBJ.cpp"/>
-    <ClCompile Include="..\..\..\old\DspFilters\RootFinder.cpp"/>
-    <ClCompile Include="..\..\..\old\DspFilters\State.cpp"/>
+    <ClCompile Include="..\..\..\old\Bessel.cpp"/>
+    <ClCompile Include="..\..\..\old\Biquad.cpp"/>
+    <ClCompile Include="..\..\..\old\Butterworth.cpp"/>
+    <ClCompile Include="..\..\..\old\Cascade.cpp"/>
+    <ClCompile Include="..\..\..\old\ChebyshevI.cpp"/>
+    <ClCompile Include="..\..\..\old\ChebyshevII.cpp"/>
+    <ClCompile Include="..\..\..\old\Custom.cpp"/>
+    <ClCompile Include="..\..\..\old\Design.cpp"/>
+    <ClCompile Include="..\..\..\old\Documentation.cpp"/>
+    <ClCompile Include="..\..\..\old\Elliptic.cpp"/>
+    <ClCompile Include="..\..\..\old\Filter.cpp"/>
+    <ClCompile Include="..\..\..\old\Legendre.cpp"/>
+    <ClCompile Include="..\..\..\old\Param.cpp"/>
+    <ClCompile Include="..\..\..\old\PoleFilter.cpp"/>
+    <ClCompile Include="..\..\..\old\RBJ.cpp"/>
+    <ClCompile Include="..\..\..\old\RootFinder.cpp"/>
+    <ClCompile Include="..\..\..\old\State.cpp"/>
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_AudioDataConverters.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -1309,29 +1309,33 @@
     <ClInclude Include="..\..\Source\MainApp.h"/>
     <ClInclude Include="..\..\Source\MainPanel.h"/>
     <ClInclude Include="..\..\Source\MainWindow.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\Bessel.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\Biquad.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\Butterworth.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\Cascade.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\ChebyshevI.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\ChebyshevII.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\Common.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\Custom.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\Design.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\Dsp.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\Elliptic.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\Filter.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\Layout.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\Legendre.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\MathSupplement.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\Params.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\PoleFilter.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\RBJ.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\RootFinder.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\SmoothedFilter.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\State.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\Types.h"/>
-    <ClInclude Include="..\..\..\old\DspFilters\Utilities.h"/>
+    <ClInclude Include="..\..\..\include\dspfilters\abstract_filter.h"/>
+    <ClInclude Include="..\..\..\include\dspfilters\executor.h"/>
+    <ClInclude Include="..\..\..\include\dspfilters\iir_filter.h"/>
+    <ClInclude Include="..\..\..\include\dspfilters\qalloc.h"/>
+    <ClInclude Include="..\..\..\old\Bessel.h"/>
+    <ClInclude Include="..\..\..\old\Biquad.h"/>
+    <ClInclude Include="..\..\..\old\Butterworth.h"/>
+    <ClInclude Include="..\..\..\old\Cascade.h"/>
+    <ClInclude Include="..\..\..\old\ChebyshevI.h"/>
+    <ClInclude Include="..\..\..\old\ChebyshevII.h"/>
+    <ClInclude Include="..\..\..\old\Common.h"/>
+    <ClInclude Include="..\..\..\old\Custom.h"/>
+    <ClInclude Include="..\..\..\old\Design.h"/>
+    <ClInclude Include="..\..\..\old\Dsp.h"/>
+    <ClInclude Include="..\..\..\old\Elliptic.h"/>
+    <ClInclude Include="..\..\..\old\Filter.h"/>
+    <ClInclude Include="..\..\..\old\Layout.h"/>
+    <ClInclude Include="..\..\..\old\Legendre.h"/>
+    <ClInclude Include="..\..\..\old\MathSupplement.h"/>
+    <ClInclude Include="..\..\..\old\Params.h"/>
+    <ClInclude Include="..\..\..\old\PoleFilter.h"/>
+    <ClInclude Include="..\..\..\old\RBJ.h"/>
+    <ClInclude Include="..\..\..\old\RootFinder.h"/>
+    <ClInclude Include="..\..\..\old\SmoothedFilter.h"/>
+    <ClInclude Include="..\..\..\old\State.h"/>
+    <ClInclude Include="..\..\..\old\Types.h"/>
+    <ClInclude Include="..\..\..\old\Utilities.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_AudioSampleBuffer.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_FloatVectorOperations.h"/>

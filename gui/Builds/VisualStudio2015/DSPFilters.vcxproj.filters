@@ -8,8 +8,11 @@
     <Filter Include="DSPFilters\Source">
       <UniqueIdentifier>{B69091B4-86C9-893E-185C-DE34642FB9D4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DSPFilters\DspFilters">
-      <UniqueIdentifier>{61B2A8BD-115D-03EB-E6B6-72A47815A7B9}</UniqueIdentifier>
+    <Filter Include="DSPFilters\dspfilters">
+      <UniqueIdentifier>{CF3B18A7-EB80-E8D5-EB56-BA6F1FB16100}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSPFilters\old">
+      <UniqueIdentifier>{4F748807-A655-CE46-1089-18E2F81ABEE5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Juce Modules">
       <UniqueIdentifier>{422C46B7-0467-2DB0-BF3C-16DFCAFD69AC}</UniqueIdentifier>
@@ -373,56 +376,56 @@
     <ClCompile Include="..\..\Source\MainWindow.cpp">
       <Filter>DSPFilters\Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\old\DspFilters\Bessel.cpp">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClCompile Include="..\..\..\old\Bessel.cpp">
+      <Filter>DSPFilters\old</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\old\DspFilters\Biquad.cpp">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClCompile Include="..\..\..\old\Biquad.cpp">
+      <Filter>DSPFilters\old</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\old\DspFilters\Butterworth.cpp">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClCompile Include="..\..\..\old\Butterworth.cpp">
+      <Filter>DSPFilters\old</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\old\DspFilters\Cascade.cpp">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClCompile Include="..\..\..\old\Cascade.cpp">
+      <Filter>DSPFilters\old</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\old\DspFilters\ChebyshevI.cpp">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClCompile Include="..\..\..\old\ChebyshevI.cpp">
+      <Filter>DSPFilters\old</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\old\DspFilters\ChebyshevII.cpp">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClCompile Include="..\..\..\old\ChebyshevII.cpp">
+      <Filter>DSPFilters\old</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\old\DspFilters\Custom.cpp">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClCompile Include="..\..\..\old\Custom.cpp">
+      <Filter>DSPFilters\old</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\old\DspFilters\Design.cpp">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClCompile Include="..\..\..\old\Design.cpp">
+      <Filter>DSPFilters\old</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\old\DspFilters\Documentation.cpp">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClCompile Include="..\..\..\old\Documentation.cpp">
+      <Filter>DSPFilters\old</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\old\DspFilters\Elliptic.cpp">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClCompile Include="..\..\..\old\Elliptic.cpp">
+      <Filter>DSPFilters\old</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\old\DspFilters\Filter.cpp">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClCompile Include="..\..\..\old\Filter.cpp">
+      <Filter>DSPFilters\old</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\old\DspFilters\Legendre.cpp">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClCompile Include="..\..\..\old\Legendre.cpp">
+      <Filter>DSPFilters\old</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\old\DspFilters\Param.cpp">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClCompile Include="..\..\..\old\Param.cpp">
+      <Filter>DSPFilters\old</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\old\DspFilters\PoleFilter.cpp">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClCompile Include="..\..\..\old\PoleFilter.cpp">
+      <Filter>DSPFilters\old</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\old\DspFilters\RBJ.cpp">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClCompile Include="..\..\..\old\RBJ.cpp">
+      <Filter>DSPFilters\old</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\old\DspFilters\RootFinder.cpp">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClCompile Include="..\..\..\old\RootFinder.cpp">
+      <Filter>DSPFilters\old</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\old\DspFilters\State.cpp">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClCompile Include="..\..\..\old\State.cpp">
+      <Filter>DSPFilters\old</Filter>
     </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_AudioDataConverters.cpp">
       <Filter>Juce Modules\juce_audio_basics\buffers</Filter>
@@ -1719,74 +1722,86 @@
     <ClInclude Include="..\..\Source\MainWindow.h">
       <Filter>DSPFilters\Source</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\Bessel.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\include\dspfilters\abstract_filter.h">
+      <Filter>DSPFilters\dspfilters</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\Biquad.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\include\dspfilters\executor.h">
+      <Filter>DSPFilters\dspfilters</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\Butterworth.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\include\dspfilters\iir_filter.h">
+      <Filter>DSPFilters\dspfilters</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\Cascade.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\include\dspfilters\qalloc.h">
+      <Filter>DSPFilters\dspfilters</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\ChebyshevI.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\old\Bessel.h">
+      <Filter>DSPFilters\old</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\ChebyshevII.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\old\Biquad.h">
+      <Filter>DSPFilters\old</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\Common.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\old\Butterworth.h">
+      <Filter>DSPFilters\old</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\Custom.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\old\Cascade.h">
+      <Filter>DSPFilters\old</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\Design.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\old\ChebyshevI.h">
+      <Filter>DSPFilters\old</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\Dsp.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\old\ChebyshevII.h">
+      <Filter>DSPFilters\old</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\Elliptic.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\old\Common.h">
+      <Filter>DSPFilters\old</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\Filter.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\old\Custom.h">
+      <Filter>DSPFilters\old</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\Layout.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\old\Design.h">
+      <Filter>DSPFilters\old</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\Legendre.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\old\Dsp.h">
+      <Filter>DSPFilters\old</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\MathSupplement.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\old\Elliptic.h">
+      <Filter>DSPFilters\old</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\Params.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\old\Filter.h">
+      <Filter>DSPFilters\old</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\PoleFilter.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\old\Layout.h">
+      <Filter>DSPFilters\old</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\RBJ.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\old\Legendre.h">
+      <Filter>DSPFilters\old</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\RootFinder.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\old\MathSupplement.h">
+      <Filter>DSPFilters\old</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\SmoothedFilter.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\old\Params.h">
+      <Filter>DSPFilters\old</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\State.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\old\PoleFilter.h">
+      <Filter>DSPFilters\old</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\Types.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\old\RBJ.h">
+      <Filter>DSPFilters\old</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\old\DspFilters\Utilities.h">
-      <Filter>DSPFilters\DspFilters</Filter>
+    <ClInclude Include="..\..\..\old\RootFinder.h">
+      <Filter>DSPFilters\old</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\old\SmoothedFilter.h">
+      <Filter>DSPFilters\old</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\old\State.h">
+      <Filter>DSPFilters\old</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\old\Types.h">
+      <Filter>DSPFilters\old</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\old\Utilities.h">
+      <Filter>DSPFilters\old</Filter>
     </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h">
       <Filter>Juce Modules\juce_audio_basics\buffers</Filter>

@@ -37,7 +37,7 @@ THE SOFTWARE.
 #define DSPDEMO_FILTERINGAUDIOSOURCE_H
 
 #include "Common.h"
-#include "DspFilters/Filter.h"
+#include "old/Filter.h"
 
 /*
  * An AudioSource which applies a Dsp::Filter to its connected source.

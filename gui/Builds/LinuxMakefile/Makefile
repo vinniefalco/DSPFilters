@@ -18,7 +18,7 @@ ifeq ($(CONFIG),Debug)
     TARGET_ARCH := -march=native
   endif
 
-  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "DEBUG=1" -D "_DEBUG=1" -D "JUCER_LINUX_MAKE_6D53C8B4=1" -D "JUCE_APP_VERSION=2.0.0" -D "JUCE_APP_VERSION_HEX=0x20000" -I /usr/include -I /usr/include/freetype2 -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules -I ../../../old/ -I ../../../include
+  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "DEBUG=1" -D "_DEBUG=1" -D "JUCER_LINUX_MAKE_6D53C8B4=1" -D "JUCE_APP_VERSION=2.0.0" -D "JUCE_APP_VERSION_HEX=0x20000" -I /usr/include -I /usr/include/freetype2 -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules -I ../../../ -I ../../../include
   CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -g -ggdb -O0
   CXXFLAGS += $(CFLAGS) -std=c++11
   LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -L/usr/X11R6/lib/ -lGL -lX11 -lXext -lXinerama -lasound -ldl -lfreetype -lpthread -lrt 
@@ -38,7 +38,7 @@ ifeq ($(CONFIG),Release)
     TARGET_ARCH := -march=native
   endif
 
-  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "NDEBUG=1" -D "JUCER_LINUX_MAKE_6D53C8B4=1" -D "JUCE_APP_VERSION=2.0.0" -D "JUCE_APP_VERSION_HEX=0x20000" -I /usr/include -I /usr/include/freetype2 -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules -I ../../../old/ -I ../../../include
+  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "NDEBUG=1" -D "JUCER_LINUX_MAKE_6D53C8B4=1" -D "JUCE_APP_VERSION=2.0.0" -D "JUCE_APP_VERSION_HEX=0x20000" -I /usr/include -I /usr/include/freetype2 -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules -I ../../../ -I ../../../include
   CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -O3
   CXXFLAGS += $(CFLAGS) -std=c++11
   LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -fvisibility=hidden -L/usr/X11R6/lib/ -lGL -lX11 -lXext -lXinerama -lasound -ldl -lfreetype -lpthread -lrt 
@@ -72,23 +72,23 @@ OBJECTS := \
   $(OBJDIR)/MainApp_a0433209.o \
   $(OBJDIR)/MainPanel_2a7e77ac.o \
   $(OBJDIR)/MainWindow_499ac812.o \
-  $(OBJDIR)/Bessel_1754e5dd.o \
-  $(OBJDIR)/Biquad_fb2ca021.o \
-  $(OBJDIR)/Butterworth_65cbaa5.o \
-  $(OBJDIR)/Cascade_3aa308cb.o \
-  $(OBJDIR)/ChebyshevI_719f0cbf.o \
-  $(OBJDIR)/ChebyshevII_c3a6bdb4.o \
-  $(OBJDIR)/Custom_95ea1004.o \
-  $(OBJDIR)/Design_f26f57d1.o \
-  $(OBJDIR)/Documentation_89876051.o \
-  $(OBJDIR)/Elliptic_c8c8d915.o \
-  $(OBJDIR)/Filter_979ef48b.o \
-  $(OBJDIR)/Legendre_c7344893.o \
-  $(OBJDIR)/Param_efe376a4.o \
-  $(OBJDIR)/PoleFilter_8cf4c363.o \
-  $(OBJDIR)/RBJ_f8c88451.o \
-  $(OBJDIR)/RootFinder_a28a65bb.o \
-  $(OBJDIR)/State_ff1880a8.o \
+  $(OBJDIR)/Bessel_813c1f16.o \
+  $(OBJDIR)/Biquad_6513d95a.o \
+  $(OBJDIR)/Butterworth_5a555d0c.o \
+  $(OBJDIR)/Cascade_da2f6b2.o \
+  $(OBJDIR)/ChebyshevI_b6650178.o \
+  $(OBJDIR)/ChebyshevII_179f601b.o \
+  $(OBJDIR)/Custom_ffd1493d.o \
+  $(OBJDIR)/Design_5c56910a.o \
+  $(OBJDIR)/Documentation_c1e104f8.o \
+  $(OBJDIR)/Elliptic_55c6a80e.o \
+  $(OBJDIR)/Filter_1862dc4.o \
+  $(OBJDIR)/Legendre_5432178c.o \
+  $(OBJDIR)/Param_ca03b24b.o \
+  $(OBJDIR)/PoleFilter_d1bab81c.o \
+  $(OBJDIR)/RBJ_d417db8.o \
+  $(OBJDIR)/RootFinder_e7505a74.o \
+  $(OBJDIR)/State_d938bc4f.o \
   $(OBJDIR)/juce_audio_basics_2442e4ea.o \
   $(OBJDIR)/juce_audio_devices_a4c8a728.o \
   $(OBJDIR)/juce_audio_formats_d349f0c8.o \
@@ -235,87 +235,87 @@ $(OBJDIR)/MainWindow_499ac812.o: ../../Source/MainWindow.cpp
 	@echo "Compiling MainWindow.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/Bessel_1754e5dd.o: ../../../old/DspFilters/Bessel.cpp
+$(OBJDIR)/Bessel_813c1f16.o: ../../../old/Bessel.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Bessel.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/Biquad_fb2ca021.o: ../../../old/DspFilters/Biquad.cpp
+$(OBJDIR)/Biquad_6513d95a.o: ../../../old/Biquad.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Biquad.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/Butterworth_65cbaa5.o: ../../../old/DspFilters/Butterworth.cpp
+$(OBJDIR)/Butterworth_5a555d0c.o: ../../../old/Butterworth.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Butterworth.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/Cascade_3aa308cb.o: ../../../old/DspFilters/Cascade.cpp
+$(OBJDIR)/Cascade_da2f6b2.o: ../../../old/Cascade.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Cascade.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/ChebyshevI_719f0cbf.o: ../../../old/DspFilters/ChebyshevI.cpp
+$(OBJDIR)/ChebyshevI_b6650178.o: ../../../old/ChebyshevI.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling ChebyshevI.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/ChebyshevII_c3a6bdb4.o: ../../../old/DspFilters/ChebyshevII.cpp
+$(OBJDIR)/ChebyshevII_179f601b.o: ../../../old/ChebyshevII.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling ChebyshevII.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/Custom_95ea1004.o: ../../../old/DspFilters/Custom.cpp
+$(OBJDIR)/Custom_ffd1493d.o: ../../../old/Custom.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Custom.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/Design_f26f57d1.o: ../../../old/DspFilters/Design.cpp
+$(OBJDIR)/Design_5c56910a.o: ../../../old/Design.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Design.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/Documentation_89876051.o: ../../../old/DspFilters/Documentation.cpp
+$(OBJDIR)/Documentation_c1e104f8.o: ../../../old/Documentation.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Documentation.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/Elliptic_c8c8d915.o: ../../../old/DspFilters/Elliptic.cpp
+$(OBJDIR)/Elliptic_55c6a80e.o: ../../../old/Elliptic.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Elliptic.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/Filter_979ef48b.o: ../../../old/DspFilters/Filter.cpp
+$(OBJDIR)/Filter_1862dc4.o: ../../../old/Filter.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Filter.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/Legendre_c7344893.o: ../../../old/DspFilters/Legendre.cpp
+$(OBJDIR)/Legendre_5432178c.o: ../../../old/Legendre.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Legendre.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/Param_efe376a4.o: ../../../old/DspFilters/Param.cpp
+$(OBJDIR)/Param_ca03b24b.o: ../../../old/Param.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Param.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/PoleFilter_8cf4c363.o: ../../../old/DspFilters/PoleFilter.cpp
+$(OBJDIR)/PoleFilter_d1bab81c.o: ../../../old/PoleFilter.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling PoleFilter.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/RBJ_f8c88451.o: ../../../old/DspFilters/RBJ.cpp
+$(OBJDIR)/RBJ_d417db8.o: ../../../old/RBJ.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling RBJ.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/RootFinder_a28a65bb.o: ../../../old/DspFilters/RootFinder.cpp
+$(OBJDIR)/RootFinder_e7505a74.o: ../../../old/RootFinder.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling RootFinder.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/State_ff1880a8.o: ../../../old/DspFilters/State.cpp
+$(OBJDIR)/State_d938bc4f.o: ../../../old/State.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling State.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"

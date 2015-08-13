@@ -78,59 +78,66 @@
       <FILE id="qwrJ2T" name="MainWindow.cpp" compile="1" resource="0" file="Source/MainWindow.cpp"/>
       <FILE id="qvpyBA" name="MainWindow.h" compile="0" resource="0" file="Source/MainWindow.h"/>
     </GROUP>
-    <GROUP id="{9D30FD5F-3404-EA3C-7A5B-2A28FE24AAF7}" name="DspFilters">
-      <FILE id="uqZdly" name="Bessel.cpp" compile="1" resource="0" file="../old/DspFilters/Bessel.cpp"/>
-      <FILE id="Rsj5gt" name="Bessel.h" compile="0" resource="0" file="../old/DspFilters/Bessel.h"/>
-      <FILE id="TE2ToL" name="Biquad.cpp" compile="1" resource="0" file="../old/DspFilters/Biquad.cpp"/>
-      <FILE id="OHHsOG" name="Biquad.h" compile="0" resource="0" file="../old/DspFilters/Biquad.h"/>
-      <FILE id="r4lEM3" name="Butterworth.cpp" compile="1" resource="0" file="../old/DspFilters/Butterworth.cpp"/>
-      <FILE id="xwBsTA" name="Butterworth.h" compile="0" resource="0" file="../old/DspFilters/Butterworth.h"/>
-      <FILE id="RP2cfs" name="Cascade.cpp" compile="1" resource="0" file="../old/DspFilters/Cascade.cpp"/>
-      <FILE id="Ot3pWj" name="Cascade.h" compile="0" resource="0" file="../old/DspFilters/Cascade.h"/>
-      <FILE id="XhDeiH" name="ChebyshevI.cpp" compile="1" resource="0" file="../old/DspFilters/ChebyshevI.cpp"/>
-      <FILE id="PlC3y9" name="ChebyshevI.h" compile="0" resource="0" file="../old/DspFilters/ChebyshevI.h"/>
-      <FILE id="Z8smHs" name="ChebyshevII.cpp" compile="1" resource="0" file="../old/DspFilters/ChebyshevII.cpp"/>
-      <FILE id="uA6TvN" name="ChebyshevII.h" compile="0" resource="0" file="../old/DspFilters/ChebyshevII.h"/>
-      <FILE id="hOzupc" name="Common.h" compile="0" resource="0" file="../old/DspFilters/Common.h"/>
-      <FILE id="pmALNo" name="Custom.cpp" compile="1" resource="0" file="../old/DspFilters/Custom.cpp"/>
-      <FILE id="mg2pX2" name="Custom.h" compile="0" resource="0" file="../old/DspFilters/Custom.h"/>
-      <FILE id="w90Y3U" name="Design.cpp" compile="1" resource="0" file="../old/DspFilters/Design.cpp"/>
-      <FILE id="s1d1PL" name="Design.h" compile="0" resource="0" file="../old/DspFilters/Design.h"/>
-      <FILE id="S59ody" name="Documentation.cpp" compile="1" resource="0"
-            file="../old/DspFilters/Documentation.cpp"/>
-      <FILE id="Vl5hd7" name="Dsp.h" compile="0" resource="0" file="../old/DspFilters/Dsp.h"/>
-      <FILE id="lEmPZx" name="Elliptic.cpp" compile="1" resource="0" file="../old/DspFilters/Elliptic.cpp"/>
-      <FILE id="riDnRI" name="Elliptic.h" compile="0" resource="0" file="../old/DspFilters/Elliptic.h"/>
-      <FILE id="AXiYMY" name="Filter.cpp" compile="1" resource="0" file="../old/DspFilters/Filter.cpp"/>
-      <FILE id="AS6srO" name="Filter.h" compile="0" resource="0" file="../old/DspFilters/Filter.h"/>
-      <FILE id="Plyp29" name="Layout.h" compile="0" resource="0" file="../old/DspFilters/Layout.h"/>
-      <FILE id="qWncbg" name="Legendre.cpp" compile="1" resource="0" file="../old/DspFilters/Legendre.cpp"/>
-      <FILE id="gE0U9k" name="Legendre.h" compile="0" resource="0" file="../old/DspFilters/Legendre.h"/>
-      <FILE id="rtibqh" name="MathSupplement.h" compile="0" resource="0"
-            file="../old/DspFilters/MathSupplement.h"/>
-      <FILE id="S9D4MJ" name="Param.cpp" compile="1" resource="0" file="../old/DspFilters/Param.cpp"/>
-      <FILE id="Qnmzcy" name="Params.h" compile="0" resource="0" file="../old/DspFilters/Params.h"/>
-      <FILE id="Nw3Kh6" name="PoleFilter.cpp" compile="1" resource="0" file="../old/DspFilters/PoleFilter.cpp"/>
-      <FILE id="O0o0U6" name="PoleFilter.h" compile="0" resource="0" file="../old/DspFilters/PoleFilter.h"/>
-      <FILE id="uOlDB8" name="RBJ.cpp" compile="1" resource="0" file="../old/DspFilters/RBJ.cpp"/>
-      <FILE id="H83RP5" name="RBJ.h" compile="0" resource="0" file="../old/DspFilters/RBJ.h"/>
-      <FILE id="clOx9Q" name="RootFinder.cpp" compile="1" resource="0" file="../old/DspFilters/RootFinder.cpp"/>
-      <FILE id="Qn15QL" name="RootFinder.h" compile="0" resource="0" file="../old/DspFilters/RootFinder.h"/>
-      <FILE id="RDpb03" name="SmoothedFilter.h" compile="0" resource="0"
-            file="../old/DspFilters/SmoothedFilter.h"/>
-      <FILE id="IFjnXL" name="State.cpp" compile="1" resource="0" file="../old/DspFilters/State.cpp"/>
-      <FILE id="UNbfJF" name="State.h" compile="0" resource="0" file="../old/DspFilters/State.h"/>
-      <FILE id="re6tQf" name="Types.h" compile="0" resource="0" file="../old/DspFilters/Types.h"/>
-      <FILE id="y4OX0A" name="Utilities.h" compile="0" resource="0" file="../old/DspFilters/Utilities.h"/>
+    <GROUP id="{09DA72F6-D6CD-C176-962A-C6AC61808845}" name="dspfilters">
+      <FILE id="Dy7EeR" name="abstract_filter.h" compile="0" resource="0"
+            file="../include/dspfilters/abstract_filter.h"/>
+      <FILE id="zeE02c" name="executor.h" compile="0" resource="0" file="../include/dspfilters/executor.h"/>
+      <FILE id="NSFTg2" name="iir_filter.h" compile="0" resource="0" file="../include/dspfilters/iir_filter.h"/>
+      <FILE id="VWU34H" name="qalloc.h" compile="0" resource="0" file="../include/dspfilters/qalloc.h"/>
+    </GROUP>
+    <GROUP id="{940BCB47-F9EF-7FA9-5EF1-BBF6A6C2446E}" name="old">
+      <FILE id="Lq0NWp" name="Bessel.cpp" compile="1" resource="0" file="../old/Bessel.cpp"/>
+      <FILE id="kHXvAU" name="Bessel.h" compile="0" resource="0" file="../old/Bessel.h"/>
+      <FILE id="IzA6IX" name="Biquad.cpp" compile="1" resource="0" file="../old/Biquad.cpp"/>
+      <FILE id="Tf3fsF" name="Biquad.h" compile="0" resource="0" file="../old/Biquad.h"/>
+      <FILE id="T7Hvvh" name="Butterworth.cpp" compile="1" resource="0" file="../old/Butterworth.cpp"/>
+      <FILE id="mczfH8" name="Butterworth.h" compile="0" resource="0" file="../old/Butterworth.h"/>
+      <FILE id="tcZcAv" name="Cascade.cpp" compile="1" resource="0" file="../old/Cascade.cpp"/>
+      <FILE id="jiA2wl" name="Cascade.h" compile="0" resource="0" file="../old/Cascade.h"/>
+      <FILE id="PVkMv6" name="ChebyshevI.cpp" compile="1" resource="0" file="../old/ChebyshevI.cpp"/>
+      <FILE id="ISvNRT" name="ChebyshevI.h" compile="0" resource="0" file="../old/ChebyshevI.h"/>
+      <FILE id="zDIn6h" name="ChebyshevII.cpp" compile="1" resource="0" file="../old/ChebyshevII.cpp"/>
+      <FILE id="NhKOcS" name="ChebyshevII.h" compile="0" resource="0" file="../old/ChebyshevII.h"/>
+      <FILE id="Cbj4Tu" name="Common.h" compile="0" resource="0" file="../old/Common.h"/>
+      <FILE id="Bmyd76" name="Custom.cpp" compile="1" resource="0" file="../old/Custom.cpp"/>
+      <FILE id="VxIZAc" name="Custom.h" compile="0" resource="0" file="../old/Custom.h"/>
+      <FILE id="d0qvlR" name="Design.cpp" compile="1" resource="0" file="../old/Design.cpp"/>
+      <FILE id="W8QPtX" name="Design.h" compile="0" resource="0" file="../old/Design.h"/>
+      <FILE id="H7DhQM" name="Documentation.cpp" compile="1" resource="0"
+            file="../old/Documentation.cpp"/>
+      <FILE id="YRA0ti" name="Dsp.h" compile="0" resource="0" file="../old/Dsp.h"/>
+      <FILE id="o4pjEC" name="Elliptic.cpp" compile="1" resource="0" file="../old/Elliptic.cpp"/>
+      <FILE id="fPU7bk" name="Elliptic.h" compile="0" resource="0" file="../old/Elliptic.h"/>
+      <FILE id="otcrZk" name="Filter.cpp" compile="1" resource="0" file="../old/Filter.cpp"/>
+      <FILE id="prIWou" name="Filter.h" compile="0" resource="0" file="../old/Filter.h"/>
+      <FILE id="uDLKXn" name="Layout.h" compile="0" resource="0" file="../old/Layout.h"/>
+      <FILE id="awjOwt" name="Legendre.cpp" compile="1" resource="0" file="../old/Legendre.cpp"/>
+      <FILE id="WqnBPJ" name="Legendre.h" compile="0" resource="0" file="../old/Legendre.h"/>
+      <FILE id="Xl3VcQ" name="MathSupplement.h" compile="0" resource="0"
+            file="../old/MathSupplement.h"/>
+      <FILE id="Qg6xAG" name="Param.cpp" compile="1" resource="0" file="../old/Param.cpp"/>
+      <FILE id="knj9gy" name="Params.h" compile="0" resource="0" file="../old/Params.h"/>
+      <FILE id="TDtGVn" name="PoleFilter.cpp" compile="1" resource="0" file="../old/PoleFilter.cpp"/>
+      <FILE id="hJqyMx" name="PoleFilter.h" compile="0" resource="0" file="../old/PoleFilter.h"/>
+      <FILE id="GNzTAd" name="RBJ.cpp" compile="1" resource="0" file="../old/RBJ.cpp"/>
+      <FILE id="dX5BBY" name="RBJ.h" compile="0" resource="0" file="../old/RBJ.h"/>
+      <FILE id="qPTnVp" name="RootFinder.cpp" compile="1" resource="0" file="../old/RootFinder.cpp"/>
+      <FILE id="WMHaYO" name="RootFinder.h" compile="0" resource="0" file="../old/RootFinder.h"/>
+      <FILE id="WNWm1G" name="SmoothedFilter.h" compile="0" resource="0"
+            file="../old/SmoothedFilter.h"/>
+      <FILE id="QcumcV" name="State.cpp" compile="1" resource="0" file="../old/State.cpp"/>
+      <FILE id="OiRZm9" name="State.h" compile="0" resource="0" file="../old/State.h"/>
+      <FILE id="huzDz9" name="Types.h" compile="0" resource="0" file="../old/Types.h"/>
+      <FILE id="K0EOYy" name="Utilities.h" compile="0" resource="0" file="../old/Utilities.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
-                       isDebug="1" optimisation="1" targetName="NewProject" headerPath="../../../old/&#10;../../../include"/>
+                       isDebug="1" optimisation="1" targetName="NewProject" headerPath="../../../&#10;../../../include"/>
         <CONFIGURATION name="Release" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
-                       isDebug="0" optimisation="3" targetName="NewProject" headerPath="../../../old/&#10;../../../include"/>
+                       isDebug="0" optimisation="3" targetName="NewProject" headerPath="../../../&#10;../../../include"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
@@ -151,9 +158,9 @@
     <VS2015 targetFolder="Builds/VisualStudio2015">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="1" optimisation="1" targetName="NewProject" headerPath="../../../old/&#10;../../../include"/>
+                       isDebug="1" optimisation="1" targetName="NewProject" headerPath="../../../&#10;../../../include"/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="0" optimisation="3" targetName="NewProject" headerPath="../../../old/&#10;../../../include"/>
+                       isDebug="0" optimisation="3" targetName="NewProject" headerPath="../../../&#10;../../../include"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
@@ -174,9 +181,9 @@
     <LINUX_MAKE targetFolder="Builds/LinuxMakefile">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
-                       targetName="NewProject" headerPath="../../../old/&#10;../../../include"/>
+                       targetName="NewProject" headerPath="../../../&#10;../../../include"/>
         <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="3"
-                       targetName="NewProject" headerPath="../../../old/&#10;../../../include"/>
+                       targetName="NewProject" headerPath="../../../&#10;../../../include"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../../JUCE/modules"/>

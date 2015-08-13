@@ -33,71 +33,32 @@ THE SOFTWARE.
 
 *******************************************************************************/
 
-#ifndef DSPDEMO_FILTERCHART_H
-#define DSPDEMO_FILTERCHART_H
+#ifndef DSPFILTERS_DESIGN_H
+#define DSPFILTERS_DESIGN_H
 
-#include "old/Filter.h"
-#include "FilterListener.h"
+#include "old/Common.h"
+#include "old/Params.h"
 
-/*
- * Provides some common functionality for displayed charts.
- *
- */
-class FilterChart
-    : public Component
-    , public FilterListener
+namespace Dsp {
+
+struct DesignBase
 {
-public:
-    FilterChart(FilterListeners& listeners);
-    ~FilterChart();
+    // Sampling rate is the first param for every Design filter
+    static const ParamInfo getParamInfo_0()
+    {
+        return ParamInfo::defaultSampleRateParam();
+    }
 
-    void paint(Graphics& g);
-
-    void resized();
-
-    void onFilterChanged(Dsp::Filter* newFilter);
-    void onFilterParameters();
-
-    virtual const String getName() const;
-    virtual void paintContents(Graphics& g) = 0;
-    virtual void update() = 0;
-
-    static void drawText(Graphics &g,
-        const Point<int> ptOrigin,
-        const String text,
-        Justification just = Justification::bottomLeft);
-
-private:
-    void paintName(Graphics& g);
-
-protected:
-    FilterListeners& m_listeners;
-    Dsp::Filter* m_filter;
-    bool m_isDefined;
-    Path m_path;
-
-    Colour m_cBack;
-    Colour m_cFrame;
-    Colour m_cAxis;
-    Colour m_cAxisMinor;
-    Colour m_cText;
+    // These should never get called
+    static const ParamInfo getParamInfo_1() { return ParamInfo(); }
+    static const ParamInfo getParamInfo_2() { return ParamInfo(); }
+    static const ParamInfo getParamInfo_3() { return ParamInfo(); }
+    static const ParamInfo getParamInfo_4() { return ParamInfo(); }
+    static const ParamInfo getParamInfo_5() { return ParamInfo(); }
+    static const ParamInfo getParamInfo_6() { return ParamInfo(); }
+    static const ParamInfo getParamInfo_7() { return ParamInfo(); }
 };
 
-/*
- * Chart which has a frequency axis that can be made logarithmic scale
- *
- */
-class FrequencyChart : public FilterChart
-{
-public:
-    FrequencyChart(FilterListeners& listeners);
-    ~FrequencyChart();
-
-    void paintOverChildren(Graphics& g);
-
-    // map x=[0..1] to unit frequency F=[0..1]
-    float xToF(float x);
-};
+}
 
 #endif
-

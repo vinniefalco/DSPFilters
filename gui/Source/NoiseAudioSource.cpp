@@ -61,12 +61,12 @@ void NoiseAudioSource::getNextAudioBlock(const AudioSourceChannelInfo& bufferToF
     {
         for(int i = 0; i < bufferToFill.buffer->getNumChannels(); ++i)
             pink_noise(bufferToFill.numSamples,
-                bufferToFill.buffer->getArrayOfChannels()[i] + bufferToFill.startSample);
+                bufferToFill.buffer->getArrayOfWritePointers()[i] + bufferToFill.startSample);
     } else
     {
         for(int i = 0; i < bufferToFill.buffer->getNumChannels(); ++i)
             white_noise(bufferToFill.numSamples,
-                bufferToFill.buffer->getArrayOfChannels()[i] + bufferToFill.startSample);
+                bufferToFill.buffer->getArrayOfWritePointers()[i] + bufferToFill.startSample);
     }
 }
 

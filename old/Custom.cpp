@@ -33,71 +33,34 @@ THE SOFTWARE.
 
 *******************************************************************************/
 
-#ifndef DSPDEMO_FILTERCHART_H
-#define DSPDEMO_FILTERCHART_H
+#include "old/Common.h"
+#include "old/Custom.h"
 
-#include "old/Filter.h"
-#include "FilterListener.h"
+namespace Dsp {
 
-/*
- * Provides some common functionality for displayed charts.
- *
- */
-class FilterChart
-    : public Component
-    , public FilterListener
+namespace Custom {
+
+void OnePole::setup(double scale,
+    double pole,
+    double zero)
 {
-public:
-    FilterChart(FilterListeners& listeners);
-    ~FilterChart();
+    setOnePole(pole, zero);
+    applyScale(scale);
+}
 
-    void paint(Graphics& g);
-
-    void resized();
-
-    void onFilterChanged(Dsp::Filter* newFilter);
-    void onFilterParameters();
-
-    virtual const String getName() const;
-    virtual void paintContents(Graphics& g) = 0;
-    virtual void update() = 0;
-
-    static void drawText(Graphics &g,
-        const Point<int> ptOrigin,
-        const String text,
-        Justification just = Justification::bottomLeft);
-
-private:
-    void paintName(Graphics& g);
-
-protected:
-    FilterListeners& m_listeners;
-    Dsp::Filter* m_filter;
-    bool m_isDefined;
-    Path m_path;
-
-    Colour m_cBack;
-    Colour m_cFrame;
-    Colour m_cAxis;
-    Colour m_cAxisMinor;
-    Colour m_cText;
-};
-
-/*
- * Chart which has a frequency axis that can be made logarithmic scale
- *
- */
-class FrequencyChart : public FilterChart
+void TwoPole::setup(double scale,
+    double poleRho,
+    double poleTheta,
+    double zeroRho,
+    double zeroTheta)
 {
-public:
-    FrequencyChart(FilterListeners& listeners);
-    ~FrequencyChart();
+    complex_t pole = std::polar(poleRho, poleTheta);
+    complex_t zero = std::polar(zeroRho, zeroTheta);
 
-    void paintOverChildren(Graphics& g);
+    setTwoPole(pole, zero, std::conj(pole), std::conj(zero));
+    applyScale(scale);
+}
 
-    // map x=[0..1] to unit frequency F=[0..1]
-    float xToF(float x);
-};
+}
 
-#endif
-
+}

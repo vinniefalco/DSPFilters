@@ -33,71 +33,85 @@ THE SOFTWARE.
 
 *******************************************************************************/
 
-#ifndef DSPDEMO_FILTERCHART_H
-#define DSPDEMO_FILTERCHART_H
-
+#include "old/Common.h"
 #include "old/Filter.h"
-#include "FilterListener.h"
 
-/*
- * Provides some common functionality for displayed charts.
- *
- */
-class FilterChart
-    : public Component
-    , public FilterListener
+namespace Dsp {
+
+Params Filter::getDefaultParams() const
 {
-public:
-    FilterChart(FilterListeners& listeners);
-    ~FilterChart();
+    Params params;
 
-    void paint(Graphics& g);
+    params.clear();
 
-    void resized();
+    for(int i = 0; i < getNumParams(); ++i)
+        params[i] = getParamInfo(i).getDefaultValue();
 
-    void onFilterChanged(Dsp::Filter* newFilter);
-    void onFilterParameters();
+    return params;
+}
 
-    virtual const String getName() const;
-    virtual void paintContents(Graphics& g) = 0;
-    virtual void update() = 0;
-
-    static void drawText(Graphics &g,
-        const Point<int> ptOrigin,
-        const String text,
-        Justification just = Justification::bottomLeft);
-
-private:
-    void paintName(Graphics& g);
-
-protected:
-    FilterListeners& m_listeners;
-    Dsp::Filter* m_filter;
-    bool m_isDefined;
-    Path m_path;
-
-    Colour m_cBack;
-    Colour m_cFrame;
-    Colour m_cAxis;
-    Colour m_cAxisMinor;
-    Colour m_cText;
-};
-
-/*
- * Chart which has a frequency axis that can be made logarithmic scale
- *
- */
-class FrequencyChart : public FilterChart
+Filter::~Filter()
 {
-public:
-    FrequencyChart(FilterListeners& listeners);
-    ~FrequencyChart();
+}
 
-    void paintOverChildren(Graphics& g);
+int Filter::findParamId(int paramId)
+{
+    int index = -1;
 
-    // map x=[0..1] to unit frequency F=[0..1]
-    float xToF(float x);
-};
+    for(int i = getNumParams(); --i >= 0;)
+    {
+        if(getParamInfo(i).getId() == paramId)
+        {
+            index = i;
+            break;
+        }
+    }
 
-#endif
+    return index;
+}
 
+void Filter::setParamById(int paramId, double nativeValue)
+{
+    for(int i = getNumParams(); --i >= 0;)
+    {
+        if(getParamInfo(i).getId() == paramId)
+        {
+            setParam(i, nativeValue);
+            return;
+        }
+    }
+
+    assert(0);
+}
+
+void Filter::copyParamsFrom(Dsp::Filter const* other)
+{
+    // first, set reasonable defaults
+    m_params = getDefaultParams();
+
+    if(other)
+    {
+        // now loop
+        for(int i = 0; i < getNumParams(); ++i)
+        {
+            const ParamInfo& paramInfo = getParamInfo(i);
+
+            // find a match
+            for(int j = 0; j < other->getNumParams(); ++j)
+            {
+                const ParamInfo& otherParamInfo = other->getParamInfo(j);
+
+                if(paramInfo.getId() == otherParamInfo.getId())
+                {
+                    // match!
+                    m_params[i] = paramInfo.clamp(other->getParam(j));
+                    break;
+                }
+            }
+        }
+    }
+
+    doSetParams(m_params);
+}
+
+}
