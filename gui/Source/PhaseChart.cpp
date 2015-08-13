@@ -85,8 +85,8 @@ void PhaseChart::update()
     {
         m_isDefined = true;
 
-        const Rectangle<int> bounds = getLocalBounds();
-        const Rectangle<int> r = bounds.reduced(4, 4);
+        const Rectangle<int> b = getLocalBounds();
+        const Rectangle<int> r = b.reduced(4, 4);
 
         for(int xi = 0; xi < r.getWidth(); ++xi)
         {
@@ -119,8 +119,8 @@ bool PhaseChart::drawPhaseLine(Graphics& g, int degrees, bool drawLabel)
 {
     bool onScreen = true;
 
-    const Rectangle<int> bounds = getLocalBounds();
-    const Rectangle<int> r = bounds;
+    const Rectangle<int> b = getLocalBounds();
+    const Rectangle<int> r = b;
     const int y = yToScreen(float(degrees));
 
     if(y >= r.getY() && y < r.getBottom())
@@ -144,8 +144,8 @@ bool PhaseChart::drawPhaseLine(Graphics& g, int degrees, bool drawLabel)
 
 AffineTransform PhaseChart::calcTransform()
 {
-    const Rectangle<int> bounds = getLocalBounds();
-    const Rectangle<int> r = bounds.reduced(4, 4);
+    const Rectangle<int> b = getLocalBounds();
+    const Rectangle<int> r = b.reduced(4, 4);
 
     AffineTransform t;
 

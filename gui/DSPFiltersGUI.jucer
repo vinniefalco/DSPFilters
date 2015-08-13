@@ -128,9 +128,9 @@
     <XCODE_MAC targetFolder="Builds/MacOSX">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
-                       isDebug="1" optimisation="1" targetName="NewProject"/>
+                       isDebug="1" optimisation="1" targetName="NewProject" headerPath="../../../old/&#10;../../../include"/>
         <CONFIGURATION name="Release" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
-                       isDebug="0" optimisation="3" targetName="NewProject"/>
+                       isDebug="0" optimisation="3" targetName="NewProject" headerPath="../../../old/&#10;../../../include"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
@@ -151,9 +151,9 @@
     <VS2015 targetFolder="Builds/VisualStudio2015">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="1" optimisation="1" targetName="NewProject" headerPath="../../../old/"/>
+                       isDebug="1" optimisation="1" targetName="NewProject" headerPath="../../../old/&#10;../../../include"/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="0" optimisation="3" targetName="NewProject" headerPath="../../../old/"/>
+                       isDebug="0" optimisation="3" targetName="NewProject" headerPath="../../../old/&#10;../../../include"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
@@ -174,9 +174,9 @@
     <LINUX_MAKE targetFolder="Builds/LinuxMakefile">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
-                       targetName="NewProject"/>
+                       targetName="NewProject" headerPath="../../../old/&#10;../../../include"/>
         <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="3"
-                       targetName="NewProject"/>
+                       targetName="NewProject" headerPath="../../../old/&#10;../../../include"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../../JUCE/modules"/>

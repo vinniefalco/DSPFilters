@@ -36,6 +36,7 @@ THE SOFTWARE.
 #ifndef DSPDEMO_AUDIOOUTPUT_H
 #define DSPDEMO_AUDIOOUTPUT_H
 
+#include <dspfilters/executor.h>
 #include "Common.h"
 #include "ThreadQueue.h"
 #include "FilteringAudioSource.h"
@@ -81,6 +82,8 @@ protected:
     void audioDeviceStopped();
 
 private:
+    dspfilters::executor queue_;
+
     ScopedPointer<AudioDeviceManager> m_audioDeviceManager;
     ThreadQueue m_queue;
     AudioIODevice* m_device;

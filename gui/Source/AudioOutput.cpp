@@ -84,6 +84,11 @@ AudioOutput::~AudioOutput()
 
 void AudioOutput::setGain(float gainDb)
 {
+    queue_.post(
+        [=]()
+        {
+            doSetGain(Decibels::decibelsToGain(gainDb));
+        });
     m_queue.call(bond(&AudioOutput::doSetGain, this, Decibels::decibelsToGain(gainDb)));
 }
 
@@ -180,6 +185,7 @@ void AudioOutput::audioDeviceIOCallback(const float** inputChannelData,
     int numOutputChannels,
     int numSamples)
 {
+    queue_.run();
     m_queue.process();
 
     AudioSampleBuffer buffer(outputChannelData, numOutputChannels, numSamples);

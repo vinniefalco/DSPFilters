@@ -458,9 +458,11 @@ void MainPanel::paint(Graphics& g)
 template <class DesignType, class StateType>
 void MainPanel::createFilterDesign(Dsp::Filter** pFilter, Dsp::Filter** pAudioFilter)
 {
+#if 0
     *pAudioFilter =
         new NewFilter;
     return;
+#else
     switch(m_menuSmoothing->getSelectedId())
     {
     case 1:
@@ -471,6 +473,7 @@ void MainPanel::createFilterDesign(Dsp::Filter** pFilter, Dsp::Filter** pAudioFi
     *pAudioFilter = new Dsp::FilterDesign <DesignType, 2, StateType>;
     break;
     };
+#endif
 }
 
 template <class DesignType>

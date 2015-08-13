@@ -51,7 +51,7 @@ void PoleZeroChart::paintContents(Graphics& g)
     Colour cPole(0xd0ff0000);
     Colour cZero(0xd02020ff);
 
-    Rectangle<int> bounds = getLocalBounds();
+    Rectangle<int> b = getLocalBounds();
 
     short size = (jmin(getWidth(), getHeight()) + 2) / 3;
 
@@ -67,7 +67,7 @@ void PoleZeroChart::paintContents(Graphics& g)
     }
 
     t = t.scaled(float(size), -float(size));
-    t = t.translated(float(bounds.getCentreX()), float(bounds.getCentreY()));
+    t = t.translated(float(b.getCentreX()), float(b.getCentreY()));
 
     g.setColour(m_cAxis);
     {
