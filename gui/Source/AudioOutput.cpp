@@ -37,6 +37,8 @@ THE SOFTWARE.
 #include "AudioOutput.h"
 #include "binaries.h"
 #include "bond.h"
+#include <memory>
+#include <utility>
 
 AudioOutput::AudioOutput()
     : m_audioDeviceManager(new AudioDeviceManager)
@@ -84,38 +86,54 @@ AudioOutput::~AudioOutput()
 
 void AudioOutput::setGain(float gainDb)
 {
-    queue_.post(
-        [=]()
-        {
-            doSetGain(Decibels::decibelsToGain(gainDb));
-        });
-    m_queue.call(bond(&AudioOutput::doSetGain, this, Decibels::decibelsToGain(gainDb)));
+    queue_.post([=]()
+    {
+        doSetGain(Decibels::decibelsToGain(gainDb));
+    });
 }
 
 void AudioOutput::setTempo(float tempo)
 {
-    m_queue.call(bond(&AudioOutput::doSetTempo, this, tempo));
+    queue_.post([=]()
+    {
+        doSetTempo(tempo);
+    });
 }
 
 void AudioOutput::setSource(AudioSource* source)
 {
-    ResamplingAudioSource* resampler = new ResamplingAudioSource(source, true);
-    m_queue.call(bond(&AudioOutput::doSetSource, this, resampler));
+    auto resampler =
+        std::make_unique<ResamplingAudioSource>(
+            source, true);
+    queue_.post([this, resampler = std::move(resampler)]() mutable
+    {
+        doSetSource(resampler.release());
+    });
 }
 
+// VFALCO This should take std::unique_ptr<Dsp::Filter>
 void AudioOutput::setFilter(Dsp::Filter* filter)
 {
-    m_queue.call(bond(&AudioOutput::doSetFilter, this, filter));
+    queue_.post([=]()
+    {
+        doSetFilter(filter);
+    });
 }
 
 void AudioOutput::setFilterParameters(Dsp::Params parameters)
 {
-    m_queue.call(bond(&AudioOutput::doSetFilterParameters, this, parameters));
+    queue_.post([=]()
+    {
+        doSetFilterParameters(parameters);
+    });
 }
 
 void AudioOutput::resetFilter()
 {
-    m_queue.call(bond(&AudioOutput::doResetFilter, this));
+    queue_.post([=]()
+    {
+        doResetFilter();
+    });
 }
 
 void AudioOutput::doSetGain(float gain)

@@ -35,6 +35,7 @@
 #include <new>
 
 namespace dspfilters {
+
 namespace detail {
 
 template <class = void>
@@ -59,14 +60,15 @@ private:
         block (std::size_t bytes);
 
         void*
-        allocate (std::size_t n);
+        allocate (std::size_t bytes, std::size_t align);
         
         bool
         deallocate();
 
+        template <class U>
         static
-        block*
-        get (void* p);
+        block*&
+        stash (U const* u);
     };
 
     block* used_ = nullptr;
@@ -85,7 +87,7 @@ public:
     ~qalloc_impl();
 
     void*
-    allocate (std::size_t n);
+    allocate (std::size_t bytes, std::size_t align);
 
     void
     deallocate (void* p);
@@ -168,8 +170,8 @@ using qalloc = qalloc_type<int>;
 
 namespace detail {
 
-template <class T>
-qalloc_impl<T>::block::block (std::size_t bytes)
+template <class _>
+qalloc_impl<_>::block::block (std::size_t bytes)
     : bytes_ (bytes - sizeof(*this))
     , remain_ (bytes_)
     , free_ (reinterpret_cast<
@@ -177,25 +179,41 @@ qalloc_impl<T>::block::block (std::size_t bytes)
 {
 }
 
-template <class T>
+template <class _>
 void*
-qalloc_impl<T>::block::allocate (std::size_t n)
+qalloc_impl<_>::block::allocate(
+    std::size_t bytes, std::size_t align)
 {
-    n = sizeof(block*) + n;
-    if (remain_ < n)
+//align = 16;
+    align = std::max(align,
+        std::alignment_of<block*>::value);
+    auto pad = [](void const* p, std::size_t align)
+    {
+        auto const i = reinterpret_cast<
+            std::uintptr_t>(p);
+        return (align - (i % align)) % align;
+    };
+
+    auto const n0 =
+        pad(free_ + sizeof(block*), align);
+    auto const n1 =
+        n0 + sizeof(block*) + bytes;
+    if (remain_ < n1)
         return nullptr;
-    auto p = reinterpret_cast<
-        block**>(free_);
-    *p = this;
+    auto p = reinterpret_cast<block**>(
+        free_ + n0 + sizeof(block*));
+    assert(pad(p - 1,
+        std::alignment_of<block*>::value) == 0);
+    p[-1] = this;
     ++count_;
-    free_ += n;
-    remain_ -= n;
-    return p + 1;
+    free_ += n1;
+    remain_ -= n1;
+    return p;
 }
 
-template <class T>
+template <class _>
 bool
-qalloc_impl<T>::block::deallocate()
+qalloc_impl<_>::block::deallocate()
 {
     --count_;
     if (count_ > 0)
@@ -206,18 +224,21 @@ qalloc_impl<T>::block::deallocate()
     return true;
 }
 
-template <class T>
+template <class _>
+template <class U>
 inline
 auto
-qalloc_impl<T>::block::get (void* p) ->
-    block*
+qalloc_impl<_>::block::stash (U const* u) ->
+    block*&
 {
-    return reinterpret_cast<
-        block**>(p)[-1];
+    static auto const a =
+        std::alignment_of<block*>::value;
+    return *reinterpret_cast<block**>(
+        a * ((reinterpret_cast<std::uintptr_t>(u) - sizeof(block*)) / a));
 }
 
-template <class T>
-qalloc_impl<T>::~qalloc_impl()
+template <class _>
+qalloc_impl<_>::~qalloc_impl()
 {
     if (used_)
         std::free(used_);
@@ -230,20 +251,23 @@ qalloc_impl<T>::~qalloc_impl()
     }
 }
 
-template <class T>
+template <class _>
 void*
-qalloc_impl<T>::allocate (std::size_t n)
+qalloc_impl<_>::allocate(
+    std::size_t bytes, std::size_t align)
 {
     if (used_)
     {
-        auto const p = used_->allocate(n);
+        auto const p =
+            used_->allocate(bytes, align);
         if (p)
             return p;
         used_ = nullptr;
     }
     if (free_)
     {
-        auto const p = free_->allocate(n);
+        auto const p =
+            free_->allocate(bytes, align);
         if (p)
         {
             used_ = free_;
@@ -251,23 +275,24 @@ qalloc_impl<T>::allocate (std::size_t n)
             return p;
         }
     }
-    auto const bytes = std::max<std::size_t>(
+    // VFALCO Formula needs audit
+    auto const n = std::max<std::size_t>(
         block_size, sizeof(block) +
-            sizeof(block*) + n);
+            sizeof(block*) + bytes + 2 * align);
     block* const b =
-        new(std::malloc(bytes)) block(bytes);
+        new(std::malloc(n)) block(n);
     if (! b)
         throw std::bad_alloc();
     used_ = b;
     // VFALCO This has to succeed
-    return used_->allocate(n);
+    return used_->allocate(bytes, align);
 }
 
-template <class T>
+template <class _>
 void
-qalloc_impl<T>::deallocate (void* p)
+qalloc_impl<_>::deallocate (void* p)
 {
-    auto const block = block::get(p);
+    auto const block = block::stash(p);
     if (block->deallocate())
     {
         if (used_ == block)
@@ -305,7 +330,8 @@ qalloc_type<T>::allocate (std::size_t n)
         throw std::bad_alloc();
     auto const bytes = n * sizeof(T);
     return static_cast<T*>(
-        impl_->allocate(bytes));
+        impl_->allocate(bytes,
+            std::alignment_of<T>::value));
 }
 
 template <class T>
@@ -313,14 +339,13 @@ template <class U>
 U*
 qalloc_type<T>::alloc (std::size_t n)
 {
-    static_assert(std::alignment_of<U>::value <=
-        sizeof(void*), "");
     if (n > std::numeric_limits<
             std::size_t>::max() / sizeof(U))
         throw std::bad_alloc();
     auto const bytes = n * sizeof(U);
     return static_cast<U*>(
-        impl_->allocate(bytes));
+        impl_->allocate(bytes,
+            std::alignment_of<U>::value));
 }
 
 template <class T>
@@ -357,7 +382,7 @@ bool
 qalloc_type<T>::operator==(
     qalloc_type<U> const& u)
 {
-    return impl_.get() == u.impl_.get();
+    return impl_.stash() == u.impl_.stash();
 }
 
 template <class T>
