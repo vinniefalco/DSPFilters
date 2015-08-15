@@ -54,9 +54,9 @@ AudioOutput::AudioOutput()
 
     // set up audio device
     {
-        int sampleRate = 44100;
+        int sampleRate = 96000;
         int bufferSize;
-        int latencyMilliseconds = 50;
+        int latencyMilliseconds = 5;
 
         bufferSize = sampleRate * latencyMilliseconds / 1000;
 

@@ -29,6 +29,7 @@
 #define DSPFILTERS_EXECUTOR_H_INCLUDED
 
 #include <dspfilters/qalloc.h>
+#include <mutex>
 #include <type_traits>
 #include <utility>
 
@@ -58,6 +59,7 @@ private:
     };
 
     qalloc alloc_;
+    std::mutex mutex_;
     item* head_ = nullptr;
     item* tail_ = nullptr;
 
@@ -68,25 +70,28 @@ public:
 
     ~executor_impl();
 
-    /** Run one pending function
+    /** Run all pending functions.
+        
+        Thread Safety:
 
-        @return `true` if a function was executed
+            May not be called concurrently.
+
+            Functions posted while `run` is executing
+            are not guaranteed to execute in this call
+            to `run`.
     */
-    bool
-    run_one();
-
-    /** Run all pending functions
-
-        @return `true` if any functions were executed
-    */
-    bool
+    void
     run();
 
     /** Post a function.
 
-        The function will be executed in the next
-        call to `run_one` or `run`. Functions are
-        executed in the order they are posted.
+        The function will be executed in the next call to
+        `run`. Functions posted from the same thread are
+        guaranteed to execute in the order they were posted.
+
+        Thread Safety:
+
+            May be called concurrently.
     */
     template <class F>
     void
@@ -122,39 +127,43 @@ executor_impl<_>::~executor_impl()
 {
     while(head_)
     {
-        auto const item = head_;
+        auto const cur = head_;
         head_ = head_->next;
-        item->~item();
-        alloc_.dealloc(item, 1);
+        cur->~item();
+        alloc_.dealloc(cur, 1);
     }
 }
 
 template <class _>
-bool
-executor_impl<_>::run_one()
-{
-    auto const item = head_;
-    if (! item)
-        return false;
-    head_ = head_->next;
-    if (! head_)
-        tail_ = nullptr;
-    (*item)();
-    item->~item();
-    alloc_.dealloc(item, 1);
-    return true;
-}
-
-template <class _>
-bool
+void
 executor_impl<_>::run()
 {
-    if (! run_one())
-        return false;
-    for(;;)
-        if (! run_one())
-            break;
-    return true;
+    item* head;
+    {
+        std::lock_guard<
+            std::mutex> lock(mutex_);
+        head = head_;
+        if (! head)
+            return;
+        head_ = nullptr;
+        tail_ = nullptr;
+    }
+    auto cur = head;
+    do
+    {
+        (*cur)();
+        cur = cur->next;
+    }
+    while(cur);
+    std::lock_guard<
+        std::mutex> lock(mutex_);
+    while(head)
+    {
+        cur = head;
+        head = head->next;
+        cur->~item();
+        alloc_.dealloc(cur, 1);
+    }
 }
 
 template <class _>
@@ -164,6 +173,8 @@ executor_impl<_>::post (F&& f)
 {
     using T = item_impl<typename
         std::decay<F>::type>;
+    std::lock_guard<
+        std::mutex> lock(mutex_);
     auto const item =
         new(alloc_.alloc<T>(1)) T(
             std::forward<F>(f));
