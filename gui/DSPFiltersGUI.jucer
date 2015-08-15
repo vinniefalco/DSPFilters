@@ -42,7 +42,6 @@
       <FILE id="AvQQm6" name="AudioOutput.h" compile="0" resource="0" file="Source/AudioOutput.h"/>
       <FILE id="TAuD1G" name="binaries.cpp" compile="1" resource="0" file="Source/binaries.cpp"/>
       <FILE id="c4iq9T" name="binaries.h" compile="0" resource="0" file="Source/binaries.h"/>
-      <FILE id="DUaTWp" name="bond.h" compile="0" resource="0" file="Source/bond.h"/>
       <FILE id="TjSrVh" name="BrickWallChart.cpp" compile="1" resource="0"
             file="Source/BrickWallChart.cpp"/>
       <FILE id="ZFKM1h" name="BrickWallChart.h" compile="0" resource="0"

@@ -38,12 +38,13 @@ THE SOFTWARE.
 
 #include "Common.h"
 #include "old/Filter.h"
+#include <memory>
 
-/*
- * An AudioSource which applies a Dsp::Filter to its connected source.
- * The filter parameters can be changed during playback.
- *
- */
+/**
+    An AudioSource which applies a Dsp::Filter to its connected source.
+
+    The filter parameters can be changed during playback.
+*/
 class FilteringAudioSource : public AudioSource
 {
 public:
@@ -52,7 +53,7 @@ public:
 
     void setSource(AudioSource* source);
 
-    void setFilter(Dsp::Filter* filter);
+    void setFilter(std::shared_ptr<Dsp::Filter> filter);
 
     void setFilterParameters(Dsp::Params parameters);
 
@@ -68,7 +69,7 @@ public:
 private:
     double m_sampleRate;
     ScopedPointer<AudioSource> m_source;
-    ScopedPointer<Dsp::Filter> m_filter;
+    std::shared_ptr<Dsp::Filter> m_filter;
 };
 
 #endif

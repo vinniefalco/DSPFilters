@@ -54,7 +54,7 @@ void FilteringAudioSource::setSource(AudioSource* source)
     m_source = source;
 }
 
-void FilteringAudioSource::setFilter(Dsp::Filter* filter)
+void FilteringAudioSource::setFilter(std::shared_ptr<Dsp::Filter> filter)
 {
     m_filter = filter;
 

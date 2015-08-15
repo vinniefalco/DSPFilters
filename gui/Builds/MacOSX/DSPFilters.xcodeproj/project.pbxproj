@@ -805,7 +805,6 @@
 		BC38B9D11974EF8643B7EB1B = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_ChoicePropertyComponent.h"; path = "../../JuceLibraryCode/modules/juce_gui_basics/properties/juce_ChoicePropertyComponent.h"; sourceTree = "SOURCE_ROOT"; };
 		BC6482827006C912563546AE = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_Desktop.cpp"; path = "../../JuceLibraryCode/modules/juce_gui_basics/components/juce_Desktop.cpp"; sourceTree = "SOURCE_ROOT"; };
 		BC6F482B9339C25D7E523AAE = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_CodeTokeniser.h"; path = "../../JuceLibraryCode/modules/juce_gui_extra/code_editor/juce_CodeTokeniser.h"; sourceTree = "SOURCE_ROOT"; };
-		BC7387AAFCB017150C881530 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = bond.h; path = ../../Source/bond.h; sourceTree = "SOURCE_ROOT"; };
 		BC8724BC9E8C04C4ADC7CE82 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_DragAndDropContainer.cpp"; path = "../../JuceLibraryCode/modules/juce_gui_basics/mouse/juce_DragAndDropContainer.cpp"; sourceTree = "SOURCE_ROOT"; };
 		BCD9A5882C2470FAC3FEC103 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_ReverbAudioSource.cpp"; path = "../../JuceLibraryCode/modules/juce_audio_basics/sources/juce_ReverbAudioSource.cpp"; sourceTree = "SOURCE_ROOT"; };
 		BDCAE056F3FF5E553BBB88B8 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_DragAndDropContainer.h"; path = "../../JuceLibraryCode/modules/juce_gui_basics/mouse/juce_DragAndDropContainer.h"; sourceTree = "SOURCE_ROOT"; };
@@ -1075,7 +1074,6 @@
 					DCE2ACD2FE89FED62215FDA2,
 					29A481C857A5640B02F4AA05,
 					21689E013BAD06CC830DA916,
-					BC7387AAFCB017150C881530,
 					BA251E4638D3AC1D7F00DB51,
 					EF752712E03FB24DF2108334,
 					6255714D487E9126E7F1AB47,

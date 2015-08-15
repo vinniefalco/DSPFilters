@@ -1677,9 +1677,6 @@
     <ClInclude Include="..\..\Source\binaries.h">
       <Filter>DSPFilters\Source</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\bond.h">
-      <Filter>DSPFilters\Source</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\BrickWallChart.h">
       <Filter>DSPFilters\Source</Filter>
     </ClInclude>

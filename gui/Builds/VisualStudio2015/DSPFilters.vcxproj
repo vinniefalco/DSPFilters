@@ -1294,7 +1294,6 @@
     <ClInclude Include="..\..\Source\ThreadQueue.h"/>
     <ClInclude Include="..\..\Source\AudioOutput.h"/>
     <ClInclude Include="..\..\Source\binaries.h"/>
-    <ClInclude Include="..\..\Source\bond.h"/>
     <ClInclude Include="..\..\Source\BrickWallChart.h"/>
     <ClInclude Include="..\..\Source\Common.h"/>
     <ClInclude Include="..\..\Source\ContentComponentConstrainer.h"/>

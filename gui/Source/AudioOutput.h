@@ -59,7 +59,7 @@ public:
     void setGain(float gainDb);
     void setTempo(float tempo);
     void setSource(AudioSource* source);
-    void setFilter(Dsp::Filter* filter);
+    void setFilter(std::shared_ptr<Dsp::Filter> filter);
     void setFilterParameters(Dsp::Params parameters);
     void resetFilter();
 
@@ -67,7 +67,7 @@ protected:
     void doSetGain(float gain);
     void doSetTempo(float tempo);
     void doSetSource(ResamplingAudioSource* source);
-    void doSetFilter(Dsp::Filter* filter);
+    void doSetFilter(std::shared_ptr<Dsp::Filter> filter);
     void doSetFilterParameters(Dsp::Params parameters);
     void doResetFilter();
 

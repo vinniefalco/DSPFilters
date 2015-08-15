@@ -39,6 +39,7 @@ THE SOFTWARE.
 #include "Common.h"
 #include "ResizableLayout.h"
 #include "FilterListener.h"
+#include <memory>
 
 class MainPanel :
     public Component,
@@ -73,10 +74,12 @@ public:
 
 private:
     template <class DesignType, class StateType>
-    void createFilterDesign(Dsp::Filter** pFilter, Dsp::Filter** pAudioFilter);
+    void createFilterDesign(std::shared_ptr<Dsp::Filter>* pFilter,
+        std::shared_ptr<Dsp::Filter>* pAudioFilter);
 
     template <class DesignType>
-    void createFilterState(Dsp::Filter** pFilter, Dsp::Filter** pAudioFilter);
+    void createFilterState(std::shared_ptr<Dsp::Filter>* pFilter,
+        std::shared_ptr<Dsp::Filter>* pAudioFilter);
 
     void createFilter();
 
@@ -93,7 +96,7 @@ private:
 
     int m_lastTypeId;
 
-    ScopedPointer<Dsp::Filter> m_filter;
+    std::shared_ptr<Dsp::Filter> m_filter;
 };
 
 #endif

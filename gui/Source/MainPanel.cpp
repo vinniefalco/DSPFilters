@@ -64,21 +64,34 @@ public:
     Dsp::ParamInfo getParamInfo(int index) const override
     {
         static std::size_t MaxOrder = 10;
-        return Dsp::ParamInfo(
-            Dsp::idOrder, "Order", "Order",
-            1, MaxOrder, 2,
-            &Dsp::ParamInfo::Int_toControlValue,
-            &Dsp::ParamInfo::Int_toNativeValue,
-            &Dsp::ParamInfo::Int_toString);
+        switch(index)
+        {
+        case 0:
+            return Dsp::ParamInfo(
+                Dsp::idSampleRate, "Fs", "Sample Rate",
+                11025, 192000, 44100,
+                &Dsp::ParamInfo::Real_toControlValue,
+                &Dsp::ParamInfo::Real_toNativeValue,
+                &Dsp::ParamInfo::Hz_toString);
+        case 1:
+            return Dsp::ParamInfo(
+                Dsp::idOrder, "Order", "Order",
+                1, MaxOrder, 2,
+                &Dsp::ParamInfo::Int_toControlValue,
+                &Dsp::ParamInfo::Int_toNativeValue,
+                &Dsp::ParamInfo::Int_toString);
+        };
+        return {};
     }
 
     std::vector<Dsp::PoleZeroPair>
-        getPoleZeros() const override
+    getPoleZeros() const override
     {
         return{};
     }
 
-    Dsp::complex_t response(double normalizedFrequency) const override
+    Dsp::complex_t
+    response (double normalizedFrequency) const override
     {
         return{};
     }
@@ -456,30 +469,32 @@ void MainPanel::paint(Graphics& g)
 //------------------------------------------------------------------------------
 
 template <class DesignType, class StateType>
-void MainPanel::createFilterDesign(Dsp::Filter** pFilter, Dsp::Filter** pAudioFilter)
+void MainPanel::createFilterDesign(std::shared_ptr<Dsp::Filter>* pFilter,
+    std::shared_ptr<Dsp::Filter>* pAudioFilter)
 {
 #if 0
-    *pAudioFilter =
-        new NewFilter;
+    *pAudioFilter = std::make_shared<NewFilter>();
     return;
 #else
     switch(m_menuSmoothing->getSelectedId())
     {
     case 1:
-    *pAudioFilter = new Dsp::SmoothedFilterDesign <DesignType, 2, StateType>(1024);
+    *pAudioFilter = std::make_shared<Dsp::SmoothedFilterDesign<DesignType, 2, StateType>>(1024);
     break;
 
     default:
-    *pAudioFilter = new Dsp::FilterDesign <DesignType, 2, StateType>;
+    *pAudioFilter = std::make_shared<Dsp::FilterDesign<DesignType, 2, StateType>>();
     break;
     };
 #endif
 }
 
 template <class DesignType>
-void MainPanel::createFilterState(Dsp::Filter** pFilter, Dsp::Filter** pAudioFilter)
+void MainPanel::createFilterState(
+    std::shared_ptr<Dsp::Filter>* pFilter,
+        std::shared_ptr<Dsp::Filter>* pAudioFilter)
 {
-    *pFilter = new Dsp::FilterDesign <DesignType, 1>;
+    *pFilter = std::make_shared<Dsp::FilterDesign <DesignType, 1>>();
 
     switch(m_menuStateType->getSelectedId())
     {
@@ -494,8 +509,8 @@ void MainPanel::createFilterState(Dsp::Filter** pFilter, Dsp::Filter** pAudioFil
 
 void MainPanel::createFilter()
 {
-    Dsp::Filter* f = 0;
-    Dsp::Filter* fo = 0;
+    std::shared_ptr<Dsp::Filter> f = 0;
+    std::shared_ptr<Dsp::Filter> fo = 0;
 
     const int familyId = m_menuFamily->getSelectedId();
     const int typeId = m_menuType->getSelectedId();
@@ -621,11 +636,11 @@ void MainPanel::createFilter()
     if(f)
     {
         // TODO: Copy the parameters over in an intelligent way
-        f->copyParamsFrom(m_filter);
+        f->copyParamsFrom(m_filter.get());
         m_filter = f;
         //m_filter->setParams (m_filter->getDefaultParams());
 
-        m_listeners.call(&FilterListener::onFilterChanged, m_filter);
+        m_listeners.call(&FilterListener::onFilterChanged, m_filter.get());
 
         if(fo)
             fo->setParams(m_filter->getParams());

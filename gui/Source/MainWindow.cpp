@@ -46,10 +46,10 @@ MainWindow::MainWindow()
 {
     setResizable(true, false);
 
-    MainPanel* contentComponent = new MainPanel;
-    setMenuBar(contentComponent);
-    setContentOwned(contentComponent, true);
-    contentComponent->setAsConstrainerFor(this);
+    MainPanel* cc = new MainPanel;
+    setMenuBar(cc);
+    setContentOwned(cc, true);
+    cc->setAsConstrainerFor(this);
     ContentComponentConstrainer::attachTo(this);
 
     centreWithSize(getWidth(), getHeight());

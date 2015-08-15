@@ -85,8 +85,8 @@ void GroupDelayChart::update()
     {
         m_isDefined = true;
 
-        const Rectangle<int> bounds = getLocalBounds();
-        const Rectangle<int> r = bounds.reduced(4, 4);
+        const Rectangle<int> b = getLocalBounds();
+        const Rectangle<int> r = b.reduced(4, 4);
 
         // start from 1 to prevent divide by 0
         for(int xi = 1; xi < r.getWidth(); ++xi)
@@ -120,8 +120,8 @@ bool GroupDelayChart::drawGroupDelayLine(Graphics& g, float seconds, bool drawLa
 {
     bool onScreen = true;
 
-    const Rectangle<int> bounds = getLocalBounds();
-    const Rectangle<int> r = bounds;
+    const Rectangle<int> b = getLocalBounds();
+    const Rectangle<int> r = b;
     const int y = yToScreen(seconds);
 
     if(y >= r.getY() && y < r.getBottom())
@@ -145,8 +145,8 @@ bool GroupDelayChart::drawGroupDelayLine(Graphics& g, float seconds, bool drawLa
 
 AffineTransform GroupDelayChart::calcTransform()
 {
-    const Rectangle<int> bounds = getLocalBounds();
-    const Rectangle<int> r = bounds.reduced(4, 4);
+    const Rectangle<int> b = getLocalBounds();
+    const Rectangle<int> r = b.reduced(4, 4);
 
     AffineTransform t;
 

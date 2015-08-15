@@ -36,7 +36,6 @@ THE SOFTWARE.
 #include "Common.h"
 #include "AudioOutput.h"
 #include "binaries.h"
-#include "bond.h"
 #include <memory>
 #include <utility>
 
@@ -111,8 +110,7 @@ void AudioOutput::setSource(AudioSource* source)
     });
 }
 
-// VFALCO This should take std::unique_ptr<Dsp::Filter>
-void AudioOutput::setFilter(Dsp::Filter* filter)
+void AudioOutput::setFilter(std::shared_ptr<Dsp::Filter> filter)
 {
     queue_.post([=]()
     {
@@ -168,7 +166,7 @@ void AudioOutput::doSetSource(ResamplingAudioSource* source)
         m_device->getCurrentSampleRate());
 }
 
-void AudioOutput::doSetFilter(Dsp::Filter* filter)
+void AudioOutput::doSetFilter(std::shared_ptr<Dsp::Filter> filter)
 {
     m_filteringAudioSource->setFilter(filter);
 }
