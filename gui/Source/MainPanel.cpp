@@ -45,6 +45,10 @@
 
 class NewFilter : public Dsp::Filter
 {
+private:
+    Dsp::BiquadBase::State<Dsp::DirectFormI> state_[2];
+    Dsp::RBJ::LowPass filt_;
+
 public:
     Dsp::Kind getKind() const override
     {
@@ -107,15 +111,20 @@ public:
 
     void process(int numSamples, float* const* arrayOfChannels) override
     {
+        filt_.process(numSamples, arrayOfChannels[0], state_[0]);
+        filt_.process(numSamples, arrayOfChannels[1], state_[1]);
     }
 
     void process(int numSamples, double* const* arrayOfChannels) override
     {
+        filt_.process(numSamples, arrayOfChannels[0], state_[0]);
+        filt_.process(numSamples, arrayOfChannels[1], state_[1]);
     }
 
 protected:
     void doSetParams(const Dsp::Params& parameters)
     {
+        filt_.setup(parameters[0], parameters[1], parameters[2]);
     }
 };
 
@@ -472,7 +481,7 @@ template <class DesignType, class StateType>
 void MainPanel::createFilterDesign(std::shared_ptr<Dsp::Filter>* pFilter,
     std::shared_ptr<Dsp::Filter>* pAudioFilter)
 {
-#if 0
+#if 1
     *pAudioFilter = std::make_shared<NewFilter>();
     return;
 #else
