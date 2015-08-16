@@ -81,7 +81,7 @@ void GroupDelayChart::update()
     m_isDefined = false;
     m_path.clear();
 
-    if(m_filter)
+    if(filter_)
     {
         m_isDefined = true;
 
@@ -93,7 +93,7 @@ void GroupDelayChart::update()
         {
             const float x = xi / float(r.getWidth());
             const float w = float(Dsp::doublePi * (x / 2.));
-            const float y = float(-std::abs(m_filter->response(w)) / w);
+            const float y = float(-std::abs(filter_->response(w)) / w);
 
             if(!Dsp::is_nan(y))
             {

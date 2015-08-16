@@ -76,12 +76,12 @@ void StepResponseChart::update()
 
     m_ymax = .1f;
 
-    if(m_filter)
+    if(filter_)
     {
-        m_filter->reset();
+        filter_->reset();
 
-        const Rectangle<int> bounds = getLocalBounds();
-        const Rectangle<int> r = bounds.reduced(4, 4);
+        const Rectangle<int> b = getLocalBounds();
+        const Rectangle<int> r = b.reduced(4, 4);
 
         //int numSamples = r.getWidth ();
         int numSamples = 2048;
@@ -98,7 +98,7 @@ void StepResponseChart::update()
         for(int i = 3; i < numSamples; ++i)
             impulse[i] = 1;
 #endif
-        m_filter->process(numSamples, &impulse);
+        filter_->process(numSamples, &impulse);
 
         // chop off empty tail
         int bigs = 0;
@@ -153,8 +153,8 @@ void StepResponseChart::update()
 
 AffineTransform StepResponseChart::calcTransform()
 {
-    const Rectangle<int> bounds = getLocalBounds();
-    const Rectangle<int> r = bounds.reduced(4, 4);
+    const Rectangle<int> b = getLocalBounds();
+    const Rectangle<int> r = b.reduced(4, 4);
 
     AffineTransform t;
 

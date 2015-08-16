@@ -81,7 +81,7 @@ void PhaseChart::update()
     m_isDefined = false;
     m_path.clear();
 
-    if(m_filter)
+    if(filter_)
     {
         m_isDefined = true;
 
@@ -91,7 +91,7 @@ void PhaseChart::update()
         for(int xi = 0; xi < r.getWidth(); ++xi)
         {
             float x = xi / float(r.getWidth());
-            Dsp::complex_t c = m_filter->response(x / 2);
+            Dsp::complex_t c = filter_->response(x / 2);
             float y = float(90 * (std::arg(c) / Dsp::doublePi));
 
             if(!Dsp::is_nan(y))

@@ -53,7 +53,7 @@ void PoleZeroChart::paintContents(Graphics& g)
 
     Rectangle<int> b = getLocalBounds();
 
-    short size = (jmin(getWidth(), getHeight()) + 2) / 3;
+    auto const size = (jmin(getWidth(), getHeight()) + 2) / 3;
 
     // scale the graph down if the pole/zeroes lie outside the unit disc
     AffineTransform t = AffineTransform::identity;
@@ -143,8 +143,8 @@ void PoleZeroChart::update()
 {
     clear();
 
-    if(m_filter)
-        addPoleZeros(m_filter->getPoleZeros());
+    if(filter_)
+        addPoleZeros(filter_->getPoleZeros());
 
     repaint();
 }

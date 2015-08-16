@@ -649,7 +649,9 @@ void MainPanel::createFilter()
         m_filter = f;
         //m_filter->setParams (m_filter->getDefaultParams());
 
-        m_listeners.call(&FilterListener::onFilterChanged, m_filter.get());
+        forEachChild<FilterListener>(getTopLevelComponent(),
+            [=](FilterListener* c)
+                { c->onFilterSelect(m_filter); });
 
         if(fo)
             fo->setParams(m_filter->getParams());

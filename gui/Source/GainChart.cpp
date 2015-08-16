@@ -96,7 +96,7 @@ void GainChart::update()
     m_isDefined = false;
     m_path.clear();
 
-    if(m_filter)
+    if(filter_)
     {
         m_isDefined = true;
 
@@ -107,7 +107,7 @@ void GainChart::update()
         {
             float x = xi / float(r.getWidth());
             float f = xToF(x);
-            Dsp::complex_t c = m_filter->response(f / 2.f);
+            Dsp::complex_t c = filter_->response(f / 2.f);
             float y = float(std::abs(c));
             if(y < 1e-5f)
                 y = 1e-5f;

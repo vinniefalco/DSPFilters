@@ -58,7 +58,7 @@ public:
         virtual const String getName() const = 0;
         // Control value is always from 0..1
         virtual double getControlValue() const = 0;
-        virtual void setControlValue(double controlValue) = 0;
+        virtual void setControlValue(Component* owner, double controlValue) = 0;
         // Native value is in Model units
         virtual const String getNativeValueAsText() const = 0;
         virtual void setNativeValue(double nativeValue) = 0;

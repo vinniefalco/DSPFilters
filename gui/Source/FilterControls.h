@@ -56,7 +56,8 @@ public:
 
     void paint(Graphics& g);
 
-    void onFilterChanged(Dsp::Filter* newFilter);
+    void onFilterSelect(
+        std::shared_ptr<Dsp::Filter> const&) override;
 
 protected:
     void clear();
@@ -74,7 +75,7 @@ private:
 
     ListenerList<FilterListener>& m_listeners;
     Array<Item> m_items;
-    Dsp::Filter* m_filter;
+    std::shared_ptr<Dsp::Filter> filter_;
 };
 
 #endif

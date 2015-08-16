@@ -91,7 +91,7 @@ SliderGroup::~SliderGroup()
 
 void SliderGroup::sliderValueChanged(Slider* ctrl)
 {
-    m_model->setControlValue(ctrl->getValue());
+    m_model->setControlValue(ctrl, ctrl->getValue());
     updateText();
 }
 

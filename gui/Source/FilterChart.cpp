@@ -38,7 +38,6 @@ THE SOFTWARE.
 
 FilterChart::FilterChart(FilterListeners& listeners)
     : m_listeners(listeners)
-    , m_filter(0)
     , m_isDefined(false)
 {
     setOpaque(true);
@@ -77,10 +76,10 @@ void FilterChart::resized()
     update();
 }
 
-void FilterChart::onFilterChanged(Dsp::Filter* newFilter)
+void FilterChart::onFilterSelect(
+    std::shared_ptr<Dsp::Filter> const& f)
 {
-    m_filter = newFilter;
-
+    filter_ = f;
     update();
 }
 

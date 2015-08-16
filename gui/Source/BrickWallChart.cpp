@@ -94,7 +94,7 @@ void BrickWallChart::update()
     m_isDefined = false;
     m_path.clear();
 
-    if(m_filter)
+    if(filter_)
     {
         m_isDefined = true;
 
@@ -106,7 +106,7 @@ void BrickWallChart::update()
             float x = xi / float(r.getWidth()); // [0..1)
             float f = xToF(x);
 
-            Dsp::complex_t c = m_filter->response(f / 2.f);
+            Dsp::complex_t c = filter_->response(f / 2.f);
             float y = float(std::abs(c));
 
             if(!Dsp::is_nan(y))

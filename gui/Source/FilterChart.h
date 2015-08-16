@@ -55,8 +55,10 @@ public:
 
     void resized();
 
-    void onFilterChanged(Dsp::Filter* newFilter);
-    void onFilterParameters();
+    void onFilterSelect(
+        std::shared_ptr<Dsp::Filter> const&) override;
+
+    void onFilterParameters() override;
 
     virtual const String getName() const;
     virtual void paintContents(Graphics& g) = 0;
@@ -72,7 +74,7 @@ private:
 
 protected:
     FilterListeners& m_listeners;
-    Dsp::Filter* m_filter;
+    std::shared_ptr<Dsp::Filter> filter_;
     bool m_isDefined;
     Path m_path;
 

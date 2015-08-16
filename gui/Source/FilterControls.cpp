@@ -44,9 +44,9 @@ public:
         Dsp::Filter* filter,
         int paramIndex)
         : m_listeners(listeners)
-        , m_filter(filter)
+        , filter_(filter)
         , m_paramIndex(paramIndex)
-        , m_paramInfo(m_filter->getParamInfo(paramIndex))
+        , m_paramInfo(filter_->getParamInfo(paramIndex))
     {
     }
 
@@ -61,19 +61,21 @@ public:
 
     double getControlValue() const
     {
-        return m_paramInfo.toControlValue(m_filter->getParam(m_paramIndex));
+        return m_paramInfo.toControlValue(filter_->getParam(m_paramIndex));
     }
 
-    void setControlValue(double controlValue)
+    void setControlValue(Component* owner, double controlValue)
     {
-        m_filter->setParam(m_paramIndex, m_paramInfo.toNativeValue(controlValue));
+        filter_->setParam(m_paramIndex, m_paramInfo.toNativeValue(controlValue));
+        forEachChild<FilterListener>(owner->getTopLevelComponent(),
+            [=](FilterListener* c) { c->onFilterParameters(); });
         m_listeners.call(&FilterListener::onFilterParameters);
     }
 
     const String getNativeValueAsText() const
     {
-        const Dsp::ParamInfo paramInfo = m_filter->getParamInfo(m_paramIndex);
-        return String(paramInfo.toString(m_filter->getParam(m_paramIndex)).c_str());
+        const Dsp::ParamInfo paramInfo = filter_->getParamInfo(m_paramIndex);
+        return String(paramInfo.toString(filter_->getParam(m_paramIndex)).c_str());
     }
 
     void setNativeValue(double nativeValue)
@@ -82,7 +84,7 @@ public:
 
 private:
     ListenerList<FilterListener>& m_listeners;
-    Dsp::Filter* m_filter;
+    Dsp::Filter* filter_;
     int m_paramIndex;
     const Dsp::ParamInfo m_paramInfo;
 };
@@ -111,9 +113,10 @@ void FilterControls::paint(Graphics& g)
 }
 
 // Use introspection to build the list of controls
-void FilterControls::onFilterChanged(Dsp::Filter* newFilter)
+void FilterControls::onFilterSelect(
+    std::shared_ptr<Dsp::Filter> const& newFilter)
 {
-    m_filter = newFilter;
+    filter_ = newFilter;
 
     clear();
 
@@ -125,15 +128,15 @@ void FilterControls::onFilterChanged(Dsp::Filter* newFilter)
     const int y = b.getY() + ygap;
 
     int x = b.getX() + 2;
-    for(int i = 0; i < m_filter->getNumParams(); ++i)
+    for(int i = 0; i < filter_->getNumParams(); ++i)
     {
-        const Dsp::ParamInfo info = m_filter->getParamInfo(i);
+        const Dsp::ParamInfo info = filter_->getParamInfo(i);
 
         if(info.getId() != Dsp::idSampleRate)
         {
             Item item;
             item.group = new SliderGroup(new FilterParamSliderGroupModel(
-                m_listeners, m_filter, i));
+                m_listeners, filter_.get(), i));
             item.group->setBounds(x, y, w, h);
             addAndMakeVisible(item.group);
             m_items.add(item);
