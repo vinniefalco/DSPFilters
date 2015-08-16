@@ -481,7 +481,7 @@ template <class DesignType, class StateType>
 void MainPanel::createFilterDesign(std::shared_ptr<Dsp::Filter>* pFilter,
     std::shared_ptr<Dsp::Filter>* pAudioFilter)
 {
-#if 1
+#if 0
     *pAudioFilter = std::make_shared<NewFilter>();
     return;
 #else

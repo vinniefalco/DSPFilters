@@ -349,12 +349,8 @@ TopLevelResizableLayout::Constrainer::Constrainer(TopLevelResizableLayout* owner
 void TopLevelResizableLayout::Constrainer::resizeStart()
 {
     m_owner.resizeStart();
-
-    int minW = m_owner.getMinimumWidth();
-    int minH = m_owner.getMinimumHeight();
-
-    setMinimumWidth(minW);
-    setMinimumHeight(minH);
+    setMinimumWidth(m_owner.getMinimumWidth());
+    setMinimumHeight(m_owner.getMinimumHeight());
 }
 
 //------------------------------------------------------------------------------
