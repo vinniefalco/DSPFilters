@@ -38,6 +38,7 @@ THE SOFTWARE.
 
 #include "DspFilters/Common.h"
 #include "DspFilters/Types.h"
+#include <algorithm>
 
 namespace Dsp {
 
