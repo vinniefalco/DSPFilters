@@ -55,6 +55,7 @@ THE SOFTWARE.
 #include <string>
 #include <limits>
 #include <vector>
+#include <algorithm>
 
 #ifdef _MSC_VER
 namespace tr1 = std::tr1;
