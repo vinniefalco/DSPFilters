@@ -156,12 +156,12 @@ void HighShelf::setup (double sampleRate,
   double sn = sin (w0);
   double AL = sn / 2 * ::std::sqrt ((A + 1/A) * (1/shelfSlope - 1) + 2);
   double sq = 2 * sqrt(A) * AL;
-  double b0 =    A*( (A+1) - (A-1)*cs + sq );
-  double b1 = -2*A*( (A-1) - (A+1)*cs );
-  double b2 =    A*( (A+1) - (A-1)*cs - sq );
-  double a0 =        (A+1) + (A-1)*cs + sq;
-  double a1 =    2*( (A-1) + (A+1)*cs );
-  double a2 =        (A+1) + (A-1)*cs - sq;
+  double b0 =    A*( (A+1) + (A-1)*cs + sq );
+  double b1 = -2*A*( (A-1) + (A+1)*cs );
+  double b2 =    A*( (A+1) + (A-1)*cs - sq );
+  double a0 =        (A+1) - (A-1)*cs + sq;
+  double a1 =    2*( (A-1) - (A+1)*cs );
+  double a2 =        (A+1) - (A-1)*cs - sq;
   setCoefficients (a0, a1, a2, b0, b1, b2);
 }
 
