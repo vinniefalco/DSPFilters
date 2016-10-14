@@ -320,6 +320,7 @@
 				2E7DB4FF140DFBDF009FE107 /* Sources */,
 				2E7DB500140DFBDF009FE107 /* Frameworks */,
 				2E7DB501140DFBDF009FE107 /* Headers */,
+				4CF659D21DB1205200F1CDD1 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -372,6 +373,22 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4CF659D21DB1205200F1CDD1 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Move .a file to Lib folder\ncp $PROJECT_DIR/build/$CONFIGURATION/$EXECUTABLE_PREFIX$PRODUCT_NAME.a $PROJECT_DIR/../../../../Lib/$CONFIGURATION/\n\n# Rename .a file\nmv $PROJECT_DIR/../../../../Lib/$CONFIGURATION/$EXECUTABLE_PREFIX$PRODUCT_NAME.a $PROJECT_DIR/../../../../Lib/$CONFIGURATION/$EXECUTABLE_PREFIX\"DSPFilters\".a";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		2E7DB4FF140DFBDF009FE107 /* Sources */ = {
@@ -445,7 +462,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2EF3B479140F5059002CE947 /* SharedMacOS.xcconfig */;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/build/$(CONFIGURATION)";
 				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_VERSION = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				"MACOSX_DEPLOYMENT_TARGET[arch=*]" = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -454,7 +478,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2EF3B479140F5059002CE947 /* SharedMacOS.xcconfig */;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/build/$(CONFIGURATION)";
 				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_VERSION = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				"MACOSX_DEPLOYMENT_TARGET[arch=*]" = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
