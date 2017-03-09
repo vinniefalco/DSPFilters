@@ -181,7 +181,6 @@ BandPassTransform::BandPassTransform (double fc,
     //
 #ifndef NDEBUG
     ComplexPair p2 = transform (pair.poles.second);
-    ComplexPair z2 = transform (pair.zeros.second);
     assert (p2.first == std::conj (p1.first));
     assert (p2.second == std::conj (p1.second));
 #endif
