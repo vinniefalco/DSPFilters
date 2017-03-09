@@ -2,6 +2,9 @@
 import os, sys
 from waflib import Logs
 
+top = '../../../..'
+out = 'out'
+
 def options(opt):
     opt.load('compiler_cxx')
     config_options = opt.get_option_group('configure options')
@@ -27,10 +30,14 @@ def configure_demo(conf):
 def configure_juce(conf):
     juce_required_libs=[]
     juce_required_packages=[]
+    juce_additional_cxxflags=[]
     
     if os.name.startswith('posix') and not sys.platform.startswith('darwin'):
         juce_required_libs+=['dl', 'pthread', 'rt']
         juce_required_packages+=['freetype2', 'gl', 'glu', 'x11', 'xinerama', 'alsa', 'xext']
+        # A really ugly hack to make the amalgam compile under g++ 4.7,
+        # a better solution could be provided by JUCE upstream itself.
+        juce_additional_cxxflags+=['-include', 'unistd.h']
     else:
         # TODO: add Darwin and non-POSIX dependency checks
         conf.fatal('DSPFiltersDemo: Building DSPFiltersDemo with waf is currently only possible on'
@@ -47,6 +54,7 @@ def configure_juce(conf):
             args=['--cflags', '--libs'])
     conf.env.append_value('JUCE_USELIBS', juce_required_libs)
     conf.env.append_value('JUCE_USELIBS', juce_required_packages)
+    conf.env.append_value('JUCE_ADDITIONAL_CXXFLAGS', juce_additional_cxxflags)
 
 
 def build(bld):
@@ -55,29 +63,30 @@ def build(bld):
         build_demo(bld)
 
 def build_lib(bld):
-    dspfilters_include_dir = bld.path.find_dir('shared/DSPFilters/include')
+    dspfilters_include_dir = bld.path.find_dir('../../include')
     bld.install_files('${PREFIX}/include',
         dspfilters_include_dir.ant_glob('**/*.h'),
         cwd=dspfilters_include_dir,
         relative_trick=True)
     bld.shlib(
-        source=bld.path.ant_glob('shared/DSPFilters/source/*.cpp'),
-        includes='shared/DSPFilters/include',
+        source=bld.path.parent.parent.ant_glob('source/*.cpp'),
+        includes='../../include',
         target='DSPFilters')
 
 def build_demo(bld):
     build_juce(bld)
     bld.program(
-        source=bld.path.ant_glob('shared/DSPFiltersDemo/source/*.cpp'),
-        includes=['shared/DSPFiltersDemo/source', 'shared/DSPFilters/include', 'shared/JuceAmalgam'],
+        source=bld.path.parent.parent.parent.ant_glob('DSPFiltersDemo/source/*.cpp'),
+        includes=['../../../DSPFiltersDemo/source', '../../include', '../../../JuceAmalgam'],
         use=bld.env['JUCE_USELIBS'] + ['JuceAmalgam', 'DSPFilters'],
         target='DSPFiltersDemo')
 
 def build_juce(bld):
     bld.stlib(
-        source=bld.path.ant_glob('shared/JuceAmalgam/*.cpp'),
-        includes='shared/JuceAmalgam',
+        source=bld.path.parent.parent.parent.ant_glob('JuceAmalgam/*.cpp'),
+        includes='../../../JuceAmalgam',
         use=bld.env['JUCE_USELIBS'],
+        cxxflags=bld.env['JUCE_ADDITIONAL_CXXFLAGS'],
         target='JuceAmalgam')
 
 # vim: syntax=python
