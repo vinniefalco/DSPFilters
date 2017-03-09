@@ -36,6 +36,12 @@ THE SOFTWARE.
 #ifndef DSPFILTERS_BIQUAD_H
 #define DSPFILTERS_BIQUAD_H
 
+#ifdef __SSE3__
+#include <pmmintrin.h>
+#elif defined(__ARM_NEON__)
+#include <arm_neon.h>
+#endif
+
 #include "DspFilters/Common.h"
 #include "DspFilters/MathSupplement.h"
 #include "DspFilters/Types.h"
@@ -116,12 +122,23 @@ protected:
   void applyScale (double scale);
 
 public:
-  double m_a0;
-  double m_a1;
-  double m_a2;
-  double m_b1;
-  double m_b2;
-  double m_b0;
+  #ifdef __SSE3__
+                   //   3     2     1     0
+  __m128 m_vab12;  // [m_b2  m_b1  m_a2  m_a1]
+  __m128 m_va0;    // [m_a0  m_a0  m_a0  m_a0]
+  __m128 m_vb0;    // [m_b0  m_b0  m_b0  m_b0]
+#elif defined(__ARM_NEON__)
+                        //   3     2     1     0
+  float32x4_t m_vab12;  // [m_b2  m_a2  m_b1  m_a1]
+  float32x2_t m_va0;    // [m_a0  m_a0]
+  float32x2_t m_vb0;    // [m_b0  m_b0]
+#endif
+  float m_a0;
+  float m_a1;
+  float m_a2;
+  float m_b1;
+  float m_b2;
+  float m_b0;
 };
 
 //------------------------------------------------------------------------------

@@ -58,5 +58,6 @@ THE SOFTWARE.
 #include "DspFilters/Elliptic.h"
 #include "DspFilters/Legendre.h"
 #include "DspFilters/RBJ.h"
+#include "DspFilters/RASTA.h"
 
 #endif

@@ -47,7 +47,7 @@ namespace Dsp {
  */
 template <class DesignClass,
           int Channels,
-          class StateType = DirectFormII>
+          class StateType = DirectFormII<float>>
 class SmoothedFilterDesign
   : public FilterDesign <DesignClass,
                        Channels,
