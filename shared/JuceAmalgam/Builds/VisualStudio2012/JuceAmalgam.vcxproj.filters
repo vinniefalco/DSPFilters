@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="config %28change as needed%29">
+      <UniqueIdentifier>{ab6c121d-0c6e-4cfb-a2fa-2cfce95db602}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source %28add these to your project%29">
+      <UniqueIdentifier>{70518b17-a564-4e26-b6dc-2d5f23587248}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include %28#include this to get Juce%29">
+      <UniqueIdentifier>{cdc1bb8c-decb-4e18-80f5-d2dcf947ba9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_props %28shared project settings%29">
+      <UniqueIdentifier>{5e5a88d2-97ec-4917-b5f3-03ba57593033}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\juce_audio_basics_amalgam.cpp">
+      <Filter>source %28add these to your project%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\juce_audio_devices_amalgam.cpp">
+      <Filter>source %28add these to your project%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\juce_audio_formats_amalgam.cpp">
+      <Filter>source %28add these to your project%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\juce_audio_processors_amalgam.cpp">
+      <Filter>source %28add these to your project%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\juce_core_amalgam.cpp">
+      <Filter>source %28add these to your project%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\juce_cryptography_amalgam.cpp">
+      <Filter>source %28add these to your project%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\juce_data_structures_amalgam.cpp">
+      <Filter>source %28add these to your project%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\juce_events_amalgam.cpp">
+      <Filter>source %28add these to your project%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\juce_graphics_amalgam.cpp">
+      <Filter>source %28add these to your project%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\juce_gui_basics_amalgam.cpp">
+      <Filter>source %28add these to your project%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\juce_gui_extra_amalgam.cpp">
+      <Filter>source %28add these to your project%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\juce_opengl_amalgam.cpp">
+      <Filter>source %28add these to your project%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\juce_video_amalgam.cpp">
+      <Filter>source %28add these to your project%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\juce_audio_utils_amalgam.cpp">
+      <Filter>source %28add these to your project%29</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\JuceHeader.h">
+      <Filter>include %28#include this to get Juce%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\AppConfig.h">
+      <Filter>config %28change as needed%29</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../../../../user/settings/VisualStudio2012/Shared.props">
+      <Filter>_props %28shared project settings%29</Filter>
+    </None>
+    <None Include="../../../../user/settings/VisualStudio2012/SharedRelease.props">
+      <Filter>_props %28shared project settings%29</Filter>
+    </None>
+    <None Include="../../../../user/settings/VisualStudio2012/SharedDebug.props">
+      <Filter>_props %28shared project settings%29</Filter>
+    </None>
+  </ItemGroup>
+</Project>

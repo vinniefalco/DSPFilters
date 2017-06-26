@@ -44788,7 +44788,7 @@ FLAC__bool FLAC__memory_alloc_aligned_real_array(unsigned elements, FLAC__real *
 #include <sys/stat.h> /* for stat() */
 #include <sys/types.h> /* for off_t */
 #if defined _MSC_VER || defined __BORLANDC__ || defined __MINGW32__
-#if _MSC_VER <= 1600 || defined __BORLANDC__ /* @@@ [2G limit] */
+#if _MSC_VER <= 1700 || defined __BORLANDC__ /* @@@ [2G limit] */
 #define fseeko fseek
 #define ftello ftell
 #endif

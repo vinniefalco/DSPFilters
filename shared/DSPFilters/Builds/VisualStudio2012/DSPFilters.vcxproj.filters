@@ -138,15 +138,15 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\user\settings\VisualStudio2010\Shared.props">
+    <None Include="..\..\..\..\user\settings\VisualStudio2012\Shared.props">
       <Filter>_props %28shared project settings%29</Filter>
     </None>
-    <None Include="..\..\..\..\user\settings\VisualStudio2010\SharedRelease.props">
+    <None Include="..\..\..\..\user\settings\VisualStudio2012\SharedRelease.props">
       <Filter>_props %28shared project settings%29</Filter>
     </None>
-    <None Include="..\..\..\..\user\settings\VisualStudio2010\SharedDebug.props">
+    <None Include="..\..\..\..\user\settings\VisualStudio2012\SharedDebug.props">
       <Filter>_props %28shared project settings%29</Filter>
     </None>
-    <None Include="..\..\..\DSPFiltersDemo\Builds\VisualStudio2010\DSPFiltersDemo.vcxproj" />
+    <None Include="..\..\..\DSPFiltersDemo\Builds\VisualStudio2012\DSPFiltersDemo.vcxproj" />
   </ItemGroup>
 </Project>

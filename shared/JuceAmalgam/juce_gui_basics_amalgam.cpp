@@ -106780,7 +106780,7 @@ private:
 
 			PAINTSTRUCT paintStruct;
 			HDC dc = BeginPaint (hwnd, &paintStruct); // Note this can immediately generate a WM_NCPAINT
-													  // message and become re-entrant, but that's OK
+													  // message and become re-entrant, but that's OKSaveDC
 
 			// if something in a paint handler calls, e.g. a message box, this can become reentrant and
 			// corrupt the image it's using to paint into, so do a check here.

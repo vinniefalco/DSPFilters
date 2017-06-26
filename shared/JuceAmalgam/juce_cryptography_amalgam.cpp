@@ -570,9 +570,11 @@ namespace juce
  #define JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS 1
 #endif
 
-// Declare some fake versions of nullptr and noexcept, for older compilers:
+// Declare some fake versions of nullptr and JUCE_NOEXCEPT, for older compilers:
 #if ! (DOXYGEN || JUCE_COMPILER_SUPPORTS_NOEXCEPT)
- #define noexcept  throw()
+#define JUCE_NOEXCEPT  throw()
+#else
+#define JUCE_NOEXCEPT noexcept
 #endif
 
 #if ! (DOXYGEN || JUCE_COMPILER_SUPPORTS_NULLPTR)
@@ -675,7 +677,7 @@ BEGIN_JUCE_NAMESPACE
 extern JUCE_API bool JUCE_CALLTYPE juce_isRunningUnderDebugger();
 
 #if JUCE_LOG_ASSERTIONS
- extern JUCE_API void juce_LogAssertion (const char* filename, int lineNum) noexcept;
+ extern JUCE_API void juce_LogAssertion (const char* filename, int lineNum) JUCE_NOEXCEPT;
 #endif
 
 
@@ -702,11 +704,11 @@ extern JUCE_API bool JUCE_CALLTYPE juce_isRunningUnderDebugger();
 #endif
 
 /** Fills a block of memory with zeros. */
-inline void zeromem (void* memory, size_t numBytes) noexcept        { memset (memory, 0, numBytes); }
+inline void zeromem (void* memory, size_t numBytes) JUCE_NOEXCEPT        { memset (memory, 0, numBytes); }
 
 /** Overwrites a structure or object with zeros. */
 template <typename Type>
-inline void zerostruct (Type& structure) noexcept                   { memset (&structure, 0, sizeof (structure)); }
+inline void zerostruct (Type& structure) JUCE_NOEXCEPT                   { memset (&structure, 0, sizeof (structure)); }
 
 /** Delete an object pointer, and sets the pointer to null.
 
@@ -721,13 +723,13 @@ inline void deleteAndZero (Type& pointer)                           { delete poi
 	a specific number of bytes,
 */
 template <typename Type>
-inline Type* addBytesToPointer (Type* pointer, int bytes) noexcept  { return (Type*) (((char*) pointer) + bytes); }
+inline Type* addBytesToPointer (Type* pointer, int bytes) JUCE_NOEXCEPT  { return (Type*) (((char*) pointer) + bytes); }
 
 /** A handy function which returns the difference between any two pointers, in bytes.
 	The address of the second pointer is subtracted from the first, and the difference in bytes is returned.
 */
 template <typename Type1, typename Type2>
-inline int getAddressDifference (Type1* pointer1, Type2* pointer2) noexcept  { return (int) (((const char*) pointer1) - (const char*) pointer2); }
+inline int getAddressDifference (Type1* pointer1, Type2* pointer2) JUCE_NOEXCEPT  { return (int) (((const char*) pointer1) - (const char*) pointer2); }
 
 /** If a pointer is non-null, this returns a new copy of the object that it points to, or safely returns
 	nullptr if the pointer is null.
@@ -941,7 +943,7 @@ void findMinAndMax (const Type* values, int numValues, Type& lowest, Type& highe
 template <typename Type>
 inline Type jlimit (const Type lowerLimit,
 					const Type upperLimit,
-					const Type valueToConstrain) noexcept
+					const Type valueToConstrain) JUCE_NOEXCEPT
 {
 	jassert (lowerLimit <= upperLimit); // if these are in the wrong order, results are unpredictable..
 
@@ -956,14 +958,14 @@ inline Type jlimit (const Type lowerLimit,
 	@endcode
 */
 template <typename Type>
-inline bool isPositiveAndBelow (Type valueToTest, Type upperLimit) noexcept
+inline bool isPositiveAndBelow (Type valueToTest, Type upperLimit) JUCE_NOEXCEPT
 {
 	jassert (Type() <= upperLimit); // makes no sense to call this if the upper limit is itself below zero..
 	return Type() <= valueToTest && valueToTest < upperLimit;
 }
 
 template <>
-inline bool isPositiveAndBelow (const int valueToTest, const int upperLimit) noexcept
+inline bool isPositiveAndBelow (const int valueToTest, const int upperLimit) JUCE_NOEXCEPT
 {
 	jassert (upperLimit >= 0); // makes no sense to call this if the upper limit is itself below zero..
 	return static_cast <unsigned int> (valueToTest) < static_cast <unsigned int> (upperLimit);
@@ -975,14 +977,14 @@ inline bool isPositiveAndBelow (const int valueToTest, const int upperLimit) noe
 	@endcode
 */
 template <typename Type>
-inline bool isPositiveAndNotGreaterThan (Type valueToTest, Type upperLimit) noexcept
+inline bool isPositiveAndNotGreaterThan (Type valueToTest, Type upperLimit) JUCE_NOEXCEPT
 {
 	jassert (Type() <= upperLimit); // makes no sense to call this if the upper limit is itself below zero..
 	return Type() <= valueToTest && valueToTest <= upperLimit;
 }
 
 template <>
-inline bool isPositiveAndNotGreaterThan (const int valueToTest, const int upperLimit) noexcept
+inline bool isPositiveAndNotGreaterThan (const int valueToTest, const int upperLimit) JUCE_NOEXCEPT
 {
 	jassert (upperLimit >= 0); // makes no sense to call this if the upper limit is itself below zero..
 	return static_cast <unsigned int> (valueToTest) <= static_cast <unsigned int> (upperLimit);
@@ -1016,7 +1018,7 @@ inline int numElementsInArray (Type (&array)[N])
 /** Using juce_hypot is easier than dealing with the different types of hypot function
 	that are provided by the various platforms and compilers. */
 template <typename Type>
-inline Type juce_hypot (Type a, Type b) noexcept
+inline Type juce_hypot (Type a, Type b) JUCE_NOEXCEPT
 {
    #if JUCE_WINDOWS
 	return static_cast <Type> (_hypot (a, b));
@@ -1026,14 +1028,14 @@ inline Type juce_hypot (Type a, Type b) noexcept
 }
 
 /** 64-bit abs function. */
-inline int64 abs64 (const int64 n) noexcept
+inline int64 abs64 (const int64 n) JUCE_NOEXCEPT
 {
 	return (n >= 0) ? n : -n;
 }
 
 /** This templated negate function will negate pointers as well as integers */
 template <typename Type>
-inline Type juce_negate (Type n) noexcept
+inline Type juce_negate (Type n) JUCE_NOEXCEPT
 {
 	return sizeof (Type) == 1 ? (Type) -(signed char) n
 		: (sizeof (Type) == 2 ? (Type) -(short) n
@@ -1043,7 +1045,7 @@ inline Type juce_negate (Type n) noexcept
 
 /** This templated negate function will negate pointers as well as integers */
 template <typename Type>
-inline Type* juce_negate (Type* n) noexcept
+inline Type* juce_negate (Type* n) JUCE_NOEXCEPT
 {
 	return (Type*) -(pointer_sized_int) n;
 }
@@ -1091,7 +1093,7 @@ inline bool juce_isfinite (FloatingPointType value)
 	even numbers will be rounded up or down differently.
 */
 template <typename FloatType>
-inline int roundToInt (const FloatType value) noexcept
+inline int roundToInt (const FloatType value) JUCE_NOEXCEPT
 {
 	union { int asInt[2]; double asDouble; } n;
 	n.asDouble = ((double) value) + 6755399441055744.0;
@@ -1113,7 +1115,7 @@ inline int roundToInt (const FloatType value) noexcept
 	This is a slightly slower and slightly more accurate version of roundDoubleToInt(). It works
 	fine for values above zero, but negative numbers are rounded the wrong way.
 */
-inline int roundToIntAccurate (const double value) noexcept
+inline int roundToIntAccurate (const double value) JUCE_NOEXCEPT
 {
 	return roundToInt (value + 1.5e-8);
 }
@@ -1129,7 +1131,7 @@ inline int roundToIntAccurate (const double value) noexcept
 	even numbers will be rounded up or down differently. For a more accurate conversion,
 	see roundDoubleToIntAccurate().
 */
-inline int roundDoubleToInt (const double value) noexcept
+inline int roundDoubleToInt (const double value) JUCE_NOEXCEPT
 {
 	return roundToInt (value);
 }
@@ -1144,7 +1146,7 @@ inline int roundDoubleToInt (const double value) noexcept
 	rounding values whose floating point component is exactly 0.5, odd numbers and
 	even numbers will be rounded up or down differently.
 */
-inline int roundFloatToInt (const float value) noexcept
+inline int roundFloatToInt (const float value) JUCE_NOEXCEPT
 {
 	return roundToInt (value);
 }
@@ -1174,7 +1176,7 @@ inline int nextPowerOfTwo (int n)
 	The divisor must be greater than zero.
 */
 template <typename IntegerType>
-int negativeAwareModulo (IntegerType dividend, const IntegerType divisor) noexcept
+int negativeAwareModulo (IntegerType dividend, const IntegerType divisor) JUCE_NOEXCEPT
 {
 	jassert (divisor > 0);
 	dividend %= divisor;
@@ -1466,29 +1468,29 @@ class JUCE_API  CharacterFunctions
 {
 public:
 
-	static juce_wchar toUpperCase (juce_wchar character) noexcept;
-	static juce_wchar toLowerCase (juce_wchar character) noexcept;
+	static juce_wchar toUpperCase (juce_wchar character) JUCE_NOEXCEPT;
+	static juce_wchar toLowerCase (juce_wchar character) JUCE_NOEXCEPT;
 
-	static bool isUpperCase (juce_wchar character) noexcept;
-	static bool isLowerCase (juce_wchar character) noexcept;
+	static bool isUpperCase (juce_wchar character) JUCE_NOEXCEPT;
+	static bool isLowerCase (juce_wchar character) JUCE_NOEXCEPT;
 
-	static bool isWhitespace (char character) noexcept;
-	static bool isWhitespace (juce_wchar character) noexcept;
+	static bool isWhitespace (char character) JUCE_NOEXCEPT;
+	static bool isWhitespace (juce_wchar character) JUCE_NOEXCEPT;
 
-	static bool isDigit (char character) noexcept;
-	static bool isDigit (juce_wchar character) noexcept;
+	static bool isDigit (char character) JUCE_NOEXCEPT;
+	static bool isDigit (juce_wchar character) JUCE_NOEXCEPT;
 
-	static bool isLetter (char character) noexcept;
-	static bool isLetter (juce_wchar character) noexcept;
+	static bool isLetter (char character) JUCE_NOEXCEPT;
+	static bool isLetter (juce_wchar character) JUCE_NOEXCEPT;
 
-	static bool isLetterOrDigit (char character) noexcept;
-	static bool isLetterOrDigit (juce_wchar character) noexcept;
+	static bool isLetterOrDigit (char character) JUCE_NOEXCEPT;
+	static bool isLetterOrDigit (juce_wchar character) JUCE_NOEXCEPT;
 
 	/** Returns 0 to 16 for '0' to 'F", or -1 for characters that aren't a legal hex digit. */
-	static int getHexDigitValue (juce_wchar digit) noexcept;
+	static int getHexDigitValue (juce_wchar digit) JUCE_NOEXCEPT;
 
 	template <typename CharPointerType>
-	static double readDoubleValue (CharPointerType& text) noexcept
+	static double readDoubleValue (CharPointerType& text) JUCE_NOEXCEPT
 	{
 		double result[3] = { 0 }, accumulator[2] = { 0 };
 		int exponentAdjustment[2] = { 0 }, exponentAccumulator[2] = { -1, -1 };
@@ -1618,14 +1620,14 @@ public:
 	}
 
 	template <typename CharPointerType>
-	static double getDoubleValue (const CharPointerType& text) noexcept
+	static double getDoubleValue (const CharPointerType& text) JUCE_NOEXCEPT
 	{
 		CharPointerType t (text);
 		return readDoubleValue (t);
 	}
 
 	template <typename IntType, typename CharPointerType>
-	static IntType getIntValue (const CharPointerType& text) noexcept
+	static IntType getIntValue (const CharPointerType& text) JUCE_NOEXCEPT
 	{
 		IntType v = 0;
 		CharPointerType s (text.findEndOfWhitespace());
@@ -1648,7 +1650,7 @@ public:
 	}
 
 	template <typename CharPointerType>
-	static size_t lengthUpTo (CharPointerType text, const size_t maxCharsToCount) noexcept
+	static size_t lengthUpTo (CharPointerType text, const size_t maxCharsToCount) JUCE_NOEXCEPT
 	{
 		size_t len = 0;
 
@@ -1659,7 +1661,7 @@ public:
 	}
 
 	template <typename CharPointerType>
-	static size_t lengthUpTo (CharPointerType start, const CharPointerType& end) noexcept
+	static size_t lengthUpTo (CharPointerType start, const CharPointerType& end) JUCE_NOEXCEPT
 	{
 		size_t len = 0;
 
@@ -1670,7 +1672,7 @@ public:
 	}
 
 	template <typename DestCharPointerType, typename SrcCharPointerType>
-	static void copyAll (DestCharPointerType& dest, SrcCharPointerType src) noexcept
+	static void copyAll (DestCharPointerType& dest, SrcCharPointerType src) JUCE_NOEXCEPT
 	{
 		for (;;)
 		{
@@ -1686,7 +1688,7 @@ public:
 	}
 
 	template <typename DestCharPointerType, typename SrcCharPointerType>
-	static int copyWithDestByteLimit (DestCharPointerType& dest, SrcCharPointerType src, int maxBytes) noexcept
+	static int copyWithDestByteLimit (DestCharPointerType& dest, SrcCharPointerType src, int maxBytes) JUCE_NOEXCEPT
 	{
 		typename DestCharPointerType::CharType const* const startAddress = dest.getAddress();
 		maxBytes -= sizeof (typename DestCharPointerType::CharType); // (allow for a terminating null)
@@ -1709,7 +1711,7 @@ public:
 	}
 
 	template <typename DestCharPointerType, typename SrcCharPointerType>
-	static void copyWithCharLimit (DestCharPointerType& dest, SrcCharPointerType src, int maxChars) noexcept
+	static void copyWithCharLimit (DestCharPointerType& dest, SrcCharPointerType src, int maxChars) JUCE_NOEXCEPT
 	{
 		while (--maxChars > 0)
 		{
@@ -1724,7 +1726,7 @@ public:
 	}
 
 	template <typename CharPointerType1, typename CharPointerType2>
-	static int compare (CharPointerType1 s1, CharPointerType2 s2) noexcept
+	static int compare (CharPointerType1 s1, CharPointerType2 s2) JUCE_NOEXCEPT
 	{
 		for (;;)
 		{
@@ -1742,7 +1744,7 @@ public:
 	}
 
 	template <typename CharPointerType1, typename CharPointerType2>
-	static int compareUpTo (CharPointerType1 s1, CharPointerType2 s2, int maxChars) noexcept
+	static int compareUpTo (CharPointerType1 s1, CharPointerType2 s2, int maxChars) JUCE_NOEXCEPT
 	{
 		while (--maxChars >= 0)
 		{
@@ -1760,7 +1762,7 @@ public:
 	}
 
 	template <typename CharPointerType1, typename CharPointerType2>
-	static int compareIgnoreCase (CharPointerType1 s1, CharPointerType2 s2) noexcept
+	static int compareIgnoreCase (CharPointerType1 s1, CharPointerType2 s2) JUCE_NOEXCEPT
 	{
 		for (;;)
 		{
@@ -1780,7 +1782,7 @@ public:
 	}
 
 	template <typename CharPointerType1, typename CharPointerType2>
-	static int compareIgnoreCaseUpTo (CharPointerType1 s1, CharPointerType2 s2, int maxChars) noexcept
+	static int compareIgnoreCaseUpTo (CharPointerType1 s1, CharPointerType2 s2, int maxChars) JUCE_NOEXCEPT
 	{
 		while (--maxChars >= 0)
 		{
@@ -1800,7 +1802,7 @@ public:
 	}
 
 	template <typename CharPointerType1, typename CharPointerType2>
-	static int indexOf (CharPointerType1 haystack, const CharPointerType2& needle) noexcept
+	static int indexOf (CharPointerType1 haystack, const CharPointerType2& needle) JUCE_NOEXCEPT
 	{
 		int index = 0;
 		const int needleLength = (int) needle.length();
@@ -1818,7 +1820,7 @@ public:
 	}
 
 	template <typename CharPointerType1, typename CharPointerType2>
-	static int indexOfIgnoreCase (CharPointerType1 haystack, const CharPointerType2& needle) noexcept
+	static int indexOfIgnoreCase (CharPointerType1 haystack, const CharPointerType2& needle) JUCE_NOEXCEPT
 	{
 		int index = 0;
 		const int needleLength = (int) needle.length();
@@ -1836,7 +1838,7 @@ public:
 	}
 
 	template <typename Type>
-	static int indexOfChar (Type text, const juce_wchar charToFind) noexcept
+	static int indexOfChar (Type text, const juce_wchar charToFind) JUCE_NOEXCEPT
 	{
 		int i = 0;
 
@@ -1852,7 +1854,7 @@ public:
 	}
 
 	template <typename Type>
-	static int indexOfCharIgnoreCase (Type text, juce_wchar charToFind) noexcept
+	static int indexOfCharIgnoreCase (Type text, juce_wchar charToFind) JUCE_NOEXCEPT
 	{
 		charToFind = CharacterFunctions::toLowerCase (charToFind);
 		int i = 0;
@@ -1870,7 +1872,7 @@ public:
 	}
 
 	template <typename Type>
-	static Type findEndOfWhitespace (const Type& text) noexcept
+	static Type findEndOfWhitespace (const Type& text) JUCE_NOEXCEPT
 	{
 		Type p (text);
 
@@ -1909,7 +1911,7 @@ public:
 	}
 
 private:
-	static double mulexp10 (const double value, int exponent) noexcept;
+	static double mulexp10 (const double value, int exponent) JUCE_NOEXCEPT;
 };
 
 #endif   // __JUCE_CHARACTERFUNCTIONS_JUCEHEADER__
@@ -1941,56 +1943,56 @@ class Atomic
 {
 public:
 	/** Creates a new value, initialised to zero. */
-	inline Atomic() noexcept
+	inline Atomic() JUCE_NOEXCEPT
 		: value (0)
 	{
 	}
 
 	/** Creates a new value, with a given initial value. */
-	inline Atomic (const Type initialValue) noexcept
+	inline Atomic (const Type initialValue) JUCE_NOEXCEPT
 		: value (initialValue)
 	{
 	}
 
 	/** Copies another value (atomically). */
-	inline Atomic (const Atomic& other) noexcept
+	inline Atomic (const Atomic& other) JUCE_NOEXCEPT
 		: value (other.get())
 	{
 	}
 
 	/** Destructor. */
-	inline ~Atomic() noexcept
+	inline ~Atomic() JUCE_NOEXCEPT
 	{
 		// This class can only be used for types which are 32 or 64 bits in size.
 		static_jassert (sizeof (Type) == 4 || sizeof (Type) == 8);
 	}
 
 	/** Atomically reads and returns the current value. */
-	Type get() const noexcept;
+	Type get() const JUCE_NOEXCEPT;
 
 	/** Copies another value onto this one (atomically). */
-	inline Atomic& operator= (const Atomic& other) noexcept         { exchange (other.get()); return *this; }
+	inline Atomic& operator= (const Atomic& other) JUCE_NOEXCEPT         { exchange (other.get()); return *this; }
 
 	/** Copies another value onto this one (atomically). */
-	inline Atomic& operator= (const Type newValue) noexcept         { exchange (newValue); return *this; }
+	inline Atomic& operator= (const Type newValue) JUCE_NOEXCEPT         { exchange (newValue); return *this; }
 
 	/** Atomically sets the current value. */
-	void set (Type newValue) noexcept                               { exchange (newValue); }
+	void set (Type newValue) JUCE_NOEXCEPT                               { exchange (newValue); }
 
 	/** Atomically sets the current value, returning the value that was replaced. */
-	Type exchange (Type value) noexcept;
+	Type exchange (Type value) JUCE_NOEXCEPT;
 
 	/** Atomically adds a number to this value, returning the new value. */
-	Type operator+= (Type amountToAdd) noexcept;
+	Type operator+= (Type amountToAdd) JUCE_NOEXCEPT;
 
 	/** Atomically subtracts a number from this value, returning the new value. */
-	Type operator-= (Type amountToSubtract) noexcept;
+	Type operator-= (Type amountToSubtract) JUCE_NOEXCEPT;
 
 	/** Atomically increments this value, returning the new value. */
-	Type operator++() noexcept;
+	Type operator++() JUCE_NOEXCEPT;
 
 	/** Atomically decrements this value, returning the new value. */
-	Type operator--() noexcept;
+	Type operator--() JUCE_NOEXCEPT;
 
 	/** Atomically compares this value with a target value, and if it is equal, sets
 		this to be equal to a new value.
@@ -2013,7 +2015,7 @@ public:
 				 the comparison failed and the value was left unchanged.
 		@see compareAndSetValue
 	*/
-	bool compareAndSetBool (Type newValue, Type valueToCompare) noexcept;
+	bool compareAndSetBool (Type newValue, Type valueToCompare) JUCE_NOEXCEPT;
 
 	/** Atomically compares this value with a target value, and if it is equal, sets
 		this to be equal to a new value.
@@ -2033,10 +2035,10 @@ public:
 		@returns the old value before it was changed.
 		@see compareAndSetBool
 	*/
-	Type compareAndSetValue (Type newValue, Type valueToCompare) noexcept;
+	Type compareAndSetValue (Type newValue, Type valueToCompare) JUCE_NOEXCEPT;
 
 	/** Implements a memory read/write barrier. */
-	static void memoryBarrier() noexcept;
+	static void memoryBarrier() JUCE_NOEXCEPT;
 
    #if JUCE_64BIT
 	JUCE_ALIGN (8)
@@ -2051,10 +2053,10 @@ public:
 	volatile Type value;
 
 private:
-	static inline Type castFrom32Bit (int32 value) noexcept   { return *(Type*) &value; }
-	static inline Type castFrom64Bit (int64 value) noexcept   { return *(Type*) &value; }
-	static inline int32 castTo32Bit (Type value) noexcept     { return *(int32*) &value; }
-	static inline int64 castTo64Bit (Type value) noexcept     { return *(int64*) &value; }
+	static inline Type castFrom32Bit (int32 value) JUCE_NOEXCEPT   { return *(Type*) &value; }
+	static inline Type castFrom64Bit (int64 value) JUCE_NOEXCEPT   { return *(Type*) &value; }
+	static inline int32 castTo32Bit (Type value) JUCE_NOEXCEPT     { return *(int32*) &value; }
+	static inline int64 castTo64Bit (Type value) JUCE_NOEXCEPT     { return *(int64*) &value; }
 
 	Type operator++ (int); // better to just use pre-increment with atomics..
 	Type operator-- (int);
@@ -2074,10 +2076,10 @@ private:
 
   #if JUCE_PPC || JUCE_IOS
 	// None of these atomics are available for PPC or for iPhoneOS 3.1 or earlier!!
-	template <typename Type> static Type OSAtomicAdd64Barrier (Type b, JUCE_MAC_ATOMICS_VOLATILE Type* a) noexcept  { jassertfalse; return *a += b; }
-	template <typename Type> static Type OSAtomicIncrement64Barrier (JUCE_MAC_ATOMICS_VOLATILE Type* a) noexcept    { jassertfalse; return ++*a; }
-	template <typename Type> static Type OSAtomicDecrement64Barrier (JUCE_MAC_ATOMICS_VOLATILE Type* a) noexcept    { jassertfalse; return --*a; }
-	template <typename Type> static bool OSAtomicCompareAndSwap64Barrier (Type old, Type newValue, JUCE_MAC_ATOMICS_VOLATILE Type* value) noexcept
+	template <typename Type> static Type OSAtomicAdd64Barrier (Type b, JUCE_MAC_ATOMICS_VOLATILE Type* a) JUCE_NOEXCEPT  { jassertfalse; return *a += b; }
+	template <typename Type> static Type OSAtomicIncrement64Barrier (JUCE_MAC_ATOMICS_VOLATILE Type* a) JUCE_NOEXCEPT    { jassertfalse; return ++*a; }
+	template <typename Type> static Type OSAtomicDecrement64Barrier (JUCE_MAC_ATOMICS_VOLATILE Type* a) JUCE_NOEXCEPT    { jassertfalse; return --*a; }
+	template <typename Type> static bool OSAtomicCompareAndSwap64Barrier (Type old, Type newValue, JUCE_MAC_ATOMICS_VOLATILE Type* value) JUCE_NOEXCEPT
 		{ jassertfalse; if (old == *value) { *value = newValue; return true; } return false; }
 	#define JUCE_64BIT_ATOMICS_UNAVAILABLE 1
   #endif
@@ -2105,13 +2107,13 @@ private:
 	#define juce_InterlockedCompareExchange64(a, b, c)  _InterlockedCompareExchange64(a, b, c)
 	#define juce_MemoryBarrier _ReadWriteBarrier
   #else
-	long juce_InterlockedExchange (volatile long* a, long b) noexcept;
-	long juce_InterlockedIncrement (volatile long* a) noexcept;
-	long juce_InterlockedDecrement (volatile long* a) noexcept;
-	long juce_InterlockedExchangeAdd (volatile long* a, long b) noexcept;
-	long juce_InterlockedCompareExchange (volatile long* a, long b, long c) noexcept;
-	__int64 juce_InterlockedCompareExchange64 (volatile __int64* a, __int64 b, __int64 c) noexcept;
-	inline void juce_MemoryBarrier() noexcept  { long x = 0; juce_InterlockedIncrement (&x); }
+	long juce_InterlockedExchange (volatile long* a, long b) JUCE_NOEXCEPT;
+	long juce_InterlockedIncrement (volatile long* a) JUCE_NOEXCEPT;
+	long juce_InterlockedDecrement (volatile long* a) JUCE_NOEXCEPT;
+	long juce_InterlockedExchangeAdd (volatile long* a, long b) JUCE_NOEXCEPT;
+	long juce_InterlockedCompareExchange (volatile long* a, long b, long c) JUCE_NOEXCEPT;
+	__int64 juce_InterlockedCompareExchange64 (volatile __int64* a, __int64 b, __int64 c) JUCE_NOEXCEPT;
+	inline void juce_MemoryBarrier() JUCE_NOEXCEPT  { long x = 0; juce_InterlockedIncrement (&x); }
   #endif
 
   #if JUCE_64BIT
@@ -2124,10 +2126,10 @@ private:
 	#define juce_InterlockedDecrement64(a)          _InterlockedDecrement64(a)
   #else
 	// None of these atomics are available in a 32-bit Windows build!!
-	template <typename Type> static Type juce_InterlockedExchangeAdd64 (volatile Type* a, Type b) noexcept  { jassertfalse; Type old = *a; *a += b; return old; }
-	template <typename Type> static Type juce_InterlockedExchange64 (volatile Type* a, Type b) noexcept     { jassertfalse; Type old = *a; *a = b; return old; }
-	template <typename Type> static Type juce_InterlockedIncrement64 (volatile Type* a) noexcept            { jassertfalse; return ++*a; }
-	template <typename Type> static Type juce_InterlockedDecrement64 (volatile Type* a) noexcept            { jassertfalse; return --*a; }
+	template <typename Type> static Type juce_InterlockedExchangeAdd64 (volatile Type* a, Type b) JUCE_NOEXCEPT  { jassertfalse; Type old = *a; *a += b; return old; }
+	template <typename Type> static Type juce_InterlockedExchange64 (volatile Type* a, Type b) JUCE_NOEXCEPT     { jassertfalse; Type old = *a; *a = b; return old; }
+	template <typename Type> static Type juce_InterlockedIncrement64 (volatile Type* a) JUCE_NOEXCEPT            { jassertfalse; return ++*a; }
+	template <typename Type> static Type juce_InterlockedDecrement64 (volatile Type* a) JUCE_NOEXCEPT            { jassertfalse; return --*a; }
 	#define JUCE_64BIT_ATOMICS_UNAVAILABLE 1
   #endif
 #endif
@@ -2138,7 +2140,7 @@ private:
 #endif
 
 template <typename Type>
-inline Type Atomic<Type>::get() const noexcept
+inline Type Atomic<Type>::get() const JUCE_NOEXCEPT
 {
   #if JUCE_ATOMICS_MAC
 	return sizeof (Type) == 4 ? castFrom32Bit ((int32) OSAtomicAdd32Barrier ((int32_t) 0, (JUCE_MAC_ATOMICS_VOLATILE int32_t*) &value))
@@ -2153,7 +2155,7 @@ inline Type Atomic<Type>::get() const noexcept
 }
 
 template <typename Type>
-inline Type Atomic<Type>::exchange (const Type newValue) noexcept
+inline Type Atomic<Type>::exchange (const Type newValue) JUCE_NOEXCEPT
 {
   #if JUCE_ATOMICS_MAC || JUCE_ATOMICS_GCC
 	Type currentVal = value;
@@ -2166,7 +2168,7 @@ inline Type Atomic<Type>::exchange (const Type newValue) noexcept
 }
 
 template <typename Type>
-inline Type Atomic<Type>::operator+= (const Type amountToAdd) noexcept
+inline Type Atomic<Type>::operator+= (const Type amountToAdd) JUCE_NOEXCEPT
 {
   #if JUCE_ATOMICS_MAC
 	return sizeof (Type) == 4 ? (Type) OSAtomicAdd32Barrier ((int32_t) castTo32Bit (amountToAdd), (JUCE_MAC_ATOMICS_VOLATILE int32_t*) &value)
@@ -2180,13 +2182,13 @@ inline Type Atomic<Type>::operator+= (const Type amountToAdd) noexcept
 }
 
 template <typename Type>
-inline Type Atomic<Type>::operator-= (const Type amountToSubtract) noexcept
+inline Type Atomic<Type>::operator-= (const Type amountToSubtract) JUCE_NOEXCEPT
 {
 	return operator+= (juce_negate (amountToSubtract));
 }
 
 template <typename Type>
-inline Type Atomic<Type>::operator++() noexcept
+inline Type Atomic<Type>::operator++() JUCE_NOEXCEPT
 {
   #if JUCE_ATOMICS_MAC
 	return sizeof (Type) == 4 ? (Type) OSAtomicIncrement32Barrier ((JUCE_MAC_ATOMICS_VOLATILE int32_t*) &value)
@@ -2200,7 +2202,7 @@ inline Type Atomic<Type>::operator++() noexcept
 }
 
 template <typename Type>
-inline Type Atomic<Type>::operator--() noexcept
+inline Type Atomic<Type>::operator--() JUCE_NOEXCEPT
 {
   #if JUCE_ATOMICS_MAC
 	return sizeof (Type) == 4 ? (Type) OSAtomicDecrement32Barrier ((JUCE_MAC_ATOMICS_VOLATILE int32_t*) &value)
@@ -2214,7 +2216,7 @@ inline Type Atomic<Type>::operator--() noexcept
 }
 
 template <typename Type>
-inline bool Atomic<Type>::compareAndSetBool (const Type newValue, const Type valueToCompare) noexcept
+inline bool Atomic<Type>::compareAndSetBool (const Type newValue, const Type valueToCompare) JUCE_NOEXCEPT
 {
   #if JUCE_ATOMICS_MAC
 	return sizeof (Type) == 4 ? OSAtomicCompareAndSwap32Barrier ((int32_t) castTo32Bit (valueToCompare), (int32_t) castTo32Bit (newValue), (JUCE_MAC_ATOMICS_VOLATILE int32_t*) &value)
@@ -2228,7 +2230,7 @@ inline bool Atomic<Type>::compareAndSetBool (const Type newValue, const Type val
 }
 
 template <typename Type>
-inline Type Atomic<Type>::compareAndSetValue (const Type newValue, const Type valueToCompare) noexcept
+inline Type Atomic<Type>::compareAndSetValue (const Type newValue, const Type valueToCompare) JUCE_NOEXCEPT
 {
   #if JUCE_ATOMICS_MAC
 	for (;;) // Annoying workaround for only having a bool CAS operation..
@@ -2251,7 +2253,7 @@ inline Type Atomic<Type>::compareAndSetValue (const Type newValue, const Type va
 }
 
 template <typename Type>
-inline void Atomic<Type>::memoryBarrier() noexcept
+inline void Atomic<Type>::memoryBarrier() JUCE_NOEXCEPT
 {
   #if JUCE_ATOMICS_MAC
 	OSMemoryBarrier();
@@ -2285,47 +2287,47 @@ class CharPointer_UTF8
 public:
 	typedef char CharType;
 
-	inline explicit CharPointer_UTF8 (const CharType* const rawPointer) noexcept
+	inline explicit CharPointer_UTF8 (const CharType* const rawPointer) JUCE_NOEXCEPT
 		: data (const_cast <CharType*> (rawPointer))
 	{
 	}
 
-	inline CharPointer_UTF8 (const CharPointer_UTF8& other) noexcept
+	inline CharPointer_UTF8 (const CharPointer_UTF8& other) JUCE_NOEXCEPT
 		: data (other.data)
 	{
 	}
 
-	inline CharPointer_UTF8& operator= (const CharPointer_UTF8& other) noexcept
+	inline CharPointer_UTF8& operator= (const CharPointer_UTF8& other) JUCE_NOEXCEPT
 	{
 		data = other.data;
 		return *this;
 	}
 
-	inline CharPointer_UTF8& operator= (const CharType* text) noexcept
+	inline CharPointer_UTF8& operator= (const CharType* text) JUCE_NOEXCEPT
 	{
 		data = const_cast <CharType*> (text);
 		return *this;
 	}
 
 	/** This is a pointer comparison, it doesn't compare the actual text. */
-	inline bool operator== (const CharPointer_UTF8& other) const noexcept { return data == other.data; }
-	inline bool operator!= (const CharPointer_UTF8& other) const noexcept { return data != other.data; }
-	inline bool operator<= (const CharPointer_UTF8& other) const noexcept { return data <= other.data; }
-	inline bool operator<  (const CharPointer_UTF8& other) const noexcept { return data <  other.data; }
-	inline bool operator>= (const CharPointer_UTF8& other) const noexcept { return data >= other.data; }
-	inline bool operator>  (const CharPointer_UTF8& other) const noexcept { return data >  other.data; }
+	inline bool operator== (const CharPointer_UTF8& other) const JUCE_NOEXCEPT { return data == other.data; }
+	inline bool operator!= (const CharPointer_UTF8& other) const JUCE_NOEXCEPT { return data != other.data; }
+	inline bool operator<= (const CharPointer_UTF8& other) const JUCE_NOEXCEPT { return data <= other.data; }
+	inline bool operator<  (const CharPointer_UTF8& other) const JUCE_NOEXCEPT { return data <  other.data; }
+	inline bool operator>= (const CharPointer_UTF8& other) const JUCE_NOEXCEPT { return data >= other.data; }
+	inline bool operator>  (const CharPointer_UTF8& other) const JUCE_NOEXCEPT { return data >  other.data; }
 
 	/** Returns the address that this pointer is pointing to. */
-	inline CharType* getAddress() const noexcept        { return data; }
+	inline CharType* getAddress() const JUCE_NOEXCEPT        { return data; }
 
 	/** Returns the address that this pointer is pointing to. */
-	inline operator const CharType*() const noexcept    { return data; }
+	inline operator const CharType*() const JUCE_NOEXCEPT    { return data; }
 
 	/** Returns true if this pointer is pointing to a null character. */
-	inline bool isEmpty() const noexcept                { return *data == 0; }
+	inline bool isEmpty() const JUCE_NOEXCEPT                { return *data == 0; }
 
 	/** Returns the unicode character that this pointer is pointing to. */
-	juce_wchar operator*() const noexcept
+	juce_wchar operator*() const JUCE_NOEXCEPT
 	{
 		const signed char byte = (signed char) *data;
 
@@ -2361,7 +2363,7 @@ public:
 	}
 
 	/** Moves this pointer along to the next character in the string. */
-	CharPointer_UTF8& operator++() noexcept
+	CharPointer_UTF8& operator++() JUCE_NOEXCEPT
 	{
 		const signed char n = (signed char) *data++;
 
@@ -2380,7 +2382,7 @@ public:
 	}
 
 	/** Moves this pointer back to the previous character in the string. */
-	CharPointer_UTF8& operator--() noexcept
+	CharPointer_UTF8& operator--() JUCE_NOEXCEPT
 	{
 		const char n = *--data;
 
@@ -2400,7 +2402,7 @@ public:
 
 	/** Returns the character that this pointer is currently pointing to, and then
 		advances the pointer to point to the next character. */
-	juce_wchar getAndAdvance() noexcept
+	juce_wchar getAndAdvance() JUCE_NOEXCEPT
 	{
 		const signed char byte = (signed char) *data++;
 
@@ -2436,7 +2438,7 @@ public:
 	}
 
 	/** Moves this pointer along to the next character in the string. */
-	CharPointer_UTF8 operator++ (int) noexcept
+	CharPointer_UTF8 operator++ (int) JUCE_NOEXCEPT
 	{
 		CharPointer_UTF8 temp (*this);
 		++*this;
@@ -2444,7 +2446,7 @@ public:
 	}
 
 	/** Moves this pointer forwards by the specified number of characters. */
-	void operator+= (int numToSkip) noexcept
+	void operator+= (int numToSkip) JUCE_NOEXCEPT
 	{
 		if (numToSkip < 0)
 		{
@@ -2459,13 +2461,13 @@ public:
 	}
 
 	/** Moves this pointer backwards by the specified number of characters. */
-	void operator-= (int numToSkip) noexcept
+	void operator-= (int numToSkip) JUCE_NOEXCEPT
 	{
 		operator+= (-numToSkip);
 	}
 
 	/** Returns the character at a given character index from the start of the string. */
-	juce_wchar operator[] (int characterIndex) const noexcept
+	juce_wchar operator[] (int characterIndex) const JUCE_NOEXCEPT
 	{
 		CharPointer_UTF8 p (*this);
 		p += characterIndex;
@@ -2473,7 +2475,7 @@ public:
 	}
 
 	/** Returns a pointer which is moved forwards from this one by the specified number of characters. */
-	CharPointer_UTF8 operator+ (int numToSkip) const noexcept
+	CharPointer_UTF8 operator+ (int numToSkip) const JUCE_NOEXCEPT
 	{
 		CharPointer_UTF8 p (*this);
 		p += numToSkip;
@@ -2481,7 +2483,7 @@ public:
 	}
 
 	/** Returns a pointer which is moved backwards from this one by the specified number of characters. */
-	CharPointer_UTF8 operator- (int numToSkip) const noexcept
+	CharPointer_UTF8 operator- (int numToSkip) const JUCE_NOEXCEPT
 	{
 		CharPointer_UTF8 p (*this);
 		p += -numToSkip;
@@ -2489,7 +2491,7 @@ public:
 	}
 
 	/** Returns the number of characters in this string. */
-	size_t length() const noexcept
+	size_t length() const JUCE_NOEXCEPT
 	{
 		const CharType* d = data;
 		size_t count = 0;
@@ -2521,13 +2523,13 @@ public:
 	}
 
 	/** Returns the number of characters in this string, or the given value, whichever is lower. */
-	size_t lengthUpTo (const size_t maxCharsToCount) const noexcept
+	size_t lengthUpTo (const size_t maxCharsToCount) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::lengthUpTo (*this, maxCharsToCount);
 	}
 
 	/** Returns the number of characters in this string, or up to the given end pointer, whichever is lower. */
-	size_t lengthUpTo (const CharPointer_UTF8& end) const noexcept
+	size_t lengthUpTo (const CharPointer_UTF8& end) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::lengthUpTo (*this, end);
 	}
@@ -2535,7 +2537,7 @@ public:
 	/** Returns the number of bytes that are used to represent this string.
 		This includes the terminating null character.
 	*/
-	size_t sizeInBytes() const noexcept
+	size_t sizeInBytes() const JUCE_NOEXCEPT
 	{
 		jassert (data != nullptr);
 		return strlen (data) + 1;
@@ -2544,7 +2546,7 @@ public:
 	/** Returns the number of bytes that would be needed to represent the given
 		unicode character in this encoding format.
 	*/
-	static size_t getBytesRequiredFor (const juce_wchar charToWrite) noexcept
+	static size_t getBytesRequiredFor (const juce_wchar charToWrite) JUCE_NOEXCEPT
 	{
 		size_t num = 1;
 		const uint32 c = (uint32) charToWrite;
@@ -2568,7 +2570,7 @@ public:
 		The value returned does NOT include the terminating null character.
 	*/
 	template <class CharPointer>
-	static size_t getBytesRequiredFor (CharPointer text) noexcept
+	static size_t getBytesRequiredFor (CharPointer text) JUCE_NOEXCEPT
 	{
 		size_t count = 0;
 		juce_wchar n;
@@ -2580,13 +2582,13 @@ public:
 	}
 
 	/** Returns a pointer to the null character that terminates this string. */
-	CharPointer_UTF8 findTerminatingNull() const noexcept
+	CharPointer_UTF8 findTerminatingNull() const JUCE_NOEXCEPT
 	{
 		return CharPointer_UTF8 (data + strlen (data));
 	}
 
 	/** Writes a unicode character to this string, and advances this pointer to point to the next position. */
-	void write (const juce_wchar charToWrite) noexcept
+	void write (const juce_wchar charToWrite) JUCE_NOEXCEPT
 	{
 		const uint32 c = (uint32) charToWrite;
 
@@ -2612,20 +2614,20 @@ public:
 	}
 
 	/** Writes a null character to this string (leaving the pointer's position unchanged). */
-	inline void writeNull() const noexcept
+	inline void writeNull() const JUCE_NOEXCEPT
 	{
 		*data = 0;
 	}
 
 	/** Copies a source string to this pointer, advancing this pointer as it goes. */
 	template <typename CharPointer>
-	void writeAll (const CharPointer& src) noexcept
+	void writeAll (const CharPointer& src) JUCE_NOEXCEPT
 	{
 		CharacterFunctions::copyAll (*this, src);
 	}
 
 	/** Copies a source string to this pointer, advancing this pointer as it goes. */
-	void writeAll (const CharPointer_UTF8& src) noexcept
+	void writeAll (const CharPointer_UTF8& src) JUCE_NOEXCEPT
 	{
 		const CharType* s = src.data;
 
@@ -2641,7 +2643,7 @@ public:
 		to the destination buffer before stopping.
 	*/
 	template <typename CharPointer>
-	int writeWithDestByteLimit (const CharPointer& src, const int maxDestBytes) noexcept
+	int writeWithDestByteLimit (const CharPointer& src, const int maxDestBytes) JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::copyWithDestByteLimit (*this, src, maxDestBytes);
 	}
@@ -2651,34 +2653,34 @@ public:
 		written to the destination buffer before stopping (including the terminating null).
 	*/
 	template <typename CharPointer>
-	void writeWithCharLimit (const CharPointer& src, const int maxChars) noexcept
+	void writeWithCharLimit (const CharPointer& src, const int maxChars) JUCE_NOEXCEPT
 	{
 		CharacterFunctions::copyWithCharLimit (*this, src, maxChars);
 	}
 
 	/** Compares this string with another one. */
 	template <typename CharPointer>
-	int compare (const CharPointer& other) const noexcept
+	int compare (const CharPointer& other) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::compare (*this, other);
 	}
 
 	/** Compares this string with another one, up to a specified number of characters. */
 	template <typename CharPointer>
-	int compareUpTo (const CharPointer& other, const int maxChars) const noexcept
+	int compareUpTo (const CharPointer& other, const int maxChars) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::compareUpTo (*this, other, maxChars);
 	}
 
 	/** Compares this string with another one. */
 	template <typename CharPointer>
-	int compareIgnoreCase (const CharPointer& other) const noexcept
+	int compareIgnoreCase (const CharPointer& other) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::compareIgnoreCase (*this, other);
 	}
 
 	/** Compares this string with another one. */
-	int compareIgnoreCase (const CharPointer_UTF8& other) const noexcept
+	int compareIgnoreCase (const CharPointer_UTF8& other) const JUCE_NOEXCEPT
 	{
 	   #if JUCE_WINDOWS
 		return stricmp (data, other.data);
@@ -2689,54 +2691,54 @@ public:
 
 	/** Compares this string with another one, up to a specified number of characters. */
 	template <typename CharPointer>
-	int compareIgnoreCaseUpTo (const CharPointer& other, const int maxChars) const noexcept
+	int compareIgnoreCaseUpTo (const CharPointer& other, const int maxChars) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::compareIgnoreCaseUpTo (*this, other, maxChars);
 	}
 
 	/** Returns the character index of a substring, or -1 if it isn't found. */
 	template <typename CharPointer>
-	int indexOf (const CharPointer& stringToFind) const noexcept
+	int indexOf (const CharPointer& stringToFind) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::indexOf (*this, stringToFind);
 	}
 
 	/** Returns the character index of a unicode character, or -1 if it isn't found. */
-	int indexOf (const juce_wchar charToFind) const noexcept
+	int indexOf (const juce_wchar charToFind) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::indexOfChar (*this, charToFind);
 	}
 
 	/** Returns the character index of a unicode character, or -1 if it isn't found. */
-	int indexOf (const juce_wchar charToFind, const bool ignoreCase) const noexcept
+	int indexOf (const juce_wchar charToFind, const bool ignoreCase) const JUCE_NOEXCEPT
 	{
 		return ignoreCase ? CharacterFunctions::indexOfCharIgnoreCase (*this, charToFind)
 						  : CharacterFunctions::indexOfChar (*this, charToFind);
 	}
 
 	/** Returns true if the first character of this string is whitespace. */
-	bool isWhitespace() const noexcept      { return *data == ' ' || (*data <= 13 && *data >= 9); }
+	bool isWhitespace() const JUCE_NOEXCEPT      { return *data == ' ' || (*data <= 13 && *data >= 9); }
 	/** Returns true if the first character of this string is a digit. */
-	bool isDigit() const noexcept           { return *data >= '0' && *data <= '9'; }
+	bool isDigit() const JUCE_NOEXCEPT           { return *data >= '0' && *data <= '9'; }
 	/** Returns true if the first character of this string is a letter. */
-	bool isLetter() const noexcept          { return CharacterFunctions::isLetter (operator*()) != 0; }
+	bool isLetter() const JUCE_NOEXCEPT          { return CharacterFunctions::isLetter (operator*()) != 0; }
 	/** Returns true if the first character of this string is a letter or digit. */
-	bool isLetterOrDigit() const noexcept   { return CharacterFunctions::isLetterOrDigit (operator*()) != 0; }
+	bool isLetterOrDigit() const JUCE_NOEXCEPT   { return CharacterFunctions::isLetterOrDigit (operator*()) != 0; }
 	/** Returns true if the first character of this string is upper-case. */
-	bool isUpperCase() const noexcept       { return CharacterFunctions::isUpperCase (operator*()) != 0; }
+	bool isUpperCase() const JUCE_NOEXCEPT       { return CharacterFunctions::isUpperCase (operator*()) != 0; }
 	/** Returns true if the first character of this string is lower-case. */
-	bool isLowerCase() const noexcept       { return CharacterFunctions::isLowerCase (operator*()) != 0; }
+	bool isLowerCase() const JUCE_NOEXCEPT       { return CharacterFunctions::isLowerCase (operator*()) != 0; }
 
 	/** Returns an upper-case version of the first character of this string. */
-	juce_wchar toUpperCase() const noexcept { return CharacterFunctions::toUpperCase (operator*()); }
+	juce_wchar toUpperCase() const JUCE_NOEXCEPT { return CharacterFunctions::toUpperCase (operator*()); }
 	/** Returns a lower-case version of the first character of this string. */
-	juce_wchar toLowerCase() const noexcept { return CharacterFunctions::toLowerCase (operator*()); }
+	juce_wchar toLowerCase() const JUCE_NOEXCEPT { return CharacterFunctions::toLowerCase (operator*()); }
 
 	/** Parses this string as a 32-bit integer. */
-	int getIntValue32() const noexcept      { return atoi (data); }
+	int getIntValue32() const JUCE_NOEXCEPT      { return atoi (data); }
 
 	/** Parses this string as a 64-bit integer. */
-	int64 getIntValue64() const noexcept
+	int64 getIntValue64() const JUCE_NOEXCEPT
 	{
 	   #if JUCE_LINUX || JUCE_ANDROID
 		return atoll (data);
@@ -2748,13 +2750,13 @@ public:
 	}
 
 	/** Parses this string as a floating point double. */
-	double getDoubleValue() const noexcept  { return CharacterFunctions::getDoubleValue (*this); }
+	double getDoubleValue() const JUCE_NOEXCEPT  { return CharacterFunctions::getDoubleValue (*this); }
 
 	/** Returns the first non-whitespace character in the string. */
-	CharPointer_UTF8 findEndOfWhitespace() const noexcept   { return CharacterFunctions::findEndOfWhitespace (*this); }
+	CharPointer_UTF8 findEndOfWhitespace() const JUCE_NOEXCEPT   { return CharacterFunctions::findEndOfWhitespace (*this); }
 
 	/** Returns true if the given unicode character can be represented in this encoding. */
-	static bool canRepresent (juce_wchar character) noexcept
+	static bool canRepresent (juce_wchar character) JUCE_NOEXCEPT
 	{
 		return ((unsigned int) character) < (unsigned int) 0x10ffff;
 	}
@@ -2839,47 +2841,47 @@ public:
 	typedef int16 CharType;
    #endif
 
-	inline explicit CharPointer_UTF16 (const CharType* const rawPointer) noexcept
+	inline explicit CharPointer_UTF16 (const CharType* const rawPointer) JUCE_NOEXCEPT
 		: data (const_cast <CharType*> (rawPointer))
 	{
 	}
 
-	inline CharPointer_UTF16 (const CharPointer_UTF16& other) noexcept
+	inline CharPointer_UTF16 (const CharPointer_UTF16& other) JUCE_NOEXCEPT
 		: data (other.data)
 	{
 	}
 
-	inline CharPointer_UTF16& operator= (const CharPointer_UTF16& other) noexcept
+	inline CharPointer_UTF16& operator= (const CharPointer_UTF16& other) JUCE_NOEXCEPT
 	{
 		data = other.data;
 		return *this;
 	}
 
-	inline CharPointer_UTF16& operator= (const CharType* text) noexcept
+	inline CharPointer_UTF16& operator= (const CharType* text) JUCE_NOEXCEPT
 	{
 		data = const_cast <CharType*> (text);
 		return *this;
 	}
 
 	/** This is a pointer comparison, it doesn't compare the actual text. */
-	inline bool operator== (const CharPointer_UTF16& other) const noexcept { return data == other.data; }
-	inline bool operator!= (const CharPointer_UTF16& other) const noexcept { return data != other.data; }
-	inline bool operator<= (const CharPointer_UTF16& other) const noexcept { return data <= other.data; }
-	inline bool operator<  (const CharPointer_UTF16& other) const noexcept { return data <  other.data; }
-	inline bool operator>= (const CharPointer_UTF16& other) const noexcept { return data >= other.data; }
-	inline bool operator>  (const CharPointer_UTF16& other) const noexcept { return data >  other.data; }
+	inline bool operator== (const CharPointer_UTF16& other) const JUCE_NOEXCEPT { return data == other.data; }
+	inline bool operator!= (const CharPointer_UTF16& other) const JUCE_NOEXCEPT { return data != other.data; }
+	inline bool operator<= (const CharPointer_UTF16& other) const JUCE_NOEXCEPT { return data <= other.data; }
+	inline bool operator<  (const CharPointer_UTF16& other) const JUCE_NOEXCEPT { return data <  other.data; }
+	inline bool operator>= (const CharPointer_UTF16& other) const JUCE_NOEXCEPT { return data >= other.data; }
+	inline bool operator>  (const CharPointer_UTF16& other) const JUCE_NOEXCEPT { return data >  other.data; }
 
 	/** Returns the address that this pointer is pointing to. */
-	inline CharType* getAddress() const noexcept        { return data; }
+	inline CharType* getAddress() const JUCE_NOEXCEPT        { return data; }
 
 	/** Returns the address that this pointer is pointing to. */
-	inline operator const CharType*() const noexcept    { return data; }
+	inline operator const CharType*() const JUCE_NOEXCEPT    { return data; }
 
 	/** Returns true if this pointer is pointing to a null character. */
-	inline bool isEmpty() const noexcept                { return *data == 0; }
+	inline bool isEmpty() const JUCE_NOEXCEPT                { return *data == 0; }
 
 	/** Returns the unicode character that this pointer is pointing to. */
-	juce_wchar operator*() const noexcept
+	juce_wchar operator*() const JUCE_NOEXCEPT
 	{
 		uint32 n = (uint32) (uint16) *data;
 
@@ -2890,7 +2892,7 @@ public:
 	}
 
 	/** Moves this pointer along to the next character in the string. */
-	CharPointer_UTF16& operator++() noexcept
+	CharPointer_UTF16& operator++() JUCE_NOEXCEPT
 	{
 		const juce_wchar n = *data++;
 
@@ -2901,7 +2903,7 @@ public:
 	}
 
 	/** Moves this pointer back to the previous character in the string. */
-	CharPointer_UTF16& operator--() noexcept
+	CharPointer_UTF16& operator--() JUCE_NOEXCEPT
 	{
 		const juce_wchar n = *--data;
 
@@ -2913,7 +2915,7 @@ public:
 
 	/** Returns the character that this pointer is currently pointing to, and then
 		advances the pointer to point to the next character. */
-	juce_wchar getAndAdvance() noexcept
+	juce_wchar getAndAdvance() JUCE_NOEXCEPT
 	{
 		uint32 n = (uint32) (uint16) *data++;
 
@@ -2924,7 +2926,7 @@ public:
 	}
 
 	/** Moves this pointer along to the next character in the string. */
-	CharPointer_UTF16 operator++ (int) noexcept
+	CharPointer_UTF16 operator++ (int) JUCE_NOEXCEPT
 	{
 		CharPointer_UTF16 temp (*this);
 		++*this;
@@ -2932,7 +2934,7 @@ public:
 	}
 
 	/** Moves this pointer forwards by the specified number of characters. */
-	void operator+= (int numToSkip) noexcept
+	void operator+= (int numToSkip) JUCE_NOEXCEPT
 	{
 		if (numToSkip < 0)
 		{
@@ -2947,13 +2949,13 @@ public:
 	}
 
 	/** Moves this pointer backwards by the specified number of characters. */
-	void operator-= (int numToSkip) noexcept
+	void operator-= (int numToSkip) JUCE_NOEXCEPT
 	{
 		operator+= (-numToSkip);
 	}
 
 	/** Returns the character at a given character index from the start of the string. */
-	juce_wchar operator[] (const int characterIndex) const noexcept
+	juce_wchar operator[] (const int characterIndex) const JUCE_NOEXCEPT
 	{
 		CharPointer_UTF16 p (*this);
 		p += characterIndex;
@@ -2961,7 +2963,7 @@ public:
 	}
 
 	/** Returns a pointer which is moved forwards from this one by the specified number of characters. */
-	CharPointer_UTF16 operator+ (const int numToSkip) const noexcept
+	CharPointer_UTF16 operator+ (const int numToSkip) const JUCE_NOEXCEPT
 	{
 		CharPointer_UTF16 p (*this);
 		p += numToSkip;
@@ -2969,7 +2971,7 @@ public:
 	}
 
 	/** Returns a pointer which is moved backwards from this one by the specified number of characters. */
-	CharPointer_UTF16 operator- (const int numToSkip) const noexcept
+	CharPointer_UTF16 operator- (const int numToSkip) const JUCE_NOEXCEPT
 	{
 		CharPointer_UTF16 p (*this);
 		p += -numToSkip;
@@ -2977,7 +2979,7 @@ public:
 	}
 
 	/** Writes a unicode character to this string, and advances this pointer to point to the next position. */
-	void write (juce_wchar charToWrite) noexcept
+	void write (juce_wchar charToWrite) JUCE_NOEXCEPT
 	{
 		if (charToWrite >= 0x10000)
 		{
@@ -2992,13 +2994,13 @@ public:
 	}
 
 	/** Writes a null character to this string (leaving the pointer's position unchanged). */
-	inline void writeNull() const noexcept
+	inline void writeNull() const JUCE_NOEXCEPT
 	{
 		*data = 0;
 	}
 
 	/** Returns the number of characters in this string. */
-	size_t length() const noexcept
+	size_t length() const JUCE_NOEXCEPT
 	{
 		const CharType* d = data;
 		size_t count = 0;
@@ -3022,13 +3024,13 @@ public:
 	}
 
 	/** Returns the number of characters in this string, or the given value, whichever is lower. */
-	size_t lengthUpTo (const size_t maxCharsToCount) const noexcept
+	size_t lengthUpTo (const size_t maxCharsToCount) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::lengthUpTo (*this, maxCharsToCount);
 	}
 
 	/** Returns the number of characters in this string, or up to the given end pointer, whichever is lower. */
-	size_t lengthUpTo (const CharPointer_UTF16& end) const noexcept
+	size_t lengthUpTo (const CharPointer_UTF16& end) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::lengthUpTo (*this, end);
 	}
@@ -3036,7 +3038,7 @@ public:
 	/** Returns the number of bytes that are used to represent this string.
 		This includes the terminating null character.
 	*/
-	size_t sizeInBytes() const noexcept
+	size_t sizeInBytes() const JUCE_NOEXCEPT
 	{
 		return sizeof (CharType) * (findNullIndex (data) + 1);
 	}
@@ -3044,7 +3046,7 @@ public:
 	/** Returns the number of bytes that would be needed to represent the given
 		unicode character in this encoding format.
 	*/
-	static size_t getBytesRequiredFor (const juce_wchar charToWrite) noexcept
+	static size_t getBytesRequiredFor (const juce_wchar charToWrite) JUCE_NOEXCEPT
 	{
 		return (charToWrite >= 0x10000) ? (sizeof (CharType) * 2) : sizeof (CharType);
 	}
@@ -3054,7 +3056,7 @@ public:
 		The value returned does NOT include the terminating null character.
 	*/
 	template <class CharPointer>
-	static size_t getBytesRequiredFor (CharPointer text) noexcept
+	static size_t getBytesRequiredFor (CharPointer text) JUCE_NOEXCEPT
 	{
 		size_t count = 0;
 		juce_wchar n;
@@ -3066,7 +3068,7 @@ public:
 	}
 
 	/** Returns a pointer to the null character that terminates this string. */
-	CharPointer_UTF16 findTerminatingNull() const noexcept
+	CharPointer_UTF16 findTerminatingNull() const JUCE_NOEXCEPT
 	{
 		const CharType* t = data;
 
@@ -3078,13 +3080,13 @@ public:
 
 	/** Copies a source string to this pointer, advancing this pointer as it goes. */
 	template <typename CharPointer>
-	void writeAll (const CharPointer& src) noexcept
+	void writeAll (const CharPointer& src) JUCE_NOEXCEPT
 	{
 		CharacterFunctions::copyAll (*this, src);
 	}
 
 	/** Copies a source string to this pointer, advancing this pointer as it goes. */
-	void writeAll (const CharPointer_UTF16& src) noexcept
+	void writeAll (const CharPointer_UTF16& src) JUCE_NOEXCEPT
 	{
 		const CharType* s = src.data;
 
@@ -3100,7 +3102,7 @@ public:
 		to the destination buffer before stopping.
 	*/
 	template <typename CharPointer>
-	int writeWithDestByteLimit (const CharPointer& src, const int maxDestBytes) noexcept
+	int writeWithDestByteLimit (const CharPointer& src, const int maxDestBytes) JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::copyWithDestByteLimit (*this, src, maxDestBytes);
 	}
@@ -3110,51 +3112,51 @@ public:
 		written to the destination buffer before stopping (including the terminating null).
 	*/
 	template <typename CharPointer>
-	void writeWithCharLimit (const CharPointer& src, const int maxChars) noexcept
+	void writeWithCharLimit (const CharPointer& src, const int maxChars) JUCE_NOEXCEPT
 	{
 		CharacterFunctions::copyWithCharLimit (*this, src, maxChars);
 	}
 
 	/** Compares this string with another one. */
 	template <typename CharPointer>
-	int compare (const CharPointer& other) const noexcept
+	int compare (const CharPointer& other) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::compare (*this, other);
 	}
 
 	/** Compares this string with another one, up to a specified number of characters. */
 	template <typename CharPointer>
-	int compareUpTo (const CharPointer& other, const int maxChars) const noexcept
+	int compareUpTo (const CharPointer& other, const int maxChars) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::compareUpTo (*this, other, maxChars);
 	}
 
 	/** Compares this string with another one. */
 	template <typename CharPointer>
-	int compareIgnoreCase (const CharPointer& other) const noexcept
+	int compareIgnoreCase (const CharPointer& other) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::compareIgnoreCase (*this, other);
 	}
 
 	/** Compares this string with another one, up to a specified number of characters. */
 	template <typename CharPointer>
-	int compareIgnoreCaseUpTo (const CharPointer& other, const int maxChars) const noexcept
+	int compareIgnoreCaseUpTo (const CharPointer& other, const int maxChars) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::compareIgnoreCaseUpTo (*this, other, maxChars);
 	}
 
    #if JUCE_WINDOWS && ! DOXYGEN
-	int compareIgnoreCase (const CharPointer_UTF16& other) const noexcept
+	int compareIgnoreCase (const CharPointer_UTF16& other) const JUCE_NOEXCEPT
 	{
 		return _wcsicmp (data, other.data);
 	}
 
-	int compareIgnoreCaseUpTo (const CharPointer_UTF16& other, int maxChars) const noexcept
+	int compareIgnoreCaseUpTo (const CharPointer_UTF16& other, int maxChars) const JUCE_NOEXCEPT
 	{
 		return _wcsnicmp (data, other.data, (size_t) maxChars);
 	}
 
-	int indexOf (const CharPointer_UTF16& stringToFind) const noexcept
+	int indexOf (const CharPointer_UTF16& stringToFind) const JUCE_NOEXCEPT
 	{
 		const CharType* const t = wcsstr (data, stringToFind.getAddress());
 		return t == nullptr ? -1 : (int) (t - data);
@@ -3163,44 +3165,44 @@ public:
 
 	/** Returns the character index of a substring, or -1 if it isn't found. */
 	template <typename CharPointer>
-	int indexOf (const CharPointer& stringToFind) const noexcept
+	int indexOf (const CharPointer& stringToFind) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::indexOf (*this, stringToFind);
 	}
 
 	/** Returns the character index of a unicode character, or -1 if it isn't found. */
-	int indexOf (const juce_wchar charToFind) const noexcept
+	int indexOf (const juce_wchar charToFind) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::indexOfChar (*this, charToFind);
 	}
 
 	/** Returns the character index of a unicode character, or -1 if it isn't found. */
-	int indexOf (const juce_wchar charToFind, const bool ignoreCase) const noexcept
+	int indexOf (const juce_wchar charToFind, const bool ignoreCase) const JUCE_NOEXCEPT
 	{
 		return ignoreCase ? CharacterFunctions::indexOfCharIgnoreCase (*this, charToFind)
 						  : CharacterFunctions::indexOfChar (*this, charToFind);
 	}
 
 	/** Returns true if the first character of this string is whitespace. */
-	bool isWhitespace() const noexcept      { return CharacterFunctions::isWhitespace (operator*()) != 0; }
+	bool isWhitespace() const JUCE_NOEXCEPT      { return CharacterFunctions::isWhitespace (operator*()) != 0; }
 	/** Returns true if the first character of this string is a digit. */
-	bool isDigit() const noexcept           { return CharacterFunctions::isDigit (operator*()) != 0; }
+	bool isDigit() const JUCE_NOEXCEPT           { return CharacterFunctions::isDigit (operator*()) != 0; }
 	/** Returns true if the first character of this string is a letter. */
-	bool isLetter() const noexcept          { return CharacterFunctions::isLetter (operator*()) != 0; }
+	bool isLetter() const JUCE_NOEXCEPT          { return CharacterFunctions::isLetter (operator*()) != 0; }
 	/** Returns true if the first character of this string is a letter or digit. */
-	bool isLetterOrDigit() const noexcept   { return CharacterFunctions::isLetterOrDigit (operator*()) != 0; }
+	bool isLetterOrDigit() const JUCE_NOEXCEPT   { return CharacterFunctions::isLetterOrDigit (operator*()) != 0; }
 	/** Returns true if the first character of this string is upper-case. */
-	bool isUpperCase() const noexcept       { return CharacterFunctions::isUpperCase (operator*()) != 0; }
+	bool isUpperCase() const JUCE_NOEXCEPT       { return CharacterFunctions::isUpperCase (operator*()) != 0; }
 	/** Returns true if the first character of this string is lower-case. */
-	bool isLowerCase() const noexcept       { return CharacterFunctions::isLowerCase (operator*()) != 0; }
+	bool isLowerCase() const JUCE_NOEXCEPT       { return CharacterFunctions::isLowerCase (operator*()) != 0; }
 
 	/** Returns an upper-case version of the first character of this string. */
-	juce_wchar toUpperCase() const noexcept { return CharacterFunctions::toUpperCase (operator*()); }
+	juce_wchar toUpperCase() const JUCE_NOEXCEPT { return CharacterFunctions::toUpperCase (operator*()); }
 	/** Returns a lower-case version of the first character of this string. */
-	juce_wchar toLowerCase() const noexcept { return CharacterFunctions::toLowerCase (operator*()); }
+	juce_wchar toLowerCase() const JUCE_NOEXCEPT { return CharacterFunctions::toLowerCase (operator*()); }
 
 	/** Parses this string as a 32-bit integer. */
-	int getIntValue32() const noexcept
+	int getIntValue32() const JUCE_NOEXCEPT
 	{
 	   #if JUCE_WINDOWS
 		return _wtoi (data);
@@ -3210,7 +3212,7 @@ public:
 	}
 
 	/** Parses this string as a 64-bit integer. */
-	int64 getIntValue64() const noexcept
+	int64 getIntValue64() const JUCE_NOEXCEPT
 	{
 	   #if JUCE_WINDOWS
 		return _wtoi64 (data);
@@ -3220,13 +3222,13 @@ public:
 	}
 
 	/** Parses this string as a floating point double. */
-	double getDoubleValue() const noexcept  { return CharacterFunctions::getDoubleValue (*this); }
+	double getDoubleValue() const JUCE_NOEXCEPT  { return CharacterFunctions::getDoubleValue (*this); }
 
 	/** Returns the first non-whitespace character in the string. */
-	CharPointer_UTF16 findEndOfWhitespace() const noexcept   { return CharacterFunctions::findEndOfWhitespace (*this); }
+	CharPointer_UTF16 findEndOfWhitespace() const JUCE_NOEXCEPT   { return CharacterFunctions::findEndOfWhitespace (*this); }
 
 	/** Returns true if the given unicode character can be represented in this encoding. */
-	static bool canRepresent (juce_wchar character) noexcept
+	static bool canRepresent (juce_wchar character) JUCE_NOEXCEPT
 	{
 		return ((unsigned int) character) < (unsigned int) 0x10ffff
 				 && (((unsigned int) character) < 0xd800 || ((unsigned int) character) > 0xdfff);
@@ -3280,7 +3282,7 @@ public:
 private:
 	CharType* data;
 
-	static int findNullIndex (const CharType* const t) noexcept
+	static int findNullIndex (const CharType* const t) JUCE_NOEXCEPT
 	{
 		int n = 0;
 
@@ -3310,57 +3312,57 @@ class CharPointer_UTF32
 public:
 	typedef juce_wchar CharType;
 
-	inline explicit CharPointer_UTF32 (const CharType* const rawPointer) noexcept
+	inline explicit CharPointer_UTF32 (const CharType* const rawPointer) JUCE_NOEXCEPT
 		: data (const_cast <CharType*> (rawPointer))
 	{
 	}
 
-	inline CharPointer_UTF32 (const CharPointer_UTF32& other) noexcept
+	inline CharPointer_UTF32 (const CharPointer_UTF32& other) JUCE_NOEXCEPT
 		: data (other.data)
 	{
 	}
 
-	inline CharPointer_UTF32& operator= (const CharPointer_UTF32& other) noexcept
+	inline CharPointer_UTF32& operator= (const CharPointer_UTF32& other) JUCE_NOEXCEPT
 	{
 		data = other.data;
 		return *this;
 	}
 
-	inline CharPointer_UTF32& operator= (const CharType* text) noexcept
+	inline CharPointer_UTF32& operator= (const CharType* text) JUCE_NOEXCEPT
 	{
 		data = const_cast <CharType*> (text);
 		return *this;
 	}
 
 	/** This is a pointer comparison, it doesn't compare the actual text. */
-	inline bool operator== (const CharPointer_UTF32& other) const noexcept { return data == other.data; }
-	inline bool operator!= (const CharPointer_UTF32& other) const noexcept { return data != other.data; }
-	inline bool operator<= (const CharPointer_UTF32& other) const noexcept { return data <= other.data; }
-	inline bool operator<  (const CharPointer_UTF32& other) const noexcept { return data <  other.data; }
-	inline bool operator>= (const CharPointer_UTF32& other) const noexcept { return data >= other.data; }
-	inline bool operator>  (const CharPointer_UTF32& other) const noexcept { return data >  other.data; }
+	inline bool operator== (const CharPointer_UTF32& other) const JUCE_NOEXCEPT { return data == other.data; }
+	inline bool operator!= (const CharPointer_UTF32& other) const JUCE_NOEXCEPT { return data != other.data; }
+	inline bool operator<= (const CharPointer_UTF32& other) const JUCE_NOEXCEPT { return data <= other.data; }
+	inline bool operator<  (const CharPointer_UTF32& other) const JUCE_NOEXCEPT { return data <  other.data; }
+	inline bool operator>= (const CharPointer_UTF32& other) const JUCE_NOEXCEPT { return data >= other.data; }
+	inline bool operator>  (const CharPointer_UTF32& other) const JUCE_NOEXCEPT { return data >  other.data; }
 
 	/** Returns the address that this pointer is pointing to. */
-	inline CharType* getAddress() const noexcept        { return data; }
+	inline CharType* getAddress() const JUCE_NOEXCEPT        { return data; }
 
 	/** Returns the address that this pointer is pointing to. */
-	inline operator const CharType*() const noexcept    { return data; }
+	inline operator const CharType*() const JUCE_NOEXCEPT    { return data; }
 
 	/** Returns true if this pointer is pointing to a null character. */
-	inline bool isEmpty() const noexcept                { return *data == 0; }
+	inline bool isEmpty() const JUCE_NOEXCEPT                { return *data == 0; }
 
 	/** Returns the unicode character that this pointer is pointing to. */
-	inline juce_wchar operator*() const noexcept        { return *data; }
+	inline juce_wchar operator*() const JUCE_NOEXCEPT        { return *data; }
 
 	/** Moves this pointer along to the next character in the string. */
-	inline CharPointer_UTF32& operator++() noexcept
+	inline CharPointer_UTF32& operator++() JUCE_NOEXCEPT
 	{
 		++data;
 		return *this;
 	}
 
 	/** Moves this pointer to the previous character in the string. */
-	inline CharPointer_UTF32& operator--() noexcept
+	inline CharPointer_UTF32& operator--() JUCE_NOEXCEPT
 	{
 		--data;
 		return *this;
@@ -3368,10 +3370,10 @@ public:
 
 	/** Returns the character that this pointer is currently pointing to, and then
 		advances the pointer to point to the next character. */
-	inline juce_wchar getAndAdvance() noexcept  { return *data++; }
+	inline juce_wchar getAndAdvance() JUCE_NOEXCEPT  { return *data++; }
 
 	/** Moves this pointer along to the next character in the string. */
-	CharPointer_UTF32 operator++ (int) noexcept
+	CharPointer_UTF32 operator++ (int) JUCE_NOEXCEPT
 	{
 		CharPointer_UTF32 temp (*this);
 		++data;
@@ -3379,53 +3381,53 @@ public:
 	}
 
 	/** Moves this pointer forwards by the specified number of characters. */
-	inline void operator+= (const int numToSkip) noexcept
+	inline void operator+= (const int numToSkip) JUCE_NOEXCEPT
 	{
 		data += numToSkip;
 	}
 
-	inline void operator-= (const int numToSkip) noexcept
+	inline void operator-= (const int numToSkip) JUCE_NOEXCEPT
 	{
 		data -= numToSkip;
 	}
 
 	/** Returns the character at a given character index from the start of the string. */
-	inline juce_wchar& operator[] (const int characterIndex) const noexcept
+	inline juce_wchar& operator[] (const int characterIndex) const JUCE_NOEXCEPT
 	{
 		return data [characterIndex];
 	}
 
 	/** Returns a pointer which is moved forwards from this one by the specified number of characters. */
-	CharPointer_UTF32 operator+ (const int numToSkip) const noexcept
+	CharPointer_UTF32 operator+ (const int numToSkip) const JUCE_NOEXCEPT
 	{
 		return CharPointer_UTF32 (data + numToSkip);
 	}
 
 	/** Returns a pointer which is moved backwards from this one by the specified number of characters. */
-	CharPointer_UTF32 operator- (const int numToSkip) const noexcept
+	CharPointer_UTF32 operator- (const int numToSkip) const JUCE_NOEXCEPT
 	{
 		return CharPointer_UTF32 (data - numToSkip);
 	}
 
 	/** Writes a unicode character to this string, and advances this pointer to point to the next position. */
-	inline void write (const juce_wchar charToWrite) noexcept
+	inline void write (const juce_wchar charToWrite) JUCE_NOEXCEPT
 	{
 		*data++ = charToWrite;
 	}
 
-	inline void replaceChar (const juce_wchar newChar) noexcept
+	inline void replaceChar (const juce_wchar newChar) JUCE_NOEXCEPT
 	{
 		*data = newChar;
 	}
 
 	/** Writes a null character to this string (leaving the pointer's position unchanged). */
-	inline void writeNull() const noexcept
+	inline void writeNull() const JUCE_NOEXCEPT
 	{
 		*data = 0;
 	}
 
 	/** Returns the number of characters in this string. */
-	size_t length() const noexcept
+	size_t length() const JUCE_NOEXCEPT
 	{
 	   #if JUCE_NATIVE_WCHAR_IS_UTF32 && ! JUCE_ANDROID
 		return wcslen (data);
@@ -3438,13 +3440,13 @@ public:
 	}
 
 	/** Returns the number of characters in this string, or the given value, whichever is lower. */
-	size_t lengthUpTo (const size_t maxCharsToCount) const noexcept
+	size_t lengthUpTo (const size_t maxCharsToCount) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::lengthUpTo (*this, maxCharsToCount);
 	}
 
 	/** Returns the number of characters in this string, or up to the given end pointer, whichever is lower. */
-	size_t lengthUpTo (const CharPointer_UTF32& end) const noexcept
+	size_t lengthUpTo (const CharPointer_UTF32& end) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::lengthUpTo (*this, end);
 	}
@@ -3452,7 +3454,7 @@ public:
 	/** Returns the number of bytes that are used to represent this string.
 		This includes the terminating null character.
 	*/
-	size_t sizeInBytes() const noexcept
+	size_t sizeInBytes() const JUCE_NOEXCEPT
 	{
 		return sizeof (CharType) * (length() + 1);
 	}
@@ -3460,7 +3462,7 @@ public:
 	/** Returns the number of bytes that would be needed to represent the given
 		unicode character in this encoding format.
 	*/
-	static inline size_t getBytesRequiredFor (const juce_wchar) noexcept
+	static inline size_t getBytesRequiredFor (const juce_wchar) JUCE_NOEXCEPT
 	{
 		return sizeof (CharType);
 	}
@@ -3470,26 +3472,26 @@ public:
 		The value returned does NOT include the terminating null character.
 	*/
 	template <class CharPointer>
-	static size_t getBytesRequiredFor (const CharPointer& text) noexcept
+	static size_t getBytesRequiredFor (const CharPointer& text) JUCE_NOEXCEPT
 	{
 		return sizeof (CharType) * text.length();
 	}
 
 	/** Returns a pointer to the null character that terminates this string. */
-	CharPointer_UTF32 findTerminatingNull() const noexcept
+	CharPointer_UTF32 findTerminatingNull() const JUCE_NOEXCEPT
 	{
 		return CharPointer_UTF32 (data + length());
 	}
 
 	/** Copies a source string to this pointer, advancing this pointer as it goes. */
 	template <typename CharPointer>
-	void writeAll (const CharPointer& src) noexcept
+	void writeAll (const CharPointer& src) JUCE_NOEXCEPT
 	{
 		CharacterFunctions::copyAll (*this, src);
 	}
 
 	/** Copies a source string to this pointer, advancing this pointer as it goes. */
-	void writeAll (const CharPointer_UTF32& src) noexcept
+	void writeAll (const CharPointer_UTF32& src) JUCE_NOEXCEPT
 	{
 		const CharType* s = src.data;
 
@@ -3505,7 +3507,7 @@ public:
 		to the destination buffer before stopping.
 	*/
 	template <typename CharPointer>
-	int writeWithDestByteLimit (const CharPointer& src, const int maxDestBytes) noexcept
+	int writeWithDestByteLimit (const CharPointer& src, const int maxDestBytes) JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::copyWithDestByteLimit (*this, src, maxDestBytes);
 	}
@@ -3515,21 +3517,21 @@ public:
 		written to the destination buffer before stopping (including the terminating null).
 	*/
 	template <typename CharPointer>
-	void writeWithCharLimit (const CharPointer& src, const int maxChars) noexcept
+	void writeWithCharLimit (const CharPointer& src, const int maxChars) JUCE_NOEXCEPT
 	{
 		CharacterFunctions::copyWithCharLimit (*this, src, maxChars);
 	}
 
 	/** Compares this string with another one. */
 	template <typename CharPointer>
-	int compare (const CharPointer& other) const noexcept
+	int compare (const CharPointer& other) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::compare (*this, other);
 	}
 
    #if JUCE_NATIVE_WCHAR_IS_UTF32 && ! JUCE_ANDROID
 	/** Compares this string with another one. */
-	int compare (const CharPointer_UTF32& other) const noexcept
+	int compare (const CharPointer_UTF32& other) const JUCE_NOEXCEPT
 	{
 		return wcscmp (data, other.data);
 	}
@@ -3537,7 +3539,7 @@ public:
 
 	/** Compares this string with another one, up to a specified number of characters. */
 	template <typename CharPointer>
-	int compareUpTo (const CharPointer& other, const int maxChars) const noexcept
+	int compareUpTo (const CharPointer& other, const int maxChars) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::compareUpTo (*this, other, maxChars);
 	}
@@ -3551,20 +3553,20 @@ public:
 
 	/** Compares this string with another one, up to a specified number of characters. */
 	template <typename CharPointer>
-	int compareIgnoreCaseUpTo (const CharPointer& other, const int maxChars) const noexcept
+	int compareIgnoreCaseUpTo (const CharPointer& other, const int maxChars) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::compareIgnoreCaseUpTo (*this, other, maxChars);
 	}
 
 	/** Returns the character index of a substring, or -1 if it isn't found. */
 	template <typename CharPointer>
-	int indexOf (const CharPointer& stringToFind) const noexcept
+	int indexOf (const CharPointer& stringToFind) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::indexOf (*this, stringToFind);
 	}
 
 	/** Returns the character index of a unicode character, or -1 if it isn't found. */
-	int indexOf (const juce_wchar charToFind) const noexcept
+	int indexOf (const juce_wchar charToFind) const JUCE_NOEXCEPT
 	{
 		int i = 0;
 
@@ -3580,7 +3582,7 @@ public:
 	}
 
 	/** Returns the character index of a unicode character, or -1 if it isn't found. */
-	int indexOf (const juce_wchar charToFind, const bool ignoreCase) const noexcept
+	int indexOf (const juce_wchar charToFind, const bool ignoreCase) const JUCE_NOEXCEPT
 	{
 		return ignoreCase ? CharacterFunctions::indexOfCharIgnoreCase (*this, charToFind)
 						  : CharacterFunctions::indexOfChar (*this, charToFind);
@@ -3600,23 +3602,23 @@ public:
 	bool isLowerCase() const                { return CharacterFunctions::isLowerCase (*data) != 0; }
 
 	/** Returns an upper-case version of the first character of this string. */
-	juce_wchar toUpperCase() const noexcept { return CharacterFunctions::toUpperCase (*data); }
+	juce_wchar toUpperCase() const JUCE_NOEXCEPT { return CharacterFunctions::toUpperCase (*data); }
 	/** Returns a lower-case version of the first character of this string. */
-	juce_wchar toLowerCase() const noexcept { return CharacterFunctions::toLowerCase (*data); }
+	juce_wchar toLowerCase() const JUCE_NOEXCEPT { return CharacterFunctions::toLowerCase (*data); }
 
 	/** Parses this string as a 32-bit integer. */
-	int getIntValue32() const noexcept      { return CharacterFunctions::getIntValue <int, CharPointer_UTF32> (*this); }
+	int getIntValue32() const JUCE_NOEXCEPT      { return CharacterFunctions::getIntValue <int, CharPointer_UTF32> (*this); }
 	/** Parses this string as a 64-bit integer. */
-	int64 getIntValue64() const noexcept    { return CharacterFunctions::getIntValue <int64, CharPointer_UTF32> (*this); }
+	int64 getIntValue64() const JUCE_NOEXCEPT    { return CharacterFunctions::getIntValue <int64, CharPointer_UTF32> (*this); }
 
 	/** Parses this string as a floating point double. */
-	double getDoubleValue() const noexcept  { return CharacterFunctions::getDoubleValue (*this); }
+	double getDoubleValue() const JUCE_NOEXCEPT  { return CharacterFunctions::getDoubleValue (*this); }
 
 	/** Returns the first non-whitespace character in the string. */
-	CharPointer_UTF32 findEndOfWhitespace() const noexcept   { return CharacterFunctions::findEndOfWhitespace (*this); }
+	CharPointer_UTF32 findEndOfWhitespace() const JUCE_NOEXCEPT   { return CharacterFunctions::findEndOfWhitespace (*this); }
 
 	/** Returns true if the given unicode character can be represented in this encoding. */
-	static bool canRepresent (juce_wchar character) noexcept
+	static bool canRepresent (juce_wchar character) JUCE_NOEXCEPT
 	{
 		return ((unsigned int) character) < (unsigned int) 0x10ffff;
 	}
@@ -3665,57 +3667,57 @@ class CharPointer_ASCII
 public:
 	typedef char CharType;
 
-	inline explicit CharPointer_ASCII (const CharType* const rawPointer) noexcept
+	inline explicit CharPointer_ASCII (const CharType* const rawPointer) JUCE_NOEXCEPT
 		: data (const_cast <CharType*> (rawPointer))
 	{
 	}
 
-	inline CharPointer_ASCII (const CharPointer_ASCII& other) noexcept
+	inline CharPointer_ASCII (const CharPointer_ASCII& other) JUCE_NOEXCEPT
 		: data (other.data)
 	{
 	}
 
-	inline CharPointer_ASCII& operator= (const CharPointer_ASCII& other) noexcept
+	inline CharPointer_ASCII& operator= (const CharPointer_ASCII& other) JUCE_NOEXCEPT
 	{
 		data = other.data;
 		return *this;
 	}
 
-	inline CharPointer_ASCII& operator= (const CharType* text) noexcept
+	inline CharPointer_ASCII& operator= (const CharType* text) JUCE_NOEXCEPT
 	{
 		data = const_cast <CharType*> (text);
 		return *this;
 	}
 
 	/** This is a pointer comparison, it doesn't compare the actual text. */
-	inline bool operator== (const CharPointer_ASCII& other) const noexcept { return data == other.data; }
-	inline bool operator!= (const CharPointer_ASCII& other) const noexcept { return data != other.data; }
-	inline bool operator<= (const CharPointer_ASCII& other) const noexcept { return data <= other.data; }
-	inline bool operator<  (const CharPointer_ASCII& other) const noexcept { return data <  other.data; }
-	inline bool operator>= (const CharPointer_ASCII& other) const noexcept { return data >= other.data; }
-	inline bool operator>  (const CharPointer_ASCII& other) const noexcept { return data >  other.data; }
+	inline bool operator== (const CharPointer_ASCII& other) const JUCE_NOEXCEPT { return data == other.data; }
+	inline bool operator!= (const CharPointer_ASCII& other) const JUCE_NOEXCEPT { return data != other.data; }
+	inline bool operator<= (const CharPointer_ASCII& other) const JUCE_NOEXCEPT { return data <= other.data; }
+	inline bool operator<  (const CharPointer_ASCII& other) const JUCE_NOEXCEPT { return data <  other.data; }
+	inline bool operator>= (const CharPointer_ASCII& other) const JUCE_NOEXCEPT { return data >= other.data; }
+	inline bool operator>  (const CharPointer_ASCII& other) const JUCE_NOEXCEPT { return data >  other.data; }
 
 	/** Returns the address that this pointer is pointing to. */
-	inline CharType* getAddress() const noexcept        { return data; }
+	inline CharType* getAddress() const JUCE_NOEXCEPT        { return data; }
 
 	/** Returns the address that this pointer is pointing to. */
-	inline operator const CharType*() const noexcept    { return data; }
+	inline operator const CharType*() const JUCE_NOEXCEPT    { return data; }
 
 	/** Returns true if this pointer is pointing to a null character. */
-	inline bool isEmpty() const noexcept                { return *data == 0; }
+	inline bool isEmpty() const JUCE_NOEXCEPT                { return *data == 0; }
 
 	/** Returns the unicode character that this pointer is pointing to. */
-	inline juce_wchar operator*() const noexcept        { return (juce_wchar) (uint8) *data; }
+	inline juce_wchar operator*() const JUCE_NOEXCEPT        { return (juce_wchar) (uint8) *data; }
 
 	/** Moves this pointer along to the next character in the string. */
-	inline CharPointer_ASCII& operator++() noexcept
+	inline CharPointer_ASCII& operator++() JUCE_NOEXCEPT
 	{
 		++data;
 		return *this;
 	}
 
 	/** Moves this pointer to the previous character in the string. */
-	inline CharPointer_ASCII& operator--() noexcept
+	inline CharPointer_ASCII& operator--() JUCE_NOEXCEPT
 	{
 		--data;
 		return *this;
@@ -3723,10 +3725,10 @@ public:
 
 	/** Returns the character that this pointer is currently pointing to, and then
 		advances the pointer to point to the next character. */
-	inline juce_wchar getAndAdvance() noexcept  { return (juce_wchar) (uint8) *data++; }
+	inline juce_wchar getAndAdvance() JUCE_NOEXCEPT  { return (juce_wchar) (uint8) *data++; }
 
 	/** Moves this pointer along to the next character in the string. */
-	CharPointer_ASCII operator++ (int) noexcept
+	CharPointer_ASCII operator++ (int) JUCE_NOEXCEPT
 	{
 		CharPointer_ASCII temp (*this);
 		++data;
@@ -3734,65 +3736,65 @@ public:
 	}
 
 	/** Moves this pointer forwards by the specified number of characters. */
-	inline void operator+= (const int numToSkip) noexcept
+	inline void operator+= (const int numToSkip) JUCE_NOEXCEPT
 	{
 		data += numToSkip;
 	}
 
-	inline void operator-= (const int numToSkip) noexcept
+	inline void operator-= (const int numToSkip) JUCE_NOEXCEPT
 	{
 		data -= numToSkip;
 	}
 
 	/** Returns the character at a given character index from the start of the string. */
-	inline juce_wchar operator[] (const int characterIndex) const noexcept
+	inline juce_wchar operator[] (const int characterIndex) const JUCE_NOEXCEPT
 	{
 		return (juce_wchar) (unsigned char) data [characterIndex];
 	}
 
 	/** Returns a pointer which is moved forwards from this one by the specified number of characters. */
-	CharPointer_ASCII operator+ (const int numToSkip) const noexcept
+	CharPointer_ASCII operator+ (const int numToSkip) const JUCE_NOEXCEPT
 	{
 		return CharPointer_ASCII (data + numToSkip);
 	}
 
 	/** Returns a pointer which is moved backwards from this one by the specified number of characters. */
-	CharPointer_ASCII operator- (const int numToSkip) const noexcept
+	CharPointer_ASCII operator- (const int numToSkip) const JUCE_NOEXCEPT
 	{
 		return CharPointer_ASCII (data - numToSkip);
 	}
 
 	/** Writes a unicode character to this string, and advances this pointer to point to the next position. */
-	inline void write (const juce_wchar charToWrite) noexcept
+	inline void write (const juce_wchar charToWrite) JUCE_NOEXCEPT
 	{
 		*data++ = (char) charToWrite;
 	}
 
-	inline void replaceChar (const juce_wchar newChar) noexcept
+	inline void replaceChar (const juce_wchar newChar) JUCE_NOEXCEPT
 	{
 		*data = (char) newChar;
 	}
 
 	/** Writes a null character to this string (leaving the pointer's position unchanged). */
-	inline void writeNull() const noexcept
+	inline void writeNull() const JUCE_NOEXCEPT
 	{
 		*data = 0;
 	}
 
 	/** Returns the number of characters in this string. */
-	size_t length() const noexcept
+	size_t length() const JUCE_NOEXCEPT
 	{
 		return (size_t) strlen (data);
 	}
 
 	/** Returns the number of characters in this string, or the given value, whichever is lower. */
-	size_t lengthUpTo (const size_t maxCharsToCount) const noexcept
+	size_t lengthUpTo (const size_t maxCharsToCount) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::lengthUpTo (*this, maxCharsToCount);
 	}
 
 	/** Returns the number of characters in this string, or up to the given end pointer, whichever is lower. */
-	size_t lengthUpTo (const CharPointer_ASCII& end) const noexcept
+	size_t lengthUpTo (const CharPointer_ASCII& end) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::lengthUpTo (*this, end);
 	}
@@ -3800,7 +3802,7 @@ public:
 	/** Returns the number of bytes that are used to represent this string.
 		This includes the terminating null character.
 	*/
-	size_t sizeInBytes() const noexcept
+	size_t sizeInBytes() const JUCE_NOEXCEPT
 	{
 		return length() + 1;
 	}
@@ -3808,7 +3810,7 @@ public:
 	/** Returns the number of bytes that would be needed to represent the given
 		unicode character in this encoding format.
 	*/
-	static inline size_t getBytesRequiredFor (const juce_wchar) noexcept
+	static inline size_t getBytesRequiredFor (const juce_wchar) JUCE_NOEXCEPT
 	{
 		return 1;
 	}
@@ -3818,26 +3820,26 @@ public:
 		The value returned does NOT include the terminating null character.
 	*/
 	template <class CharPointer>
-	static size_t getBytesRequiredFor (const CharPointer& text) noexcept
+	static size_t getBytesRequiredFor (const CharPointer& text) JUCE_NOEXCEPT
 	{
 		return text.length();
 	}
 
 	/** Returns a pointer to the null character that terminates this string. */
-	CharPointer_ASCII findTerminatingNull() const noexcept
+	CharPointer_ASCII findTerminatingNull() const JUCE_NOEXCEPT
 	{
 		return CharPointer_ASCII (data + length());
 	}
 
 	/** Copies a source string to this pointer, advancing this pointer as it goes. */
 	template <typename CharPointer>
-	void writeAll (const CharPointer& src) noexcept
+	void writeAll (const CharPointer& src) JUCE_NOEXCEPT
 	{
 		CharacterFunctions::copyAll (*this, src);
 	}
 
 	/** Copies a source string to this pointer, advancing this pointer as it goes. */
-	void writeAll (const CharPointer_ASCII& src) noexcept
+	void writeAll (const CharPointer_ASCII& src) JUCE_NOEXCEPT
 	{
 		strcpy (data, src.data);
 	}
@@ -3847,7 +3849,7 @@ public:
 		to the destination buffer before stopping.
 	*/
 	template <typename CharPointer>
-	int writeWithDestByteLimit (const CharPointer& src, const int maxDestBytes) noexcept
+	int writeWithDestByteLimit (const CharPointer& src, const int maxDestBytes) JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::copyWithDestByteLimit (*this, src, maxDestBytes);
 	}
@@ -3857,33 +3859,33 @@ public:
 		written to the destination buffer before stopping (including the terminating null).
 	*/
 	template <typename CharPointer>
-	void writeWithCharLimit (const CharPointer& src, const int maxChars) noexcept
+	void writeWithCharLimit (const CharPointer& src, const int maxChars) JUCE_NOEXCEPT
 	{
 		CharacterFunctions::copyWithCharLimit (*this, src, maxChars);
 	}
 
 	/** Compares this string with another one. */
 	template <typename CharPointer>
-	int compare (const CharPointer& other) const noexcept
+	int compare (const CharPointer& other) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::compare (*this, other);
 	}
 
 	/** Compares this string with another one. */
-	int compare (const CharPointer_ASCII& other) const noexcept
+	int compare (const CharPointer_ASCII& other) const JUCE_NOEXCEPT
 	{
 		return strcmp (data, other.data);
 	}
 
 	/** Compares this string with another one, up to a specified number of characters. */
 	template <typename CharPointer>
-	int compareUpTo (const CharPointer& other, const int maxChars) const noexcept
+	int compareUpTo (const CharPointer& other, const int maxChars) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::compareUpTo (*this, other, maxChars);
 	}
 
 	/** Compares this string with another one, up to a specified number of characters. */
-	int compareUpTo (const CharPointer_ASCII& other, const int maxChars) const noexcept
+	int compareUpTo (const CharPointer_ASCII& other, const int maxChars) const JUCE_NOEXCEPT
 	{
 		return strncmp (data, other.data, (size_t) maxChars);
 	}
@@ -3906,20 +3908,20 @@ public:
 
 	/** Compares this string with another one, up to a specified number of characters. */
 	template <typename CharPointer>
-	int compareIgnoreCaseUpTo (const CharPointer& other, const int maxChars) const noexcept
+	int compareIgnoreCaseUpTo (const CharPointer& other, const int maxChars) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::compareIgnoreCaseUpTo (*this, other, maxChars);
 	}
 
 	/** Returns the character index of a substring, or -1 if it isn't found. */
 	template <typename CharPointer>
-	int indexOf (const CharPointer& stringToFind) const noexcept
+	int indexOf (const CharPointer& stringToFind) const JUCE_NOEXCEPT
 	{
 		return CharacterFunctions::indexOf (*this, stringToFind);
 	}
 
 	/** Returns the character index of a unicode character, or -1 if it isn't found. */
-	int indexOf (const juce_wchar charToFind) const noexcept
+	int indexOf (const juce_wchar charToFind) const JUCE_NOEXCEPT
 	{
 		int i = 0;
 
@@ -3935,7 +3937,7 @@ public:
 	}
 
 	/** Returns the character index of a unicode character, or -1 if it isn't found. */
-	int indexOf (const juce_wchar charToFind, const bool ignoreCase) const noexcept
+	int indexOf (const juce_wchar charToFind, const bool ignoreCase) const JUCE_NOEXCEPT
 	{
 		return ignoreCase ? CharacterFunctions::indexOfCharIgnoreCase (*this, charToFind)
 						  : CharacterFunctions::indexOfChar (*this, charToFind);
@@ -3955,15 +3957,15 @@ public:
 	bool isLowerCase() const                { return CharacterFunctions::isLowerCase ((juce_wchar) (uint8) *data) != 0; }
 
 	/** Returns an upper-case version of the first character of this string. */
-	juce_wchar toUpperCase() const noexcept { return CharacterFunctions::toUpperCase ((juce_wchar) (uint8) *data); }
+	juce_wchar toUpperCase() const JUCE_NOEXCEPT { return CharacterFunctions::toUpperCase ((juce_wchar) (uint8) *data); }
 	/** Returns a lower-case version of the first character of this string. */
-	juce_wchar toLowerCase() const noexcept { return CharacterFunctions::toLowerCase ((juce_wchar) (uint8) *data); }
+	juce_wchar toLowerCase() const JUCE_NOEXCEPT { return CharacterFunctions::toLowerCase ((juce_wchar) (uint8) *data); }
 
 	/** Parses this string as a 32-bit integer. */
-	int getIntValue32() const noexcept      { return atoi (data); }
+	int getIntValue32() const JUCE_NOEXCEPT      { return atoi (data); }
 
 	/** Parses this string as a 64-bit integer. */
-	int64 getIntValue64() const noexcept
+	int64 getIntValue64() const JUCE_NOEXCEPT
 	{
 	   #if JUCE_LINUX || JUCE_ANDROID
 		return atoll (data);
@@ -3975,13 +3977,13 @@ public:
 	}
 
 	/** Parses this string as a floating point double. */
-	double getDoubleValue() const noexcept  { return CharacterFunctions::getDoubleValue (*this); }
+	double getDoubleValue() const JUCE_NOEXCEPT  { return CharacterFunctions::getDoubleValue (*this); }
 
 	/** Returns the first non-whitespace character in the string. */
-	CharPointer_ASCII findEndOfWhitespace() const noexcept   { return CharacterFunctions::findEndOfWhitespace (*this); }
+	CharPointer_ASCII findEndOfWhitespace() const JUCE_NOEXCEPT   { return CharacterFunctions::findEndOfWhitespace (*this); }
 
 	/** Returns true if the given unicode character can be represented in this encoding. */
-	static bool canRepresent (juce_wchar character) noexcept
+	static bool canRepresent (juce_wchar character) JUCE_NOEXCEPT
 	{
 		return ((unsigned int) character) < (unsigned int) 128;
 	}
@@ -4030,13 +4032,13 @@ public:
 	/** Creates an empty string.
 		@see empty
 	*/
-	String() noexcept;
+	String() JUCE_NOEXCEPT;
 
 	/** Creates a copy of another string. */
-	String (const String& other) noexcept;
+	String (const String& other) JUCE_NOEXCEPT;
 
    #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
-	String (String&& other) noexcept;
+	String (String&& other) JUCE_NOEXCEPT;
    #endif
 
 	/** Creates a string from a zero-terminated ascii text string.
@@ -4116,7 +4118,7 @@ public:
 	static String charToString (juce_wchar character);
 
 	/** Destructor. */
-	~String() noexcept;
+	~String() JUCE_NOEXCEPT;
 
 	/** This is an empty string that can be used whenever one is needed.
 
@@ -4148,21 +4150,21 @@ public:
    #endif
 
 	/** Generates a probably-unique 32-bit hashcode from this string. */
-	int hashCode() const noexcept;
+	int hashCode() const JUCE_NOEXCEPT;
 
 	/** Generates a probably-unique 64-bit hashcode from this string. */
-	int64 hashCode64() const noexcept;
+	int64 hashCode64() const JUCE_NOEXCEPT;
 
 	/** Returns the number of characters in the string. */
-	int length() const noexcept;
+	int length() const JUCE_NOEXCEPT;
 
 	// Assignment and concatenation operators..
 
 	/** Replaces this string's contents with another string. */
-	String& operator= (const String& other) noexcept;
+	String& operator= (const String& other) JUCE_NOEXCEPT;
 
    #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
-	String& operator= (String&& other) noexcept;
+	String& operator= (String&& other) JUCE_NOEXCEPT;
    #endif
 
 	/** Appends another string at the end of this one. */
@@ -4245,46 +4247,46 @@ public:
 		Note that there's also an isNotEmpty() method to help write readable code.
 		@see containsNonWhitespaceChars()
 	*/
-	inline bool isEmpty() const noexcept                    { return text[0] == 0; }
+	inline bool isEmpty() const JUCE_NOEXCEPT                    { return text[0] == 0; }
 
 	/** Returns true if the string contains at least one character.
 		Note that there's also an isEmpty() method to help write readable code.
 		@see containsNonWhitespaceChars()
 	*/
-	inline bool isNotEmpty() const noexcept                 { return text[0] != 0; }
+	inline bool isNotEmpty() const JUCE_NOEXCEPT                 { return text[0] != 0; }
 
 	/** Case-insensitive comparison with another string. */
-	bool equalsIgnoreCase (const String& other) const noexcept;
+	bool equalsIgnoreCase (const String& other) const JUCE_NOEXCEPT;
 
 	/** Case-insensitive comparison with another string. */
-	bool equalsIgnoreCase (const wchar_t* other) const noexcept;
+	bool equalsIgnoreCase (const wchar_t* other) const JUCE_NOEXCEPT;
 
 	/** Case-insensitive comparison with another string. */
-	bool equalsIgnoreCase (const char* other) const noexcept;
+	bool equalsIgnoreCase (const char* other) const JUCE_NOEXCEPT;
 
 	/** Case-sensitive comparison with another string.
 		@returns     0 if the two strings are identical; negative if this string comes before
 					 the other one alphabetically, or positive if it comes after it.
 	*/
-	int compare (const String& other) const noexcept;
+	int compare (const String& other) const JUCE_NOEXCEPT;
 
 	/** Case-sensitive comparison with another string.
 		@returns     0 if the two strings are identical; negative if this string comes before
 					 the other one alphabetically, or positive if it comes after it.
 	*/
-	int compare (const char* other) const noexcept;
+	int compare (const char* other) const JUCE_NOEXCEPT;
 
 	/** Case-sensitive comparison with another string.
 		@returns     0 if the two strings are identical; negative if this string comes before
 					 the other one alphabetically, or positive if it comes after it.
 	*/
-	int compare (const wchar_t* other) const noexcept;
+	int compare (const wchar_t* other) const JUCE_NOEXCEPT;
 
 	/** Case-insensitive comparison with another string.
 		@returns     0 if the two strings are identical; negative if this string comes before
 					 the other one alphabetically, or positive if it comes after it.
 	*/
-	int compareIgnoreCase (const String& other) const noexcept;
+	int compareIgnoreCase (const String& other) const JUCE_NOEXCEPT;
 
 	/** Lexicographic comparison with another string.
 
@@ -4294,59 +4296,59 @@ public:
 		@returns     0 if the two strings are identical; negative if this string comes before
 					 the other one alphabetically, or positive if it comes after it.
 	*/
-	int compareLexicographically (const String& other) const noexcept;
+	int compareLexicographically (const String& other) const JUCE_NOEXCEPT;
 
 	/** Tests whether the string begins with another string.
 		If the parameter is an empty string, this will always return true.
 		Uses a case-sensitive comparison.
 	*/
-	bool startsWith (const String& text) const noexcept;
+	bool startsWith (const String& text) const JUCE_NOEXCEPT;
 
 	/** Tests whether the string begins with a particular character.
 		If the character is 0, this will always return false.
 		Uses a case-sensitive comparison.
 	*/
-	bool startsWithChar (juce_wchar character) const noexcept;
+	bool startsWithChar (juce_wchar character) const JUCE_NOEXCEPT;
 
 	/** Tests whether the string begins with another string.
 		If the parameter is an empty string, this will always return true.
 		Uses a case-insensitive comparison.
 	*/
-	bool startsWithIgnoreCase (const String& text) const noexcept;
+	bool startsWithIgnoreCase (const String& text) const JUCE_NOEXCEPT;
 
 	/** Tests whether the string ends with another string.
 		If the parameter is an empty string, this will always return true.
 		Uses a case-sensitive comparison.
 	*/
-	bool endsWith (const String& text) const noexcept;
+	bool endsWith (const String& text) const JUCE_NOEXCEPT;
 
 	/** Tests whether the string ends with a particular character.
 		If the character is 0, this will always return false.
 		Uses a case-sensitive comparison.
 	*/
-	bool endsWithChar (juce_wchar character) const noexcept;
+	bool endsWithChar (juce_wchar character) const JUCE_NOEXCEPT;
 
 	/** Tests whether the string ends with another string.
 		If the parameter is an empty string, this will always return true.
 		Uses a case-insensitive comparison.
 	*/
-	bool endsWithIgnoreCase (const String& text) const noexcept;
+	bool endsWithIgnoreCase (const String& text) const JUCE_NOEXCEPT;
 
 	/** Tests whether the string contains another substring.
 		If the parameter is an empty string, this will always return true.
 		Uses a case-sensitive comparison.
 	*/
-	bool contains (const String& text) const noexcept;
+	bool contains (const String& text) const JUCE_NOEXCEPT;
 
 	/** Tests whether the string contains a particular character.
 		Uses a case-sensitive comparison.
 	*/
-	bool containsChar (juce_wchar character) const noexcept;
+	bool containsChar (juce_wchar character) const JUCE_NOEXCEPT;
 
 	/** Tests whether the string contains another substring.
 		Uses a case-insensitive comparison.
 	*/
-	bool containsIgnoreCase (const String& text) const noexcept;
+	bool containsIgnoreCase (const String& text) const JUCE_NOEXCEPT;
 
 	/** Tests whether the string contains another substring as a distict word.
 
@@ -4354,7 +4356,7 @@ public:
 					non-alphanumeric characters
 		@see indexOfWholeWord, containsWholeWordIgnoreCase
 	*/
-	bool containsWholeWord (const String& wordToLookFor) const noexcept;
+	bool containsWholeWord (const String& wordToLookFor) const JUCE_NOEXCEPT;
 
 	/** Tests whether the string contains another substring as a distict word.
 
@@ -4362,7 +4364,7 @@ public:
 					non-alphanumeric characters
 		@see indexOfWholeWordIgnoreCase, containsWholeWord
 	*/
-	bool containsWholeWordIgnoreCase (const String& wordToLookFor) const noexcept;
+	bool containsWholeWordIgnoreCase (const String& wordToLookFor) const JUCE_NOEXCEPT;
 
 	/** Finds an instance of another substring if it exists as a distict word.
 
@@ -4371,7 +4373,7 @@ public:
 					found, then it will return -1
 		@see indexOfWholeWordIgnoreCase, containsWholeWord
 	*/
-	int indexOfWholeWord (const String& wordToLookFor) const noexcept;
+	int indexOfWholeWord (const String& wordToLookFor) const JUCE_NOEXCEPT;
 
 	/** Finds an instance of another substring if it exists as a distict word.
 
@@ -4380,7 +4382,7 @@ public:
 					found, then it will return -1
 		@see indexOfWholeWord, containsWholeWordIgnoreCase
 	*/
-	int indexOfWholeWordIgnoreCase (const String& wordToLookFor) const noexcept;
+	int indexOfWholeWordIgnoreCase (const String& wordToLookFor) const JUCE_NOEXCEPT;
 
 	/** Looks for any of a set of characters in the string.
 		Uses a case-sensitive comparison.
@@ -4388,7 +4390,7 @@ public:
 		@returns    true if the string contains any of the characters from
 					the string that is passed in.
 	*/
-	bool containsAnyOf (const String& charactersItMightContain) const noexcept;
+	bool containsAnyOf (const String& charactersItMightContain) const JUCE_NOEXCEPT;
 
 	/** Looks for a set of characters in the string.
 		Uses a case-sensitive comparison.
@@ -4397,7 +4399,7 @@ public:
 					the parameter string. If this string is empty, the return value will
 					always be true.
 	*/
-	bool containsOnly (const String& charactersItMightContain) const noexcept;
+	bool containsOnly (const String& charactersItMightContain) const JUCE_NOEXCEPT;
 
 	/** Returns true if this string contains any non-whitespace characters.
 
@@ -4406,7 +4408,7 @@ public:
 
 		It is equivalent to calling "myString.trim().isNotEmpty()".
 	*/
-	bool containsNonWhitespaceChars() const noexcept;
+	bool containsNonWhitespaceChars() const JUCE_NOEXCEPT;
 
 	/** Returns true if the string matches this simple wildcard expression.
 
@@ -4415,7 +4417,7 @@ public:
 		This isn't a full-blown regex though! The only wildcard characters supported
 		are "*" and "?". It's mainly intended for filename pattern matching.
 	*/
-	bool matchesWildcard (const String& wildcard, bool ignoreCase) const noexcept;
+	bool matchesWildcard (const String& wildcard, bool ignoreCase) const JUCE_NOEXCEPT;
 
 	// Substring location methods..
 
@@ -4424,7 +4426,7 @@ public:
 		@returns    the index of the first occurrence of the character in this
 					string, or -1 if it's not found.
 	*/
-	int indexOfChar (juce_wchar characterToLookFor) const noexcept;
+	int indexOfChar (juce_wchar characterToLookFor) const JUCE_NOEXCEPT;
 
 	/** Searches for a character inside this string.
 		Uses a case-sensitive comparison.
@@ -4433,7 +4435,7 @@ public:
 		@returns            the index of the first occurrence of the character in this
 							string, or -1 if it's not found.
 	*/
-	int indexOfChar (int startIndex, juce_wchar characterToLookFor) const noexcept;
+	int indexOfChar (int startIndex, juce_wchar characterToLookFor) const JUCE_NOEXCEPT;
 
 	/** Returns the index of the first character that matches one of the characters
 		passed-in to this method.
@@ -4449,14 +4451,14 @@ public:
 	*/
 	int indexOfAnyOf (const String& charactersToLookFor,
 					  int startIndex = 0,
-					  bool ignoreCase = false) const noexcept;
+					  bool ignoreCase = false) const JUCE_NOEXCEPT;
 
 	/** Searches for a substring within this string.
 		Uses a case-sensitive comparison.
 		@returns    the index of the first occurrence of this substring, or -1 if it's not found.
 					If textToLookFor is an empty string, this will always return 0.
 	*/
-	int indexOf (const String& textToLookFor) const noexcept;
+	int indexOf (const String& textToLookFor) const JUCE_NOEXCEPT;
 
 	/** Searches for a substring within this string.
 		Uses a case-sensitive comparison.
@@ -4465,14 +4467,14 @@ public:
 		@returns                the index of the first occurrence of this substring, or -1 if it's not found.
 								If textToLookFor is an empty string, this will always return -1.
 	*/
-	int indexOf (int startIndex, const String& textToLookFor) const noexcept;
+	int indexOf (int startIndex, const String& textToLookFor) const JUCE_NOEXCEPT;
 
 	/** Searches for a substring within this string.
 		Uses a case-insensitive comparison.
 		@returns    the index of the first occurrence of this substring, or -1 if it's not found.
 					If textToLookFor is an empty string, this will always return 0.
 	*/
-	int indexOfIgnoreCase (const String& textToLookFor) const noexcept;
+	int indexOfIgnoreCase (const String& textToLookFor) const JUCE_NOEXCEPT;
 
 	/** Searches for a substring within this string.
 		Uses a case-insensitive comparison.
@@ -4481,27 +4483,27 @@ public:
 		@returns                the index of the first occurrence of this substring, or -1 if it's not found.
 								If textToLookFor is an empty string, this will always return -1.
 	*/
-	int indexOfIgnoreCase (int startIndex, const String& textToLookFor) const noexcept;
+	int indexOfIgnoreCase (int startIndex, const String& textToLookFor) const JUCE_NOEXCEPT;
 
 	/** Searches for a character inside this string (working backwards from the end of the string).
 		Uses a case-sensitive comparison.
 		@returns    the index of the last occurrence of the character in this string, or -1 if it's not found.
 	*/
-	int lastIndexOfChar (juce_wchar character) const noexcept;
+	int lastIndexOfChar (juce_wchar character) const JUCE_NOEXCEPT;
 
 	/** Searches for a substring inside this string (working backwards from the end of the string).
 		Uses a case-sensitive comparison.
 		@returns    the index of the start of the last occurrence of the substring within this string,
 					or -1 if it's not found. If textToLookFor is an empty string, this will always return -1.
 	*/
-	int lastIndexOf (const String& textToLookFor) const noexcept;
+	int lastIndexOf (const String& textToLookFor) const JUCE_NOEXCEPT;
 
 	/** Searches for a substring inside this string (working backwards from the end of the string).
 		Uses a case-insensitive comparison.
 		@returns    the index of the start of the last occurrence of the substring within this string, or -1
 					if it's not found. If textToLookFor is an empty string, this will always return -1.
 	*/
-	int lastIndexOfIgnoreCase (const String& textToLookFor) const noexcept;
+	int lastIndexOfIgnoreCase (const String& textToLookFor) const JUCE_NOEXCEPT;
 
 	/** Returns the index of the last character in this string that matches one of the
 		characters passed-in to this method.
@@ -4516,7 +4518,7 @@ public:
 		@see lastIndexOf, indexOfAnyOf
 	*/
 	int lastIndexOfAnyOf (const String& charactersToLookFor,
-						  bool ignoreCase = false) const noexcept;
+						  bool ignoreCase = false) const JUCE_NOEXCEPT;
 
 	// Substring extraction and manipulation methods..
 
@@ -4531,12 +4533,12 @@ public:
 		then to use that to iterate the string.
 		@see getCharPointer
 	*/
-	const juce_wchar operator[] (int index) const noexcept;
+	const juce_wchar operator[] (int index) const JUCE_NOEXCEPT;
 
 	/** Returns the final character of the string.
 		If the string is empty this will return 0.
 	*/
-	juce_wchar getLastCharacter() const noexcept;
+	juce_wchar getLastCharacter() const JUCE_NOEXCEPT;
 
 	/** Returns a subsection of the string.
 
@@ -4895,13 +4897,13 @@ public:
 		@returns the value of the string as a 32 bit signed base-10 integer.
 		@see getTrailingIntValue, getHexValue32, getHexValue64
 	*/
-	int getIntValue() const noexcept;
+	int getIntValue() const JUCE_NOEXCEPT;
 
 	/** Reads the value of the string as a decimal number (up to 64 bits in size).
 
 		@returns the value of the string as a 64 bit signed base-10 integer.
 	*/
-	int64 getLargeIntValue() const noexcept;
+	int64 getLargeIntValue() const JUCE_NOEXCEPT;
 
 	/** Parses a decimal number from the end of the string.
 
@@ -4912,21 +4914,21 @@ public:
 
 		@see getIntValue
 	*/
-	int getTrailingIntValue() const noexcept;
+	int getTrailingIntValue() const JUCE_NOEXCEPT;
 
 	/** Parses this string as a floating point number.
 
 		@returns    the value of the string as a 32-bit floating point value.
 		@see getDoubleValue
 	*/
-	float getFloatValue() const noexcept;
+	float getFloatValue() const JUCE_NOEXCEPT;
 
 	/** Parses this string as a floating point number.
 
 		@returns    the value of the string as a 64-bit floating point value.
 		@see getFloatValue
 	*/
-	double getDoubleValue() const noexcept;
+	double getDoubleValue() const JUCE_NOEXCEPT;
 
 	/** Parses the string as a hexadecimal number.
 
@@ -4937,7 +4939,7 @@ public:
 
 		@returns    a 32-bit number which is the value of the string in hex.
 	*/
-	int getHexValue32() const noexcept;
+	int getHexValue32() const JUCE_NOEXCEPT;
 
 	/** Parses the string as a hexadecimal number.
 
@@ -4948,7 +4950,7 @@ public:
 
 		@returns    a 64-bit number which is the value of the string in hex.
 	*/
-	int64 getHexValue64() const noexcept;
+	int64 getHexValue64() const JUCE_NOEXCEPT;
 
 	/** Creates a string representing this 32-bit value in hexadecimal. */
 	static String toHexString (int number);
@@ -4976,7 +4978,7 @@ public:
 		that is returned must not be stored anywhere, as it can be deleted whenever the
 		string changes.
 	*/
-	inline const CharPointerType& getCharPointer() const noexcept    { return text; }
+	inline const CharPointerType& getCharPointer() const JUCE_NOEXCEPT    { return text; }
 
 	/** Returns a pointer to a UTF-8 version of this string.
 
@@ -5037,7 +5039,7 @@ public:
 		The number returned does NOT include the trailing zero.
 		@see toUTF8, copyToUTF8
 	*/
-	int getNumBytesAsUTF8() const noexcept;
+	int getNumBytesAsUTF8() const JUCE_NOEXCEPT;
 
 	/** Copies the string to a buffer as UTF-8 characters.
 
@@ -5054,7 +5056,7 @@ public:
 								end, and will return the number of bytes that were actually used.
 		@see CharPointer_UTF8::writeWithDestByteLimit
 	*/
-	int copyToUTF8 (CharPointer_UTF8::CharType* destBuffer, int maxBufferSizeBytes) const noexcept;
+	int copyToUTF8 (CharPointer_UTF8::CharType* destBuffer, int maxBufferSizeBytes) const JUCE_NOEXCEPT;
 
 	/** Copies the string to a buffer as UTF-16 characters.
 
@@ -5071,7 +5073,7 @@ public:
 								end, and will return the number of bytes that were actually used.
 		@see CharPointer_UTF16::writeWithDestByteLimit
 	*/
-	int copyToUTF16 (CharPointer_UTF16::CharType* destBuffer, int maxBufferSizeBytes) const noexcept;
+	int copyToUTF16 (CharPointer_UTF16::CharType* destBuffer, int maxBufferSizeBytes) const JUCE_NOEXCEPT;
 
 	/** Copies the string to a buffer as UTF-16 characters.
 
@@ -5088,7 +5090,7 @@ public:
 								end, and will return the number of bytes that were actually used.
 		@see CharPointer_UTF32::writeWithDestByteLimit
 	*/
-	int copyToUTF32 (CharPointer_UTF32::CharType* destBuffer, int maxBufferSizeBytes) const noexcept;
+	int copyToUTF32 (CharPointer_UTF32::CharType* destBuffer, int maxBufferSizeBytes) const JUCE_NOEXCEPT;
 
 	/** Increases the string's internally allocated storage.
 
@@ -5109,7 +5111,7 @@ public:
 	/** Swaps the contents of this string with another one.
 		This is a very fast operation, as no allocation or copying needs to be done.
 	*/
-	void swapWith (String& other) noexcept;
+	void swapWith (String& other) JUCE_NOEXCEPT;
 
    #if JUCE_MAC || JUCE_IOS || DOXYGEN
 	/** MAC ONLY - Creates a String from an OSX CFString. */
@@ -5138,13 +5140,13 @@ private:
 
 	explicit String (const PreallocationBytes&); // This constructor preallocates a certain amount of memory
 	void appendFixedLength (const char* text, int numExtraChars);
-	size_t getByteOffsetOfEnd() const noexcept;
+	size_t getByteOffsetOfEnd() const JUCE_NOEXCEPT;
 	JUCE_DEPRECATED (String (const String& stringToCopy, size_t charsToAllocate));
 
 	// This private cast operator should prevent strings being accidentally cast
 	// to bools (this is possible because the compiler can add an implicit cast
 	// via a const char*)
-	operator bool() const noexcept  { return false; }
+	operator bool() const JUCE_NOEXCEPT  { return false; }
 };
 
 /** Concatenates two strings. */
@@ -5203,37 +5205,37 @@ JUCE_API String& JUCE_CALLTYPE operator<< (String& string1, float number);
 JUCE_API String& JUCE_CALLTYPE operator<< (String& string1, double number);
 
 /** Case-sensitive comparison of two strings. */
-JUCE_API bool JUCE_CALLTYPE operator== (const String& string1, const String& string2) noexcept;
+JUCE_API bool JUCE_CALLTYPE operator== (const String& string1, const String& string2) JUCE_NOEXCEPT;
 /** Case-sensitive comparison of two strings. */
-JUCE_API bool JUCE_CALLTYPE operator== (const String& string1, const char* string2) noexcept;
+JUCE_API bool JUCE_CALLTYPE operator== (const String& string1, const char* string2) JUCE_NOEXCEPT;
 /** Case-sensitive comparison of two strings. */
-JUCE_API bool JUCE_CALLTYPE operator== (const String& string1, const wchar_t* string2) noexcept;
+JUCE_API bool JUCE_CALLTYPE operator== (const String& string1, const wchar_t* string2) JUCE_NOEXCEPT;
 /** Case-sensitive comparison of two strings. */
-JUCE_API bool JUCE_CALLTYPE operator== (const String& string1, const CharPointer_UTF8& string2) noexcept;
+JUCE_API bool JUCE_CALLTYPE operator== (const String& string1, const CharPointer_UTF8& string2) JUCE_NOEXCEPT;
 /** Case-sensitive comparison of two strings. */
-JUCE_API bool JUCE_CALLTYPE operator== (const String& string1, const CharPointer_UTF16& string2) noexcept;
+JUCE_API bool JUCE_CALLTYPE operator== (const String& string1, const CharPointer_UTF16& string2) JUCE_NOEXCEPT;
 /** Case-sensitive comparison of two strings. */
-JUCE_API bool JUCE_CALLTYPE operator== (const String& string1, const CharPointer_UTF32& string2) noexcept;
+JUCE_API bool JUCE_CALLTYPE operator== (const String& string1, const CharPointer_UTF32& string2) JUCE_NOEXCEPT;
 /** Case-sensitive comparison of two strings. */
-JUCE_API bool JUCE_CALLTYPE operator!= (const String& string1, const String& string2) noexcept;
+JUCE_API bool JUCE_CALLTYPE operator!= (const String& string1, const String& string2) JUCE_NOEXCEPT;
 /** Case-sensitive comparison of two strings. */
-JUCE_API bool JUCE_CALLTYPE operator!= (const String& string1, const char* string2) noexcept;
+JUCE_API bool JUCE_CALLTYPE operator!= (const String& string1, const char* string2) JUCE_NOEXCEPT;
 /** Case-sensitive comparison of two strings. */
-JUCE_API bool JUCE_CALLTYPE operator!= (const String& string1, const wchar_t* string2) noexcept;
+JUCE_API bool JUCE_CALLTYPE operator!= (const String& string1, const wchar_t* string2) JUCE_NOEXCEPT;
 /** Case-sensitive comparison of two strings. */
-JUCE_API bool JUCE_CALLTYPE operator!= (const String& string1, const CharPointer_UTF8& string2) noexcept;
+JUCE_API bool JUCE_CALLTYPE operator!= (const String& string1, const CharPointer_UTF8& string2) JUCE_NOEXCEPT;
 /** Case-sensitive comparison of two strings. */
-JUCE_API bool JUCE_CALLTYPE operator!= (const String& string1, const CharPointer_UTF16& string2) noexcept;
+JUCE_API bool JUCE_CALLTYPE operator!= (const String& string1, const CharPointer_UTF16& string2) JUCE_NOEXCEPT;
 /** Case-sensitive comparison of two strings. */
-JUCE_API bool JUCE_CALLTYPE operator!= (const String& string1, const CharPointer_UTF32& string2) noexcept;
+JUCE_API bool JUCE_CALLTYPE operator!= (const String& string1, const CharPointer_UTF32& string2) JUCE_NOEXCEPT;
 /** Case-sensitive comparison of two strings. */
-JUCE_API bool JUCE_CALLTYPE operator>  (const String& string1, const String& string2) noexcept;
+JUCE_API bool JUCE_CALLTYPE operator>  (const String& string1, const String& string2) JUCE_NOEXCEPT;
 /** Case-sensitive comparison of two strings. */
-JUCE_API bool JUCE_CALLTYPE operator<  (const String& string1, const String& string2) noexcept;
+JUCE_API bool JUCE_CALLTYPE operator<  (const String& string1, const String& string2) JUCE_NOEXCEPT;
 /** Case-sensitive comparison of two strings. */
-JUCE_API bool JUCE_CALLTYPE operator>= (const String& string1, const String& string2) noexcept;
+JUCE_API bool JUCE_CALLTYPE operator>= (const String& string1, const String& string2) JUCE_NOEXCEPT;
 /** Case-sensitive comparison of two strings. */
-JUCE_API bool JUCE_CALLTYPE operator<= (const String& string1, const String& string2) noexcept;
+JUCE_API bool JUCE_CALLTYPE operator<= (const String& string1, const String& string2) JUCE_NOEXCEPT;
 
 /** This operator allows you to write a juce String directly to std output streams.
 	This is handy for writing strings to std::cout, std::cerr, etc.
@@ -5345,8 +5347,8 @@ class LeakedObjectDetector
 {
 public:
 
-	LeakedObjectDetector() noexcept                                 { ++(getCounter().numObjects); }
-	LeakedObjectDetector (const LeakedObjectDetector&) noexcept     { ++(getCounter().numObjects); }
+	LeakedObjectDetector() JUCE_NOEXCEPT                                 { ++(getCounter().numObjects); }
+	LeakedObjectDetector (const LeakedObjectDetector&) JUCE_NOEXCEPT     { ++(getCounter().numObjects); }
 
 	~LeakedObjectDetector()
 	{
@@ -5374,7 +5376,7 @@ private:
 	class LeakCounter
 	{
 	public:
-		LeakCounter() noexcept {}
+		LeakCounter() JUCE_NOEXCEPT {}
 
 		~LeakCounter()
 		{
@@ -5401,7 +5403,7 @@ private:
 		return OwnerClass::getLeakedObjectClassName();
 	}
 
-	static LeakCounter& getCounter() noexcept
+	static LeakCounter& getCounter() JUCE_NOEXCEPT
 	{
 		static LeakCounter counter;
 		return counter;
@@ -5430,7 +5432,7 @@ private:
   */
   #define JUCE_LEAK_DETECTOR(OwnerClass) \
 		friend class juce::LeakedObjectDetector<OwnerClass>; \
-		static const char* getLeakedObjectClassName() noexcept { return #OwnerClass; } \
+		static const char* getLeakedObjectClassName() JUCE_NOEXCEPT { return #OwnerClass; } \
 		juce::LeakedObjectDetector<OwnerClass> JUCE_JOIN_MACRO (leakDetector, __LINE__);
  #else
   #define JUCE_LEAK_DETECTOR(OwnerClass)
@@ -5546,28 +5548,28 @@ class JUCE_API  AbstractFifo
 public:
 
 	/** Creates a FIFO to manage a buffer with the specified capacity. */
-	AbstractFifo (int capacity) noexcept;
+	AbstractFifo (int capacity) JUCE_NOEXCEPT;
 
 	/** Destructor */
 	~AbstractFifo();
 
 	/** Returns the total size of the buffer being managed. */
-	int getTotalSize() const noexcept;
+	int getTotalSize() const JUCE_NOEXCEPT;
 
 	/** Returns the number of items that can currently be added to the buffer without it overflowing. */
-	int getFreeSpace() const noexcept;
+	int getFreeSpace() const JUCE_NOEXCEPT;
 
 	/** Returns the number of items that can currently be read from the buffer. */
-	int getNumReady() const noexcept;
+	int getNumReady() const JUCE_NOEXCEPT;
 
 	/** Clears the buffer positions, so that it appears empty. */
-	void reset() noexcept;
+	void reset() JUCE_NOEXCEPT;
 
 	/** Changes the buffer's total size.
 		Note that this isn't thread-safe, so don't call it if there's any danger that it
 		might overlap with a call to any other method in this class!
 	*/
-	void setTotalSize (int newSize) noexcept;
+	void setTotalSize (int newSize) JUCE_NOEXCEPT;
 
 	/** Returns the location within the buffer at which an incoming block of data should be written.
 
@@ -5608,12 +5610,12 @@ public:
 		@param blockSize2       on exit, this indicates how many items can be written to the block starting at startIndex2
 		@see finishedWrite
 	*/
-	void prepareToWrite (int numToWrite, int& startIndex1, int& blockSize1, int& startIndex2, int& blockSize2) const noexcept;
+	void prepareToWrite (int numToWrite, int& startIndex1, int& blockSize1, int& startIndex2, int& blockSize2) const JUCE_NOEXCEPT;
 
 	/** Called after reading from the FIFO, to indicate that this many items have been added.
 		@see prepareToWrite
 	*/
-	void finishedWrite (int numWritten) noexcept;
+	void finishedWrite (int numWritten) JUCE_NOEXCEPT;
 
 	/** Returns the location within the buffer from which the next block of data should be read.
 
@@ -5653,12 +5655,12 @@ public:
 		@param blockSize2       on exit, this indicates how many items can be written to the block starting at startIndex2
 		@see finishedRead
 	*/
-	void prepareToRead (int numWanted, int& startIndex1, int& blockSize1, int& startIndex2, int& blockSize2) const noexcept;
+	void prepareToRead (int numWanted, int& startIndex1, int& blockSize1, int& startIndex2, int& blockSize2) const JUCE_NOEXCEPT;
 
 	/** Called after reading from the FIFO, to indicate that this many items have now been consumed.
 		@see prepareToRead
 	*/
-	void finishedRead (int numRead) noexcept;
+	void finishedRead (int numRead) JUCE_NOEXCEPT;
 
 private:
 
@@ -5756,7 +5758,7 @@ public:
 		After creation, you can resize the array using the malloc(), calloc(),
 		or realloc() methods.
 	*/
-	HeapBlock() noexcept  : data (nullptr)
+	HeapBlock() JUCE_NOEXCEPT  : data (nullptr)
 	{
 	}
 
@@ -5783,13 +5785,13 @@ public:
 	}
 
    #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
-	HeapBlock (HeapBlock&& other) noexcept
+	HeapBlock (HeapBlock&& other) JUCE_NOEXCEPT
 		: data (other.data)
 	{
 		other.data = nullptr;
 	}
 
-	HeapBlock& operator= (HeapBlock&& other) noexcept
+	HeapBlock& operator= (HeapBlock&& other) JUCE_NOEXCEPT
 	{
 		std::swap (data, other.data);
 		return *this;
@@ -5800,54 +5802,54 @@ public:
 		This may be a null pointer if the data hasn't yet been allocated, or if it has been
 		freed by calling the free() method.
 	*/
-	inline operator ElementType*() const noexcept                           { return data; }
+	inline operator ElementType*() const JUCE_NOEXCEPT                           { return data; }
 
 	/** Returns a raw pointer to the allocated data.
 		This may be a null pointer if the data hasn't yet been allocated, or if it has been
 		freed by calling the free() method.
 	*/
-	inline ElementType* getData() const noexcept                            { return data; }
+	inline ElementType* getData() const JUCE_NOEXCEPT                            { return data; }
 
 	/** Returns a void pointer to the allocated data.
 		This may be a null pointer if the data hasn't yet been allocated, or if it has been
 		freed by calling the free() method.
 	*/
-	inline operator void*() const noexcept                                  { return static_cast <void*> (data); }
+	inline operator void*() const JUCE_NOEXCEPT                                  { return static_cast <void*> (data); }
 
 	/** Returns a void pointer to the allocated data.
 		This may be a null pointer if the data hasn't yet been allocated, or if it has been
 		freed by calling the free() method.
 	*/
-	inline operator const void*() const noexcept                            { return static_cast <const void*> (data); }
+	inline operator const void*() const JUCE_NOEXCEPT                            { return static_cast <const void*> (data); }
 
 	/** Lets you use indirect calls to the first element in the array.
 		Obviously this will cause problems if the array hasn't been initialised, because it'll
 		be referencing a null pointer.
 	*/
-	inline ElementType* operator->() const  noexcept                        { return data; }
+	inline ElementType* operator->() const  JUCE_NOEXCEPT                        { return data; }
 
 	/** Returns a reference to one of the data elements.
 		Obviously there's no bounds-checking here, as this object is just a dumb pointer and
 		has no idea of the size it currently has allocated.
 	*/
 	template <typename IndexType>
-	inline ElementType& operator[] (IndexType index) const noexcept         { return data [index]; }
+	inline ElementType& operator[] (IndexType index) const JUCE_NOEXCEPT         { return data [index]; }
 
 	/** Returns a pointer to a data element at an offset from the start of the array.
 		This is the same as doing pointer arithmetic on the raw pointer itself.
 	*/
 	template <typename IndexType>
-	inline ElementType* operator+ (IndexType index) const noexcept          { return data + index; }
+	inline ElementType* operator+ (IndexType index) const JUCE_NOEXCEPT          { return data + index; }
 
 	/** Compares the pointer with another pointer.
 		This can be handy for checking whether this is a null pointer.
 	*/
-	inline bool operator== (const ElementType* const otherPointer) const noexcept   { return otherPointer == data; }
+	inline bool operator== (const ElementType* const otherPointer) const JUCE_NOEXCEPT   { return otherPointer == data; }
 
 	/** Compares the pointer with another pointer.
 		This can be handy for checking whether this is a null pointer.
 	*/
-	inline bool operator!= (const ElementType* const otherPointer) const noexcept   { return otherPointer != data; }
+	inline bool operator!= (const ElementType* const otherPointer) const JUCE_NOEXCEPT   { return otherPointer != data; }
 
 	/** Allocates a specified amount of memory.
 
@@ -5922,7 +5924,7 @@ public:
 		The two objects simply exchange their data pointers.
 	*/
 	template <bool otherBlockThrows>
-	void swapWith (HeapBlock <ElementType, otherBlockThrows>& other) noexcept
+	void swapWith (HeapBlock <ElementType, otherBlockThrows>& other) JUCE_NOEXCEPT
 	{
 		std::swap (data, other.data);
 	}
@@ -5931,7 +5933,7 @@ public:
 		Since the block has no way of knowing its own size, you must make sure that the number of
 		elements you specify doesn't exceed the allocated size.
 	*/
-	void clear (size_t numElements) noexcept
+	void clear (size_t numElements) JUCE_NOEXCEPT
 	{
 		zeromem (data, sizeof (ElementType) * numElements);
 	}
@@ -5971,24 +5973,24 @@ class ArrayAllocationBase  : public TypeOfCriticalSectionToUse
 public:
 
 	/** Creates an empty array. */
-	ArrayAllocationBase() noexcept
+	ArrayAllocationBase() JUCE_NOEXCEPT
 		: numAllocated (0)
 	{
 	}
 
 	/** Destructor. */
-	~ArrayAllocationBase() noexcept
+	~ArrayAllocationBase() JUCE_NOEXCEPT
 	{
 	}
 
    #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
-	ArrayAllocationBase (ArrayAllocationBase<ElementType, TypeOfCriticalSectionToUse>&& other) noexcept
+	ArrayAllocationBase (ArrayAllocationBase<ElementType, TypeOfCriticalSectionToUse>&& other) JUCE_NOEXCEPT
 		: elements (static_cast <HeapBlock <ElementType>&&> (other.elements)),
 		  numAllocated (other.numAllocated)
 	{
 	}
 
-	ArrayAllocationBase& operator= (ArrayAllocationBase<ElementType, TypeOfCriticalSectionToUse>&& other) noexcept
+	ArrayAllocationBase& operator= (ArrayAllocationBase<ElementType, TypeOfCriticalSectionToUse>&& other) JUCE_NOEXCEPT
 	{
 		elements = static_cast <HeapBlock <ElementType>&&> (other.elements);
 		numAllocated = other.numAllocated;
@@ -6040,7 +6042,7 @@ public:
 	}
 
 	/** Swap the contents of two objects. */
-	void swapWith (ArrayAllocationBase <ElementType, TypeOfCriticalSectionToUse>& other) noexcept
+	void swapWith (ArrayAllocationBase <ElementType, TypeOfCriticalSectionToUse>& other) JUCE_NOEXCEPT
 	{
 		elements.swapWith (other.elements);
 		std::swap (numAllocated, other.numAllocated);
@@ -6355,14 +6357,14 @@ public:
 		otherwise there are no guarantees what will happen! Best just to use it
 		as a local stack object, rather than creating one with the new() operator.
 	*/
-	inline explicit GenericScopedLock (const LockType& lock) noexcept : lock_ (lock)     { lock.enter(); }
+	inline explicit GenericScopedLock (const LockType& lock) JUCE_NOEXCEPT : lock_ (lock)     { lock.enter(); }
 
 	/** Destructor.
 		The lock will be released when the destructor is called.
 		Make sure this object is created and deleted by the same thread, otherwise there are
 		no guarantees what will happen!
 	*/
-	inline ~GenericScopedLock() noexcept                                                 { lock_.exit(); }
+	inline ~GenericScopedLock() JUCE_NOEXCEPT                                                 { lock_.exit(); }
 
 private:
 
@@ -6423,7 +6425,7 @@ public:
 		otherwise there are no guarantees what will happen! Best just to use it
 		as a local stack object, rather than creating one with the new() operator.
 	*/
-	inline explicit GenericScopedUnlock (const LockType& lock) noexcept : lock_ (lock)   { lock.exit(); }
+	inline explicit GenericScopedUnlock (const LockType& lock) JUCE_NOEXCEPT : lock_ (lock)   { lock.exit(); }
 
 	/** Destructor.
 
@@ -6432,7 +6434,7 @@ public:
 		Make sure this object is created and deleted by the same thread,
 		otherwise there are no guarantees what will happen!
 	*/
-	inline ~GenericScopedUnlock() noexcept                                               { lock_.enter(); }
+	inline ~GenericScopedUnlock() JUCE_NOEXCEPT                                               { lock_.enter(); }
 
 private:
 
@@ -6490,7 +6492,7 @@ public:
 		otherwise there are no guarantees what will happen! Best just to use it
 		as a local stack object, rather than creating one with the new() operator.
 	*/
-	inline explicit GenericScopedTryLock (const LockType& lock) noexcept
+	inline explicit GenericScopedTryLock (const LockType& lock) JUCE_NOEXCEPT
 		: lock_ (lock), lockWasSuccessful (lock.tryEnter()) {}
 
 	/** Destructor.
@@ -6501,10 +6503,10 @@ public:
 		Make sure this object is created and deleted by the same thread,
 		otherwise there are no guarantees what will happen!
 	*/
-	inline ~GenericScopedTryLock() noexcept         { if (lockWasSuccessful) lock_.exit(); }
+	inline ~GenericScopedTryLock() JUCE_NOEXCEPT         { if (lockWasSuccessful) lock_.exit(); }
 
 	/** Returns true if the mutex was successfully locked. */
-	bool isLocked() const noexcept                  { return lockWasSuccessful; }
+	bool isLocked() const JUCE_NOEXCEPT                  { return lockWasSuccessful; }
 
 private:
 
@@ -6532,13 +6534,13 @@ class JUCE_API  CriticalSection
 public:
 
 	/** Creates a CriticalSection object. */
-	CriticalSection() noexcept;
+	CriticalSection() JUCE_NOEXCEPT;
 
 	/** Destructor.
 		If the critical section is deleted whilst locked, any subsequent behaviour
 		is unpredictable.
 	*/
-	~CriticalSection() noexcept;
+	~CriticalSection() JUCE_NOEXCEPT;
 
 	/** Acquires the lock.
 
@@ -6550,7 +6552,7 @@ public:
 
 		@see exit, tryEnter, ScopedLock
 	*/
-	void enter() const noexcept;
+	void enter() const JUCE_NOEXCEPT;
 
 	/** Attempts to lock this critical section without blocking.
 
@@ -6560,7 +6562,7 @@ public:
 		@returns false if the lock is currently held by another thread, true otherwise.
 		@see enter
 	*/
-	bool tryEnter() const noexcept;
+	bool tryEnter() const JUCE_NOEXCEPT;
 
 	/** Releases the lock.
 
@@ -6572,7 +6574,7 @@ public:
 
 		@see enter, ScopedLock
 	*/
-	void exit() const noexcept;
+	void exit() const JUCE_NOEXCEPT;
 
 	/** Provides the type of scoped lock to use with a CriticalSection. */
 	typedef GenericScopedLock <CriticalSection>       ScopedLockType;
@@ -6613,17 +6615,17 @@ private:
 class JUCE_API  DummyCriticalSection
 {
 public:
-	inline DummyCriticalSection() noexcept      {}
-	inline ~DummyCriticalSection() noexcept     {}
+	inline DummyCriticalSection() JUCE_NOEXCEPT      {}
+	inline ~DummyCriticalSection() JUCE_NOEXCEPT     {}
 
-	inline void enter() const noexcept          {}
-	inline bool tryEnter() const noexcept       { return true; }
-	inline void exit() const noexcept           {}
+	inline void enter() const JUCE_NOEXCEPT          {}
+	inline bool tryEnter() const JUCE_NOEXCEPT       { return true; }
+	inline void exit() const JUCE_NOEXCEPT           {}
 
 	/** A dummy scoped-lock type to use with a dummy critical section. */
 	struct ScopedLockType
 	{
-		ScopedLockType (const DummyCriticalSection&) noexcept {}
+		ScopedLockType (const DummyCriticalSection&) JUCE_NOEXCEPT {}
 	};
 
 	/** A dummy scoped-unlocker type to use with a dummy critical section. */
@@ -6765,7 +6767,7 @@ private:
 public:
 
 	/** Creates an empty array. */
-	Array() noexcept
+	Array() JUCE_NOEXCEPT
 	   : numUsed (0)
 	{
 	}
@@ -6784,7 +6786,7 @@ public:
 	}
 
    #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
-	Array (Array<ElementType, TypeOfCriticalSectionToUse>&& other) noexcept
+	Array (Array<ElementType, TypeOfCriticalSectionToUse>&& other) JUCE_NOEXCEPT
 		: data (static_cast <ArrayAllocationBase<ElementType, TypeOfCriticalSectionToUse>&&> (other.data)),
 		  numUsed (other.numUsed)
 	{
@@ -6840,7 +6842,7 @@ public:
 	}
 
    #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
-	Array& operator= (Array&& other) noexcept
+	Array& operator= (Array&& other) JUCE_NOEXCEPT
 	{
 		data = static_cast <ArrayAllocationBase<ElementType, TypeOfCriticalSectionToUse>&&> (other.data);
 		numUsed = other.numUsed;
@@ -6909,7 +6911,7 @@ public:
 
 	/** Returns the current number of elements in the array.
 	*/
-	inline int size() const noexcept
+	inline int size() const JUCE_NOEXCEPT
 	{
 		return numUsed;
 	}
@@ -6956,7 +6958,7 @@ public:
 		@param index    the index of the element being requested (0 is the first element in the array)
 		@see operator[], getFirst, getLast
 	*/
-	inline ElementType& getReference (const int index) const noexcept
+	inline ElementType& getReference (const int index) const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		jassert (isPositiveAndBelow (index, numUsed));
@@ -6989,7 +6991,7 @@ public:
 		This pointer will only be valid until the next time a non-const method
 		is called on the array.
 	*/
-	inline ElementType* getRawDataPointer() noexcept
+	inline ElementType* getRawDataPointer() JUCE_NOEXCEPT
 	{
 		return data.elements;
 	}
@@ -6997,7 +6999,7 @@ public:
 	/** Returns a pointer to the first element in the array.
 		This method is provided for compatibility with standard C++ iteration mechanisms.
 	*/
-	inline ElementType* begin() const noexcept
+	inline ElementType* begin() const JUCE_NOEXCEPT
 	{
 		return data.elements;
 	}
@@ -7005,7 +7007,7 @@ public:
 	/** Returns a pointer to the element which follows the last element in the array.
 		This method is provided for compatibility with standard C++ iteration mechanisms.
 	*/
-	inline ElementType* end() const noexcept
+	inline ElementType* end() const JUCE_NOEXCEPT
 	{
 		return data.elements + numUsed;
 	}
@@ -7258,7 +7260,7 @@ public:
 		If you need to exchange two arrays, this is vastly quicker than using copy-by-value
 		because it just swaps their internal pointers.
 	*/
-	void swapWithArray (Array& otherArray) noexcept
+	void swapWithArray (Array& otherArray) JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock1 (getLock());
 		const ScopedLockType lock2 (otherArray.getLock());
@@ -7607,7 +7609,7 @@ public:
 								is less than zero, the value will be moved to the end
 								of the array
 	*/
-	void move (const int currentIndex, int newIndex) noexcept
+	void move (const int currentIndex, int newIndex) JUCE_NOEXCEPT
 	{
 		if (currentIndex != newIndex)
 		{
@@ -7703,7 +7705,7 @@ public:
 		To lock, you can call getLock().enter() and getLock().exit(), or preferably use
 		an object of ScopedLockType as an RAII lock for it.
 	*/
-	inline const TypeOfCriticalSectionToUse& getLock() const noexcept      { return data; }
+	inline const TypeOfCriticalSectionToUse& getLock() const JUCE_NOEXCEPT      { return data; }
 
 	/** Returns the type of scoped lock to use for locking this array */
 	typedef typename TypeOfCriticalSectionToUse::ScopedLockType ScopedLockType;
@@ -7713,7 +7715,7 @@ private:
 	ArrayAllocationBase <ElementType, TypeOfCriticalSectionToUse> data;
 	int numUsed;
 
-	inline void deleteAllElements() noexcept
+	inline void deleteAllElements() JUCE_NOEXCEPT
 	{
 		for (int i = 0; i < numUsed; ++i)
 			data.elements[i].~ElementType();
@@ -7765,7 +7767,7 @@ class JUCE_API  Identifier
 {
 public:
 	/** Creates a null identifier. */
-	Identifier() noexcept;
+	Identifier() JUCE_NOEXCEPT;
 
 	/** Creates an identifier with a specified name.
 		Because this name may need to be used in contexts such as script variables or XML
@@ -7780,34 +7782,34 @@ public:
 	Identifier (const String& name);
 
 	/** Creates a copy of another identifier. */
-	Identifier (const Identifier& other) noexcept;
+	Identifier (const Identifier& other) JUCE_NOEXCEPT;
 
 	/** Creates a copy of another identifier. */
-	Identifier& operator= (const Identifier& other) noexcept;
+	Identifier& operator= (const Identifier& other) JUCE_NOEXCEPT;
 
 	/** Destructor */
 	~Identifier();
 
 	/** Compares two identifiers. This is a very fast operation. */
-	inline bool operator== (const Identifier& other) const noexcept     { return name == other.name; }
+	inline bool operator== (const Identifier& other) const JUCE_NOEXCEPT     { return name == other.name; }
 
 	/** Compares two identifiers. This is a very fast operation. */
-	inline bool operator!= (const Identifier& other) const noexcept     { return name != other.name; }
+	inline bool operator!= (const Identifier& other) const JUCE_NOEXCEPT     { return name != other.name; }
 
 	/** Returns this identifier as a string. */
 	String toString() const                                             { return name; }
 
 	/** Returns this identifier's raw string pointer. */
-	operator const String::CharPointerType() const noexcept             { return name; }
+	operator const String::CharPointerType() const JUCE_NOEXCEPT             { return name; }
 
 	/** Returns this identifier's raw string pointer. */
-	const String::CharPointerType getCharPointer() const noexcept       { return name; }
+	const String::CharPointerType getCharPointer() const JUCE_NOEXCEPT       { return name; }
 
 	/** Checks a given string for characters that might not be valid in an Identifier.
 		Since Identifiers are used as a script variables and XML attributes, they should only contain
 		alphanumeric characters, underscores, or the '-' and ':' characters.
 	*/
-	static bool isValidIdentifier (const String& possibleIdentifier) noexcept;
+	static bool isValidIdentifier (const String& possibleIdentifier) JUCE_NOEXCEPT;
 
 private:
 
@@ -7846,7 +7848,7 @@ public:
 	/** Returns the default new-line sequence that the library uses.
 		@see OutputStream::setNewLineString()
 	*/
-	static const char* getDefault() noexcept        { return "\r\n"; }
+	static const char* getDefault() JUCE_NOEXCEPT        { return "\r\n"; }
 
 	/** Returns the default new-line sequence that the library uses.
 		@see getDefault()
@@ -8058,7 +8060,7 @@ public:
 	void setNewLineString (const String& newLineString);
 
 	/** Returns the current new-line string that was set by setNewLineString(). */
-	const String& getNewLineString() const noexcept         { return newLineString; }
+	const String& getNewLineString() const JUCE_NOEXCEPT         { return newLineString; }
 
 private:
 
@@ -8350,7 +8352,7 @@ public:
 
 protected:
 
-	InputStream() noexcept {}
+	InputStream() JUCE_NOEXCEPT {}
 
 private:
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InputStream);
@@ -8385,25 +8387,25 @@ public:
 	typedef Identifier identifier;
 
 	/** Creates a void variant. */
-	var() noexcept;
+	var() JUCE_NOEXCEPT;
 
 	/** Destructor. */
-	~var() noexcept;
+	~var() JUCE_NOEXCEPT;
 
 	/** A static var object that can be used where you need an empty variant object. */
 	static const var null;
 
 	var (const var& valueToCopy);
-	var (int value) noexcept;
-	var (int64 value) noexcept;
-	var (bool value) noexcept;
-	var (double value) noexcept;
+	var (int value) JUCE_NOEXCEPT;
+	var (int64 value) JUCE_NOEXCEPT;
+	var (bool value) JUCE_NOEXCEPT;
+	var (double value) JUCE_NOEXCEPT;
 	var (const char* value);
 	var (const wchar_t* value);
 	var (const String& value);
 	var (const Array<var>& value);
 	var (ReferenceCountedObject* object);
-	var (MethodFunction method) noexcept;
+	var (MethodFunction method) JUCE_NOEXCEPT;
 
 	var& operator= (const var& valueToCopy);
 	var& operator= (int value);
@@ -8418,47 +8420,47 @@ public:
 	var& operator= (MethodFunction method);
 
    #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
-	var (var&& other) noexcept;
+	var (var&& other) JUCE_NOEXCEPT;
 	var (String&& value);
-	var& operator= (var&& other) noexcept;
+	var& operator= (var&& other) JUCE_NOEXCEPT;
 	var& operator= (String&& value);
    #endif
 
-	void swapWith (var& other) noexcept;
+	void swapWith (var& other) JUCE_NOEXCEPT;
 
-	operator int() const noexcept;
-	operator int64() const noexcept;
-	operator bool() const noexcept;
-	operator float() const noexcept;
-	operator double() const noexcept;
+	operator int() const JUCE_NOEXCEPT;
+	operator int64() const JUCE_NOEXCEPT;
+	operator bool() const JUCE_NOEXCEPT;
+	operator float() const JUCE_NOEXCEPT;
+	operator double() const JUCE_NOEXCEPT;
 	operator String() const;
 	String toString() const;
-	Array<var>* getArray() const noexcept;
-	ReferenceCountedObject* getObject() const noexcept;
-	DynamicObject* getDynamicObject() const noexcept;
+	Array<var>* getArray() const JUCE_NOEXCEPT;
+	ReferenceCountedObject* getObject() const JUCE_NOEXCEPT;
+	DynamicObject* getDynamicObject() const JUCE_NOEXCEPT;
 
-	bool isVoid() const noexcept;
-	bool isInt() const noexcept;
-	bool isInt64() const noexcept;
-	bool isBool() const noexcept;
-	bool isDouble() const noexcept;
-	bool isString() const noexcept;
-	bool isObject() const noexcept;
-	bool isArray() const noexcept;
-	bool isMethod() const noexcept;
+	bool isVoid() const JUCE_NOEXCEPT;
+	bool isInt() const JUCE_NOEXCEPT;
+	bool isInt64() const JUCE_NOEXCEPT;
+	bool isBool() const JUCE_NOEXCEPT;
+	bool isDouble() const JUCE_NOEXCEPT;
+	bool isString() const JUCE_NOEXCEPT;
+	bool isObject() const JUCE_NOEXCEPT;
+	bool isArray() const JUCE_NOEXCEPT;
+	bool isMethod() const JUCE_NOEXCEPT;
 
 	/** Returns true if this var has the same value as the one supplied.
 		Note that this ignores the type, so a string var "123" and an integer var with the
 		value 123 are considered to be equal.
 		@see equalsWithSameType
 	*/
-	bool equals (const var& other) const noexcept;
+	bool equals (const var& other) const JUCE_NOEXCEPT;
 
 	/** Returns true if this var has the same value and type as the one supplied.
 		This differs from equals() because e.g. "123" and 123 will be considered different.
 		@see equals
 	*/
-	bool equalsWithSameType (const var& other) const noexcept;
+	bool equalsWithSameType (const var& other) const JUCE_NOEXCEPT;
 
 	/** If the var is an array, this returns the number of elements.
 		If the var isn't actually an array, this will return 0.
@@ -8592,9 +8594,9 @@ private:
 };
 
 /** Compares the values of two var objects, using the var::equals() comparison. */
-bool operator== (const var& v1, const var& v2) noexcept;
+bool operator== (const var& v1, const var& v2) JUCE_NOEXCEPT;
 /** Compares the values of two var objects, using the var::equals() comparison. */
-bool operator!= (const var& v1, const var& v2) noexcept;
+bool operator!= (const var& v1, const var& v2) JUCE_NOEXCEPT;
 bool operator== (const var& v1, const String& v2);
 bool operator!= (const var& v1, const String& v2);
 bool operator== (const var& v1, const char* v2);
@@ -8641,32 +8643,32 @@ class LinkedListPointer
 public:
 
 	/** Creates a null pointer to an empty list. */
-	LinkedListPointer() noexcept
+	LinkedListPointer() JUCE_NOEXCEPT
 		: item (nullptr)
 	{
 	}
 
 	/** Creates a pointer to a list whose head is the item provided. */
-	explicit LinkedListPointer (ObjectType* const headItem) noexcept
+	explicit LinkedListPointer (ObjectType* const headItem) JUCE_NOEXCEPT
 		: item (headItem)
 	{
 	}
 
 	/** Sets this pointer to point to a new list. */
-	LinkedListPointer& operator= (ObjectType* const newItem) noexcept
+	LinkedListPointer& operator= (ObjectType* const newItem) JUCE_NOEXCEPT
 	{
 		item = newItem;
 		return *this;
 	}
 
    #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
-	LinkedListPointer (LinkedListPointer&& other) noexcept
+	LinkedListPointer (LinkedListPointer&& other) JUCE_NOEXCEPT
 		: item (other.item)
 	{
 		other.item = nullptr;
 	}
 
-	LinkedListPointer& operator= (LinkedListPointer&& other) noexcept
+	LinkedListPointer& operator= (LinkedListPointer&& other) JUCE_NOEXCEPT
 	{
 		jassert (this != &other); // hopefully the compiler should make this situation impossible!
 
@@ -8677,13 +8679,13 @@ public:
    #endif
 
 	/** Returns the item which this pointer points to. */
-	inline operator ObjectType*() const noexcept
+	inline operator ObjectType*() const JUCE_NOEXCEPT
 	{
 		return item;
 	}
 
 	/** Returns the item which this pointer points to. */
-	inline ObjectType* get() const noexcept
+	inline ObjectType* get() const JUCE_NOEXCEPT
 	{
 		return item;
 	}
@@ -8695,7 +8697,7 @@ public:
 		If you're planning on appending a number of items to your list, it's much more
 		efficient to use the Appender class than to repeatedly call getLast() to find the end.
 	*/
-	LinkedListPointer& getLast() noexcept
+	LinkedListPointer& getLast() JUCE_NOEXCEPT
 	{
 		LinkedListPointer* l = this;
 
@@ -8709,7 +8711,7 @@ public:
 		Obviously with a simple linked list, getting the size involves iterating the list, so
 		this can be a lengthy operation - be careful when using this method in your code.
 	*/
-	int size() const noexcept
+	int size() const JUCE_NOEXCEPT
 	{
 		int total = 0;
 
@@ -8723,7 +8725,7 @@ public:
 		Since the only way to find an item is to iterate the list, this operation can obviously
 		be slow, depending on its size, so you should be careful when using this in algorithms.
 	*/
-	LinkedListPointer& operator[] (int index) noexcept
+	LinkedListPointer& operator[] (int index) JUCE_NOEXCEPT
 	{
 		LinkedListPointer* l = this;
 
@@ -8737,7 +8739,7 @@ public:
 		Since the only way to find an item is to iterate the list, this operation can obviously
 		be slow, depending on its size, so you should be careful when using this in algorithms.
 	*/
-	const LinkedListPointer& operator[] (int index) const noexcept
+	const LinkedListPointer& operator[] (int index) const JUCE_NOEXCEPT
 	{
 		const LinkedListPointer* l = this;
 
@@ -8748,7 +8750,7 @@ public:
 	}
 
 	/** Returns true if the list contains the given item. */
-	bool contains (const ObjectType* const itemToLookFor) const noexcept
+	bool contains (const ObjectType* const itemToLookFor) const JUCE_NOEXCEPT
 	{
 		for (ObjectType* i = item; i != nullptr; i = i->nextListItem)
 			if (itemToLookFor == i)
@@ -8789,7 +8791,7 @@ public:
 	/** Replaces the object that this pointer points to, appending the rest of the list to
 		the new object, and returning the old one.
 	*/
-	ObjectType* replaceNext (ObjectType* const newItem) noexcept
+	ObjectType* replaceNext (ObjectType* const newItem) JUCE_NOEXCEPT
 	{
 		jassert (newItem != nullptr);
 		jassert (newItem->nextListItem == nullptr);
@@ -8831,7 +8833,7 @@ public:
 		This won't delete the object that is removed, but returns it, so the caller can
 		delete it if necessary.
 	*/
-	ObjectType* removeNext() noexcept
+	ObjectType* removeNext() JUCE_NOEXCEPT
 	{
 		ObjectType* const oldItem = item;
 
@@ -8872,7 +8874,7 @@ public:
 		If the item is found in the list, this returns the pointer that points to it. If
 		the item isn't found, this returns null.
 	*/
-	LinkedListPointer* findPointerTo (ObjectType* const itemToLookFor) noexcept
+	LinkedListPointer* findPointerTo (ObjectType* const itemToLookFor) JUCE_NOEXCEPT
 	{
 		LinkedListPointer* l = this;
 
@@ -8891,7 +8893,7 @@ public:
 		The destArray must contain enough elements to hold the entire list - no checks are
 		made for this!
 	*/
-	void copyToArray (ObjectType** destArray) const noexcept
+	void copyToArray (ObjectType** destArray) const JUCE_NOEXCEPT
 	{
 		jassert (destArray != nullptr);
 
@@ -8900,7 +8902,7 @@ public:
 	}
 
 	/** Swaps this pointer with another one */
-	void swapWith (LinkedListPointer& other) noexcept
+	void swapWith (LinkedListPointer& other) JUCE_NOEXCEPT
 	{
 		std::swap (item, other.item);
 	}
@@ -8917,7 +8919,7 @@ public:
 	public:
 		/** Creates an appender which will add items to the given list.
 		*/
-		Appender (LinkedListPointer& endOfListPointer) noexcept
+		Appender (LinkedListPointer& endOfListPointer) JUCE_NOEXCEPT
 			: endOfList (&endOfListPointer)
 		{
 			// This can only be used to add to the end of a list.
@@ -8925,7 +8927,7 @@ public:
 		}
 
 		/** Appends an item to the list. */
-		void append (ObjectType* const newItem) noexcept
+		void append (ObjectType* const newItem) JUCE_NOEXCEPT
 		{
 			*endOfList = newItem;
 			endOfList = &(newItem->nextListItem);
@@ -8962,7 +8964,7 @@ class JUCE_API  NamedValueSet
 {
 public:
 	/** Creates an empty set. */
-	NamedValueSet() noexcept;
+	NamedValueSet() JUCE_NOEXCEPT;
 
 	/** Creates a copy of another set. */
 	NamedValueSet (const NamedValueSet& other);
@@ -8971,8 +8973,8 @@ public:
 	NamedValueSet& operator= (const NamedValueSet& other);
 
    #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
-	NamedValueSet (NamedValueSet&& other) noexcept;
-	NamedValueSet& operator= (NamedValueSet&& other) noexcept;
+	NamedValueSet (NamedValueSet&& other) JUCE_NOEXCEPT;
+	NamedValueSet& operator= (NamedValueSet&& other) JUCE_NOEXCEPT;
    #endif
 
 	/** Destructor. */
@@ -8982,7 +8984,7 @@ public:
 	bool operator!= (const NamedValueSet& other) const;
 
 	/** Returns the total number of values that the set contains. */
-	int size() const noexcept;
+	int size() const JUCE_NOEXCEPT;
 
 	/** Returns the value of a named item.
 		If the name isn't found, this will return a void variant.
@@ -9037,7 +9039,7 @@ public:
 		Do not use this method unless you really need access to the internal var object
 		for some reason - for normal reading and writing always prefer operator[]() and set().
 	*/
-	var* getVarPointer (const Identifier& name) const noexcept;
+	var* getVarPointer (const Identifier& name) const JUCE_NOEXCEPT;
 
 	/** Sets properties to the values of all of an XML element's attributes. */
 	void setFromXmlAttributes (const XmlElement& xml);
@@ -9052,16 +9054,16 @@ private:
 	class NamedValue
 	{
 	public:
-		NamedValue() noexcept;
+		NamedValue() JUCE_NOEXCEPT;
 		NamedValue (const NamedValue&);
 		NamedValue (const Identifier& name, const var& value);
 		NamedValue& operator= (const NamedValue&);
 	   #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
-		NamedValue (NamedValue&&) noexcept;
+		NamedValue (NamedValue&&) JUCE_NOEXCEPT;
 		NamedValue (const Identifier& name, var&& value);
-		NamedValue& operator= (NamedValue&&) noexcept;
+		NamedValue& operator= (NamedValue&&) JUCE_NOEXCEPT;
 	   #endif
-		bool operator== (const NamedValue& other) const noexcept;
+		bool operator== (const NamedValue& other) const JUCE_NOEXCEPT;
 
 		LinkedListPointer<NamedValue> nextListItem;
 		Identifier name;
@@ -9126,7 +9128,7 @@ public:
 		This is done automatically by the smart pointer, but is public just
 		in case it's needed for nefarious purposes.
 	*/
-	inline void incReferenceCount() noexcept
+	inline void incReferenceCount() JUCE_NOEXCEPT
 	{
 		++refCount;
 	}
@@ -9135,7 +9137,7 @@ public:
 
 		If the count gets to zero, the object will be deleted.
 	*/
-	inline void decReferenceCount() noexcept
+	inline void decReferenceCount() JUCE_NOEXCEPT
 	{
 		jassert (getReferenceCount() > 0);
 
@@ -9144,7 +9146,7 @@ public:
 	}
 
 	/** Returns the object's current reference count. */
-	inline int getReferenceCount() const noexcept       { return refCount.get(); }
+	inline int getReferenceCount() const JUCE_NOEXCEPT       { return refCount.get(); }
 
 protected:
 
@@ -9163,7 +9165,7 @@ protected:
 	/** Resets the reference count to zero without deleting the object.
 		You should probably never need to use this!
 	*/
-	void resetReferenceCount() noexcept
+	void resetReferenceCount() JUCE_NOEXCEPT
 	{
 		refCount = 0;
 	}
@@ -9192,7 +9194,7 @@ public:
 		This is done automatically by the smart pointer, but is public just
 		in case it's needed for nefarious purposes.
 	*/
-	inline void incReferenceCount() noexcept
+	inline void incReferenceCount() JUCE_NOEXCEPT
 	{
 		++refCount;
 	}
@@ -9201,7 +9203,7 @@ public:
 
 		If the count gets to zero, the object will be deleted.
 	*/
-	inline void decReferenceCount() noexcept
+	inline void decReferenceCount() JUCE_NOEXCEPT
 	{
 		jassert (getReferenceCount() > 0);
 
@@ -9210,7 +9212,7 @@ public:
 	}
 
 	/** Returns the object's current reference count. */
-	inline int getReferenceCount() const noexcept       { return refCount; }
+	inline int getReferenceCount() const JUCE_NOEXCEPT       { return refCount; }
 
 protected:
 
@@ -9251,7 +9253,7 @@ public:
 	typedef ReferenceCountedObjectClass ReferencedType;
 
 	/** Creates a pointer to a null object. */
-	inline ReferenceCountedObjectPtr() noexcept
+	inline ReferenceCountedObjectPtr() JUCE_NOEXCEPT
 		: referencedObject (nullptr)
 	{
 	}
@@ -9260,7 +9262,7 @@ public:
 
 		This will increment the object's reference-count if it is non-null.
 	*/
-	inline ReferenceCountedObjectPtr (ReferenceCountedObjectClass* const refCountedObject) noexcept
+	inline ReferenceCountedObjectPtr (ReferenceCountedObjectClass* const refCountedObject) JUCE_NOEXCEPT
 		: referencedObject (refCountedObject)
 	{
 		if (refCountedObject != nullptr)
@@ -9270,7 +9272,7 @@ public:
 	/** Copies another pointer.
 		This will increment the object's reference-count (if it is non-null).
 	*/
-	inline ReferenceCountedObjectPtr (const ReferenceCountedObjectPtr& other) noexcept
+	inline ReferenceCountedObjectPtr (const ReferenceCountedObjectPtr& other) JUCE_NOEXCEPT
 		: referencedObject (other.referencedObject)
 	{
 		if (referencedObject != nullptr)
@@ -9279,7 +9281,7 @@ public:
 
    #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
 	/** Takes-over the object from another pointer. */
-	inline ReferenceCountedObjectPtr (ReferenceCountedObjectPtr&& other) noexcept
+	inline ReferenceCountedObjectPtr (ReferenceCountedObjectPtr&& other) JUCE_NOEXCEPT
 		: referencedObject (other.referencedObject)
 	{
 		other.referencedObject = nullptr;
@@ -9290,7 +9292,7 @@ public:
 		This will increment the object's reference-count (if it is non-null).
 	*/
 	template <class DerivedClass>
-	inline ReferenceCountedObjectPtr (const ReferenceCountedObjectPtr<DerivedClass>& other) noexcept
+	inline ReferenceCountedObjectPtr (const ReferenceCountedObjectPtr<DerivedClass>& other) JUCE_NOEXCEPT
 		: referencedObject (static_cast <ReferenceCountedObjectClass*> (other.getObject()))
 	{
 		if (referencedObject != nullptr)
@@ -9363,13 +9365,13 @@ public:
 	/** Returns the object that this pointer references.
 		The pointer returned may be zero, of course.
 	*/
-	inline operator ReferenceCountedObjectClass*() const noexcept
+	inline operator ReferenceCountedObjectClass*() const JUCE_NOEXCEPT
 	{
 		return referencedObject;
 	}
 
 	// the -> operator is called on the referenced object
-	inline ReferenceCountedObjectClass* operator->() const noexcept
+	inline ReferenceCountedObjectClass* operator->() const JUCE_NOEXCEPT
 	{
 		return referencedObject;
 	}
@@ -9377,7 +9379,7 @@ public:
 	/** Returns the object that this pointer references.
 		The pointer returned may be zero, of course.
 	*/
-	inline ReferenceCountedObjectClass* getObject() const noexcept
+	inline ReferenceCountedObjectClass* getObject() const JUCE_NOEXCEPT
 	{
 		return referencedObject;
 	}
@@ -9389,42 +9391,42 @@ private:
 
 /** Compares two ReferenceCountedObjectPointers. */
 template <class ReferenceCountedObjectClass>
-bool operator== (const ReferenceCountedObjectPtr<ReferenceCountedObjectClass>& object1, ReferenceCountedObjectClass* const object2) noexcept
+bool operator== (const ReferenceCountedObjectPtr<ReferenceCountedObjectClass>& object1, ReferenceCountedObjectClass* const object2) JUCE_NOEXCEPT
 {
 	return object1.getObject() == object2;
 }
 
 /** Compares two ReferenceCountedObjectPointers. */
 template <class ReferenceCountedObjectClass>
-bool operator== (const ReferenceCountedObjectPtr<ReferenceCountedObjectClass>& object1, const ReferenceCountedObjectPtr<ReferenceCountedObjectClass>& object2) noexcept
+bool operator== (const ReferenceCountedObjectPtr<ReferenceCountedObjectClass>& object1, const ReferenceCountedObjectPtr<ReferenceCountedObjectClass>& object2) JUCE_NOEXCEPT
 {
 	return object1.getObject() == object2.getObject();
 }
 
 /** Compares two ReferenceCountedObjectPointers. */
 template <class ReferenceCountedObjectClass>
-bool operator== (ReferenceCountedObjectClass* object1, ReferenceCountedObjectPtr<ReferenceCountedObjectClass>& object2) noexcept
+bool operator== (ReferenceCountedObjectClass* object1, ReferenceCountedObjectPtr<ReferenceCountedObjectClass>& object2) JUCE_NOEXCEPT
 {
 	return object1 == object2.getObject();
 }
 
 /** Compares two ReferenceCountedObjectPointers. */
 template <class ReferenceCountedObjectClass>
-bool operator!= (const ReferenceCountedObjectPtr<ReferenceCountedObjectClass>& object1, const ReferenceCountedObjectClass* object2) noexcept
+bool operator!= (const ReferenceCountedObjectPtr<ReferenceCountedObjectClass>& object1, const ReferenceCountedObjectClass* object2) JUCE_NOEXCEPT
 {
 	return object1.getObject() != object2;
 }
 
 /** Compares two ReferenceCountedObjectPointers. */
 template <class ReferenceCountedObjectClass>
-bool operator!= (const ReferenceCountedObjectPtr<ReferenceCountedObjectClass>& object1, ReferenceCountedObjectPtr<ReferenceCountedObjectClass>& object2) noexcept
+bool operator!= (const ReferenceCountedObjectPtr<ReferenceCountedObjectClass>& object1, ReferenceCountedObjectPtr<ReferenceCountedObjectClass>& object2) JUCE_NOEXCEPT
 {
 	return object1.getObject() != object2.getObject();
 }
 
 /** Compares two ReferenceCountedObjectPointers. */
 template <class ReferenceCountedObjectClass>
-bool operator!= (ReferenceCountedObjectClass* object1, ReferenceCountedObjectPtr<ReferenceCountedObjectClass>& object2) noexcept
+bool operator!= (ReferenceCountedObjectClass* object1, ReferenceCountedObjectPtr<ReferenceCountedObjectClass>& object2) JUCE_NOEXCEPT
 {
 	return object1 != object2.getObject();
 }
@@ -9507,7 +9509,7 @@ public:
 	void clear();
 
 	/** Returns the NamedValueSet that holds the object's properties. */
-	NamedValueSet& getProperties() noexcept     { return properties; }
+	NamedValueSet& getProperties() JUCE_NOEXCEPT     { return properties; }
 
 private:
 
@@ -9562,7 +9564,7 @@ class OwnedArray
 public:
 
 	/** Creates an empty array. */
-	OwnedArray() noexcept
+	OwnedArray() JUCE_NOEXCEPT
 		: numUsed (0)
 	{
 	}
@@ -9578,14 +9580,14 @@ public:
 	}
 
    #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
-	OwnedArray (OwnedArray&& other) noexcept
+	OwnedArray (OwnedArray&& other) JUCE_NOEXCEPT
 		: data (static_cast <ArrayAllocationBase <ObjectClass*, TypeOfCriticalSectionToUse>&&> (other.data)),
 		  numUsed (other.numUsed)
 	{
 		other.numUsed = 0;
 	}
 
-	OwnedArray& operator= (OwnedArray&& other) noexcept
+	OwnedArray& operator= (OwnedArray&& other) JUCE_NOEXCEPT
 	{
 		data = static_cast <ArrayAllocationBase <ObjectClass*, TypeOfCriticalSectionToUse>&&> (other.data);
 		numUsed = other.numUsed;
@@ -9612,7 +9614,7 @@ public:
 	/** Returns the number of items currently in the array.
 		@see operator[]
 	*/
-	inline int size() const noexcept
+	inline int size() const JUCE_NOEXCEPT
 	{
 		return numUsed;
 	}
@@ -9625,7 +9627,7 @@ public:
 
 		@see getUnchecked
 	*/
-	inline ObjectClass* operator[] (const int index) const noexcept
+	inline ObjectClass* operator[] (const int index) const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		return isPositiveAndBelow (index, numUsed) ? data.elements [index]
@@ -9637,7 +9639,7 @@ public:
 		This is a faster and less safe version of operator[] which doesn't check the index passed in, so
 		it can be used when you're sure the index if always going to be legal.
 	*/
-	inline ObjectClass* getUnchecked (const int index) const noexcept
+	inline ObjectClass* getUnchecked (const int index) const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		jassert (isPositiveAndBelow (index, numUsed));
@@ -9649,7 +9651,7 @@ public:
 		This will return a null pointer if the array's empty.
 		@see getLast
 	*/
-	inline ObjectClass* getFirst() const noexcept
+	inline ObjectClass* getFirst() const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		return numUsed > 0 ? data.elements [0]
@@ -9661,7 +9663,7 @@ public:
 		This will return a null pointer if the array's empty.
 		@see getFirst
 	*/
-	inline ObjectClass* getLast() const noexcept
+	inline ObjectClass* getLast() const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		return numUsed > 0 ? data.elements [numUsed - 1]
@@ -9672,7 +9674,7 @@ public:
 		This pointer will only be valid until the next time a non-const method
 		is called on the array.
 	*/
-	inline ObjectClass** getRawDataPointer() noexcept
+	inline ObjectClass** getRawDataPointer() JUCE_NOEXCEPT
 	{
 		return data.elements;
 	}
@@ -9680,7 +9682,7 @@ public:
 	/** Returns a pointer to the first element in the array.
 		This method is provided for compatibility with standard C++ iteration mechanisms.
 	*/
-	inline ObjectClass** begin() const noexcept
+	inline ObjectClass** begin() const JUCE_NOEXCEPT
 	{
 		return data.elements;
 	}
@@ -9688,7 +9690,7 @@ public:
 	/** Returns a pointer to the element which follows the last element in the array.
 		This method is provided for compatibility with standard C++ iteration mechanisms.
 	*/
-	inline ObjectClass** end() const noexcept
+	inline ObjectClass** end() const JUCE_NOEXCEPT
 	{
 		return data.elements + numUsed;
 	}
@@ -9698,7 +9700,7 @@ public:
 		@param objectToLookFor    the object to look for
 		@returns                  the index at which the object was found, or -1 if it's not found
 	*/
-	int indexOf (const ObjectClass* const objectToLookFor) const noexcept
+	int indexOf (const ObjectClass* const objectToLookFor) const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		ObjectClass* const* e = data.elements.getData();
@@ -9716,7 +9718,7 @@ public:
 		@param objectToLookFor      the object to look for
 		@returns                    true if the object is in the array
 	*/
-	bool contains (const ObjectClass* const objectToLookFor) const noexcept
+	bool contains (const ObjectClass* const objectToLookFor) const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		ObjectClass* const* e = data.elements.getData();
@@ -9740,7 +9742,7 @@ public:
 		@param newObject       the new object to add to the array
 		@see set, insert, addIfNotAlreadyThere, addSorted
 	*/
-	void add (const ObjectClass* const newObject) noexcept
+	void add (const ObjectClass* const newObject) JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		data.ensureAllocatedSize (numUsed + 1);
@@ -9765,7 +9767,7 @@ public:
 		@see add, addSorted, addIfNotAlreadyThere, set
 	*/
 	void insert (int indexToInsertAt,
-				 const ObjectClass* const newObject) noexcept
+				 const ObjectClass* const newObject) JUCE_NOEXCEPT
 	{
 		if (indexToInsertAt >= 0)
 		{
@@ -9798,7 +9800,7 @@ public:
 
 		@param newObject   the new object to add to the array
 	*/
-	void addIfNotAlreadyThere (const ObjectClass* const newObject) noexcept
+	void addIfNotAlreadyThere (const ObjectClass* const newObject) JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 
@@ -9948,7 +9950,7 @@ public:
 		@see add, sort, indexOfSorted
 	*/
 	template <class ElementComparator>
-	int addSorted (ElementComparator& comparator, ObjectClass* const newObject) noexcept
+	int addSorted (ElementComparator& comparator, ObjectClass* const newObject) JUCE_NOEXCEPT
 	{
 		(void) comparator;  // if you pass in an object with a static compareElements() method, this
 							// avoids getting warning messages about the parameter being unused
@@ -9972,7 +9974,7 @@ public:
 	*/
 	template <class ElementComparator>
 	int indexOfSorted (ElementComparator& comparator,
-					   const ObjectClass* const objectToLookFor) const noexcept
+					   const ObjectClass* const objectToLookFor) const JUCE_NOEXCEPT
 	{
 		(void) comparator;  // if you pass in an object with a static compareElements() method, this
 							// avoids getting warning messages about the parameter being unused
@@ -10173,7 +10175,7 @@ public:
 		otherwise the two objects at these positions will be exchanged.
 	*/
 	void swap (const int index1,
-			   const int index2) noexcept
+			   const int index2) JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 
@@ -10199,7 +10201,7 @@ public:
 								is less than zero, it will be moved to the end of the array
 	*/
 	void move (const int currentIndex,
-			   int newIndex) noexcept
+			   int newIndex) JUCE_NOEXCEPT
 	{
 		if (currentIndex != newIndex)
 		{
@@ -10235,7 +10237,7 @@ public:
 		If you need to exchange two arrays, this is vastly quicker than using copy-by-value
 		because it just swaps their internal pointers.
 	*/
-	void swapWithArray (OwnedArray& otherArray) noexcept
+	void swapWithArray (OwnedArray& otherArray) JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock1 (getLock());
 		const ScopedLockType lock2 (otherArray.getLock());
@@ -10250,7 +10252,7 @@ public:
 		removing elements, they may have quite a lot of unused space allocated.
 		This method will reduce the amount of allocated storage to a minimum.
 	*/
-	void minimiseStorageOverheads() noexcept
+	void minimiseStorageOverheads() JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		data.shrinkToNoMoreThan (numUsed);
@@ -10262,7 +10264,7 @@ public:
 		the array won't have to keep dynamically resizing itself as the elements
 		are added, and it'll therefore be more efficient.
 	*/
-	void ensureStorageAllocated (const int minNumElements) noexcept
+	void ensureStorageAllocated (const int minNumElements) JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		data.ensureAllocatedSize (minNumElements);
@@ -10295,7 +10297,7 @@ public:
 	*/
 	template <class ElementComparator>
 	void sort (ElementComparator& comparator,
-			   const bool retainOrderOfEquivalentItems = false) const noexcept
+			   const bool retainOrderOfEquivalentItems = false) const JUCE_NOEXCEPT
 	{
 		(void) comparator;  // if you pass in an object with a static compareElements() method, this
 							// avoids getting warning messages about the parameter being unused
@@ -10308,7 +10310,7 @@ public:
 		To lock, you can call getLock().enter() and getLock().exit(), or preferably use
 		an object of ScopedLockType as an RAII lock for it.
 	*/
-	inline const TypeOfCriticalSectionToUse& getLock() const noexcept      { return data; }
+	inline const TypeOfCriticalSectionToUse& getLock() const JUCE_NOEXCEPT      { return data; }
 
 	/** Returns the type of scoped lock to use for locking this array */
 	typedef typename TypeOfCriticalSectionToUse::ScopedLockType ScopedLockType;
@@ -10368,12 +10370,12 @@ class ScopedPointer
 public:
 
 	/** Creates a ScopedPointer containing a null pointer. */
-	inline ScopedPointer() noexcept   : object (nullptr)
+	inline ScopedPointer() JUCE_NOEXCEPT   : object (nullptr)
 	{
 	}
 
 	/** Creates a ScopedPointer that owns the specified object. */
-	inline ScopedPointer (ObjectType* const objectToTakePossessionOf) noexcept
+	inline ScopedPointer (ObjectType* const objectToTakePossessionOf) JUCE_NOEXCEPT
 		: object (objectToTakePossessionOf)
 	{
 	}
@@ -10384,7 +10386,7 @@ public:
 		the pointer from the other object to this one, and the other object is reset to
 		be a null pointer.
 	*/
-	ScopedPointer (ScopedPointer& objectToTransferFrom) noexcept
+	ScopedPointer (ScopedPointer& objectToTransferFrom) JUCE_NOEXCEPT
 		: object (objectToTransferFrom.object)
 	{
 		objectToTransferFrom.object = nullptr;
@@ -10441,26 +10443,26 @@ public:
 	}
 
 	/** Returns the object that this ScopedPointer refers to. */
-	inline operator ObjectType*() const noexcept                                    { return object; }
+	inline operator ObjectType*() const JUCE_NOEXCEPT                                    { return object; }
 
 	/** Returns the object that this ScopedPointer refers to. */
-	inline ObjectType* get() const noexcept                                         { return object; }
+	inline ObjectType* get() const JUCE_NOEXCEPT                                         { return object; }
 
 	/** Returns the object that this ScopedPointer refers to. */
-	inline ObjectType& operator*() const noexcept                                   { return *object; }
+	inline ObjectType& operator*() const JUCE_NOEXCEPT                                   { return *object; }
 
 	/** Lets you access methods and properties of the object that this ScopedPointer refers to. */
-	inline ObjectType* operator->() const noexcept                                  { return object; }
+	inline ObjectType* operator->() const JUCE_NOEXCEPT                                  { return object; }
 
 	/** Removes the current object from this ScopedPointer without deleting it.
 		This will return the current object, and set the ScopedPointer to a null pointer.
 	*/
-	ObjectType* release() noexcept                                                  { ObjectType* const o = object; object = nullptr; return o; }
+	ObjectType* release() JUCE_NOEXCEPT                                                  { ObjectType* const o = object; object = nullptr; return o; }
 
 	/** Swaps this object with that of another ScopedPointer.
 		The two objects simply exchange their pointers.
 	*/
-	void swapWith (ScopedPointer <ObjectType>& other) noexcept
+	void swapWith (ScopedPointer <ObjectType>& other) JUCE_NOEXCEPT
 	{
 		// Two ScopedPointers should never be able to refer to the same object - if
 		// this happens, you must have done something dodgy!
@@ -10479,7 +10481,7 @@ private:
 	ObjectType* object;
 
 	// (Required as an alternative to the overloaded & operator).
-	const ScopedPointer* getAddress() const noexcept                                { return this; }
+	const ScopedPointer* getAddress() const JUCE_NOEXCEPT                                { return this; }
 
   #if ! JUCE_MSVC  // (MSVC can't deal with multiple copy constructors)
 	/* These are private to stop people accidentally copying a const ScopedPointer (the compiler
@@ -10508,7 +10510,7 @@ private:
 	This can be handy for checking whether this is a null pointer.
 */
 template <class ObjectType>
-bool operator== (const ScopedPointer<ObjectType>& pointer1, ObjectType* const pointer2) noexcept
+bool operator== (const ScopedPointer<ObjectType>& pointer1, ObjectType* const pointer2) JUCE_NOEXCEPT
 {
 	return static_cast <ObjectType*> (pointer1) == pointer2;
 }
@@ -10517,7 +10519,7 @@ bool operator== (const ScopedPointer<ObjectType>& pointer1, ObjectType* const po
 	This can be handy for checking whether this is a null pointer.
 */
 template <class ObjectType>
-bool operator!= (const ScopedPointer<ObjectType>& pointer1, ObjectType* const pointer2) noexcept
+bool operator!= (const ScopedPointer<ObjectType>& pointer1, ObjectType* const pointer2) JUCE_NOEXCEPT
 {
 	return static_cast <ObjectType*> (pointer1) != pointer2;
 }
@@ -10535,11 +10537,11 @@ class DefaultHashFunctions
 {
 public:
 	/** Generates a simple hash from an integer. */
-	static int generateHash (const int key, const int upperLimit) noexcept        { return std::abs (key) % upperLimit; }
+	static int generateHash (const int key, const int upperLimit) JUCE_NOEXCEPT        { return std::abs (key) % upperLimit; }
 	/** Generates a simple hash from a string. */
-	static int generateHash (const String& key, const int upperLimit) noexcept    { return (int) (((uint32) key.hashCode()) % upperLimit); }
+	static int generateHash (const String& key, const int upperLimit) JUCE_NOEXCEPT    { return (int) (((uint32) key.hashCode()) % upperLimit); }
 	/** Generates a simple hash from a variant. */
-	static int generateHash (const var& key, const int upperLimit) noexcept       { return generateHash (key.toString(), upperLimit); }
+	static int generateHash (const var& key, const int upperLimit) JUCE_NOEXCEPT       { return generateHash (key.toString(), upperLimit); }
 };
 
 /**
@@ -10637,7 +10639,7 @@ public:
 	}
 
 	/** Returns the current number of items in the map. */
-	inline int size() const noexcept
+	inline int size() const JUCE_NOEXCEPT
 	{
 		return totalNumItems;
 	}
@@ -10793,13 +10795,13 @@ public:
 		Each slot corresponds to a single hash-code, and each one can contain multiple items.
 		@see getNumSlots()
 	*/
-	inline int getNumSlots() const noexcept
+	inline int getNumSlots() const JUCE_NOEXCEPT
 	{
 		return slots.size();
 	}
 
 	/** Efficiently swaps the contents of two hash-maps. */
-	void swapWith (HashMap& otherHashMap) noexcept
+	void swapWith (HashMap& otherHashMap) JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock1 (getLock());
 		const ScopedLockType lock2 (otherHashMap.getLock());
@@ -10812,7 +10814,7 @@ public:
 		To lock, you can call getLock().enter() and getLock().exit(), or preferably use
 		an object of ScopedLockType as an RAII lock for it.
 	*/
-	inline const TypeOfCriticalSectionToUse& getLock() const noexcept      { return lock; }
+	inline const TypeOfCriticalSectionToUse& getLock() const JUCE_NOEXCEPT      { return lock; }
 
 	/** Returns the type of scoped lock to use for locking this array */
 	typedef typename TypeOfCriticalSectionToUse::ScopedLockType ScopedLockType;
@@ -10970,13 +10972,13 @@ class JUCE_API  StringArray
 public:
 
 	/** Creates an empty string array */
-	StringArray() noexcept;
+	StringArray() JUCE_NOEXCEPT;
 
 	/** Creates a copy of another string array */
 	StringArray (const StringArray& other);
 
    #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
-	StringArray (StringArray&& other) noexcept;
+	StringArray (StringArray&& other) JUCE_NOEXCEPT;
    #endif
 
 	/** Creates an array containing a single string. */
@@ -11016,23 +11018,23 @@ public:
 	StringArray& operator= (const StringArray& other);
 
    #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
-	StringArray& operator= (StringArray&& other) noexcept;
+	StringArray& operator= (StringArray&& other) JUCE_NOEXCEPT;
    #endif
 
 	/** Compares two arrays.
 		Comparisons are case-sensitive.
 		@returns    true only if the other array contains exactly the same strings in the same order
 	*/
-	bool operator== (const StringArray& other) const noexcept;
+	bool operator== (const StringArray& other) const JUCE_NOEXCEPT;
 
 	/** Compares two arrays.
 		Comparisons are case-sensitive.
 		@returns    false if the other array contains exactly the same strings in the same order
 	*/
-	bool operator!= (const StringArray& other) const noexcept;
+	bool operator!= (const StringArray& other) const JUCE_NOEXCEPT;
 
 	/** Returns the number of strings in the array */
-	inline int size() const noexcept                                    { return strings.size(); };
+	inline int size() const JUCE_NOEXCEPT                                    { return strings.size(); };
 
 	/** Returns one of the strings from the array.
 
@@ -11041,13 +11043,13 @@ public:
 		Obviously the reference returned shouldn't be stored for later use, as the
 		string it refers to may disappear when the array changes.
 	*/
-	const String& operator[] (int index) const noexcept;
+	const String& operator[] (int index) const JUCE_NOEXCEPT;
 
 	/** Returns a reference to one of the strings in the array.
 		This lets you modify a string in-place in the array, but you must be sure that
 		the index is in-range.
 	*/
-	String& getReference (int index) noexcept;
+	String& getReference (int index) JUCE_NOEXCEPT;
 
 	/** Searches for a string in the array.
 
@@ -11203,7 +11205,7 @@ public:
 								is less than zero, the value will be moved to the end
 								of the array
 	*/
-	void move (int currentIndex, int newIndex) noexcept;
+	void move (int currentIndex, int newIndex) JUCE_NOEXCEPT;
 
 	/** Deletes any whitespace characters from the starts and ends of all the strings. */
 	void trim();
@@ -11324,13 +11326,13 @@ public:
 	String getValue (const String& key, const String& defaultReturnValue) const;
 
 	/** Returns a list of all keys in the array. */
-	const StringArray& getAllKeys() const noexcept          { return keys; }
+	const StringArray& getAllKeys() const JUCE_NOEXCEPT          { return keys; }
 
 	/** Returns a list of all values in the array. */
-	const StringArray& getAllValues() const noexcept        { return values; }
+	const StringArray& getAllValues() const JUCE_NOEXCEPT        { return values; }
 
 	/** Returns the number of strings in the array */
-	inline int size() const noexcept                        { return keys.size(); };
+	inline int size() const JUCE_NOEXCEPT                        { return keys.size(); };
 
 	/** Adds or amends a key/value pair.
 
@@ -11425,76 +11427,76 @@ public:
 		@param seconds  the number of seconds, which may be +ve or -ve.
 		@see milliseconds, minutes, hours, days, weeks
 	*/
-	explicit RelativeTime (double seconds = 0.0) noexcept;
+	explicit RelativeTime (double seconds = 0.0) JUCE_NOEXCEPT;
 
 	/** Copies another relative time. */
-	RelativeTime (const RelativeTime& other) noexcept;
+	RelativeTime (const RelativeTime& other) JUCE_NOEXCEPT;
 
 	/** Copies another relative time. */
-	RelativeTime& operator= (const RelativeTime& other) noexcept;
+	RelativeTime& operator= (const RelativeTime& other) JUCE_NOEXCEPT;
 
 	/** Destructor. */
-	~RelativeTime() noexcept;
+	~RelativeTime() JUCE_NOEXCEPT;
 
 	/** Creates a new RelativeTime object representing a number of milliseconds.
 		@see minutes, hours, days, weeks
 	*/
-	static const RelativeTime milliseconds (int milliseconds) noexcept;
+	static const RelativeTime milliseconds (int milliseconds) JUCE_NOEXCEPT;
 
 	/** Creates a new RelativeTime object representing a number of milliseconds.
 		@see minutes, hours, days, weeks
 	*/
-	static const RelativeTime milliseconds (int64 milliseconds) noexcept;
+	static const RelativeTime milliseconds (int64 milliseconds) JUCE_NOEXCEPT;
 
 	/** Creates a new RelativeTime object representing a number of minutes.
 		@see milliseconds, hours, days, weeks
 	*/
-	static const RelativeTime minutes (double numberOfMinutes) noexcept;
+	static const RelativeTime minutes (double numberOfMinutes) JUCE_NOEXCEPT;
 
 	/** Creates a new RelativeTime object representing a number of hours.
 		@see milliseconds, minutes, days, weeks
 	*/
-	static const RelativeTime hours (double numberOfHours) noexcept;
+	static const RelativeTime hours (double numberOfHours) JUCE_NOEXCEPT;
 
 	/** Creates a new RelativeTime object representing a number of days.
 		@see milliseconds, minutes, hours, weeks
 	*/
-	static const RelativeTime days (double numberOfDays) noexcept;
+	static const RelativeTime days (double numberOfDays) JUCE_NOEXCEPT;
 
 	/** Creates a new RelativeTime object representing a number of weeks.
 		@see milliseconds, minutes, hours, days
 	*/
-	static const RelativeTime weeks (double numberOfWeeks) noexcept;
+	static const RelativeTime weeks (double numberOfWeeks) JUCE_NOEXCEPT;
 
 	/** Returns the number of milliseconds this time represents.
 		@see milliseconds, inSeconds, inMinutes, inHours, inDays, inWeeks
 	*/
-	int64 inMilliseconds() const noexcept;
+	int64 inMilliseconds() const JUCE_NOEXCEPT;
 
 	/** Returns the number of seconds this time represents.
 		@see inMilliseconds, inMinutes, inHours, inDays, inWeeks
 	*/
-	double inSeconds() const noexcept       { return seconds; }
+	double inSeconds() const JUCE_NOEXCEPT       { return seconds; }
 
 	/** Returns the number of minutes this time represents.
 		@see inMilliseconds, inSeconds, inHours, inDays, inWeeks
 	*/
-	double inMinutes() const noexcept;
+	double inMinutes() const JUCE_NOEXCEPT;
 
 	/** Returns the number of hours this time represents.
 		@see inMilliseconds, inSeconds, inMinutes, inDays, inWeeks
 	*/
-	double inHours() const noexcept;
+	double inHours() const JUCE_NOEXCEPT;
 
 	/** Returns the number of days this time represents.
 		@see inMilliseconds, inSeconds, inMinutes, inHours, inWeeks
 	*/
-	double inDays() const noexcept;
+	double inDays() const JUCE_NOEXCEPT;
 
 	/** Returns the number of weeks this time represents.
 		@see inMilliseconds, inSeconds, inMinutes, inHours, inDays
 	*/
-	double inWeeks() const noexcept;
+	double inWeeks() const JUCE_NOEXCEPT;
 
 	/** Returns a readable textual description of the time.
 
@@ -11514,14 +11516,14 @@ public:
 	String getDescription (const String& returnValueForZeroTime = "0") const;
 
 	/** Adds another RelativeTime to this one. */
-	const RelativeTime& operator+= (const RelativeTime& timeToAdd) noexcept;
+	const RelativeTime& operator+= (const RelativeTime& timeToAdd) JUCE_NOEXCEPT;
 	/** Subtracts another RelativeTime from this one. */
-	const RelativeTime& operator-= (const RelativeTime& timeToSubtract) noexcept;
+	const RelativeTime& operator-= (const RelativeTime& timeToSubtract) JUCE_NOEXCEPT;
 
 	/** Adds a number of seconds to this time. */
-	const RelativeTime& operator+= (double secondsToAdd) noexcept;
+	const RelativeTime& operator+= (double secondsToAdd) JUCE_NOEXCEPT;
 	/** Subtracts a number of seconds from this time. */
-	const RelativeTime& operator-= (double secondsToSubtract) noexcept;
+	const RelativeTime& operator-= (double secondsToSubtract) JUCE_NOEXCEPT;
 
 private:
 
@@ -11529,22 +11531,22 @@ private:
 };
 
 /** Compares two RelativeTimes. */
-bool operator== (const RelativeTime& t1, const RelativeTime& t2) noexcept;
+bool operator== (const RelativeTime& t1, const RelativeTime& t2) JUCE_NOEXCEPT;
 /** Compares two RelativeTimes. */
-bool operator!= (const RelativeTime& t1, const RelativeTime& t2) noexcept;
+bool operator!= (const RelativeTime& t1, const RelativeTime& t2) JUCE_NOEXCEPT;
 /** Compares two RelativeTimes. */
-bool operator>  (const RelativeTime& t1, const RelativeTime& t2) noexcept;
+bool operator>  (const RelativeTime& t1, const RelativeTime& t2) JUCE_NOEXCEPT;
 /** Compares two RelativeTimes. */
-bool operator<  (const RelativeTime& t1, const RelativeTime& t2) noexcept;
+bool operator<  (const RelativeTime& t1, const RelativeTime& t2) JUCE_NOEXCEPT;
 /** Compares two RelativeTimes. */
-bool operator>= (const RelativeTime& t1, const RelativeTime& t2) noexcept;
+bool operator>= (const RelativeTime& t1, const RelativeTime& t2) JUCE_NOEXCEPT;
 /** Compares two RelativeTimes. */
-bool operator<= (const RelativeTime& t1, const RelativeTime& t2) noexcept;
+bool operator<= (const RelativeTime& t1, const RelativeTime& t2) JUCE_NOEXCEPT;
 
 /** Adds two RelativeTimes together. */
-RelativeTime  operator+  (const RelativeTime&  t1, const RelativeTime& t2) noexcept;
+RelativeTime  operator+  (const RelativeTime&  t1, const RelativeTime& t2) JUCE_NOEXCEPT;
 /** Subtracts two RelativeTimes. */
-RelativeTime  operator-  (const RelativeTime&  t1, const RelativeTime& t2) noexcept;
+RelativeTime  operator-  (const RelativeTime&  t1, const RelativeTime& t2) JUCE_NOEXCEPT;
 
 #endif   // __JUCE_RELATIVETIME_JUCEHEADER__
 
@@ -11570,7 +11572,7 @@ public:
 
 		@see getCurrentTime
 	*/
-	Time() noexcept;
+	Time() JUCE_NOEXCEPT;
 
 	/** Creates a time based on a number of milliseconds.
 
@@ -11581,7 +11583,7 @@ public:
 										'epoch' (midnight Jan 1st 1970).
 		@see getCurrentTime, currentTimeMillis
 	*/
-	explicit Time (int64 millisecondsSinceEpoch) noexcept;
+	explicit Time (int64 millisecondsSinceEpoch) JUCE_NOEXCEPT;
 
 	/** Creates a time from a set of date components.
 
@@ -11604,22 +11606,22 @@ public:
 		  int minutes,
 		  int seconds = 0,
 		  int milliseconds = 0,
-		  bool useLocalTime = true) noexcept;
+		  bool useLocalTime = true) JUCE_NOEXCEPT;
 
 	/** Creates a copy of another Time object. */
-	Time (const Time& other) noexcept;
+	Time (const Time& other) JUCE_NOEXCEPT;
 
 	/** Destructor. */
-	~Time() noexcept;
+	~Time() JUCE_NOEXCEPT;
 
 	/** Copies this time from another one. */
-	Time& operator= (const Time& other) noexcept;
+	Time& operator= (const Time& other) JUCE_NOEXCEPT;
 
 	/** Returns a Time object that is set to the current system time.
 
 		@see currentTimeMillis
 	*/
-	static Time JUCE_CALLTYPE getCurrentTime() noexcept;
+	static Time JUCE_CALLTYPE getCurrentTime() JUCE_NOEXCEPT;
 
 	/** Returns the time as a number of milliseconds.
 
@@ -11627,20 +11629,20 @@ public:
 					midnight jan 1st 1970.
 		@see getMilliseconds
 	*/
-	int64 toMilliseconds() const noexcept                           { return millisSinceEpoch; }
+	int64 toMilliseconds() const JUCE_NOEXCEPT                           { return millisSinceEpoch; }
 
 	/** Returns the year.
 
 		A 4-digit format is used, e.g. 2004.
 	*/
-	int getYear() const noexcept;
+	int getYear() const JUCE_NOEXCEPT;
 
 	/** Returns the number of the month.
 
 		The value returned is in the range 0 to 11.
 		@see getMonthName
 	*/
-	int getMonth() const noexcept;
+	int getMonth() const JUCE_NOEXCEPT;
 
 	/** Returns the name of the month.
 
@@ -11653,17 +11655,17 @@ public:
 	/** Returns the day of the month.
 		The value returned is in the range 1 to 31.
 	*/
-	int getDayOfMonth() const noexcept;
+	int getDayOfMonth() const JUCE_NOEXCEPT;
 
 	/** Returns the number of the day of the week.
 		The value returned is in the range 0 to 6 (0 = sunday, 1 = monday, etc).
 	*/
-	int getDayOfWeek() const noexcept;
+	int getDayOfWeek() const JUCE_NOEXCEPT;
 
 	/** Returns the number of the day of the year.
 		The value returned is in the range 0 to 365.
 	*/
-	int getDayOfYear() const noexcept;
+	int getDayOfYear() const JUCE_NOEXCEPT;
 
 	/** Returns the name of the weekday.
 
@@ -11678,7 +11680,7 @@ public:
 
 		@see getHoursInAmPmFormat, isAfternoon
 	*/
-	int getHours() const noexcept;
+	int getHours() const JUCE_NOEXCEPT;
 
 	/** Returns true if the time is in the afternoon.
 
@@ -11686,7 +11688,7 @@ public:
 
 		@see getHoursInAmPmFormat, getHours
 	*/
-	bool isAfternoon() const noexcept;
+	bool isAfternoon() const JUCE_NOEXCEPT;
 
 	/** Returns the hours in 12-hour clock format.
 
@@ -11695,13 +11697,13 @@ public:
 
 		@see getHours, isAfternoon
 	*/
-	int getHoursInAmPmFormat() const noexcept;
+	int getHoursInAmPmFormat() const JUCE_NOEXCEPT;
 
 	/** Returns the number of minutes, 0 to 59. */
-	int getMinutes() const noexcept;
+	int getMinutes() const JUCE_NOEXCEPT;
 
 	/** Returns the number of seconds, 0 to 59. */
-	int getSeconds() const noexcept;
+	int getSeconds() const JUCE_NOEXCEPT;
 
 	/** Returns the number of milliseconds, 0 to 999.
 
@@ -11710,13 +11712,13 @@ public:
 
 		@see toMilliseconds
 	*/
-	int getMilliseconds() const noexcept;
+	int getMilliseconds() const JUCE_NOEXCEPT;
 
 	/** Returns true if the local timezone uses a daylight saving correction. */
-	bool isDaylightSavingTime() const noexcept;
+	bool isDaylightSavingTime() const JUCE_NOEXCEPT;
 
 	/** Returns a 3-character string to indicate the local timezone. */
-	String getTimeZone() const noexcept;
+	String getTimeZone() const JUCE_NOEXCEPT;
 
 	/** Quick way of getting a string version of a date and time.
 
@@ -11733,7 +11735,7 @@ public:
 	String toString (bool includeDate,
 					 bool includeTime,
 					 bool includeSeconds = true,
-					 bool use24HourClock = false) const noexcept;
+					 bool use24HourClock = false) const JUCE_NOEXCEPT;
 
 	/** Converts this date/time to a string with a user-defined format.
 
@@ -11807,7 +11809,7 @@ public:
 		Should be accurate to within a few millisecs, depending on platform,
 		hardware, etc.
 	*/
-	static int64 currentTimeMillis() noexcept;
+	static int64 currentTimeMillis() JUCE_NOEXCEPT;
 
 	/** Returns the number of millisecs since a fixed event (usually system startup).
 
@@ -11821,7 +11823,7 @@ public:
 
 		@see getApproximateMillisecondCounter
 	*/
-	static uint32 getMillisecondCounter() noexcept;
+	static uint32 getMillisecondCounter() JUCE_NOEXCEPT;
 
 	/** Returns the number of millisecs since a fixed event (usually system startup).
 
@@ -11830,13 +11832,13 @@ public:
 
 		@see getMillisecondCounter
 	*/
-	static double getMillisecondCounterHiRes() noexcept;
+	static double getMillisecondCounterHiRes() JUCE_NOEXCEPT;
 
 	/** Waits until the getMillisecondCounter() reaches a given value.
 
 		This will make the thread sleep as efficiently as it can while it's waiting.
 	*/
-	static void waitForMillisecondCounter (uint32 targetTime) noexcept;
+	static void waitForMillisecondCounter (uint32 targetTime) JUCE_NOEXCEPT;
 
 	/** Less-accurate but faster version of getMillisecondCounter().
 
@@ -11847,7 +11849,7 @@ public:
 
 		@see getMillisecondCounter
 	*/
-	static uint32 getApproximateMillisecondCounter() noexcept;
+	static uint32 getApproximateMillisecondCounter() JUCE_NOEXCEPT;
 
 	// High-resolution timers..
 
@@ -11859,28 +11861,28 @@ public:
 		@see getHighResolutionTicksPerSecond, highResolutionTicksToSeconds,
 			 secondsToHighResolutionTicks
 	*/
-	static int64 getHighResolutionTicks() noexcept;
+	static int64 getHighResolutionTicks() JUCE_NOEXCEPT;
 
 	/** Returns the resolution of the high-resolution counter in ticks per second.
 
 		@see getHighResolutionTicks, highResolutionTicksToSeconds,
 			 secondsToHighResolutionTicks
 	*/
-	static int64 getHighResolutionTicksPerSecond() noexcept;
+	static int64 getHighResolutionTicksPerSecond() JUCE_NOEXCEPT;
 
 	/** Converts a number of high-resolution ticks into seconds.
 
 		@see getHighResolutionTicks, getHighResolutionTicksPerSecond,
 			 secondsToHighResolutionTicks
 	*/
-	static double highResolutionTicksToSeconds (int64 ticks) noexcept;
+	static double highResolutionTicksToSeconds (int64 ticks) JUCE_NOEXCEPT;
 
 	/** Converts a number seconds into high-resolution ticks.
 
 		@see getHighResolutionTicks, getHighResolutionTicksPerSecond,
 			 highResolutionTicksToSeconds
 	*/
-	static int64 secondsToHighResolutionTicks (double seconds) noexcept;
+	static int64 secondsToHighResolutionTicks (double seconds) JUCE_NOEXCEPT;
 
 private:
 
@@ -11928,7 +11930,7 @@ class JUCE_API  MemoryBlock
 public:
 
 	/** Create an uninitialised block with 0 size. */
-	MemoryBlock() noexcept;
+	MemoryBlock() JUCE_NOEXCEPT;
 
 	/** Creates a memory block with a given initial size.
 
@@ -11949,7 +11951,7 @@ public:
 	MemoryBlock (const void* dataToInitialiseFrom, size_t sizeInBytes);
 
 	/** Destructor. */
-	~MemoryBlock() noexcept;
+	~MemoryBlock() JUCE_NOEXCEPT;
 
 	/** Copies another memory block onto this one.
 
@@ -11958,42 +11960,42 @@ public:
 	MemoryBlock& operator= (const MemoryBlock& other);
 
    #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
-	MemoryBlock (MemoryBlock&& other) noexcept;
-	MemoryBlock& operator= (MemoryBlock&& other) noexcept;
+	MemoryBlock (MemoryBlock&& other) JUCE_NOEXCEPT;
+	MemoryBlock& operator= (MemoryBlock&& other) JUCE_NOEXCEPT;
    #endif
 
 	/** Compares two memory blocks.
 
 		@returns true only if the two blocks are the same size and have identical contents.
 	*/
-	bool operator== (const MemoryBlock& other) const noexcept;
+	bool operator== (const MemoryBlock& other) const JUCE_NOEXCEPT;
 
 	/** Compares two memory blocks.
 
 		@returns true if the two blocks are different sizes or have different contents.
 	*/
-	bool operator!= (const MemoryBlock& other) const noexcept;
+	bool operator!= (const MemoryBlock& other) const JUCE_NOEXCEPT;
 
 	/** Returns true if the data in this MemoryBlock matches the raw bytes passed-in.
 	*/
-	bool matches (const void* data, size_t dataSize) const noexcept;
+	bool matches (const void* data, size_t dataSize) const JUCE_NOEXCEPT;
 
 	/** Returns a void pointer to the data.
 
 		Note that the pointer returned will probably become invalid when the
 		block is resized.
 	*/
-	void* getData() const noexcept                                  { return data; }
+	void* getData() const JUCE_NOEXCEPT                                  { return data; }
 
 	/** Returns a byte from the memory block.
 
 		This returns a reference, so you can also use it to set a byte.
 	*/
 	template <typename Type>
-	char& operator[] (const Type offset) const noexcept             { return data [offset]; }
+	char& operator[] (const Type offset) const JUCE_NOEXCEPT             { return data [offset]; }
 
 	/** Returns the block's current allocated size, in bytes. */
-	size_t getSize() const noexcept                                 { return size; }
+	size_t getSize() const JUCE_NOEXCEPT                                 { return size; }
 
 	/** Resizes the memory block.
 
@@ -12026,7 +12028,7 @@ public:
 
 		This is handy for clearing a block of memory to zero.
 	*/
-	void fillWith (uint8 valueToUse) noexcept;
+	void fillWith (uint8 valueToUse) JUCE_NOEXCEPT;
 
 	/** Adds another block of data to the end of this one.
 		The data pointer must not be null. This block's size will be increased accordingly.
@@ -12058,7 +12060,7 @@ public:
 	*/
 	void copyFrom (const void* srcData,
 				   int destinationOffset,
-				   size_t numBytes) noexcept;
+				   size_t numBytes) JUCE_NOEXCEPT;
 
 	/** Copies data from this MemoryBlock to a memory address.
 
@@ -12069,12 +12071,12 @@ public:
 	*/
 	void copyTo (void* destData,
 				 int sourceOffset,
-				 size_t numBytes) const noexcept;
+				 size_t numBytes) const JUCE_NOEXCEPT;
 
 	/** Exchanges the contents of this and another memory block.
 		No actual copying is required for this, so it's very fast.
 	*/
-	void swapWith (MemoryBlock& other) noexcept;
+	void swapWith (MemoryBlock& other) JUCE_NOEXCEPT;
 
 	/** Attempts to parse the contents of the block as a zero-terminated UTF8 string. */
 	String toString() const;
@@ -12091,11 +12093,11 @@ public:
 	/** Sets a number of bits in the memory block, treating it as a long binary sequence. */
 	void setBitRange (size_t bitRangeStart,
 					  size_t numBits,
-					  int binaryNumberToApply) noexcept;
+					  int binaryNumberToApply) JUCE_NOEXCEPT;
 
 	/** Reads a number of bits from the memory block, treating it as one long binary sequence */
 	int getBitRange (size_t bitRangeStart,
-					 size_t numBitsToRead) const noexcept;
+					 size_t numBitsToRead) const JUCE_NOEXCEPT;
 
 	/** Returns a string of characters that represent the binary contents of this block.
 
@@ -12165,53 +12167,53 @@ class JUCE_API  Result
 public:
 
 	/** Creates and returns a 'successful' result. */
-	static Result ok() noexcept;
+	static Result ok() JUCE_NOEXCEPT;
 
 	/** Creates a 'failure' result.
 		If you pass a blank error message in here, a default "Unknown Error" message
 		will be used instead.
 	*/
-	static Result fail (const String& errorMessage) noexcept;
+	static Result fail (const String& errorMessage) JUCE_NOEXCEPT;
 
 	/** Returns true if this result indicates a success. */
-	bool wasOk() const noexcept;
+	bool wasOk() const JUCE_NOEXCEPT;
 
 	/** Returns true if this result indicates a failure.
 		You can use getErrorMessage() to retrieve the error message associated
 		with the failure.
 	*/
-	bool failed() const noexcept;
+	bool failed() const JUCE_NOEXCEPT;
 
 	/** Returns true if this result indicates a success.
 		This is equivalent to calling wasOk().
 	*/
-	operator bool() const noexcept;
+	operator bool() const JUCE_NOEXCEPT;
 
 	/** Returns true if this result indicates a failure.
 		This is equivalent to calling failed().
 	*/
-	bool operator!() const noexcept;
+	bool operator!() const JUCE_NOEXCEPT;
 
 	/** Returns the error message that was set when this result was created.
 		For a successful result, this will be an empty string;
 	*/
-	const String& getErrorMessage() const noexcept;
+	const String& getErrorMessage() const JUCE_NOEXCEPT;
 
 	Result (const Result& other);
 	Result& operator= (const Result& other);
 
    #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
-	Result (Result&& other) noexcept;
-	Result& operator= (Result&& other) noexcept;
+	Result (Result&& other) JUCE_NOEXCEPT;
+	Result& operator= (Result&& other) JUCE_NOEXCEPT;
    #endif
 
-	bool operator== (const Result& other) const noexcept;
-	bool operator!= (const Result& other) const noexcept;
+	bool operator== (const Result& other) const JUCE_NOEXCEPT;
+	bool operator!= (const Result& other) const JUCE_NOEXCEPT;
 
 private:
 	String errorMessage;
 
-	explicit Result (const String& errorMessage) noexcept;
+	explicit Result (const String& errorMessage) JUCE_NOEXCEPT;
 
 	// These casts are private to prevent people trying to use the Result object in numeric contexts
 	operator int() const;
@@ -12284,8 +12286,8 @@ public:
 	File& operator= (const File& otherFile);
 
    #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
-	File (File&& otherFile) noexcept;
-	File& operator= (File&& otherFile) noexcept;
+	File (File&& otherFile) JUCE_NOEXCEPT;
+	File& operator= (File&& otherFile) JUCE_NOEXCEPT;
    #endif
 
 	/** This static constant is used for referring to an 'invalid' file. */
@@ -12338,7 +12340,7 @@ public:
 
 		@see getFileName, getRelativePathFrom
 	*/
-	const String& getFullPathName() const noexcept          { return fullPath; }
+	const String& getFullPathName() const JUCE_NOEXCEPT          { return fullPath; }
 
 	/** Returns the last section of the pathname.
 
@@ -13240,7 +13242,7 @@ class JUCE_API  XmlElement
 public:
 
 	/** Creates an XmlElement with this tag name. */
-	explicit XmlElement (const String& tagName) noexcept;
+	explicit XmlElement (const String& tagName) JUCE_NOEXCEPT;
 
 	/** Creates a (deep) copy of another element. */
 	XmlElement (const XmlElement& other);
@@ -13249,12 +13251,12 @@ public:
 	XmlElement& operator= (const XmlElement& other);
 
    #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
-	XmlElement (XmlElement&& other) noexcept;
-	XmlElement& operator= (XmlElement&& other) noexcept;
+	XmlElement (XmlElement&& other) JUCE_NOEXCEPT;
+	XmlElement& operator= (XmlElement&& other) JUCE_NOEXCEPT;
    #endif
 
 	/** Deleting an XmlElement will also delete all its child elements. */
-	~XmlElement() noexcept;
+	~XmlElement() JUCE_NOEXCEPT;
 
 	/** Compares two XmlElements to see if they contain the same text and attiributes.
 
@@ -13268,7 +13270,7 @@ public:
 										be in the same order as well
 	*/
 	bool isEquivalentTo (const XmlElement* other,
-						 bool ignoreOrderOfAttributes) const noexcept;
+						 bool ignoreOrderOfAttributes) const JUCE_NOEXCEPT;
 
 	/** Returns an XML text document that represents this element.
 
@@ -13346,7 +13348,7 @@ public:
 
 		@see hasTagName
 	*/
-	inline const String& getTagName() const noexcept            { return tagName; }
+	inline const String& getTagName() const JUCE_NOEXCEPT            { return tagName; }
 
 	/** Tests whether this element has a particular tag name.
 
@@ -13354,14 +13356,14 @@ public:
 
 		@see getTagName
 	*/
-	bool hasTagName (const String& possibleTagName) const noexcept;
+	bool hasTagName (const String& possibleTagName) const JUCE_NOEXCEPT;
 
 	/** Returns the number of XML attributes this element contains.
 
 		E.g. for an element such as \<MOOSE legs="4" antlers="2">, this would
 		return 2.
 	*/
-	int getNumAttributes() const noexcept;
+	int getNumAttributes() const JUCE_NOEXCEPT;
 
 	/** Returns the name of one of the elements attributes.
 
@@ -13370,7 +13372,7 @@ public:
 
 		@see getAttributeValue, getStringAttribute
 	*/
-	const String& getAttributeName (int attributeIndex) const noexcept;
+	const String& getAttributeName (int attributeIndex) const JUCE_NOEXCEPT;
 
 	/** Returns the value of one of the elements attributes.
 
@@ -13379,18 +13381,18 @@ public:
 
 		@see getAttributeName, getStringAttribute
 	*/
-	const String& getAttributeValue (int attributeIndex) const noexcept;
+	const String& getAttributeValue (int attributeIndex) const JUCE_NOEXCEPT;
 
 	// Attribute-handling methods..
 
 	/** Checks whether the element contains an attribute with a certain name. */
-	bool hasAttribute (const String& attributeName) const noexcept;
+	bool hasAttribute (const String& attributeName) const JUCE_NOEXCEPT;
 
 	/** Returns the value of a named attribute.
 
 		@param attributeName        the name of the attribute to look up
 	*/
-	const String& getStringAttribute (const String& attributeName) const noexcept;
+	const String& getStringAttribute (const String& attributeName) const JUCE_NOEXCEPT;
 
 	/** Returns the value of a named attribute.
 
@@ -13411,7 +13413,7 @@ public:
 	*/
 	bool compareAttribute (const String& attributeName,
 						   const String& stringToCompareAgainst,
-						   bool ignoreCase = false) const noexcept;
+						   bool ignoreCase = false) const JUCE_NOEXCEPT;
 
 	/** Returns the value of a named attribute as an integer.
 
@@ -13503,11 +13505,11 @@ public:
 		@param attributeName    the name of the attribute to remove
 		@see removeAllAttributes
 	*/
-	void removeAttribute (const String& attributeName) noexcept;
+	void removeAttribute (const String& attributeName) JUCE_NOEXCEPT;
 
 	/** Removes all attributes from this element.
 	*/
-	void removeAllAttributes() noexcept;
+	void removeAllAttributes() JUCE_NOEXCEPT;
 
 	// Child element methods..
 
@@ -13517,7 +13519,7 @@ public:
 
 		@see forEachXmlChildElement
 	*/
-	XmlElement* getFirstChildElement() const noexcept       { return firstChildElement; }
+	XmlElement* getFirstChildElement() const JUCE_NOEXCEPT       { return firstChildElement; }
 
 	/** Returns the next of this element's siblings.
 
@@ -13545,7 +13547,7 @@ public:
 
 		@see getNextElement, isTextElement, forEachXmlChildElement
 	*/
-	inline XmlElement* getNextElement() const noexcept          { return nextListItem; }
+	inline XmlElement* getNextElement() const JUCE_NOEXCEPT          { return nextListItem; }
 
 	/** Returns the next of this element's siblings which has the specified tag
 		name.
@@ -13561,7 +13563,7 @@ public:
 
 		@see getChildElement
 	*/
-	int getNumChildElements() const noexcept;
+	int getNumChildElements() const JUCE_NOEXCEPT;
 
 	/** Returns the sub-element at a certain index.
 
@@ -13571,7 +13573,7 @@ public:
 		@returns the n'th child of this element, or 0 if the index is out-of-range
 		@see getNextElement, isTextElement, getChildByName
 	*/
-	XmlElement* getChildElement (int index) const noexcept;
+	XmlElement* getChildElement (int index) const JUCE_NOEXCEPT;
 
 	/** Returns the first sub-element with a given tag-name.
 
@@ -13579,7 +13581,7 @@ public:
 		@returns the first element with this tag name, or 0 if none is found
 		@see getNextElement, isTextElement, getChildElement
 	*/
-	XmlElement* getChildByName (const String& tagNameToLookFor) const noexcept;
+	XmlElement* getChildByName (const String& tagNameToLookFor) const JUCE_NOEXCEPT;
 
 	/** Appends an element to this element's list of children.
 
@@ -13590,7 +13592,7 @@ public:
 		@see getFirstChildElement, getNextElement, getNumChildElements,
 			 getChildElement, removeChildElement
 	*/
-	void addChildElement (XmlElement* newChildElement) noexcept;
+	void addChildElement (XmlElement* newChildElement) JUCE_NOEXCEPT;
 
 	/** Inserts an element into this element's list of children.
 
@@ -13604,7 +13606,7 @@ public:
 		@see addChildElement, insertChildElement
 	*/
 	void insertChildElement (XmlElement* newChildNode,
-							 int indexToInsertAt) noexcept;
+							 int indexToInsertAt) JUCE_NOEXCEPT;
 
 	/** Creates a new element with the given name and returns it, after adding it
 		as a child element.
@@ -13630,7 +13632,7 @@ public:
 		will return true.
 	*/
 	bool replaceChildElement (XmlElement* currentChildElement,
-							  XmlElement* newChildNode) noexcept;
+							  XmlElement* newChildNode) JUCE_NOEXCEPT;
 
 	/** Removes a child element.
 
@@ -13639,27 +13641,27 @@ public:
 										just remove it
 	*/
 	void removeChildElement (XmlElement* childToRemove,
-							 bool shouldDeleteTheChild) noexcept;
+							 bool shouldDeleteTheChild) JUCE_NOEXCEPT;
 
 	/** Deletes all the child elements in the element.
 
 		@see removeChildElement, deleteAllChildElementsWithTagName
 	*/
-	void deleteAllChildElements() noexcept;
+	void deleteAllChildElements() JUCE_NOEXCEPT;
 
 	/** Deletes all the child elements with a given tag name.
 
 		@see removeChildElement
 	*/
-	void deleteAllChildElementsWithTagName (const String& tagName) noexcept;
+	void deleteAllChildElementsWithTagName (const String& tagName) JUCE_NOEXCEPT;
 
 	/** Returns true if the given element is a child of this one. */
-	bool containsChildElement (const XmlElement* possibleChild) const noexcept;
+	bool containsChildElement (const XmlElement* possibleChild) const JUCE_NOEXCEPT;
 
 	/** Recursively searches all sub-elements to find one that contains the specified
 		child element.
 	*/
-	XmlElement* findParentElementOf (const XmlElement* elementToLookFor) noexcept;
+	XmlElement* findParentElementOf (const XmlElement* elementToLookFor) JUCE_NOEXCEPT;
 
 	/** Sorts the child elements using a comparator.
 
@@ -13705,7 +13707,7 @@ public:
 
 		@see getAllText, addTextElement, deleteAllTextElements
 	*/
-	bool isTextElement() const noexcept;
+	bool isTextElement() const JUCE_NOEXCEPT;
 
 	/** Returns the text for a text element.
 
@@ -13723,7 +13725,7 @@ public:
 
 		@see isTextElement, getAllSubText, getChildElementAllSubText
 	*/
-	const String& getText() const noexcept;
+	const String& getText() const JUCE_NOEXCEPT;
 
 	/** Sets the text in a text element.
 
@@ -13769,7 +13771,7 @@ public:
 
 		@see isTextElement, getText, getAllSubText, addTextElement
 	*/
-	void deleteAllTextElements() noexcept;
+	void deleteAllTextElements() JUCE_NOEXCEPT;
 
 	/** Creates a text element that can be added to a parent element.
 	*/
@@ -13778,13 +13780,13 @@ public:
 private:
 	struct XmlAttributeNode
 	{
-		XmlAttributeNode (const XmlAttributeNode&) noexcept;
-		XmlAttributeNode (const String& name, const String& value) noexcept;
+		XmlAttributeNode (const XmlAttributeNode&) JUCE_NOEXCEPT;
+		XmlAttributeNode (const String& name, const String& value) JUCE_NOEXCEPT;
 
 		LinkedListPointer<XmlAttributeNode> nextListItem;
 		String name, value;
 
-		bool hasName (const String&) const noexcept;
+		bool hasName (const String&) const JUCE_NOEXCEPT;
 
 	private:
 		XmlAttributeNode& operator= (const XmlAttributeNode&);
@@ -13800,11 +13802,11 @@ private:
 	LinkedListPointer <XmlAttributeNode> attributes;
 	String tagName;
 
-	XmlElement (int) noexcept;
+	XmlElement (int) JUCE_NOEXCEPT;
 	void copyChildrenAndAttributesFrom (const XmlElement&);
 	void writeElementAsText (OutputStream&, int indentationLevel, int lineWrapLength) const;
-	void getChildElementsAsArray (XmlElement**) const noexcept;
-	void reorderChildElements (XmlElement**, int) noexcept;
+	void getChildElementsAsArray (XmlElement**) const JUCE_NOEXCEPT;
+	void reorderChildElements (XmlElement**, int) JUCE_NOEXCEPT;
 
 	JUCE_LEAK_DETECTOR (XmlElement);
 };
@@ -13854,7 +13856,7 @@ public:
 		@param defaultReturnValue   a value to return if the named property doesn't actually exist
 	*/
 	String getValue (const String& keyName,
-					 const String& defaultReturnValue = String::empty) const noexcept;
+					 const String& defaultReturnValue = String::empty) const JUCE_NOEXCEPT;
 
 	/** Returns one of the properties as an integer.
 
@@ -13866,7 +13868,7 @@ public:
 		@param defaultReturnValue   a value to return if the named property doesn't actually exist
 	*/
 	int getIntValue (const String& keyName,
-					 const int defaultReturnValue = 0) const noexcept;
+					 const int defaultReturnValue = 0) const JUCE_NOEXCEPT;
 
 	/** Returns one of the properties as an double.
 
@@ -13878,7 +13880,7 @@ public:
 		@param defaultReturnValue   a value to return if the named property doesn't actually exist
 	*/
 	double getDoubleValue (const String& keyName,
-						   const double defaultReturnValue = 0.0) const noexcept;
+						   const double defaultReturnValue = 0.0) const JUCE_NOEXCEPT;
 
 	/** Returns one of the properties as an boolean.
 
@@ -13893,7 +13895,7 @@ public:
 		@param defaultReturnValue   a value to return if the named property doesn't actually exist
 	*/
 	bool getBoolValue (const String& keyName,
-					   const bool defaultReturnValue = false) const noexcept;
+					   const bool defaultReturnValue = false) const JUCE_NOEXCEPT;
 
 	/** Returns one of the properties as an XML element.
 
@@ -13936,16 +13938,16 @@ public:
 	void removeValue (const String& keyName);
 
 	/** Returns true if the properies include the given key. */
-	bool containsKey (const String& keyName) const noexcept;
+	bool containsKey (const String& keyName) const JUCE_NOEXCEPT;
 
 	/** Removes all values. */
 	void clear();
 
 	/** Returns the keys/value pair array containing all the properties. */
-	StringPairArray& getAllProperties() noexcept                        { return properties; }
+	StringPairArray& getAllProperties() JUCE_NOEXCEPT                        { return properties; }
 
 	/** Returns the lock used when reading or writing to this set */
-	const CriticalSection& getLock() const noexcept                     { return lock; }
+	const CriticalSection& getLock() const JUCE_NOEXCEPT                     { return lock; }
 
 	/** Returns an XML element which encapsulates all the items in this property set.
 
@@ -13975,12 +13977,12 @@ public:
 
 		@see getFallbackPropertySet
 	*/
-	void setFallbackPropertySet (PropertySet* fallbackProperties) noexcept;
+	void setFallbackPropertySet (PropertySet* fallbackProperties) JUCE_NOEXCEPT;
 
 	/** Returns the fallback property set.
 		@see setFallbackPropertySet
 	*/
-	PropertySet* getFallbackPropertySet() const noexcept                { return fallbackProperties; }
+	PropertySet* getFallbackPropertySet() const JUCE_NOEXCEPT                { return fallbackProperties; }
 
 protected:
 
@@ -14030,14 +14032,14 @@ public:
 	/** Creates an empty array.
 		@see ReferenceCountedObject, Array, OwnedArray
 	*/
-	ReferenceCountedArray() noexcept
+	ReferenceCountedArray() JUCE_NOEXCEPT
 		: numUsed (0)
 	{
 	}
 
 	/** Creates a copy of another array */
 	template <class OtherObjectClass>
-	ReferenceCountedArray (const ReferenceCountedArray<OtherObjectClass, TypeOfCriticalSectionToUse>& other) noexcept
+	ReferenceCountedArray (const ReferenceCountedArray<OtherObjectClass, TypeOfCriticalSectionToUse>& other) JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (other.getLock());
 		numUsed = other.size();
@@ -14054,7 +14056,7 @@ public:
 		Any existing objects in this array will first be released.
 	*/
 	template <class OtherObjectClass>
-	ReferenceCountedArray<ObjectClass, TypeOfCriticalSectionToUse>& operator= (const ReferenceCountedArray<OtherObjectClass, TypeOfCriticalSectionToUse>& other) noexcept
+	ReferenceCountedArray<ObjectClass, TypeOfCriticalSectionToUse>& operator= (const ReferenceCountedArray<OtherObjectClass, TypeOfCriticalSectionToUse>& other) JUCE_NOEXCEPT
 	{
 		ReferenceCountedArray<ObjectClass, TypeOfCriticalSectionToUse> otherCopy (other);
 		swapWithArray (otherCopy);
@@ -14086,7 +14088,7 @@ public:
 	}
 
 	/** Returns the current number of objects in the array. */
-	inline int size() const noexcept
+	inline int size() const JUCE_NOEXCEPT
 	{
 		return numUsed;
 	}
@@ -14099,7 +14101,7 @@ public:
 
 		@see getUnchecked
 	*/
-	inline ObjectClassPtr operator[] (const int index) const noexcept
+	inline ObjectClassPtr operator[] (const int index) const JUCE_NOEXCEPT
 	{
 		return getObjectPointer (index);
 	}
@@ -14110,7 +14112,7 @@ public:
 		This is a faster and less safe version of operator[] which doesn't check the index passed in, so
 		it can be used when you're sure the index if always going to be legal.
 	*/
-	inline ObjectClassPtr getUnchecked (const int index) const noexcept
+	inline ObjectClassPtr getUnchecked (const int index) const JUCE_NOEXCEPT
 	{
 		return getObjectPointerUnchecked (index);
 	}
@@ -14123,7 +14125,7 @@ public:
 
 		@see getUnchecked
 	*/
-	inline ObjectClass* getObjectPointer (const int index) const noexcept
+	inline ObjectClass* getObjectPointer (const int index) const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		return isPositiveAndBelow (index, numUsed) ? data.elements [index]
@@ -14133,7 +14135,7 @@ public:
 	/** Returns a raw pointer to the object at this index in the array, without checking
 		whether the index is in-range.
 	*/
-	inline ObjectClass* getObjectPointerUnchecked (const int index) const noexcept
+	inline ObjectClass* getObjectPointerUnchecked (const int index) const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		jassert (isPositiveAndBelow (index, numUsed));
@@ -14145,7 +14147,7 @@ public:
 		This will return a null pointer if the array's empty.
 		@see getLast
 	*/
-	inline ObjectClassPtr getFirst() const noexcept
+	inline ObjectClassPtr getFirst() const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		return numUsed > 0 ? data.elements [0]
@@ -14157,7 +14159,7 @@ public:
 		This will return a null pointer if the array's empty.
 		@see getFirst
 	*/
-	inline ObjectClassPtr getLast() const noexcept
+	inline ObjectClassPtr getLast() const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		return numUsed > 0 ? data.elements [numUsed - 1]
@@ -14168,7 +14170,7 @@ public:
 		This pointer will only be valid until the next time a non-const method
 		is called on the array.
 	*/
-	inline ObjectClass** getRawDataPointer() const noexcept
+	inline ObjectClass** getRawDataPointer() const JUCE_NOEXCEPT
 	{
 		return data.elements;
 	}
@@ -14176,7 +14178,7 @@ public:
 	/** Returns a pointer to the first element in the array.
 		This method is provided for compatibility with standard C++ iteration mechanisms.
 	*/
-	inline ObjectClass** begin() const noexcept
+	inline ObjectClass** begin() const JUCE_NOEXCEPT
 	{
 		return data.elements;
 	}
@@ -14184,7 +14186,7 @@ public:
 	/** Returns a pointer to the element which follows the last element in the array.
 		This method is provided for compatibility with standard C++ iteration mechanisms.
 	*/
-	inline ObjectClass** end() const noexcept
+	inline ObjectClass** end() const JUCE_NOEXCEPT
 	{
 		return data.elements + numUsed;
 	}
@@ -14194,7 +14196,7 @@ public:
 		@param objectToLookFor    the object to look for
 		@returns                  the index at which the object was found, or -1 if it's not found
 	*/
-	int indexOf (const ObjectClass* const objectToLookFor) const noexcept
+	int indexOf (const ObjectClass* const objectToLookFor) const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		ObjectClass** e = data.elements.getData();
@@ -14216,7 +14218,7 @@ public:
 		@param objectToLookFor      the object to look for
 		@returns                    true if the object is in the array
 	*/
-	bool contains (const ObjectClass* const objectToLookFor) const noexcept
+	bool contains (const ObjectClass* const objectToLookFor) const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		ObjectClass** e = data.elements.getData();
@@ -14240,7 +14242,7 @@ public:
 		@param newObject       the new object to add to the array
 		@see set, insert, addIfNotAlreadyThere, addSorted, addArray
 	*/
-	void add (ObjectClass* const newObject) noexcept
+	void add (ObjectClass* const newObject) JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		data.ensureAllocatedSize (numUsed + 1);
@@ -14264,7 +14266,7 @@ public:
 		@see add, addSorted, addIfNotAlreadyThere, set
 	*/
 	void insert (int indexToInsertAt,
-				 ObjectClass* const newObject) noexcept
+				 ObjectClass* const newObject) JUCE_NOEXCEPT
 	{
 		if (indexToInsertAt >= 0)
 		{
@@ -14301,7 +14303,7 @@ public:
 
 		@param newObject   the new object to add to the array
 	*/
-	void addIfNotAlreadyThere (ObjectClass* const newObject) noexcept
+	void addIfNotAlreadyThere (ObjectClass* const newObject) JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		if (! contains (newObject))
@@ -14356,7 +14358,7 @@ public:
 	*/
 	void addArray (const ReferenceCountedArray<ObjectClass, TypeOfCriticalSectionToUse>& arrayToAddFrom,
 				   int startIndex = 0,
-				   int numElementsToAdd = -1) noexcept
+				   int numElementsToAdd = -1) JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock1 (arrayToAddFrom.getLock());
 
@@ -14395,7 +14397,7 @@ public:
 		@see add, sort
 	*/
 	template <class ElementComparator>
-	int addSorted (ElementComparator& comparator, ObjectClass* newObject) noexcept
+	int addSorted (ElementComparator& comparator, ObjectClass* newObject) JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		const int index = findInsertIndexInSortedArray (comparator, data.elements.getData(), newObject, 0, numUsed);
@@ -14410,7 +14412,7 @@ public:
 	*/
 	template <class ElementComparator>
 	void addOrReplaceSorted (ElementComparator& comparator,
-							 ObjectClass* newObject) noexcept
+							 ObjectClass* newObject) JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		const int index = findInsertIndexInSortedArray (comparator, data.elements.getData(), newObject, 0, numUsed);
@@ -14583,7 +14585,7 @@ public:
 		otherwise the two objects at these positions will be exchanged.
 	*/
 	void swap (const int index1,
-			   const int index2) noexcept
+			   const int index2) JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 
@@ -14609,7 +14611,7 @@ public:
 								is less than zero, it will be moved to the end of the array
 	*/
 	void move (const int currentIndex,
-			   int newIndex) noexcept
+			   int newIndex) JUCE_NOEXCEPT
 	{
 		if (currentIndex != newIndex)
 		{
@@ -14645,7 +14647,7 @@ public:
 		If you need to exchange two arrays, this is vastly quicker than using copy-by-value
 		because it just swaps their internal pointers.
 	*/
-	void swapWithArray (ReferenceCountedArray& otherArray) noexcept
+	void swapWithArray (ReferenceCountedArray& otherArray) JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock1 (getLock());
 		const ScopedLockType lock2 (otherArray.getLock());
@@ -14658,7 +14660,7 @@ public:
 
 		@returns true only if the other array contains the same objects in the same order
 	*/
-	bool operator== (const ReferenceCountedArray& other) const noexcept
+	bool operator== (const ReferenceCountedArray& other) const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock2 (other.getLock());
 		const ScopedLockType lock1 (getLock());
@@ -14677,7 +14679,7 @@ public:
 
 		@see operator==
 	*/
-	bool operator!= (const ReferenceCountedArray<ObjectClass, TypeOfCriticalSectionToUse>& other) const noexcept
+	bool operator!= (const ReferenceCountedArray<ObjectClass, TypeOfCriticalSectionToUse>& other) const JUCE_NOEXCEPT
 	{
 		return ! operator== (other);
 	}
@@ -14710,7 +14712,7 @@ public:
 	*/
 	template <class ElementComparator>
 	void sort (ElementComparator& comparator,
-			   const bool retainOrderOfEquivalentItems = false) const noexcept
+			   const bool retainOrderOfEquivalentItems = false) const JUCE_NOEXCEPT
 	{
 		(void) comparator;  // if you pass in an object with a static compareElements() method, this
 							// avoids getting warning messages about the parameter being unused
@@ -14725,7 +14727,7 @@ public:
 		removing elements, they may have quite a lot of unused space allocated.
 		This method will reduce the amount of allocated storage to a minimum.
 	*/
-	void minimiseStorageOverheads() noexcept
+	void minimiseStorageOverheads() JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		data.shrinkToNoMoreThan (numUsed);
@@ -14747,7 +14749,7 @@ public:
 		To lock, you can call getLock().enter() and getLock().exit(), or preferably use
 		an object of ScopedLockType as an RAII lock for it.
 	*/
-	inline const TypeOfCriticalSectionToUse& getLock() const noexcept      { return data; }
+	inline const TypeOfCriticalSectionToUse& getLock() const JUCE_NOEXCEPT      { return data; }
 
 	/** Returns the type of scoped lock to use for locking this array */
 	typedef typename TypeOfCriticalSectionToUse::ScopedLockType ScopedLockType;
@@ -14879,7 +14881,7 @@ class SortedSet
 public:
 
 	/** Creates an empty set. */
-	SortedSet() noexcept
+	SortedSet() JUCE_NOEXCEPT
 	   : numUsed (0)
 	{
 	}
@@ -14887,7 +14889,7 @@ public:
 	/** Creates a copy of another set.
 		@param other    the set to copy
 	*/
-	SortedSet (const SortedSet& other) noexcept
+	SortedSet (const SortedSet& other) JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (other.getLock());
 		numUsed = other.numUsed;
@@ -14896,14 +14898,14 @@ public:
 	}
 
 	/** Destructor. */
-	~SortedSet() noexcept
+	~SortedSet() JUCE_NOEXCEPT
 	{
 	}
 
 	/** Copies another set over this one.
 		@param other    the set to copy
 	*/
-	SortedSet& operator= (const SortedSet& other) noexcept
+	SortedSet& operator= (const SortedSet& other) JUCE_NOEXCEPT
 	{
 		if (this != &other)
 		{
@@ -14926,7 +14928,7 @@ public:
 
 		@param other    the other set to compare with
 	*/
-	bool operator== (const SortedSet<ElementType>& other) const noexcept
+	bool operator== (const SortedSet<ElementType>& other) const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 
@@ -14947,7 +14949,7 @@ public:
 
 		@param other    the other set to compare with
 	*/
-	bool operator!= (const SortedSet<ElementType>& other) const noexcept
+	bool operator!= (const SortedSet<ElementType>& other) const JUCE_NOEXCEPT
 	{
 		return ! operator== (other);
 	}
@@ -14960,7 +14962,7 @@ public:
 
 		@see clearQuick
 	*/
-	void clear() noexcept
+	void clear() JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		data.setAllocatedSize (0);
@@ -14971,7 +14973,7 @@ public:
 
 		@see clear
 	*/
-	void clearQuick() noexcept
+	void clearQuick() JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		numUsed = 0;
@@ -14979,7 +14981,7 @@ public:
 
 	/** Returns the current number of elements in the set.
 	*/
-	inline int size() const noexcept
+	inline int size() const JUCE_NOEXCEPT
 	{
 		return numUsed;
 	}
@@ -14995,7 +14997,7 @@ public:
 		@param index    the index of the element being requested (0 is the first element in the set)
 		@see getUnchecked, getFirst, getLast
 	*/
-	inline ElementType operator[] (const int index) const noexcept
+	inline ElementType operator[] (const int index) const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		return isPositiveAndBelow (index, numUsed) ? data.elements [index]
@@ -15010,7 +15012,7 @@ public:
 		@param index    the index of the element being requested (0 is the first element in the set)
 		@see operator[], getFirst, getLast
 	*/
-	inline ElementType getUnchecked (const int index) const noexcept
+	inline ElementType getUnchecked (const int index) const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		jassert (isPositiveAndBelow (index, numUsed));
@@ -15025,7 +15027,7 @@ public:
 
 		@param index    the index of the element being requested (0 is the first element in the array)
 	*/
-	inline ElementType& getReference (const int index) const noexcept
+	inline ElementType& getReference (const int index) const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		jassert (isPositiveAndBelow (index, numUsed));
@@ -15036,7 +15038,7 @@ public:
 
 		@see operator[], getUnchecked, getLast
 	*/
-	inline ElementType getFirst() const noexcept
+	inline ElementType getFirst() const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		return numUsed > 0 ? data.elements [0] : ElementType();
@@ -15046,7 +15048,7 @@ public:
 
 		@see operator[], getUnchecked, getFirst
 	*/
-	inline ElementType getLast() const noexcept
+	inline ElementType getLast() const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		return numUsed > 0 ? data.elements [numUsed - 1] : ElementType();
@@ -15055,7 +15057,7 @@ public:
 	/** Returns a pointer to the first element in the set.
 		This method is provided for compatibility with standard C++ iteration mechanisms.
 	*/
-	inline ElementType* begin() const noexcept
+	inline ElementType* begin() const JUCE_NOEXCEPT
 	{
 		return data.elements;
 	}
@@ -15063,7 +15065,7 @@ public:
 	/** Returns a pointer to the element which follows the last element in the set.
 		This method is provided for compatibility with standard C++ iteration mechanisms.
 	*/
-	inline ElementType* end() const noexcept
+	inline ElementType* end() const JUCE_NOEXCEPT
 	{
 		return data.elements + numUsed;
 	}
@@ -15076,7 +15078,7 @@ public:
 		@param elementToLookFor   the value or object to look for
 		@returns                  the index of the object, or -1 if it's not found
 	*/
-	int indexOf (const ElementType elementToLookFor) const noexcept
+	int indexOf (const ElementType elementToLookFor) const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 
@@ -15112,7 +15114,7 @@ public:
 		@param elementToLookFor     the value or object to look for
 		@returns                    true if the item is found
 	*/
-	bool contains (const ElementType elementToLookFor) const noexcept
+	bool contains (const ElementType elementToLookFor) const JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 
@@ -15148,7 +15150,7 @@ public:
 		@param newElement       the new object to add to the set
 		@see set, insert, addIfNotAlreadyThere, addSorted, addSet, addArray
 	*/
-	void add (const ElementType newElement) noexcept
+	void add (const ElementType newElement) JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 
@@ -15195,7 +15197,7 @@ public:
 		@see add
 	*/
 	void addArray (const ElementType* elementsToAdd,
-				   int numElementsToAdd) noexcept
+				   int numElementsToAdd) JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 
@@ -15215,7 +15217,7 @@ public:
 	template <class OtherSetType>
 	void addSet (const OtherSetType& setToAddFrom,
 				 int startIndex = 0,
-				 int numElementsToAdd = -1) noexcept
+				 int numElementsToAdd = -1) JUCE_NOEXCEPT
 	{
 		const typename OtherSetType::ScopedLockType lock1 (setToAddFrom.getLock());
 
@@ -15248,7 +15250,7 @@ public:
 		@returns                the element that has been removed
 		@see removeValue, removeRange
 	*/
-	ElementType remove (const int indexToRemove) noexcept
+	ElementType remove (const int indexToRemove) JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 
@@ -15279,7 +15281,7 @@ public:
 		@param valueToRemove   the object to try to remove
 		@see remove, removeRange
 	*/
-	void removeValue (const ElementType valueToRemove) noexcept
+	void removeValue (const ElementType valueToRemove) JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		remove (indexOf (valueToRemove));
@@ -15291,7 +15293,7 @@ public:
 		@see removeValuesNotIn, remove, removeValue, removeRange
 	*/
 	template <class OtherSetType>
-	void removeValuesIn (const OtherSetType& otherSet) noexcept
+	void removeValuesIn (const OtherSetType& otherSet) JUCE_NOEXCEPT
 	{
 		const typename OtherSetType::ScopedLockType lock1 (otherSet.getLock());
 		const ScopedLockType lock2 (getLock());
@@ -15319,7 +15321,7 @@ public:
 		@see removeValuesIn, remove, removeValue, removeRange
 	*/
 	template <class OtherSetType>
-	void removeValuesNotIn (const OtherSetType& otherSet) noexcept
+	void removeValuesNotIn (const OtherSetType& otherSet) JUCE_NOEXCEPT
 	{
 		const typename OtherSetType::ScopedLockType lock1 (otherSet.getLock());
 		const ScopedLockType lock2 (getLock());
@@ -15345,7 +15347,7 @@ public:
 		removing elements, they may have quite a lot of unused space allocated.
 		This method will reduce the amount of allocated storage to a minimum.
 	*/
-	void minimiseStorageOverheads() noexcept
+	void minimiseStorageOverheads() JUCE_NOEXCEPT
 	{
 		const ScopedLockType lock (getLock());
 		data.shrinkToNoMoreThan (numUsed);
@@ -15367,7 +15369,7 @@ public:
 		To lock, you can call getLock().enter() and getLock().exit(), or preferably use
 		an object of ScopedLockType as an RAII lock for it.
 	*/
-	inline const TypeOfCriticalSectionToUse& getLock() const noexcept      { return data; }
+	inline const TypeOfCriticalSectionToUse& getLock() const JUCE_NOEXCEPT      { return data; }
 
 	/** Returns the type of scoped lock to use for locking this array */
 	typedef typename TypeOfCriticalSectionToUse::ScopedLockType ScopedLockType;
@@ -15377,7 +15379,7 @@ private:
 	ArrayAllocationBase <ElementType, TypeOfCriticalSectionToUse> data;
 	int numUsed;
 
-	void insertInternal (const int indexToInsertAt, const ElementType newElement) noexcept
+	void insertInternal (const int indexToInsertAt, const ElementType newElement) JUCE_NOEXCEPT
 	{
 		data.ensureAllocatedSize (numUsed + 1);
 
@@ -15425,25 +15427,25 @@ class Range
 public:
 
 	/** Constructs an empty range. */
-	Range() noexcept
+	Range() JUCE_NOEXCEPT
 		: start (ValueType()), end (ValueType())
 	{
 	}
 
 	/** Constructs a range with given start and end values. */
-	Range (const ValueType start_, const ValueType end_) noexcept
+	Range (const ValueType start_, const ValueType end_) JUCE_NOEXCEPT
 		: start (start_), end (jmax (start_, end_))
 	{
 	}
 
 	/** Constructs a copy of another range. */
-	Range (const Range& other) noexcept
+	Range (const Range& other) JUCE_NOEXCEPT
 		: start (other.start), end (other.end)
 	{
 	}
 
 	/** Copies another range object. */
-	Range& operator= (const Range& other) noexcept
+	Range& operator= (const Range& other) JUCE_NOEXCEPT
 	{
 		start = other.start;
 		end = other.end;
@@ -15451,40 +15453,40 @@ public:
 	}
 
 	/** Destructor. */
-	~Range() noexcept
+	~Range() JUCE_NOEXCEPT
 	{
 	}
 
 	/** Returns the range that lies between two positions (in either order). */
-	static Range between (const ValueType position1, const ValueType position2) noexcept
+	static Range between (const ValueType position1, const ValueType position2) JUCE_NOEXCEPT
 	{
 		return (position1 < position2) ? Range (position1, position2)
 									   : Range (position2, position1);
 	}
 
 	/** Returns a range with the specified start position and a length of zero. */
-	static Range emptyRange (const ValueType start) noexcept
+	static Range emptyRange (const ValueType start) JUCE_NOEXCEPT
 	{
 		return Range (start, start);
 	}
 
 	/** Returns the start of the range. */
-	inline ValueType getStart() const noexcept          { return start; }
+	inline ValueType getStart() const JUCE_NOEXCEPT          { return start; }
 
 	/** Returns the length of the range. */
-	inline ValueType getLength() const noexcept         { return end - start; }
+	inline ValueType getLength() const JUCE_NOEXCEPT         { return end - start; }
 
 	/** Returns the end of the range. */
-	inline ValueType getEnd() const noexcept            { return end; }
+	inline ValueType getEnd() const JUCE_NOEXCEPT            { return end; }
 
 	/** Returns true if the range has a length of zero. */
-	inline bool isEmpty() const noexcept                { return start == end; }
+	inline bool isEmpty() const JUCE_NOEXCEPT                { return start == end; }
 
 	/** Changes the start position of the range, leaving the end position unchanged.
 		If the new start position is higher than the current end of the range, the end point
 		will be pushed along to equal it, leaving an empty range at the new position.
 	*/
-	void setStart (const ValueType newStart) noexcept
+	void setStart (const ValueType newStart) JUCE_NOEXCEPT
 	{
 		start = newStart;
 		if (end < newStart)
@@ -15495,13 +15497,13 @@ public:
 		If the new start position is higher than the current end of the range, the end point
 		will be pushed along to equal it, returning an empty range at the new position.
 	*/
-	Range withStart (const ValueType newStart) const noexcept
+	Range withStart (const ValueType newStart) const JUCE_NOEXCEPT
 	{
 		return Range (newStart, jmax (newStart, end));
 	}
 
 	/** Returns a range with the same length as this one, but moved to have the given start position. */
-	Range movedToStartAt (const ValueType newStart) const noexcept
+	Range movedToStartAt (const ValueType newStart) const JUCE_NOEXCEPT
 	{
 		return Range (newStart, end + (newStart - start));
 	}
@@ -15510,7 +15512,7 @@ public:
 		If the new end position is below the current start of the range, the start point
 		will be pushed back to equal the new end point.
 	*/
-	void setEnd (const ValueType newEnd) noexcept
+	void setEnd (const ValueType newEnd) JUCE_NOEXCEPT
 	{
 		end = newEnd;
 		if (newEnd < start)
@@ -15521,13 +15523,13 @@ public:
 		If the new end position is below the current start of the range, the start point
 		will be pushed back to equal the new end point.
 	*/
-	Range withEnd (const ValueType newEnd) const noexcept
+	Range withEnd (const ValueType newEnd) const JUCE_NOEXCEPT
 	{
 		return Range (jmin (start, newEnd), newEnd);
 	}
 
 	/** Returns a range with the same length as this one, but moved to have the given start position. */
-	Range movedToEndAt (const ValueType newEnd) const noexcept
+	Range movedToEndAt (const ValueType newEnd) const JUCE_NOEXCEPT
 	{
 		return Range (start + (newEnd - end), newEnd);
 	}
@@ -15535,7 +15537,7 @@ public:
 	/** Changes the length of the range.
 		Lengths less than zero are treated as zero.
 	*/
-	void setLength (const ValueType newLength) noexcept
+	void setLength (const ValueType newLength) JUCE_NOEXCEPT
 	{
 		end = start + jmax (ValueType(), newLength);
 	}
@@ -15543,13 +15545,13 @@ public:
 	/** Returns a range with the same start as this one, but a different length.
 		Lengths less than zero are treated as zero.
 	*/
-	Range withLength (const ValueType newLength) const noexcept
+	Range withLength (const ValueType newLength) const JUCE_NOEXCEPT
 	{
 		return Range (start, start + newLength);
 	}
 
 	/** Adds an amount to the start and end of the range. */
-	inline const Range& operator+= (const ValueType amountToAdd) noexcept
+	inline const Range& operator+= (const ValueType amountToAdd) JUCE_NOEXCEPT
 	{
 		start += amountToAdd;
 		end += amountToAdd;
@@ -15557,7 +15559,7 @@ public:
 	}
 
 	/** Subtracts an amount from the start and end of the range. */
-	inline const Range& operator-= (const ValueType amountToSubtract) noexcept
+	inline const Range& operator-= (const ValueType amountToSubtract) JUCE_NOEXCEPT
 	{
 		start -= amountToSubtract;
 		end -= amountToSubtract;
@@ -15567,55 +15569,55 @@ public:
 	/** Returns a range that is equal to this one with an amount added to its
 		start and end.
 	*/
-	Range operator+ (const ValueType amountToAdd) const noexcept
+	Range operator+ (const ValueType amountToAdd) const JUCE_NOEXCEPT
 	{
 		return Range (start + amountToAdd, end + amountToAdd);
 	}
 
 	/** Returns a range that is equal to this one with the specified amount
 		subtracted from its start and end. */
-	Range operator- (const ValueType amountToSubtract) const noexcept
+	Range operator- (const ValueType amountToSubtract) const JUCE_NOEXCEPT
 	{
 		return Range (start - amountToSubtract, end - amountToSubtract);
 	}
 
-	bool operator== (const Range& other) const noexcept     { return start == other.start && end == other.end; }
-	bool operator!= (const Range& other) const noexcept     { return start != other.start || end != other.end; }
+	bool operator== (const Range& other) const JUCE_NOEXCEPT     { return start == other.start && end == other.end; }
+	bool operator!= (const Range& other) const JUCE_NOEXCEPT     { return start != other.start || end != other.end; }
 
 	/** Returns true if the given position lies inside this range. */
-	bool contains (const ValueType position) const noexcept
+	bool contains (const ValueType position) const JUCE_NOEXCEPT
 	{
 		return start <= position && position < end;
 	}
 
 	/** Returns the nearest value to the one supplied, which lies within the range. */
-	ValueType clipValue (const ValueType value) const noexcept
+	ValueType clipValue (const ValueType value) const JUCE_NOEXCEPT
 	{
 		return jlimit (start, end, value);
 	}
 
 	/** Returns true if the given range lies entirely inside this range. */
-	bool contains (const Range& other) const noexcept
+	bool contains (const Range& other) const JUCE_NOEXCEPT
 	{
 		return start <= other.start && end >= other.end;
 	}
 
 	/** Returns true if the given range intersects this one. */
-	bool intersects (const Range& other) const noexcept
+	bool intersects (const Range& other) const JUCE_NOEXCEPT
 	{
 		return other.start < end && start < other.end;
 	}
 
 	/** Returns the range that is the intersection of the two ranges, or an empty range
 		with an undefined start position if they don't overlap. */
-	Range getIntersectionWith (const Range& other) const noexcept
+	Range getIntersectionWith (const Range& other) const JUCE_NOEXCEPT
 	{
 		return Range (jmax (start, other.start),
 					  jmin (end, other.end));
 	}
 
 	/** Returns the smallest range that contains both this one and the other one. */
-	Range getUnionWith (const Range& other) const noexcept
+	Range getUnionWith (const Range& other) const JUCE_NOEXCEPT
 	{
 		return Range (jmin (start, other.start),
 					  jmax (end, other.end));
@@ -15631,7 +15633,7 @@ public:
 		will be the new range, shifted forwards or backwards so that it doesn't extend
 		beyond this one, but keeping its original length.
 	*/
-	Range constrainRange (const Range& rangeToConstrain) const noexcept
+	Range constrainRange (const Range& rangeToConstrain) const JUCE_NOEXCEPT
 	{
 		const ValueType otherLen = rangeToConstrain.getLength();
 		return getLength() <= otherLen
@@ -15684,7 +15686,7 @@ public:
 
 		This is much quicker than using (size() == 0).
 	*/
-	bool isEmpty() const noexcept
+	bool isEmpty() const JUCE_NOEXCEPT
 	{
 		return values.size() == 0;
 	}
@@ -15739,7 +15741,7 @@ public:
 	/** Returns the number of contiguous blocks of values.
 		@see getRange
 	*/
-	int getNumRanges() const noexcept
+	int getNumRanges() const JUCE_NOEXCEPT
 	{
 		return values.size() >> 1;
 	}
@@ -15882,12 +15884,12 @@ public:
 		return false;
 	}
 
-	bool operator== (const SparseSet<Type>& other) noexcept
+	bool operator== (const SparseSet<Type>& other) JUCE_NOEXCEPT
 	{
 		return values == other.values;
 	}
 
-	bool operator!= (const SparseSet<Type>& other) noexcept
+	bool operator!= (const SparseSet<Type>& other) JUCE_NOEXCEPT
 	{
 		return values != other.values;
 	}
@@ -16077,23 +16079,23 @@ public:
 	~FileInputStream();
 
 	/** Returns the file that this stream is reading from. */
-	const File& getFile() const noexcept                { return file; }
+	const File& getFile() const JUCE_NOEXCEPT                { return file; }
 
 	/** Returns the status of the file stream.
 		The result will be ok if the file opened successfully. If an error occurs while
 		opening or reading from the file, this will contain an error message.
 	*/
-	const Result& getStatus() const noexcept            { return status; }
+	const Result& getStatus() const JUCE_NOEXCEPT            { return status; }
 
 	/** Returns true if the stream couldn't be opened for some reason.
 		@see getResult()
 	*/
-	bool failedToOpen() const noexcept                  { return status.failed(); }
+	bool failedToOpen() const JUCE_NOEXCEPT                  { return status.failed(); }
 
 	/** Returns true if the stream opened without problems.
 		@see getResult()
 	*/
-	bool openedOk() const noexcept                      { return status.wasOk(); }
+	bool openedOk() const JUCE_NOEXCEPT                      { return status.wasOk(); }
 
 	int64 getTotalLength();
 	int read (void* destBuffer, int maxBytesToRead);
@@ -16164,17 +16166,17 @@ public:
 		The result will be ok if the file opened successfully. If an error occurs while
 		opening or writing to the file, this will contain an error message.
 	*/
-	const Result& getStatus() const noexcept            { return status; }
+	const Result& getStatus() const JUCE_NOEXCEPT            { return status; }
 
 	/** Returns true if the stream couldn't be opened for some reason.
 		@see getResult()
 	*/
-	bool failedToOpen() const noexcept                  { return status.failed(); }
+	bool failedToOpen() const JUCE_NOEXCEPT                  { return status.failed(); }
 
 	/** Returns true if the stream opened without problems.
 		@see getResult()
 	*/
-	bool openedOk() const noexcept                      { return status.wasOk(); }
+	bool openedOk() const JUCE_NOEXCEPT                      { return status.wasOk(); }
 
 	/** Attempts to truncate the file to the current write position.
 		To truncate a file to a specific size, first use setPosition() to seek to the
@@ -16393,12 +16395,12 @@ public:
 	/** Returns the address at which this file has been mapped, or a null pointer if
 		the file couldn't be successfully mapped.
 	*/
-	void* getData() const noexcept              { return address; }
+	void* getData() const JUCE_NOEXCEPT              { return address; }
 
 	/** Returns the number of bytes of data that are available for reading or writing.
 		This will normally be the size of the file.
 	*/
-	size_t getSize() const noexcept             { return length; }
+	size_t getSize() const JUCE_NOEXCEPT             { return length; }
 
 private:
 
@@ -16781,8 +16783,8 @@ public:
 	BigInteger (const BigInteger& other);
 
    #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
-	BigInteger (BigInteger&& other) noexcept;
-	BigInteger& operator= (BigInteger&& other) noexcept;
+	BigInteger (BigInteger&& other) JUCE_NOEXCEPT;
+	BigInteger& operator= (BigInteger&& other) JUCE_NOEXCEPT;
    #endif
 
 	/** Destructor. */
@@ -16792,29 +16794,29 @@ public:
 	BigInteger& operator= (const BigInteger& other);
 
 	/** Swaps the internal contents of this with another object. */
-	void swapWith (BigInteger& other) noexcept;
+	void swapWith (BigInteger& other) JUCE_NOEXCEPT;
 
 	/** Returns the value of a specified bit in the number.
 		If the index is out-of-range, the result will be false.
 	*/
-	bool operator[] (int bit) const noexcept;
+	bool operator[] (int bit) const JUCE_NOEXCEPT;
 
 	/** Returns true if no bits are set. */
-	bool isZero() const noexcept;
+	bool isZero() const JUCE_NOEXCEPT;
 
 	/** Returns true if the value is 1. */
-	bool isOne() const noexcept;
+	bool isOne() const JUCE_NOEXCEPT;
 
 	/** Attempts to get the lowest bits of the value as an integer.
 		If the value is bigger than the integer limits, this will return only the lower bits.
 	*/
-	int toInteger() const noexcept;
+	int toInteger() const JUCE_NOEXCEPT;
 
 	/** Resets the value to 0. */
 	void clear();
 
 	/** Clears a particular bit in the number. */
-	void clearBit (int bitNumber) noexcept;
+	void clearBit (int bitNumber) JUCE_NOEXCEPT;
 
 	/** Sets a specified bit to 1. */
 	void setBit (int bitNumber);
@@ -16847,7 +16849,7 @@ public:
 		Asking for more than 32 bits isn't allowed (obviously) - for that, use
 		getBitRange().
 	*/
-	uint32 getBitRangeAsInt (int startBit, int numBits) const noexcept;
+	uint32 getBitRangeAsInt (int startBit, int numBits) const JUCE_NOEXCEPT;
 
 	/** Sets a range of bits to an integer value.
 
@@ -16864,26 +16866,26 @@ public:
 	void shiftBits (int howManyBitsLeft, int startBit);
 
 	/** Returns the total number of set bits in the value. */
-	int countNumberOfSetBits() const noexcept;
+	int countNumberOfSetBits() const JUCE_NOEXCEPT;
 
 	/** Looks for the index of the next set bit after a given starting point.
 
 		This searches from startIndex (inclusive) upwards for the first set bit,
 		and returns its index. If no set bits are found, it returns -1.
 	*/
-	int findNextSetBit (int startIndex = 0) const noexcept;
+	int findNextSetBit (int startIndex = 0) const JUCE_NOEXCEPT;
 
 	/** Looks for the index of the next clear bit after a given starting point.
 
 		This searches from startIndex (inclusive) upwards for the first clear bit,
 		and returns its index.
 	*/
-	int findNextClearBit (int startIndex = 0) const noexcept;
+	int findNextClearBit (int startIndex = 0) const JUCE_NOEXCEPT;
 
 	/** Returns the index of the highest set bit in the number.
 		If the value is zero, this will return -1.
 	*/
-	int getHighestBit() const noexcept;
+	int getHighestBit() const JUCE_NOEXCEPT;
 
 	// All the standard arithmetic ops...
 
@@ -16914,12 +16916,12 @@ public:
 	BigInteger operator<< (int numBitsToShift) const;
 	BigInteger operator>> (int numBitsToShift) const;
 
-	bool operator== (const BigInteger& other) const noexcept;
-	bool operator!= (const BigInteger& other) const noexcept;
-	bool operator<  (const BigInteger& other) const noexcept;
-	bool operator<= (const BigInteger& other) const noexcept;
-	bool operator>  (const BigInteger& other) const noexcept;
-	bool operator>= (const BigInteger& other) const noexcept;
+	bool operator== (const BigInteger& other) const JUCE_NOEXCEPT;
+	bool operator!= (const BigInteger& other) const JUCE_NOEXCEPT;
+	bool operator<  (const BigInteger& other) const JUCE_NOEXCEPT;
+	bool operator<= (const BigInteger& other) const JUCE_NOEXCEPT;
+	bool operator>  (const BigInteger& other) const JUCE_NOEXCEPT;
+	bool operator>= (const BigInteger& other) const JUCE_NOEXCEPT;
 
 	/** Does a signed comparison of two BigIntegers.
 
@@ -16928,7 +16930,7 @@ public:
 			- < 0 if this number is smaller than the other
 			- > 0 if this number is bigger than the other
 	*/
-	int compare (const BigInteger& other) const noexcept;
+	int compare (const BigInteger& other) const JUCE_NOEXCEPT;
 
 	/** Compares the magnitudes of two BigIntegers, ignoring their signs.
 
@@ -16937,7 +16939,7 @@ public:
 			- < 0 if this number is smaller than the other
 			- > 0 if this number is bigger than the other
 	*/
-	int compareAbsolute (const BigInteger& other) const noexcept;
+	int compareAbsolute (const BigInteger& other) const JUCE_NOEXCEPT;
 
 	/** Divides this value by another one and returns the remainder.
 
@@ -16965,17 +16967,17 @@ public:
 	/** Returns true if the value is less than zero.
 		@see setNegative, negate
 	*/
-	bool isNegative() const noexcept;
+	bool isNegative() const JUCE_NOEXCEPT;
 
 	/** Changes the sign of the number to be positive or negative.
 		@see isNegative, negate
 	*/
-	void setNegative (bool shouldBeNegative) noexcept;
+	void setNegative (bool shouldBeNegative) JUCE_NOEXCEPT;
 
 	/** Inverts the sign of the number.
 		@see isNegative, setNegative
 	*/
-	void negate() noexcept;
+	void negate() JUCE_NOEXCEPT;
 
 	/** Converts the number to a string.
 
@@ -17078,8 +17080,8 @@ public:
 	Expression& operator= (const Expression& other);
 
    #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
-	Expression (Expression&& other) noexcept;
-	Expression& operator= (Expression&& other) noexcept;
+	Expression (Expression&& other) JUCE_NOEXCEPT;
+	Expression& operator= (Expression&& other) JUCE_NOEXCEPT;
    #endif
 
 	/** Creates an expression by parsing a string.
@@ -17202,8 +17204,8 @@ public:
 	struct Symbol
 	{
 		Symbol (const String& scopeUID, const String& symbolName);
-		bool operator== (const Symbol&) const noexcept;
-		bool operator!= (const Symbol&) const noexcept;
+		bool operator== (const Symbol&) const JUCE_NOEXCEPT;
+		bool operator!= (const Symbol&) const JUCE_NOEXCEPT;
 
 		String scopeUID;    /**< The unique ID of the Scope that contains this symbol. */
 		String symbolName;  /**< The name of the symbol. */
@@ -17249,7 +17251,7 @@ public:
 	};
 
 	/** Returns the type of this expression. */
-	Type getType() const noexcept;
+	Type getType() const JUCE_NOEXCEPT;
 
 	/** If this expression is a symbol, function or operator, this returns its identifier. */
 	String getSymbolOrFunction() const;
@@ -17309,7 +17311,7 @@ public:
 
 		new Random (Time::currentTimeMillis())
 	*/
-	explicit Random (int64 seedValue) noexcept;
+	explicit Random (int64 seedValue) JUCE_NOEXCEPT;
 
 	/** Creates a Random object using a random seed value.
 		Internally, this calls setSeedRandomly() to randomise the seed.
@@ -17317,41 +17319,41 @@ public:
 	Random();
 
 	/** Destructor. */
-	~Random() noexcept;
+	~Random() JUCE_NOEXCEPT;
 
 	/** Returns the next random 32 bit integer.
 
 		@returns a random integer from the full range 0x80000000 to 0x7fffffff
 	*/
-	int nextInt() noexcept;
+	int nextInt() JUCE_NOEXCEPT;
 
 	/** Returns the next random number, limited to a given range.
 		The maxValue parameter may not be negative, or zero.
 		@returns a random integer between 0 (inclusive) and maxValue (exclusive).
 	*/
-	int nextInt (int maxValue) noexcept;
+	int nextInt (int maxValue) JUCE_NOEXCEPT;
 
 	/** Returns the next 64-bit random number.
 
 		@returns a random integer from the full range 0x8000000000000000 to 0x7fffffffffffffff
 	*/
-	int64 nextInt64() noexcept;
+	int64 nextInt64() JUCE_NOEXCEPT;
 
 	/** Returns the next random floating-point number.
 
 		@returns a random value in the range 0 to 1.0
 	*/
-	float nextFloat() noexcept;
+	float nextFloat() JUCE_NOEXCEPT;
 
 	/** Returns the next random floating-point number.
 
 		@returns a random value in the range 0 to 1.0
 	*/
-	double nextDouble() noexcept;
+	double nextDouble() JUCE_NOEXCEPT;
 
 	/** Returns the next random boolean value.
 	*/
-	bool nextBool() noexcept;
+	bool nextBool() JUCE_NOEXCEPT;
 
 	/** Returns a BigInteger containing a random number.
 
@@ -17363,13 +17365,13 @@ public:
 	void fillBitsRandomly (BigInteger& arrayToChange, int startBit, int numBits);
 
 	/** Resets this Random object to a given seed value. */
-	void setSeed (int64 newSeed) noexcept;
+	void setSeed (int64 newSeed) JUCE_NOEXCEPT;
 
 	/** Merges this object's seed with another value.
 		This sets the seed to be a value created by combining the current seed and this
 		new value.
 	*/
-	void combineSeed (int64 seedValue) noexcept;
+	void combineSeed (int64 seedValue) JUCE_NOEXCEPT;
 
 	/** Reseeds this generator using a value generated from various semi-random system
 		properties like the current time, etc.
@@ -17385,7 +17387,7 @@ public:
 		It's not thread-safe though, so threads should use their own Random object, otherwise
 		you run the risk of your random numbers becoming.. erm.. randomly corrupted..
 	*/
-	static Random& getSystemRandom() noexcept;
+	static Random& getSystemRandom() JUCE_NOEXCEPT;
 
 private:
 
@@ -17500,18 +17502,18 @@ public:
 	}
 
 	/** Returns the object that this pointer is managing. */
-	inline operator ObjectType*() const noexcept                    { return object; }
+	inline operator ObjectType*() const JUCE_NOEXCEPT                    { return object; }
 
 	/** Returns the object that this pointer is managing. */
-	inline ObjectType& operator*() const noexcept                   { return *object; }
+	inline ObjectType& operator*() const JUCE_NOEXCEPT                   { return *object; }
 
 	/** Lets you access methods and properties of the object that this pointer is holding. */
-	inline ObjectType* operator->() const noexcept                  { return object; }
+	inline ObjectType* operator->() const JUCE_NOEXCEPT                  { return object; }
 
 	/** Removes the current object from this OptionalScopedPointer without deleting it.
 		This will return the current object, and set this OptionalScopedPointer to a null pointer.
 	*/
-	ObjectType* release() noexcept                                  { return object.release(); }
+	ObjectType* release() JUCE_NOEXCEPT                                  { return object.release(); }
 
 	/** Resets this pointer to null, possibly deleting the object that it holds, if it has
 		ownership of it.
@@ -17525,7 +17527,7 @@ public:
 	/** Swaps this object with another OptionalScopedPointer.
 		The two objects simply exchange their states.
 	*/
-	void swapWith (OptionalScopedPointer<ObjectType>& other) noexcept
+	void swapWith (OptionalScopedPointer<ObjectType>& other) JUCE_NOEXCEPT
 	{
 		object.swapWith (other.object);
 		std::swap (shouldDelete, other.shouldDelete);
@@ -17645,7 +17647,7 @@ private:
 		return _singletonInstance; \
 	} \
 \
-	static inline classname* JUCE_CALLTYPE getInstanceWithoutCreating() noexcept\
+	static inline classname* JUCE_CALLTYPE getInstanceWithoutCreating() JUCE_NOEXCEPT\
 	{ \
 		return _singletonInstance; \
 	} \
@@ -17661,7 +17663,7 @@ private:
 		} \
 	} \
 \
-	void clearSingletonInstance() noexcept\
+	void clearSingletonInstance() JUCE_NOEXCEPT\
 	{ \
 		if (_singletonInstance == this) \
 			_singletonInstance = nullptr; \
@@ -17723,7 +17725,7 @@ private:
 		return _singletonInstance; \
 	} \
 \
-	static inline classname* getInstanceWithoutCreating() noexcept\
+	static inline classname* getInstanceWithoutCreating() JUCE_NOEXCEPT\
 	{ \
 		return _singletonInstance; \
 	} \
@@ -17738,7 +17740,7 @@ private:
 		} \
 	} \
 \
-	void clearSingletonInstance() noexcept\
+	void clearSingletonInstance() JUCE_NOEXCEPT\
 	{ \
 		if (_singletonInstance == this) \
 			_singletonInstance = nullptr; \
@@ -17773,7 +17775,7 @@ private:
 		return _singletonInstance; \
 	} \
 \
-	static inline classname* getInstanceWithoutCreating() noexcept\
+	static inline classname* getInstanceWithoutCreating() JUCE_NOEXCEPT\
 	{ \
 		return _singletonInstance; \
 	} \
@@ -17788,7 +17790,7 @@ private:
 		} \
 	} \
 \
-	void clearSingletonInstance() noexcept\
+	void clearSingletonInstance() JUCE_NOEXCEPT\
 	{ \
 		if (_singletonInstance == this) \
 			_singletonInstance = nullptr; \
@@ -17867,13 +17869,13 @@ class WeakReference
 {
 public:
 	/** Creates a null SafePointer. */
-	inline WeakReference() noexcept {}
+	inline WeakReference() JUCE_NOEXCEPT {}
 
 	/** Creates a WeakReference that points at the given object. */
 	WeakReference (ObjectType* const object)  : holder (getRef (object)) {}
 
 	/** Creates a copy of another WeakReference. */
-	WeakReference (const WeakReference& other) noexcept         : holder (other.holder) {}
+	WeakReference (const WeakReference& other) JUCE_NOEXCEPT         : holder (other.holder) {}
 
 	/** Copies another pointer to this one. */
 	WeakReference& operator= (const WeakReference& other)       { holder = other.holder; return *this; }
@@ -17882,21 +17884,21 @@ public:
 	WeakReference& operator= (ObjectType* const newObject)      { holder = getRef (newObject); return *this; }
 
    #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
-	WeakReference (WeakReference&& other) noexcept              : holder (static_cast <SharedRef&&> (other.holder)) {}
-	WeakReference& operator= (WeakReference&& other) noexcept   { holder = static_cast <SharedRef&&> (other.holder); return *this; }
+	WeakReference (WeakReference&& other) JUCE_NOEXCEPT              : holder (static_cast <SharedRef&&> (other.holder)) {}
+	WeakReference& operator= (WeakReference&& other) JUCE_NOEXCEPT   { holder = static_cast <SharedRef&&> (other.holder); return *this; }
    #endif
 
 	/** Returns the object that this pointer refers to, or null if the object no longer exists. */
-	ObjectType* get() const noexcept                            { return holder != nullptr ? holder->get() : nullptr; }
+	ObjectType* get() const JUCE_NOEXCEPT                            { return holder != nullptr ? holder->get() : nullptr; }
 
 	/** Returns the object that this pointer refers to, or null if the object no longer exists. */
-	operator ObjectType*() const noexcept                       { return get(); }
+	operator ObjectType*() const JUCE_NOEXCEPT                       { return get(); }
 
 	/** Returns the object that this pointer refers to, or null if the object no longer exists. */
-	ObjectType* operator->() noexcept                           { return get(); }
+	ObjectType* operator->() JUCE_NOEXCEPT                           { return get(); }
 
 	/** Returns the object that this pointer refers to, or null if the object no longer exists. */
-	const ObjectType* operator->() const noexcept               { return get(); }
+	const ObjectType* operator->() const JUCE_NOEXCEPT               { return get(); }
 
 	/** This returns true if this reference has been pointing at an object, but that object has
 		since been deleted.
@@ -17905,10 +17907,10 @@ public:
 		operator=() to make this refer to a different object will reset this flag to match the status
 		of the reference from which you're copying.
 	*/
-	bool wasObjectDeleted() const noexcept                      { return holder != nullptr && holder->get() == nullptr; }
+	bool wasObjectDeleted() const JUCE_NOEXCEPT                      { return holder != nullptr && holder->get() == nullptr; }
 
-	bool operator== (ObjectType* const object) const noexcept   { return get() == object; }
-	bool operator!= (ObjectType* const object) const noexcept   { return get() != object; }
+	bool operator== (ObjectType* const object) const JUCE_NOEXCEPT   { return get() == object; }
+	bool operator!= (ObjectType* const object) const JUCE_NOEXCEPT   { return get() != object; }
 
 	/** This class is used internally by the WeakReference class - don't use it directly
 		in your code!
@@ -17917,10 +17919,10 @@ public:
 	class SharedPointer   : public ReferenceCountingType
 	{
 	public:
-		explicit SharedPointer (ObjectType* const owner_) noexcept : owner (owner_) {}
+		explicit SharedPointer (ObjectType* const owner_) JUCE_NOEXCEPT : owner (owner_) {}
 
-		inline ObjectType* get() const noexcept     { return owner; }
-		void clearPointer() noexcept                { owner = nullptr; }
+		inline ObjectType* get() const JUCE_NOEXCEPT     { return owner; }
+		void clearPointer() JUCE_NOEXCEPT                { owner = nullptr; }
 
 	private:
 		ObjectType* volatile owner;
@@ -17938,7 +17940,7 @@ public:
 	class Master
 	{
 	public:
-		Master() noexcept {}
+		Master() JUCE_NOEXCEPT {}
 
 		~Master()
 		{
@@ -18022,7 +18024,7 @@ public:
 	Uuid();
 
 	/** Destructor. */
-	~Uuid() noexcept;
+	~Uuid() JUCE_NOEXCEPT;
 
 	/** Creates a copy of another UUID. */
 	Uuid (const Uuid& other);
@@ -18031,7 +18033,7 @@ public:
 	Uuid& operator= (const Uuid& other);
 
 	/** Returns true if the ID is zero. */
-	bool isNull() const noexcept;
+	bool isNull() const JUCE_NOEXCEPT;
 
 	/** Compares two UUIDs. */
 	bool operator== (const Uuid& other) const;
@@ -18065,7 +18067,7 @@ public:
 		This is an array of 16 bytes. To reconstruct a Uuid from its data, use
 		the constructor or operator= method that takes an array of uint8s.
 	*/
-	const uint8* getRawData() const noexcept                { return value.asBytes; }
+	const uint8* getRawData() const JUCE_NOEXCEPT                { return value.asBytes; }
 
 	/** Creates a UUID from a 16-byte array.
 
@@ -18202,7 +18204,7 @@ public:
 	explicit MACAddress (const uint8 bytes[6]);
 
 	/** Returns a pointer to the 6 bytes that make up this address. */
-	const uint8* getBytes() const noexcept        { return asBytes; }
+	const uint8* getBytes() const JUCE_NOEXCEPT        { return asBytes; }
 
 	/** Returns a dash-separated string in the form "11-22-33-44-55-66" */
 	String toString() const;
@@ -18212,13 +18214,13 @@ public:
 		This uses a little-endian arrangement, with the first byte of the address being
 		stored in the least-significant byte of the result value.
 	*/
-	int64 toInt64() const noexcept;
+	int64 toInt64() const JUCE_NOEXCEPT;
 
 	/** Returns true if this address is null (00-00-00-00-00-00). */
-	bool isNull() const noexcept;
+	bool isNull() const JUCE_NOEXCEPT;
 
-	bool operator== (const MACAddress& other) const noexcept;
-	bool operator!= (const MACAddress& other) const noexcept;
+	bool operator== (const MACAddress& other) const JUCE_NOEXCEPT;
+	bool operator!= (const MACAddress& other) const JUCE_NOEXCEPT;
 
 private:
    #ifndef DOXYGEN
@@ -18376,19 +18378,19 @@ public:
 				  int timeOutMillisecs = 3000);
 
 	/** True if the socket is currently connected. */
-	bool isConnected() const noexcept                           { return connected; }
+	bool isConnected() const JUCE_NOEXCEPT                           { return connected; }
 
 	/** Closes the connection. */
 	void close();
 
 	/** Returns the name of the currently connected host. */
-	const String& getHostName() const noexcept                  { return hostName; }
+	const String& getHostName() const JUCE_NOEXCEPT                  { return hostName; }
 
 	/** Returns the port number that's currently open. */
-	int getPort() const noexcept                                { return portNumber; }
+	int getPort() const JUCE_NOEXCEPT                                { return portNumber; }
 
 	/** True if the socket is connected to this machine rather than over the network. */
-	bool isLocal() const noexcept;
+	bool isLocal() const JUCE_NOEXCEPT;
 
 	/** Waits until the socket is ready for reading or writing.
 
@@ -18516,19 +18518,19 @@ public:
 				  int timeOutMillisecs = 3000);
 
 	/** True if the socket is currently connected. */
-	bool isConnected() const noexcept                           { return connected; }
+	bool isConnected() const JUCE_NOEXCEPT                           { return connected; }
 
 	/** Closes the connection. */
 	void close();
 
 	/** Returns the name of the currently connected host. */
-	const String& getHostName() const noexcept                  { return hostName; }
+	const String& getHostName() const JUCE_NOEXCEPT                  { return hostName; }
 
 	/** Returns the port number that's currently open. */
-	int getPort() const noexcept                                { return portNumber; }
+	int getPort() const JUCE_NOEXCEPT                                { return portNumber; }
 
 	/** True if the socket is connected to this machine rather than over the network. */
-	bool isLocal() const noexcept;
+	bool isLocal() const JUCE_NOEXCEPT;
 
 	/** Waits until the socket is ready for reading or writing.
 
@@ -18723,7 +18725,7 @@ public:
 
 		@see getParameterValues, withParameter
 	*/
-	const StringArray& getParameterNames() const noexcept       { return parameterNames; }
+	const StringArray& getParameterNames() const JUCE_NOEXCEPT       { return parameterNames; }
 
 	/** Returns an array of the values of all the URL's parameters.
 
@@ -18737,7 +18739,7 @@ public:
 
 		@see getParameterNames, withParameter
 	*/
-	const StringArray& getParameterValues() const noexcept      { return parameterValues; }
+	const StringArray& getParameterValues() const JUCE_NOEXCEPT      { return parameterValues; }
 
 	/** Returns the set of files that should be uploaded as part of a POST operation.
 
@@ -18765,7 +18767,7 @@ public:
 	URL withPOSTData (const String& postData) const;
 
 	/** Returns the data that was set using withPOSTData(). */
-	const String& getPostData() const noexcept                  { return postData; }
+	const String& getPostData() const JUCE_NOEXCEPT                  { return postData; }
 
 	/** Tries to launch the system's default browser to open the URL.
 
@@ -18999,7 +19001,7 @@ class JUCE_API  InputSource
 {
 public:
 
-	InputSource() noexcept      {}
+	InputSource() JUCE_NOEXCEPT      {}
 
 	/** Destructor. */
 	virtual ~InputSource()      {}
@@ -19182,16 +19184,16 @@ public:
 
 		@see getDataSize
 	*/
-	const void* getData() const noexcept;
+	const void* getData() const JUCE_NOEXCEPT;
 
 	/** Returns the number of bytes of data that have been written to the stream.
 
 		@see getData
 	*/
-	size_t getDataSize() const noexcept                 { return size; }
+	size_t getDataSize() const JUCE_NOEXCEPT                 { return size; }
 
 	/** Resets the stream, clearing any data that has been written to it so far. */
-	void reset() noexcept;
+	void reset() JUCE_NOEXCEPT;
 
 	/** Increases the internal storage capacity to be able to contain at least the specified
 		amount of data without needing to be resized.
@@ -19413,19 +19415,19 @@ public:
 	static String getCpuVendor();
 
 	/** Checks whether Intel MMX instructions are available. */
-	static bool hasMMX() noexcept               { return getCPUFlags().hasMMX; }
+	static bool hasMMX() JUCE_NOEXCEPT               { return getCPUFlags().hasMMX; }
 
 	/** Checks whether Intel SSE instructions are available. */
-	static bool hasSSE() noexcept               { return getCPUFlags().hasSSE; }
+	static bool hasSSE() JUCE_NOEXCEPT               { return getCPUFlags().hasSSE; }
 
 	/** Checks whether Intel SSE2 instructions are available. */
-	static bool hasSSE2() noexcept              { return getCPUFlags().hasSSE2; }
+	static bool hasSSE2() JUCE_NOEXCEPT              { return getCPUFlags().hasSSE2; }
 
 	/** Checks whether AMD 3DNOW instructions are available. */
-	static bool has3DNow() noexcept             { return getCPUFlags().has3DNow; }
+	static bool has3DNow() JUCE_NOEXCEPT             { return getCPUFlags().has3DNow; }
 
 	/** Returns the number of CPUs. */
-	static int getNumCpus() noexcept            { return getCPUFlags().numCpus; }
+	static int getNumCpus() JUCE_NOEXCEPT            { return getCPUFlags().numCpus; }
 
 	/** Finds out how much RAM is in the machine.
 
@@ -19706,7 +19708,7 @@ class JUCE_API  StringPool
 public:
 
 	/** Creates an empty pool. */
-	StringPool() noexcept;
+	StringPool() JUCE_NOEXCEPT;
 
 	/** Destructor */
 	~StringPool();
@@ -19736,10 +19738,10 @@ public:
 	String::CharPointerType getPooledString (const wchar_t* original);
 
 	/** Returns the number of strings in the pool. */
-	int size() const noexcept;
+	int size() const JUCE_NOEXCEPT;
 
 	/** Returns one of the strings in the pool, by index. */
-	String::CharPointerType operator[] (int index) const noexcept;
+	String::CharPointerType operator[] (int index) const JUCE_NOEXCEPT;
 
 private:
 	Array <String> strings;
@@ -19847,7 +19849,7 @@ public:
 	/** Creates an unopened DynamicLibrary object.
 		Call open() to actually open one.
 	*/
-	DynamicLibrary() noexcept : handle (nullptr) {}
+	DynamicLibrary() JUCE_NOEXCEPT : handle (nullptr) {}
 
 	/**
 	*/
@@ -19873,12 +19875,12 @@ public:
 	/** Tries to find a named function in the currently-open DLL, and returns a pointer to it.
 		If no library is open, or if the function isn't found, this will return a null pointer.
 	*/
-	void* getFunction (const String& functionName) noexcept;
+	void* getFunction (const String& functionName) JUCE_NOEXCEPT;
 
 	/** Returns the platform-specific native library handle.
 		You'll need to cast this to whatever is appropriate for the OS that's in use.
 	*/
-	void* getNativeHandle() const noexcept     { return handle; }
+	void* getNativeHandle() const JUCE_NOEXCEPT     { return handle; }
 
 private:
 	void* handle;
@@ -19971,7 +19973,7 @@ public:
 		inline ~ScopedLockType()                                            { lock_.exit(); }
 
 		/** Returns true if the InterProcessLock was successfully locked. */
-		bool isLocked() const noexcept                                      { return lockWasSuccessful; }
+		bool isLocked() const JUCE_NOEXCEPT                                      { return lockWasSuccessful; }
 
 	private:
 
@@ -20088,7 +20090,7 @@ public:
 		to provide the correct module handle in your DllMain() function, because
 		the system relies on the correct instance handle when opening windows.
 	*/
-	static void* JUCE_CALLTYPE getCurrentModuleInstanceHandle() noexcept;
+	static void* JUCE_CALLTYPE getCurrentModuleInstanceHandle() JUCE_NOEXCEPT;
 
 	/** WINDOWS ONLY - Sets a new module handle to be used by the library.
 
@@ -20097,7 +20099,7 @@ public:
 
 		@see getCurrentModuleInstanceHandle()
 	*/
-	static void JUCE_CALLTYPE setCurrentModuleInstanceHandle (void* newHandle) noexcept;
+	static void JUCE_CALLTYPE setCurrentModuleInstanceHandle (void* newHandle) JUCE_NOEXCEPT;
 
 	/** WINDOWS ONLY - Gets the command-line params as a string.
 		This is needed to avoid unicode problems with the argc type params.
@@ -20142,8 +20144,8 @@ private:
 class JUCE_API  SpinLock
 {
 public:
-	inline SpinLock() noexcept {}
-	inline ~SpinLock() noexcept {}
+	inline SpinLock() JUCE_NOEXCEPT {}
+	inline ~SpinLock() JUCE_NOEXCEPT {}
 
 	/** Acquires the lock.
 		This will block until the lock has been successfully acquired by this thread.
@@ -20154,16 +20156,16 @@ public:
 		It's strongly recommended that you never call this method directly - instead use the
 		ScopedLockType class to manage the locking using an RAII pattern instead.
 	*/
-	void enter() const noexcept;
+	void enter() const JUCE_NOEXCEPT;
 
 	/** Attempts to acquire the lock, returning true if this was successful. */
-	inline bool tryEnter() const noexcept
+	inline bool tryEnter() const JUCE_NOEXCEPT
 	{
 		return lock.compareAndSetBool (1, 0);
 	}
 
 	/** Releases the lock. */
-	inline void exit() const noexcept
+	inline void exit() const JUCE_NOEXCEPT
 	{
 		jassert (lock.value == 1); // Agh! Releasing a lock that isn't currently held!
 		lock = 0;
@@ -20208,14 +20210,14 @@ public:
 							method is called. If manualReset is true, then once the event is signalled,
 							the only way to reset it will be by calling the reset() method.
 	*/
-	WaitableEvent (bool manualReset = false) noexcept;
+	WaitableEvent (bool manualReset = false) JUCE_NOEXCEPT;
 
 	/** Destructor.
 
 		If other threads are waiting on this object when it gets deleted, this
 		can cause nasty errors, so be careful!
 	*/
-	~WaitableEvent() noexcept;
+	~WaitableEvent() JUCE_NOEXCEPT;
 
 	/** Suspends the calling thread until the event has been signalled.
 
@@ -20231,7 +20233,7 @@ public:
 		@returns    true if the object has been signalled, false if the timeout expires first.
 		@see signal, reset
 	*/
-	bool wait (int timeOutMilliseconds = -1) const noexcept;
+	bool wait (int timeOutMilliseconds = -1) const JUCE_NOEXCEPT;
 
 	/** Wakes up any threads that are currently waiting on this object.
 
@@ -20248,13 +20250,13 @@ public:
 
 		@see wait, reset
 	*/
-	void signal() const noexcept;
+	void signal() const JUCE_NOEXCEPT;
 
 	/** Resets the event to an unsignalled state.
 
 		If it's not already signalled, this does nothing.
 	*/
-	void reset() const noexcept;
+	void reset() const JUCE_NOEXCEPT;
 
 private:
 
@@ -20481,7 +20483,7 @@ public:
 
 		@see getCurrentThreadId
 	*/
-	ThreadID getThreadId() const noexcept                           { return threadId_; }
+	ThreadID getThreadId() const JUCE_NOEXCEPT                           { return threadId_; }
 
 	/** Returns the name of the thread.
 
@@ -20560,14 +20562,14 @@ public:
 	/**
 		Creates a ReadWriteLock object.
 	*/
-	ReadWriteLock() noexcept;
+	ReadWriteLock() JUCE_NOEXCEPT;
 
 	/** Destructor.
 
 		If the object is deleted whilst locked, any subsequent behaviour
 		is unpredictable.
 	*/
-	~ReadWriteLock() noexcept;
+	~ReadWriteLock() JUCE_NOEXCEPT;
 
 	/** Locks this object for reading.
 
@@ -20577,7 +20579,7 @@ public:
 
 		@see exitRead, ScopedReadLock
 	*/
-	void enterRead() const noexcept;
+	void enterRead() const JUCE_NOEXCEPT;
 
 	/** Releases the read-lock.
 
@@ -20589,7 +20591,7 @@ public:
 
 		@see enterRead, ScopedReadLock
 	*/
-	void exitRead() const noexcept;
+	void exitRead() const JUCE_NOEXCEPT;
 
 	/** Locks this object for writing.
 
@@ -20598,7 +20600,7 @@ public:
 
 		@see exitWrite, ScopedWriteLock
 	*/
-	void enterWrite() const noexcept;
+	void enterWrite() const JUCE_NOEXCEPT;
 
 	/** Tries to lock this object for writing.
 
@@ -20607,7 +20609,7 @@ public:
 
 		@see enterWrite
 	*/
-	bool tryEnterWrite() const noexcept;
+	bool tryEnterWrite() const JUCE_NOEXCEPT;
 
 	/** Releases the write-lock.
 
@@ -20619,7 +20621,7 @@ public:
 
 		@see enterWrite, ScopedWriteLock
 	*/
-	void exitWrite() const noexcept;
+	void exitWrite() const JUCE_NOEXCEPT;
 
 private:
 
@@ -20683,7 +20685,7 @@ public:
 		otherwise there are no guarantees what will happen! Best just to use it
 		as a local stack object, rather than creating one with the new() operator.
 	*/
-	inline explicit ScopedReadLock (const ReadWriteLock& lock) noexcept   : lock_ (lock) { lock.enterRead(); }
+	inline explicit ScopedReadLock (const ReadWriteLock& lock) JUCE_NOEXCEPT   : lock_ (lock) { lock.enterRead(); }
 
 	/** Destructor.
 
@@ -20692,7 +20694,7 @@ public:
 		Make sure this object is created and deleted by the same thread,
 		otherwise there are no guarantees what will happen!
 	*/
-	inline ~ScopedReadLock() noexcept                                     { lock_.exitRead(); }
+	inline ~ScopedReadLock() JUCE_NOEXCEPT                                     { lock_.exitRead(); }
 
 private:
 
@@ -20749,7 +20751,7 @@ public:
 		otherwise there are no guarantees what will happen! Best just to use it
 		as a local stack object, rather than creating one with the new() operator.
 	*/
-	inline explicit ScopedWriteLock (const ReadWriteLock& lock) noexcept : lock_ (lock) { lock.enterWrite(); }
+	inline explicit ScopedWriteLock (const ReadWriteLock& lock) JUCE_NOEXCEPT : lock_ (lock) { lock.enterWrite(); }
 
 	/** Destructor.
 
@@ -20758,7 +20760,7 @@ public:
 		Make sure this object is created and deleted by the same thread,
 		otherwise there are no guarantees what will happen!
 	*/
-	inline ~ScopedWriteLock() noexcept                                   { lock_.exitWrite(); }
+	inline ~ScopedWriteLock() JUCE_NOEXCEPT                                   { lock_.exitWrite(); }
 
 private:
 
@@ -20806,7 +20808,7 @@ class ThreadLocalValue
 {
 public:
 	/** */
-	ThreadLocalValue() noexcept
+	ThreadLocalValue() JUCE_NOEXCEPT
 	{
 	}
 
@@ -20828,28 +20830,28 @@ public:
 		value object will be created - so if your value's class has a non-trivial
 		constructor, be aware that this method could invoke it.
 	*/
-	Type& operator*() const noexcept    { return get(); }
+	Type& operator*() const JUCE_NOEXCEPT    { return get(); }
 
 	/** Returns a pointer to this thread's instance of the value.
 		Note that the first time a thread tries to access the value, an instance of the
 		value object will be created - so if your value's class has a non-trivial
 		constructor, be aware that this method could invoke it.
 	*/
-	operator Type*() const noexcept     { return &get(); }
+	operator Type*() const JUCE_NOEXCEPT     { return &get(); }
 
 	/** Accesses a method or field of the value object.
 		Note that the first time a thread tries to access the value, an instance of the
 		value object will be created - so if your value's class has a non-trivial
 		constructor, be aware that this method could invoke it.
 	*/
-	Type* operator->() const noexcept   { return &get(); }
+	Type* operator->() const JUCE_NOEXCEPT   { return &get(); }
 
 	/** Returns a reference to this thread's instance of the value.
 		Note that the first time a thread tries to access the value, an instance of the
 		value object will be created - so if your value's class has a non-trivial
 		constructor, be aware that this method could invoke it.
 	*/
-	Type& get() const noexcept
+	Type& get() const JUCE_NOEXCEPT
 	{
 		const Thread::ThreadID threadId = Thread::getCurrentThreadId();
 
@@ -21441,7 +21443,7 @@ public:
 	virtual ~UnitTest();
 
 	/** Returns the name of the test. */
-	const String& getName() const noexcept       { return name; }
+	const String& getName() const JUCE_NOEXCEPT       { return name; }
 
 	/** Runs the test, using the specified UnitTestRunner.
 		You shouldn't need to call this method directly - use
@@ -21563,12 +21565,12 @@ public:
 	/** Sets a flag to indicate whether an assertion should be triggered if a test fails.
 		This is true by default.
 	*/
-	void setAssertOnFailure (bool shouldAssert) noexcept;
+	void setAssertOnFailure (bool shouldAssert) JUCE_NOEXCEPT;
 
 	/** Sets a flag to indicate whether successful tests should be logged.
 		By default, this is set to false, so that only failures will be displayed in the log.
 	*/
-	void setPassesAreLogged (bool shouldDisplayPasses) noexcept;
+	void setPassesAreLogged (bool shouldDisplayPasses) JUCE_NOEXCEPT;
 
 	/** Contains the results of a test.
 
@@ -21595,12 +21597,12 @@ public:
 	/** Returns the number of TestResult objects that have been performed.
 		@see getResult
 	*/
-	int getNumResults() const noexcept;
+	int getNumResults() const JUCE_NOEXCEPT;
 
 	/** Returns one of the TestResult objects that describes a test that has been run.
 		@see getNumResults
 	*/
-	const TestResult* getResult (int index) const noexcept;
+	const TestResult* getResult (int index) const JUCE_NOEXCEPT;
 
 protected:
 	/** Called when the list of results changes.
@@ -21728,7 +21730,7 @@ public:
 
 		@returns the error, or an empty string if there was no error.
 	*/
-	const String& getLastParseError() const noexcept;
+	const String& getLastParseError() const JUCE_NOEXCEPT;
 
 	/** Sets an input source object to use for parsing documents that reference external entities.
 
@@ -21741,7 +21743,7 @@ public:
 
 		@see InputSource
 	*/
-	void setInputSource (InputSource* newSource) noexcept;
+	void setInputSource (InputSource* newSource) JUCE_NOEXCEPT;
 
 	/** Sets a flag to change the treatment of empty text elements.
 
@@ -21750,7 +21752,7 @@ public:
 		whitespace-only text, then you should set this to false before calling the
 		getDocumentElement() method.
 	*/
-	void setEmptyTextElementsIgnored (bool shouldBeIgnored) noexcept;
+	void setEmptyTextElementsIgnored (bool shouldBeIgnored) JUCE_NOEXCEPT;
 
 	/** A handy static method that parses a file.
 		This is a shortcut for creating an XmlDocument object and calling getDocumentElement() on it.
@@ -21777,10 +21779,10 @@ private:
 	void setLastError (const String& desc, bool carryOn);
 	void skipHeader();
 	void skipNextWhiteSpace();
-	juce_wchar readNextChar() noexcept;
+	juce_wchar readNextChar() JUCE_NOEXCEPT;
 	XmlElement* readNextElement (bool alsoParseSubElements);
 	void readChildElements (XmlElement* parent);
-	int findNextTokenLength() noexcept;
+	int findNextTokenLength() JUCE_NOEXCEPT;
 	void readQuotedString (String& result);
 	void readEntity (String& result);
 
@@ -22012,7 +22014,7 @@ public:
 	};
 
 	/** Returns the number of items in the zip file. */
-	int getNumEntries() const noexcept;
+	int getNumEntries() const JUCE_NOEXCEPT;
 
 	/** Returns a structure that describes one of the entries in the zip file.
 
@@ -22020,7 +22022,7 @@ public:
 
 		@see ZipFile::ZipEntry
 	*/
-	const ZipEntry* getEntry (int index) const noexcept;
+	const ZipEntry* getEntry (int index) const JUCE_NOEXCEPT;
 
 	/** Returns the index of the first entry with a given filename.
 
@@ -22029,7 +22031,7 @@ public:
 
 		@see ZipFile::ZipEntry
 	*/
-	int getIndexOfFileName (const String& fileName) const noexcept;
+	int getIndexOfFileName (const String& fileName) const JUCE_NOEXCEPT;
 
 	/** Returns a structure that describes one of the entries in the zip file.
 
@@ -22038,7 +22040,7 @@ public:
 
 		@see ZipFile::ZipEntry
 	*/
-	const ZipEntry* getEntry (const String& fileName) const noexcept;
+	const ZipEntry* getEntry (const String& fileName) const JUCE_NOEXCEPT;
 
 	/** Sorts the list of entries, based on the filename.
 	*/
@@ -22204,23 +22206,23 @@ public:
 	BlowFish (const BlowFish& other);
 
 	/** Copies another blowfish object. */
-	BlowFish& operator= (const BlowFish& other) noexcept;
+	BlowFish& operator= (const BlowFish& other) JUCE_NOEXCEPT;
 
 	/** Destructor. */
-	~BlowFish() noexcept;
+	~BlowFish() JUCE_NOEXCEPT;
 
 	/** Encrypts a pair of 32-bit integers. */
-	void encrypt (uint32& data1, uint32& data2) const noexcept;
+	void encrypt (uint32& data1, uint32& data2) const JUCE_NOEXCEPT;
 
 	/** Decrypts a pair of 32-bit integers. */
-	void decrypt (uint32& data1, uint32& data2) const noexcept;
+	void decrypt (uint32& data1, uint32& data2) const JUCE_NOEXCEPT;
 
 private:
 
 	uint32 p[18];
 	HeapBlock <uint32> s[4];
 
-	uint32 F (uint32) const noexcept;
+	uint32 F (uint32) const JUCE_NOEXCEPT;
 
 	JUCE_LEAK_DETECTOR (BlowFish);
 };
@@ -22315,8 +22317,8 @@ public:
 	/** Destructor. */
 	~RSAKey();
 
-	bool operator== (const RSAKey& other) const noexcept;
-	bool operator!= (const RSAKey& other) const noexcept;
+	bool operator== (const RSAKey& other) const JUCE_NOEXCEPT;
+	bool operator!= (const RSAKey& other) const JUCE_NOEXCEPT;
 
 	/** Turns the key into a string representation.
 
@@ -22395,19 +22397,19 @@ class JUCE_API  MD5
 public:
 
 	/** Creates a null MD5 object. */
-	MD5() noexcept;
+	MD5() JUCE_NOEXCEPT;
 
 	/** Creates a copy of another MD5. */
-	MD5 (const MD5& other) noexcept;
+	MD5 (const MD5& other) JUCE_NOEXCEPT;
 
 	/** Copies another MD5. */
-	MD5& operator= (const MD5& other) noexcept;
+	MD5& operator= (const MD5& other) JUCE_NOEXCEPT;
 
 	/** Creates a checksum for a block of binary data. */
-	explicit MD5 (const MemoryBlock& data) noexcept;
+	explicit MD5 (const MemoryBlock& data) JUCE_NOEXCEPT;
 
 	/** Creates a checksum for a block of binary data. */
-	MD5 (const void* data, size_t numBytes) noexcept;
+	MD5 (const void* data, size_t numBytes) JUCE_NOEXCEPT;
 
 	/** Creates a checksum for the input from a stream.
 
@@ -22425,16 +22427,16 @@ public:
 		@code MD5 checksum (myString.toUTF8());
 		@endcode
 	*/
-	explicit MD5 (const CharPointer_UTF8& utf8Text) noexcept;
+	explicit MD5 (const CharPointer_UTF8& utf8Text) JUCE_NOEXCEPT;
 
 	/** Destructor. */
-	~MD5() noexcept;
+	~MD5() JUCE_NOEXCEPT;
 
 	/** Returns the checksum as a 16-byte block of data. */
 	MemoryBlock getRawChecksumData() const;
 
 	/** Returns a pointer to the 16-byte array of result data. */
-	const uint8* getChecksumDataArray() const noexcept          { return result; }
+	const uint8* getChecksumDataArray() const JUCE_NOEXCEPT          { return result; }
 
 	/** Returns the checksum as a 32-digit hex string. */
 	String toHexString() const;
@@ -22448,14 +22450,14 @@ public:
 	*/
 	static MD5 fromUTF32 (const String&);
 
-	bool operator== (const MD5&) const noexcept;
-	bool operator!= (const MD5&) const noexcept;
+	bool operator== (const MD5&) const JUCE_NOEXCEPT;
+	bool operator!= (const MD5&) const JUCE_NOEXCEPT;
 
 private:
 
 	uint8 result [16];
 
-	void processData (const void*, size_t) noexcept;
+	void processData (const void*, size_t) JUCE_NOEXCEPT;
 	void processStream (InputStream&, int64);
 
 	JUCE_LEAK_DETECTOR (MD5);
@@ -22490,16 +22492,16 @@ public:
 		The default constructor just creates a hash filled with zeros. (This is not
 		equal to the hash of an empty block of data).
 	*/
-	SHA256() noexcept;
+	SHA256() JUCE_NOEXCEPT;
 
 	/** Destructor. */
-	~SHA256() noexcept;
+	~SHA256() JUCE_NOEXCEPT;
 
 	/** Creates a copy of another SHA256. */
-	SHA256 (const SHA256& other) noexcept;
+	SHA256 (const SHA256& other) JUCE_NOEXCEPT;
 
 	/** Copies another SHA256. */
-	SHA256& operator= (const SHA256& other) noexcept;
+	SHA256& operator= (const SHA256& other) JUCE_NOEXCEPT;
 
 	/** Creates a hash from a block of raw data. */
 	explicit SHA256 (const MemoryBlock& data);
@@ -22526,7 +22528,7 @@ public:
 		@code SHA256 checksum (myString.toUTF8());
 		@endcode
 	*/
-	explicit SHA256 (const CharPointer_UTF8& utf8Text) noexcept;
+	explicit SHA256 (const CharPointer_UTF8& utf8Text) JUCE_NOEXCEPT;
 
 	/** Returns the hash as a 32-byte block of data. */
 	MemoryBlock getRawData() const;
@@ -22534,8 +22536,8 @@ public:
 	/** Returns the checksum as a 64-digit hex string. */
 	String toHexString() const;
 
-	bool operator== (const SHA256&) const noexcept;
-	bool operator!= (const SHA256&) const noexcept;
+	bool operator== (const SHA256&) const JUCE_NOEXCEPT;
+	bool operator!= (const SHA256&) const JUCE_NOEXCEPT;
 
 private:
 
@@ -22763,7 +22765,7 @@ BlowFish::BlowFish (const BlowFish& other)
 	operator= (other);
 }
 
-BlowFish& BlowFish::operator= (const BlowFish& other) noexcept
+BlowFish& BlowFish::operator= (const BlowFish& other) JUCE_NOEXCEPT
 {
 	memcpy (p, other.p, sizeof (p));
 
@@ -22773,15 +22775,15 @@ BlowFish& BlowFish::operator= (const BlowFish& other) noexcept
 	return *this;
 }
 
-BlowFish::~BlowFish() noexcept {}
+BlowFish::~BlowFish() JUCE_NOEXCEPT {}
 
-uint32 BlowFish::F (const uint32 x) const noexcept
+uint32 BlowFish::F (const uint32 x) const JUCE_NOEXCEPT
 {
 	return ((s[0][(x >> 24) & 0xff] + s[1][(x >> 16) & 0xff])
 				^ s[2][(x >> 8) & 0xff]) + s[3][x & 0xff];
 }
 
-void BlowFish::encrypt (uint32& data1, uint32& data2) const noexcept
+void BlowFish::encrypt (uint32& data1, uint32& data2) const JUCE_NOEXCEPT
 {
 	uint32 l = data1;
 	uint32 r = data2;
@@ -22797,7 +22799,7 @@ void BlowFish::encrypt (uint32& data1, uint32& data2) const noexcept
 	data2 = l ^ p[16];
 }
 
-void BlowFish::decrypt (uint32& data1, uint32& data2) const noexcept
+void BlowFish::decrypt (uint32& data1, uint32& data2) const JUCE_NOEXCEPT
 {
 	uint32 l = data1;
 	uint32 r = data2;
@@ -23058,12 +23060,12 @@ RSAKey::~RSAKey()
 {
 }
 
-bool RSAKey::operator== (const RSAKey& other) const noexcept
+bool RSAKey::operator== (const RSAKey& other) const JUCE_NOEXCEPT
 {
 	return part1 == other.part1 && part2 == other.part2;
 }
 
-bool RSAKey::operator!= (const RSAKey& other) const noexcept
+bool RSAKey::operator!= (const RSAKey& other) const JUCE_NOEXCEPT
 {
 	return ! operator== (other);
 }
@@ -23150,7 +23152,7 @@ void RSAKey::createKeyPair (RSAKey& publicKey, RSAKey& privateKey,
 class MD5Generator
 {
 public:
-	MD5Generator() noexcept
+	MD5Generator() JUCE_NOEXCEPT
 	{
 		state[0] = 0x67452301;
 		state[1] = 0xefcdab89;
@@ -23161,7 +23163,7 @@ public:
 		count[1] = 0;
 	}
 
-	void processBlock (const void* data, size_t dataSize) noexcept
+	void processBlock (const void* data, size_t dataSize) JUCE_NOEXCEPT
 	{
 		int bufferPos = ((count[0] >> 3) & 0x3F);
 
@@ -23189,7 +23191,7 @@ public:
 		memcpy (buffer + bufferPos, static_cast <const char*> (data) + i, dataSize - i);
 	}
 
-	void transform (const void* bufferToTransform) noexcept
+	void transform (const void* bufferToTransform) JUCE_NOEXCEPT
 	{
 		uint32 a = state[0];
 		uint32 b = state[1];
@@ -23249,7 +23251,7 @@ public:
 		zerostruct (x);
 	}
 
-	void finish (void* result) noexcept
+	void finish (void* result) JUCE_NOEXCEPT
 	{
 		unsigned char encodedLength[8];
 		encode (encodedLength, count, 8);
@@ -23274,71 +23276,71 @@ private:
 	uint32 state [4];
 	uint32 count [2];
 
-	static void encode (void* const output, const void* const input, const int numBytes) noexcept
+	static void encode (void* const output, const void* const input, const int numBytes) JUCE_NOEXCEPT
 	{
 		for (int i = 0; i < (numBytes >> 2); ++i)
 			static_cast<uint32*> (output)[i] = ByteOrder::swapIfBigEndian (static_cast<const uint32*> (input) [i]);
 	}
 
-	static inline uint32 rotateLeft (const uint32 x, const uint32 n) noexcept          { return (x << n) | (x >> (32 - n)); }
+	static inline uint32 rotateLeft (const uint32 x, const uint32 n) JUCE_NOEXCEPT          { return (x << n) | (x >> (32 - n)); }
 
-	static inline uint32 F (const uint32 x, const uint32 y, const uint32 z) noexcept   { return (x & y) | (~x & z); }
-	static inline uint32 G (const uint32 x, const uint32 y, const uint32 z) noexcept   { return (x & z) | (y & ~z); }
-	static inline uint32 H (const uint32 x, const uint32 y, const uint32 z) noexcept   { return x ^ y ^ z; }
-	static inline uint32 I (const uint32 x, const uint32 y, const uint32 z) noexcept   { return y ^ (x | ~z); }
+	static inline uint32 F (const uint32 x, const uint32 y, const uint32 z) JUCE_NOEXCEPT   { return (x & y) | (~x & z); }
+	static inline uint32 G (const uint32 x, const uint32 y, const uint32 z) JUCE_NOEXCEPT   { return (x & z) | (y & ~z); }
+	static inline uint32 H (const uint32 x, const uint32 y, const uint32 z) JUCE_NOEXCEPT   { return x ^ y ^ z; }
+	static inline uint32 I (const uint32 x, const uint32 y, const uint32 z) JUCE_NOEXCEPT   { return y ^ (x | ~z); }
 
-	static void FF (uint32& a, const uint32 b, const uint32 c, const uint32 d, const uint32 x, const uint32 s, const uint32 ac) noexcept
+	static void FF (uint32& a, const uint32 b, const uint32 c, const uint32 d, const uint32 x, const uint32 s, const uint32 ac) JUCE_NOEXCEPT
 	{
 		a += F (b, c, d) + x + ac;
 		a = rotateLeft (a, s) + b;
 	}
 
-	static void GG (uint32& a, const uint32 b, const uint32 c, const uint32 d, const uint32 x, const uint32 s, const uint32 ac) noexcept
+	static void GG (uint32& a, const uint32 b, const uint32 c, const uint32 d, const uint32 x, const uint32 s, const uint32 ac) JUCE_NOEXCEPT
 	{
 		a += G (b, c, d) + x + ac;
 		a = rotateLeft (a, s) + b;
 	}
 
-	static void HH (uint32& a, const uint32 b, const uint32 c, const uint32 d, const uint32 x, const uint32 s, const uint32 ac) noexcept
+	static void HH (uint32& a, const uint32 b, const uint32 c, const uint32 d, const uint32 x, const uint32 s, const uint32 ac) JUCE_NOEXCEPT
 	{
 		a += H (b, c, d) + x + ac;
 		a = rotateLeft (a, s) + b;
 	}
 
-	static void II (uint32& a, const uint32 b, const uint32 c, const uint32 d, const uint32 x, const uint32 s, const uint32 ac) noexcept
+	static void II (uint32& a, const uint32 b, const uint32 c, const uint32 d, const uint32 x, const uint32 s, const uint32 ac) JUCE_NOEXCEPT
 	{
 		a += I (b, c, d) + x + ac;
 		a = rotateLeft (a, s) + b;
 	}
 };
 
-MD5::MD5() noexcept
+MD5::MD5() JUCE_NOEXCEPT
 {
 	zerostruct (result);
 }
 
-MD5::MD5 (const MD5& other) noexcept
+MD5::MD5 (const MD5& other) JUCE_NOEXCEPT
 {
 	memcpy (result, other.result, sizeof (result));
 }
 
-MD5& MD5::operator= (const MD5& other) noexcept
+MD5& MD5::operator= (const MD5& other) JUCE_NOEXCEPT
 {
 	memcpy (result, other.result, sizeof (result));
 	return *this;
 }
 
-MD5::MD5 (const MemoryBlock& data) noexcept
+MD5::MD5 (const MemoryBlock& data) JUCE_NOEXCEPT
 {
 	processData (data.getData(), data.getSize());
 }
 
-MD5::MD5 (const void* data, const size_t numBytes) noexcept
+MD5::MD5 (const void* data, const size_t numBytes) JUCE_NOEXCEPT
 {
 	processData (data, numBytes);
 }
 
-MD5::MD5 (const CharPointer_UTF8& utf8) noexcept
+MD5::MD5 (const CharPointer_UTF8& utf8) JUCE_NOEXCEPT
 {
 	jassert (utf8.getAddress() != nullptr);
 	processData (utf8.getAddress(), utf8.sizeInBytes() - 1);
@@ -23375,9 +23377,9 @@ MD5::MD5 (const File& file)
 		zerostruct (result);
 }
 
-MD5::~MD5() noexcept {}
+MD5::~MD5() JUCE_NOEXCEPT {}
 
-void MD5::processData (const void* data, size_t numBytes) noexcept
+void MD5::processData (const void* data, size_t numBytes) JUCE_NOEXCEPT
 {
 	MD5Generator generator;
 	generator.processBlock (data, numBytes);
@@ -23416,8 +23418,8 @@ String MD5::toHexString() const
 	return String::toHexString (result, sizeof (result), 0);
 }
 
-bool MD5::operator== (const MD5& other) const noexcept   { return memcmp (result, other.result, sizeof (result)) == 0; }
-bool MD5::operator!= (const MD5& other) const noexcept   { return ! operator== (other); }
+bool MD5::operator== (const MD5& other) const JUCE_NOEXCEPT   { return memcmp (result, other.result, sizeof (result)) == 0; }
+bool MD5::operator!= (const MD5& other) const JUCE_NOEXCEPT   { return ! operator== (other); }
 
 /*** End of inlined file: juce_MD5.cpp ***/
 
@@ -23426,7 +23428,7 @@ bool MD5::operator!= (const MD5& other) const noexcept   { return ! operator== (
 class SHA256Processor
 {
 public:
-	SHA256Processor() noexcept
+	SHA256Processor() JUCE_NOEXCEPT
 		: length (0)
 	{
 		state[0] = 0x6a09e667;
@@ -23440,7 +23442,7 @@ public:
 	}
 
 	// expects 64 bytes of data
-	void processFullBlock (const void* const data) noexcept
+	void processFullBlock (const void* const data) JUCE_NOEXCEPT
 	{
 		const uint32 constants[] =
 		{
@@ -23476,7 +23478,7 @@ public:
 		length += 64;
 	}
 
-	void processFinalBlock (const void* const data, int numBytes) noexcept
+	void processFinalBlock (const void* const data, int numBytes) JUCE_NOEXCEPT
 	{
 		jassert (numBytes < 64);
 
@@ -23502,7 +23504,7 @@ public:
 			processFullBlock (finalBlocks + 64);
 	}
 
-	void copyResult (uint8* result) const noexcept
+	void copyResult (uint8* result) const JUCE_NOEXCEPT
 	{
 		for (int i = 0; i < 8; ++i)
 		{
@@ -23540,31 +23542,31 @@ private:
 	uint32 state[8];
 	uint64 length;
 
-	static inline uint32 rotate (const uint32 x, const uint32 y) noexcept                { return (x >> y) | (x << (32 - y)); }
-	static inline uint32 ch  (const uint32 x, const uint32 y, const uint32 z) noexcept   { return z ^ ((y ^ z) & x); }
-	static inline uint32 maj (const uint32 x, const uint32 y, const uint32 z) noexcept   { return y ^ ((y ^ z) & (x ^ y)); }
+	static inline uint32 rotate (const uint32 x, const uint32 y) JUCE_NOEXCEPT                { return (x >> y) | (x << (32 - y)); }
+	static inline uint32 ch  (const uint32 x, const uint32 y, const uint32 z) JUCE_NOEXCEPT   { return z ^ ((y ^ z) & x); }
+	static inline uint32 maj (const uint32 x, const uint32 y, const uint32 z) JUCE_NOEXCEPT   { return y ^ ((y ^ z) & (x ^ y)); }
 
-	static inline uint32 s0 (const uint32 x) noexcept     { return rotate (x, 7)  ^ rotate (x, 18) ^ (x >> 3); }
-	static inline uint32 s1 (const uint32 x) noexcept     { return rotate (x, 17) ^ rotate (x, 19) ^ (x >> 10); }
-	static inline uint32 S0 (const uint32 x) noexcept     { return rotate (x, 2)  ^ rotate (x, 13) ^ rotate (x, 22); }
-	static inline uint32 S1 (const uint32 x) noexcept     { return rotate (x, 6)  ^ rotate (x, 11) ^ rotate (x, 25); }
+	static inline uint32 s0 (const uint32 x) JUCE_NOEXCEPT     { return rotate (x, 7)  ^ rotate (x, 18) ^ (x >> 3); }
+	static inline uint32 s1 (const uint32 x) JUCE_NOEXCEPT     { return rotate (x, 17) ^ rotate (x, 19) ^ (x >> 10); }
+	static inline uint32 S0 (const uint32 x) JUCE_NOEXCEPT     { return rotate (x, 2)  ^ rotate (x, 13) ^ rotate (x, 22); }
+	static inline uint32 S1 (const uint32 x) JUCE_NOEXCEPT     { return rotate (x, 6)  ^ rotate (x, 11) ^ rotate (x, 25); }
 
 	JUCE_DECLARE_NON_COPYABLE (SHA256Processor);
 };
 
-SHA256::SHA256() noexcept
+SHA256::SHA256() JUCE_NOEXCEPT
 {
 	zerostruct (result);
 }
 
-SHA256::~SHA256() noexcept {}
+SHA256::~SHA256() JUCE_NOEXCEPT {}
 
-SHA256::SHA256 (const SHA256& other) noexcept
+SHA256::SHA256 (const SHA256& other) JUCE_NOEXCEPT
 {
 	memcpy (result, other.result, sizeof (result));
 }
 
-SHA256& SHA256::operator= (const SHA256& other) noexcept
+SHA256& SHA256::operator= (const SHA256& other) JUCE_NOEXCEPT
 {
 	memcpy (result, other.result, sizeof (result));
 	return *this;
@@ -23601,7 +23603,7 @@ SHA256::SHA256 (const File& file)
 	}
 }
 
-SHA256::SHA256 (const CharPointer_UTF8& utf8) noexcept
+SHA256::SHA256 (const CharPointer_UTF8& utf8) JUCE_NOEXCEPT
 {
 	jassert (utf8.getAddress() != nullptr);
 	process (utf8.getAddress(), utf8.sizeInBytes() - 1);
@@ -23624,8 +23626,8 @@ String SHA256::toHexString() const
 	return String::toHexString (result, sizeof (result), 0);
 }
 
-bool SHA256::operator== (const SHA256& other) const noexcept  { return memcmp (result, other.result, sizeof (result)) == 0; }
-bool SHA256::operator!= (const SHA256& other) const noexcept  { return ! operator== (other); }
+bool SHA256::operator== (const SHA256& other) const JUCE_NOEXCEPT  { return memcmp (result, other.result, sizeof (result)) == 0; }
+bool SHA256::operator!= (const SHA256& other) const JUCE_NOEXCEPT  { return ! operator== (other); }
 
 #if JUCE_UNIT_TESTS
 
