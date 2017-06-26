@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="_precompile">
+      <UniqueIdentifier>{03963634-abf8-49c0-a6a9-1b1e4740c4e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="headers">
+      <UniqueIdentifier>{a21cfc86-33e9-4247-8b17-0282c2e5c460}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{51229aae-3a1f-4e96-ba9a-e069f0e7f1c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source">
+      <UniqueIdentifier>{d91f486e-13ac-45e0-85e3-2f68f2606006}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_props %28shared project settings%29">
+      <UniqueIdentifier>{6ae11444-9f43-4612-8a34-a7be1213cc65}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\source\AudioOutput.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\binaries.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\BrickWallChart.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\CpuMeter.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\FilterChart.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\FilterControls.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\FilteringAudioSource.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\GainChart.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\GroupDelayChart.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\MainApp.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\MainPanel.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\MainWindow.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\NoiseAudioSource.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\PhaseChart.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\PoleZeroChart.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\ResamplingReader.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\ResizableLayout.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\SettingsPanel.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\SettingsWindow.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\SliderGroup.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\StepResponseChart.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\ThreadQueue.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Precompile.cpp">
+      <Filter>_precompile</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources.rc">
+      <Filter>resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\source\AudioOutput.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\binaries.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\bond.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\BrickWallChart.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\ContentComponentConstrainer.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\CpuMeter.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\CustomSlider.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\FilterChart.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\FilterControls.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\FilteringAudioSource.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\FilterListener.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\GainChart.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\GroupDelayChart.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\MainApp.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\MainPanel.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\MainWindow.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\NoiseAudioSource.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\PhaseChart.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\PoleZeroChart.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\ResamplingReader.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\ResizableLayout.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\SettingsPanel.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\SettingsWindow.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\SliderGroup.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\StepResponseChart.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\ThreadQueue.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\Common.h">
+      <Filter>_precompile</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\user\settings\VisualStudio2012\Shared.props">
+      <Filter>_props %28shared project settings%29</Filter>
+    </None>
+    <None Include="..\..\..\..\user\settings\VisualStudio2012\SharedRelease.props">
+      <Filter>_props %28shared project settings%29</Filter>
+    </None>
+    <None Include="..\..\..\..\user\settings\VisualStudio2012\SharedDebug.props">
+      <Filter>_props %28shared project settings%29</Filter>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <OutputsDir>$(SolutionDir)$(SolutionName)-Output\</OutputsDir>
+    <ProductsDir>$(OutputsDir)Products\</ProductsDir>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutDir>$(ProductsDir)$(Platform)$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup>
+    <IntDir>$(OutputsDir)Intermediates\$(ProjectName)-$(Platform)$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <MinimalRebuild>false</MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WarningLevel>Level1</WarningLevel>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProductsDir)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="OutputsDir">
+      <Value>$(OutputsDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="ProductsDir">
+      <Value>$(ProductsDir)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>
