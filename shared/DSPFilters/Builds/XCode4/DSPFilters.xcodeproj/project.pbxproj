@@ -386,7 +386,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Move .a file to Lib folder\ncp $PROJECT_DIR/build/$CONFIGURATION/$EXECUTABLE_PREFIX$PRODUCT_NAME.a $PROJECT_DIR/../../../../Lib/$CONFIGURATION/\n\n# Rename .a file\nmv $PROJECT_DIR/../../../../Lib/$CONFIGURATION/$EXECUTABLE_PREFIX$PRODUCT_NAME.a $PROJECT_DIR/../../../../Lib/$CONFIGURATION/$EXECUTABLE_PREFIX\"DSPFilters\".a";
+			shellScript = "# Create Lib folder\nmkdir -p $PROJECT_DIR/../../../../Lib/$CONFIGURATION/\n\n# Move .a file to Lib folder\ncp $PROJECT_DIR/build/$CONFIGURATION/$EXECUTABLE_PREFIX$PRODUCT_NAME.a $PROJECT_DIR/../../../../Lib/$CONFIGURATION/\n\n# Rename .a file\nmv $PROJECT_DIR/../../../../Lib/$CONFIGURATION/$EXECUTABLE_PREFIX$PRODUCT_NAME.a $PROJECT_DIR/../../../../Lib/$CONFIGURATION/$EXECUTABLE_PREFIX\"DSPFilters\".a";
 		};
 /* End PBXShellScriptBuildPhase section */
 
