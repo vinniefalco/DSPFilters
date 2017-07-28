@@ -106,4 +106,7 @@ build
 .lock*
 .*.sw*
 *.a
-
+*.VC
+*.db
+shared/DSPFilters/DSPFilters-Output/
+shared/DSPFilters/.vs/
