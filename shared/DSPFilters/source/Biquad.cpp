@@ -143,8 +143,8 @@ void BiquadBase::setOnePole (complex_t pole, complex_t zero)
   const double a0 = 1;
   const double a1 = -pole.real();
   const double a2 = 0;
-  const double b0 = -zero.real();
-  const double b1 = 1;
+  const double b0 = 1;
+  const double b1 = -zero.real();
   const double b2 = 0;
 
   setCoefficients (a0, a1, a2, b0, b1, b2);
