@@ -125,6 +125,15 @@ public:
       dest++;
     }
   }
+    
+  template <class StateType, typename Sample>
+  void processInterleaved (int numSamples, Sample* dest, int stride, StateType& state) const
+  {
+      while (--numSamples >= 0) {
+          *dest = state.process (*dest, *this);
+          dest += stride;
+      }
+  }
 
 protected:
   Cascade ();

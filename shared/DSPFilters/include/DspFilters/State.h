@@ -287,6 +287,15 @@ public:
     for (int i = 0; i < Channels; ++i)
       filter.process (numSamples, arrayOfChannels[i], m_state[i]);
   }
+  
+  template <class Filter, typename Sample>
+  void processInterleaved (int numSamples,
+                Sample* arrayOfFrames,
+                Filter& filter)
+  {
+    for (int i = 0; i < Channels; ++i)
+      filter.processInterleaved (numSamples, arrayOfFrames + i, Channels, m_state[i]);
+  }
 
 private:
   StateType m_state[Channels];
@@ -310,6 +319,14 @@ public:
   template <class FilterDesign, typename Sample>
   void process (int numSamples,
                 Sample* const* arrayOfChannels,
+                FilterDesign& filter)
+  {
+    throw std::logic_error ("attempt to process empty ChannelState");
+  }
+
+  template <class FilterDesign, typename Sample>
+  void processInterleaved (int numSamples,
+                Sample* arrayOfFrames,
                 FilterDesign& filter)
   {
     throw std::logic_error ("attempt to process empty ChannelState");
