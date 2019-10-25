@@ -92,8 +92,6 @@ private:
 #else
 #endif
 
-  double m_p0;
-  double m_q;
   double m_K;
   double m_Kprime;
   double m_e;
@@ -108,7 +106,6 @@ private:
   double m_d1[100];
   double m_q1[100];
   double m_z1[100];
-  double m_f1[100];
   double m_s1[100];
   double m_p [100];
   double m_zw1[100];

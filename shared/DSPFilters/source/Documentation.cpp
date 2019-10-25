@@ -297,7 +297,7 @@ Filter family namespaces
 #include <iomanip>
 
 namespace {
-
+#if 0
 void UsageExamples ()
 {
   // create a two channel audio buffer
@@ -452,5 +452,5 @@ void UsageExamples ()
     std::cout << os.str();
   }
 }
-
+#endif
 }
