@@ -51,7 +51,7 @@ class RootFinderBase
 public:
   struct Array
   {
-    Array (int max, complex_t* values)
+    Array (int /*max*/, complex_t* /*values*/)
      // : m_max (max)
      // , m_values (values)
     {
