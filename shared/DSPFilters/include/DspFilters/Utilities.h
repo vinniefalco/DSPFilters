@@ -529,7 +529,7 @@ void zero (int samples,
            Ty* dest,
            int destSkip = 0)
 {
-  detail::zero<Ty, tr1::is_pod<Ty>::value>::process (samples, dest, destSkip );
+  detail::zero<Ty, std::is_pod<Ty>::value>::process (samples, dest, destSkip );
 }
 
 #else
