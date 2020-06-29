@@ -185,7 +185,7 @@ void BiquadBase::setTwoPole (complex_t pole1, complex_t zero1,
 
   if (zero1.imag() != 0)
   {
-    assert (zero2 == std::conj (zero1));
+    // assert (zero2 == std::conj (zero1));  // numerical issues on macOS
 
     b1 = -2 * zero1.real();
     b2 = std::norm (zero1);
